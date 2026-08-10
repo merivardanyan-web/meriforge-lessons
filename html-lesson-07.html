@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 7 — Գույն և տիպոգրաֆիա</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 7 · 2 ժամ</p>
+  <h1>Գույն և տիպոգրաֆիա</h1>
+  <p class="lede">Կայքի 95%-ը տեքստ է։ Այսօր սովորում ենք գույների ձևաչափերը, տառատեսակների միացումը, միավորները և ամենակարևորը՝ ինչպես ստուգել, որ տեքստն իսկապես ընթեռնելի է։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 06</span>
+    <span>Բլոկ 1 · CSS հիմունքներ</span>
+    <span>Կոնտրաստի ստուգում</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Գույնի չորս ձևաչափ</li>
+      <li>Կոնտրաստի հարաբերակցություն և դրա ստուգումը</li>
+      <li>Տառատեսակների միացում, հայերենի աջակցություն</li>
+      <li>Միավորներ՝ <code>px</code>, <code>rem</code>, <code>em</code>, <code>%</code></li>
+      <li>Տեքստի հատկություններ</li>
+      <li>Տիպոգրաֆիկ սանդղակ</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Գույնի ձևաչափեր</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>չորս ձև՝ նույն գույնը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* 1. Անուն — 140 գույն ունի անուն */</span>
+<span class="f">color</span>: <span class="s">navy</span>;
+
+<span class="c">/* 2. HEX — ամենատարածվածը */</span>
+<span class="f">color</span>: <span class="s">#003459</span>;
+<span class="f">color</span>: <span class="s">#036</span>;        <span class="c">/* կարճ ձև, երբ զույգերը կրկնվում են */</span>
+
+<span class="c">/* 3. RGB — կարմիր, կանաչ, կապույտ (0–255) */</span>
+<span class="f">color</span>: <span class="s">rgb</span>(<span class="n">0</span>, <span class="n">52</span>, <span class="n">89</span>);
+<span class="f">color</span>: <span class="s">rgba</span>(<span class="n">0</span>, <span class="n">52</span>, <span class="n">89</span>, <span class="n">0.5</span>);   <span class="c">/* 50% թափանցիկ */</span>
+
+<span class="c">/* 4. HSL — երանգ, հագեցվածություն, պայծառություն */</span>
+<span class="f">color</span>: <span class="s">hsl</span>(<span class="n">205</span>, <span class="n">100%</span>, <span class="n">17%</span>);</code></pre>
+    </div>
+
+    <div class="tree">HEX-ի կառուցվածքը
+
+  #  00  34  59
+     └┬┘ └┬┘ └┬┘
+      R   G   B
+   կարմիր կանաչ կապույտ
+   ամեն զույգը՝ 00-ից FF (0–255)
+
+  #000000 = սև       #FFFFFF = սպիտակ
+  #FF0000 = կարմիր   #00FF00 = կանաչ</div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ձևաչափ</th><th>Ե՞րբ օգտագործել</th></tr>
+      <tr><td>Անուն</td><td>Արագ փորձարկում։ Իրական նախագծերում՝ հազվադեպ</td></tr>
+      <tr><td><strong>HEX</strong></td><td>Հիմնական ձևը։ Դիզայներները տալիս են հենց այս ձևաչափով</td></tr>
+      <tr><td><strong>RGBA</strong></td><td>Երբ պետք է թափանցիկություն</td></tr>
+      <tr><td>HSL</td><td>Երբ պետք է նույն գույնի ավելի բաց/մուգ տարբերակ</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">HSL-ի առավելությունը</span>
+      <p><code>hsl(205, 100%, 17%)</code> — երանգը 205 է։ Ուզո՞ւմ ես ավելի բաց տարբերակ։ Փոխիր միայն երրորդ թիվը՝ <code>hsl(205, 100%, 40%)</code>։ HEX-ով դա անելու համար պիտի հաշվարկես երեք զույգ։<br><br>
+      Դրա համար դիզայն-համակարգերում հաճախ օգտագործում են HSL։</p>
+    </div>
+
+    <h3>Թափանցիկություն</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>rgba vs opacity</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* rgba — թափանցիկ է ՄԻԱՅՆ ֆոնը */</span>
+<span class="k">.overlay</span> {
+    <span class="f">background-color</span>: <span class="s">rgba</span>(<span class="n">0</span>, <span class="n">0</span>, <span class="n">0</span>, <span class="n">0.6</span>);
+    <span class="f">color</span>: <span class="s">white</span>;      <span class="c">/* տեքստը մնում է լիարժեք */</span>
+}
+
+<span class="c">/* opacity — թափանցիկ է ԱՄԲՈՂՋ էլեմենտը */</span>
+<span class="k">.faded</span> {
+    <span class="f">opacity</span>: <span class="n">0.6</span>;       <span class="c">/* և ֆոնը, և տեքստը, և երեխաները */</span>
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Հաճախ շփոթում են</span>
+      <p>Եթե ուզում ես մուգ շերտ նկարի վրա, բայց <strong>պայծառ</strong> տեքստ դրա վրա — օգտագործիր <code>rgba</code>։ <code>opacity</code>-ն կթուլացնի նաև տեքստը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Կոնտրաստ</h2>
+    <p>Ամենակարևոր բաժինը այս դասում։ Գեղեցիկ գունային համադրությունը կարող է լինել <strong>անընթեռնելի</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ իրական սխալներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Մուգ ֆոն + սև տեքստ */</span>
+<span class="k">.bg-dark</span> {
+    <span class="f">background-color</span>: <span class="s">#253237</span>;
+    <span class="f">color</span>: <span class="s">black</span>;          <span class="c">/* կոնտրաստ 1.3:1 — չի երևում */</span>
+}
+
+<span class="c">/* Բաց ֆոն + սպիտակ տեքստ */</span>
+<span class="k">.bg-light</span> {
+    <span class="f">background-color</span>: <span class="s">#f5f5f5</span>;
+    <span class="f">color</span>: <span class="s">white</span>;          <span class="c">/* կոնտրաստ 1.1:1 — անտեսանելի */</span>
+}
+
+<span class="c">/* Մոխրագույն «նուրբ» տեքստ */</span>
+<span class="k">.muted</span> {
+    <span class="f">color</span>: <span class="s">#aaa</span>;            <span class="c">/* սպիտակի վրա 2.3:1 — շատ թույլ */</span>
+}</code></pre>
+    </div>
+
+    <h3>Կանոնները</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Տեքստ</th><th>Նվազագույն կոնտրաստ</th></tr>
+      <tr><td>Սովորական (մինչև 24px)</td><td><strong>4.5:1</strong></td></tr>
+      <tr><td>Խոշոր (24px+ կամ 19px+ հաստ)</td><td><strong>3:1</strong></td></tr>
+      <tr><td>Կոճակների եզրագծեր, պատկերակներ</td><td><strong>3:1</strong></td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչպես ստուգել DevTools-ով</span>
+      <p><strong>1.</strong> Աջ սեղմում տեքստի վրա → <em>Inspect</em><br>
+      <strong>2.</strong> Styles վահանակում գտիր <code>color</code>-ը<br>
+      <strong>3.</strong> Սեղմիր գույնի քառակուսու վրա<br>
+      <strong>4.</strong> Կբացվի գունապնակը՝ <strong>Contrast ratio</strong> տողով<br><br>
+      Եթե կողքին ✓✓ է — ամեն ինչ լավ է։ Եթե ⚠ — ուղղիր։ Այնտեղ կա նաև գիծ, որը ցույց է տալիս՝ որ երանգից սկսած է կոնտրաստը բավարար դառնում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>✅ ուղղված տարբերակը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.bg-dark</span> {
+    <span class="f">background-color</span>: <span class="s">#253237</span>;
+    <span class="f">color</span>: <span class="s">#ffffff</span>;        <span class="c">/* 12.6:1 ✓ */</span>
+}
+
+<span class="k">.bg-light</span> {
+    <span class="f">background-color</span>: <span class="s">#f5f5f5</span>;
+    <span class="f">color</span>: <span class="s">#1a1a1a</span>;        <span class="c">/* 15.8:1 ✓ */</span>
+}
+
+<span class="k">.muted</span> {
+    <span class="f">color</span>: <span class="s">#6b6b6b</span>;          <span class="c">/* 5.3:1 ✓ */</span>
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ոսկե կանոն</span>
+      <p><strong>Ամեն ֆոնի դասը գրիր իր տեքստի գույնի հետ միասին։</strong><br><br>
+      Երբ <code>.bg-dark</code>-ը սահմանում է միայն ֆոնը, ինչ-որ պահի այն կհայտնվի սև տեքստի կողքին և ոչ ոք չի նկատի, մինչև որ օգտագործողը բողոքի։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ո՞ւմ համար</span>
+      <p>Աշխարհում մոտ 300 միլիոն մարդ ունի գունային տեսողության խանգարում։ Բացի այդ՝ արևի տակ հեռախոս նայողները, հին էկրաններով մարդիկ, տարեցները։ Լավ կոնտրաստը հատուկ խմբի համար չէ — այն <strong>բոլորի</strong> համար է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Տառատեսակներ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>font-family — պահեստային շղթա</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="t">body</span> {
+    <span class="f">font-family</span>: <span class="s">"Noto Sans Armenian", "Segoe UI", system-ui, sans-serif</span>;
+}</code></pre>
+    </div>
+
+    <p>Բրաուզերը փորձում է ձախից աջ։ Եթե առաջինը չկա՝ անցնում է հաջորդին։ Վերջում պիտի լինի <strong>ընդհանուր ընտանիք</strong>՝ <code>sans-serif</code>, <code>serif</code> կամ <code>monospace</code>։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ընտանիք</th><th>Բնութագիր</th><th>Ե՞րբ</th></tr>
+      <tr><td><code>sans-serif</code></td><td>Առանց ծայրագծերի</td><td>Ինտերֆեյս, հիմնական տեքստ</td></tr>
+      <tr><td><code>serif</code></td><td>Ծայրագծերով</td><td>Վերնագրեր, երկար հոդվածներ</td></tr>
+      <tr><td><code>monospace</code></td><td>Հավասար լայնություն</td><td>Կոդ</td></tr>
+    </table>
+    </div>
+
+    <h3>Google Fonts — հայերենով</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>head-ում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"preconnect"</span> <span class="f">href</span>=<span class="s">"https://fonts.googleapis.com"</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"preconnect"</span> <span class="f">href</span>=<span class="s">"https://fonts.gstatic.com"</span> <span class="f">crossorigin</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">link</span> <span class="f">href</span>=<span class="s">"https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&amp;display=swap"</span>
+      <span class="f">rel</span>=<span class="s">"stylesheet"</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ոչ բոլոր տառատեսակներն ունեն հայերեն</span>
+      <p>Google Fonts-ի հազարավոր տառատեսակներից միայն մի քանի տասնյակն ունեն հայկական այբուբեն։ Եթե ընտրես տառատեսակ առանց հայերենի, բրաուզերը կանցնի պահեստայինին, և էջում կլինեն <strong>երկու տարբեր տառատեսակ</strong> — լատինատառը մեկը, հայերենը՝ մյուսը։<br><br>
+      Google Fonts-ում ֆիլտրիր՝ <em>Language → Armenian</em>։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Տառատեսակ</th><th>Ոճ</th></tr>
+      <tr><td>Noto Sans Armenian</td><td>Չեզոք, ունիվերսալ</td></tr>
+      <tr><td>Noto Serif Armenian</td><td>Ծայրագծերով, վերնագրերի համար</td></tr>
+      <tr><td>Arian AMU</td><td>Դասական հայկական</td></tr>
+      <tr><td>Mardoto</td><td>Ժամանակակից</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Երկու խորհուրդ</span>
+      <p><strong>1.</strong> Միացրու միայն այն հաստությունները, որ իսկապես օգտագործում ես։ <code>wght@400;700</code> — երկուսը բավական է սովորաբար։ Ամեն ավելորդ հաստություն դանդաղեցնում է էջը։<br>
+      <strong>2.</strong> <code>display=swap</code>-ը պարտադիր է — առանց դրա տեքստն անտեսանելի է, մինչև տառատեսակը բեռնվի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Միավորներ</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Միավոր</th><th>Ինչի՞ նկատմամբ</th><th>Ե՞րբ օգտագործել</th></tr>
+      <tr><td><code>px</code></td><td>Բացարձակ</td><td>Եզրագծեր, ստվերներ, փոքր բացակներ</td></tr>
+      <tr><td><code>rem</code></td><td><code>html</code>-ի տառաչափի</td><td><strong>Տառաչափեր, բացակներ</strong></td></tr>
+      <tr><td><code>em</code></td><td>Ընթացիկ էլեմենտի տառաչափի</td><td>Ներսի բացակներ կոմպոնենտում</td></tr>
+      <tr><td><code>%</code></td><td>Ծնողի</td><td>Լայնություններ</td></tr>
+      <tr><td><code>vw</code> / <code>vh</code></td><td>Էկրանի լայնության/բարձրության</td><td>Ամբողջ էկրանով բլոկներ</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>rem — ինչպես է աշխատում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Բրաուզերի լռելյայն՝ html { font-size: 16px } */</span>
+
+<span class="k">.title</span>  { <span class="f">font-size</span>: <span class="n">2rem</span>;    }   <span class="c">/* 32px */</span>
+<span class="k">.text</span>   { <span class="f">font-size</span>: <span class="n">1rem</span>;    }   <span class="c">/* 16px */</span>
+<span class="k">.small</span>  { <span class="f">font-size</span>: <span class="n">0.875rem</span>; } <span class="c">/* 14px */</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ rem, ոչ px</span>
+      <p>Օգտագործողը կարող է բրաուզերի կարգավորումներում մեծացնել լռելյայն տառաչափը — դա անում են վատ տեսողությամբ մարդիկ։<br><br>
+      Եթե գրել ես <code>font-size: 16px</code>, տեքստը <strong>չի մեծանա</strong>։ Եթե <code>1rem</code> — կմեծանա։ Մեկ որոշում, որը շատ մարդկանց համար բան է փոխում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>em — կուտակվում է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.card</span>       { <span class="f">font-size</span>: <span class="n">20px</span>; }
+<span class="k">.card</span> <span class="k">.title</span> { <span class="f">font-size</span>: <span class="n">2em</span>;  }   <span class="c">/* 40px — 20-ի կրկնապատիկ */</span>
+
+<span class="c">/* Թակարդ՝ ներդրվածության դեպքում */</span>
+<span class="t">ul</span> { <span class="f">font-size</span>: <span class="n">0.9em</span>; }
+<span class="c">/* ul &gt; ul     = 0.81em */</span>
+<span class="c">/* ul &gt; ul &gt; ul = 0.73em — տեքստը փոքրանում է անվերջ */</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Պարզ կանոն</span>
+      <p><code>rem</code> — տառաչափերի և բացակների համար։<br>
+      <code>em</code> — երբ չափը պիտի կապված լինի հենց այս էլեմենտի տեքստի հետ (օրինակ՝ կոճակի <code>padding</code>-ը)։<br>
+      <code>px</code> — եզրագծերի և այն բաների համար, որոնք չպիտի մասշտաբավորվեն։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Տեքստի հատկություններ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հիմնականները</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.text</span> {
+    <span class="f">font-size</span>: <span class="n">1rem</span>;
+    <span class="f">font-weight</span>: <span class="n">400</span>;           <span class="c">/* 100–900 */</span>
+    <span class="f">font-style</span>: <span class="s">italic</span>;
+    <span class="f">line-height</span>: <span class="n">1.5</span>;           <span class="c">/* առանց միավորի ✅ */</span>
+    <span class="f">letter-spacing</span>: <span class="n">0.02em</span>;
+    <span class="f">text-align</span>: <span class="s">left</span>;
+    <span class="f">text-transform</span>: <span class="s">uppercase</span>;
+    <span class="f">text-decoration</span>: <span class="s">underline</span>;
+}</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հատկություն</th><th>Արժեքներ</th></tr>
+      <tr><td><code>font-weight</code></td><td><code>400</code> սովորական, <code>700</code> հաստ։ Կամ <code>normal</code>/<code>bold</code></td></tr>
+      <tr><td><code>line-height</code></td><td>Տողերի միջև հեռավորությունը</td></tr>
+      <tr><td><code>letter-spacing</code></td><td>Տառերի միջև</td></tr>
+      <tr><td><code>text-align</code></td><td><code>left</code>, <code>center</code>, <code>right</code>, <code>justify</code></td></tr>
+      <tr><td><code>text-transform</code></td><td><code>uppercase</code>, <code>lowercase</code>, <code>capitalize</code></td></tr>
+      <tr><td><code>text-decoration</code></td><td><code>none</code>, <code>underline</code>, <code>line-through</code></td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">line-height առանց միավորի</span>
+      <p><code>line-height: 1.5</code> ✅ — 1.5 × ընթացիկ տառաչափը։ Աշխատում է ճիշտ ամեն մակարդակում։<br>
+      <code>line-height: 24px</code> ❌ — ֆիքսված։ Երբ ներսի տեքստը 32px է, տողերը կկպչեն իրար։<br><br>
+      Հարմարավետ արժեքներ՝ <strong>1.5–1.7</strong> հիմնական տեքստի համար, <strong>1.1–1.3</strong> խոշոր վերնագրերի։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երկու բան, որ վնասում են ընթեռնելիությանը</span>
+      <p><strong>1.</strong> <code>text-align: justify</code> — ստեղծում է անհավասար բացատներ բառերի միջև, հատկապես նեղ սյուներում։ Խուսափիր վեբում։<br>
+      <strong>2.</strong> <code>text-transform: uppercase</code> երկար տեքստի համար — ՄԵԾԱՏԱՌ ՏԵՔՍՏԸ ԿԱՐԴԱԼՆ ԱՎԵԼԻ ԴԱՆԴԱՂ Է, ՈՐՈՎՀԵՏԵՎ ԲՈԼՈՐ ՏԱՌԵՐԸ ՆՈՒՅՆ ԲԱՐՁՐՈՒԹՅԱՆ ԵՆ։ Կարճ պիտակների համար՝ լավ է։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Տողի օպտիմալ երկարությունը</span>
+      <p>Հարմարավետ կարդալու համար՝ <strong>50–75 նիշ</strong> տողում։ CSS-ում դա հեշտ է սահմանել՝ <code>max-width: 65ch</code>։ <code>ch</code> միավորը «0» նիշի լայնությունն է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Տիպոգրաֆիկ սանդղակ</h2>
+    <p>Չափերը չեն ընտրվում պատահական։ Դրանք կազմում են <strong>սանդղակ</strong>՝ որոշակի հարաբերակցությամբ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>css/main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ---------- Գույներ ---------- */</span>
+<span class="k">:root</span> {
+    <span class="f">--dark</span>:      <span class="s">#253237</span>;
+    <span class="f">--secondary</span>: <span class="s">#003459</span>;
+    <span class="f">--light</span>:     <span class="s">#9db4c0</span>;
+    <span class="f">--bg</span>:        <span class="s">#f5f5f5</span>;
+    <span class="f">--text</span>:      <span class="s">#1a1a1a</span>;
+    <span class="f">--muted</span>:     <span class="s">#6b6b6b</span>;
+    <span class="f">--on-dark</span>:   <span class="s">#ffffff</span>;
+}
+
+<span class="c">/* ---------- Բազա ---------- */</span>
+<span class="t">body</span> {
+    <span class="f">font-family</span>: <span class="s">"Noto Sans Armenian", system-ui, sans-serif</span>;
+    <span class="f">font-size</span>: <span class="n">1rem</span>;
+    <span class="f">line-height</span>: <span class="n">1.6</span>;
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--text</span>);
+    <span class="f">background-color</span>: <span class="s">var</span>(<span class="f">--bg</span>);
+}
+
+<span class="c">/* ---------- Վերնագրերի սանդղակ ---------- */</span>
+<span class="t">h1</span>, <span class="k">.title-1</span> { <span class="f">font-size</span>: <span class="n">3.75rem</span>; <span class="f">font-weight</span>: <span class="n">700</span>; <span class="f">line-height</span>: <span class="n">1.1</span>; }
+<span class="t">h2</span>, <span class="k">.title-2</span> { <span class="f">font-size</span>: <span class="n">2.5rem</span>;  <span class="f">font-weight</span>: <span class="n">700</span>; <span class="f">line-height</span>: <span class="n">1.2</span>; }
+<span class="t">h3</span>, <span class="k">.title-3</span> { <span class="f">font-size</span>: <span class="n">1.875rem</span>;<span class="f">font-weight</span>: <span class="n">700</span>; <span class="f">line-height</span>: <span class="n">1.3</span>; }
+<span class="t">h4</span>, <span class="k">.title-4</span> { <span class="f">font-size</span>: <span class="n">1.25rem</span>; <span class="f">font-weight</span>: <span class="n">700</span>; <span class="f">line-height</span>: <span class="n">1.4</span>; }
+
+<span class="c">/* ---------- Օժանդակ ---------- */</span>
+<span class="k">.text-muted</span> { <span class="f">color</span>: <span class="s">var</span>(<span class="f">--muted</span>); }
+<span class="k">.text-small</span> { <span class="f">font-size</span>: <span class="n">0.875rem</span>; }</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Առաջին անգամ՝ CSS փոփոխականներ</span>
+      <p><code>--dark: #253237</code> — սա փոփոխական է։ Օգտագործվում է <code>var(--dark)</code>-ով։<br><br>
+      Առավելությունը՝ գույնը փոխելու համար ուղղում ես <strong>մեկ տեղում</strong>։ Մանրամասն կսովորենք 19-րդ դասին, բայց սկսում ենք օգտագործել հիմա — որ սովորություն դառնա։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ 3.75rem, ոչ 60px</span>
+      <p>60 ÷ 16 = 3.75։ Նույն արդյունքն է, բայց մասշտաբավորվում է օգտագործողի կարգավորումների հետ։<br><br>
+      Հարմար հաշվարկ՝ բաժանիր 16-ի։ 20px → 1.25rem, 24px → 1.5rem, 32px → 2rem, 40px → 2.5rem։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Խաղահրապարակ</h2>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="css">CSS</button>
+        <button class="live__tab" data-pane="html">HTML</button>
+      </div>
+      <textarea class="live__code" data-pane="css">:root {
+    --dark: #253237;
+    --secondary: #003459;
+    --bg: #f5f5f5;
+    --text: #1a1a1a;
+    --muted: #6b6b6b;
+    --on-dark: #ffffff;
+}
+
+body {
+    font-family: system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--bg);
+    margin: 0;
+    padding: 16px;
+}
+
+h1 { font-size: 2.5rem; line-height: 1.1; margin: 0 0 12px; }
+h2 { font-size: 1.5rem; line-height: 1.3; margin: 20px 0 8px; }
+
+/* Ամեն ֆոն՝ իր տեքստի գույնով */
+.bg-dark {
+    background: var(--dark);
+    color: var(--on-dark);
+    padding: 16px;
+    border-radius: 8px;
+}
+
+/* ❌ Փորձիր փոխել սա black-ի և տես DevTools-ում */
+.bg-secondary {
+    background: var(--secondary);
+    color: var(--on-dark);
+    padding: 16px;
+    border-radius: 8px;
+    margin-top: 12px;
+}
+
+.text-muted { color: var(--muted); }
+
+/* Թափանցիկ շերտ */
+.overlay {
+    background: rgba(37, 50, 55, 0.75);
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 12px;
+}
+
+/* Համեմատիր opacity-ի հետ */
+.faded {
+    background: var(--dark);
+    color: white;
+    opacity: 0.35;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 12px;
+}
+
+/* Օպտիմալ տողի երկարություն */
+.readable { max-width: 65ch; }
+
+.label {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--muted);
+}</textarea>
+      <textarea class="live__code is-hidden" data-pane="html">&lt;p class="label"&gt;Կարճ պիտակ&lt;/p&gt;
+&lt;h1&gt;Տիպոգրաֆիա և գույն&lt;/h1&gt;
+
+&lt;p class="readable"&gt;Հարմարավետ կարդալու համար տողում պիտի լինի
+50-ից 75 նիշ։ Այս պարբերությունն ունի max-width: 65ch,
+ուստի այն չի ձգվում ամբողջ լայնությամբ։&lt;/p&gt;
+
+&lt;p class="text-muted readable"&gt;Երկրորդական տեքստ։ Գույնը թույլ է,
+բայց կոնտրաստը դեռ բավարար է՝ 5.3:1&lt;/p&gt;
+
+&lt;div class="bg-dark"&gt;
+    &lt;h2&gt;Մուգ ֆոն&lt;/h2&gt;
+    &lt;p&gt;Սպիտակ տեքստ մուգի վրա — կոնտրաստ 12.6:1&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="bg-secondary"&gt;
+    &lt;p&gt;Երկրորդական ֆոն&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="overlay"&gt;
+    &lt;strong&gt;rgba&lt;/strong&gt; — թափանցիկ է միայն ֆոնը, տեքստը՝ պայծառ
+&lt;/div&gt;
+
+&lt;div class="faded"&gt;
+    &lt;strong&gt;opacity&lt;/strong&gt; — թափանցիկ է ամեն ինչ, ներառյալ տեքստը
+&lt;/div&gt;</textarea>
+      <div class="live__actions">
+        <span>Փոխիր գույները և ստուգիր կոնտրաստը</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Փորձիր</span>
+      <p><strong>1.</strong> <code>.bg-secondary</code>-ի <code>color</code>-ը դարձրու <code>black</code>։ Ընթեռնե՞լի է։<br>
+      <strong>2.</strong> Համեմատիր <code>.overlay</code>-ը և <code>.faded</code>-ը։<br>
+      <strong>3.</strong> Ջնջիր <code>max-width: 65ch</code>-ը և ընդլայնիր պատուհանը։<br>
+      <strong>4.</strong> Փոխիր <code>line-height</code>-ը 1.6-ից 1-ի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Դասարանական</h2>
+    <ol>
+      <li>Ընտրիր հայերենով տառատեսակ Google Fonts-ից (<em>Language → Armenian</em>)</li>
+      <li>Միացրու այն՝ միայն 400 և 700 հաստությամբ</li>
+      <li><code>main.css</code>-ում ստեղծիր <code>:root</code> բլոկը 6–7 գույնով</li>
+      <li>Գրիր <code>body</code>-ի բազային ոճերը</li>
+      <li>Ստեղծիր վերնագրերի սանդղակը <code>rem</code>-ով</li>
+      <li>Ստեղծիր <code>.bg-*</code> դասերը՝ <strong>ամեն մեկը իր տեքստի գույնով</strong></li>
+      <li>Ստուգիր բոլոր համադրությունները DevTools-ի կոնտրաստի ցուցիչով</li>
+    </ol>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>global.css — այսօրվա ավելացումը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ---------- Ֆորմայի տարրերը ժառանգում են տառատեսակը ---------- */</span>
+<span class="t">input</span>, <span class="t">textarea</span>, <span class="t">select</span>, <span class="t">button</span> {
+    <span class="f">font</span>: <span class="k">inherit</span>;
+    <span class="f">color</span>: <span class="k">inherit</span>;
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ է սա պետք</span>
+      <p>Ֆորմայի տարրերը <strong>չեն ժառանգում</strong> տառատեսակը <code>body</code>-ից — դա բրաուզերի հին որոշում է։ Առանց այս երկու տողի քո գեղեցիկ հայկական տառատեսակը կլինի ամենուր, բացի դաշտերից և կոճակներից, որտեղ կմնա բրաուզերի լռելյայնը։<br><br>
+      Փորձիր ինքդ․ ջնջիր այս կանոնը և նայիր ֆորմային։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Գրիր նույն գույնը չորս ձևաչափով՝ անուն, HEX, RGB, HSL։ Ստուգիր, որ արդյունքը նույնն է։</li>
+      <li>Ցուցադրիր <code>rgba</code>-ի և <code>opacity</code>-ի տարբերությունը՝ երկու նույնական բլոկով։</li>
+      <li>Ստեղծիր 5 գունային համադրություն։ Ամեն մեկի կոնտրաստը ստուգիր DevTools-ով և գրիր արժեքը մեկնաբանության մեջ։</li>
+      <li>Գտիր դիտավորյալ վատ համադրություն (2:1-ից պակաս) և ուղղիր այն։ Ցույց տուր՝ առաջ և հետո։</li>
+      <li>Միացրու հայերենով տառատեսակ։ Փորձիր նաև առանց հայերենի տառատեսակ և նկարագրիր՝ ինչ եղավ։</li>
+      <li>Ստեղծիր վերնագրերի սանդղակ <code>rem</code>-ով՝ h1-ից h4։ Ցույց տուր հաշվարկը մեկնաբանություններում։</li>
+      <li>Փորձիր բրաուզերի կարգավորումներում մեծացնել լռելյայն տառաչափը։ Համեմատիր <code>px</code>-ով և <code>rem</code>-ով գրված տեքստերի պահվածքը։</li>
+      <li>Ցուցադրիր <code>em</code>-ի կուտակումը՝ երեք մակարդակ ներդրված ցուցակով, որտեղ <code>font-size: 0.9em</code>։</li>
+      <li>Կիրառիր <code>max-width: 65ch</code> հոդվածի տեքստին։ Համեմատիր առանց դրա տարբերակի հետ լայն էկրանին։</li>
+      <li>Ոճավորիր Դաս 5-ի սեմանտիկ էջը՝ ամբողջական տիպոգրաֆիայով և գույներով։ Բոլոր կոնտրաստները պիտի անցնեն 4.5:1 շեմը։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հատկություն</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>color</code></td><td>Տեքստի գույնը</td></tr>
+      <tr><td><code>background-color</code></td><td>Ֆոնի գույնը</td></tr>
+      <tr><td><code>rgba(0,0,0,.6)</code></td><td>Թափանցիկ ֆոն, տեքստը՝ պայծառ</td></tr>
+      <tr><td><code>opacity</code></td><td>Ամբողջ էլեմենտի թափանցիկություն</td></tr>
+      <tr><td><code>font-family</code></td><td>Տառատեսակների շղթա</td></tr>
+      <tr><td><code>font-size</code></td><td>Չափը — <code>rem</code>-ով ⭐</td></tr>
+      <tr><td><code>font-weight</code></td><td>400 / 700</td></tr>
+      <tr><td><code>line-height</code></td><td>Առանց միավորի՝ 1.5 ⭐</td></tr>
+      <tr><td><code>letter-spacing</code></td><td>Տառերի միջև</td></tr>
+      <tr><td><code>text-align</code></td><td>Հավասարեցում</td></tr>
+      <tr><td><code>text-transform</code></td><td>Ռեգիստր</td></tr>
+      <tr><td><code>max-width: 65ch</code></td><td>Օպտիմալ տողի երկարություն</td></tr>
+      <tr><td><code>var(--name)</code></td><td>CSS փոփոխական</td></tr>
+    </table>
+    </div>
+
+    <h3>Կոնտրաստի շեմերը</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ինչ</th><th>Նվազագույն</th></tr>
+      <tr><td>Սովորական տեքստ</td><td>4.5:1</td></tr>
+      <tr><td>Խոշոր տեքստ (24px+)</td><td>3:1</td></tr>
+      <tr><td>Եզրագծեր, պատկերակներ</td><td>3:1</td></tr>
+    </table>
+    </div>
+
+    <h3>Ի՞նչ ավելացավ global.css-ում այսօր</h3>
+    <div class="tree">✓ input, textarea, select, button { font: inherit; color: inherit }</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Ամեն <code>.bg-*</code> դաս ունի իր <code>color</code>-ը</li>
+      <li>Բոլոր կոնտրաստները ≥ 4.5:1</li>
+      <li>Տառաչափերը <code>rem</code>-ով են</li>
+      <li><code>line-height</code>-ը առանց միավորի է</li>
+      <li>Տառատեսակն ունի հայերեն</li>
+      <li>Միացված են միայն անհրաժեշտ հաստությունները</li>
+      <li>Կա <code>display=swap</code></li>
+      <li>Երկար տեքստն ունի <code>max-width</code></li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել <code>rgba</code>-ի և <code>opacity</code>-ի տարբերությունը</li>
+      <li>Գիտե՞մ, ինչպես ստուգել կոնտրաստը</li>
+      <li>Հասկանո՞ւմ եմ, ինչու <code>rem</code>, ոչ <code>px</code></li>
+      <li>Գիտե՞մ, ինչու <code>line-height</code>-ը առանց միավորի</li>
+      <li>Կարո՞ղ եմ բացատրել <code>em</code>-ի կուտակումը</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p><strong>Box model</strong> — CSS-ի ամենակարևոր հասկացությունը։ <code>margin</code>, <code>padding</code>, <code>border</code>, և վերջապես կհասկանանք, ինչ է անում <code>box-sizing: border-box</code>-ը, որը <code>global.css</code>-ում գրեցինք առանց բացատրության։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 07 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

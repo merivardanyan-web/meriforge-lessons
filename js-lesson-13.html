@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 13 — Ֆորմաներ և վալիդացիա</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 13 · 2 ժամ</p>
+  <h1>Ֆորմաներ և վալիդացիա</h1>
+  <p class="lede">Ֆորման այն տեղն է, որտեղ օգտագործողը խոսում է քո կայքի հետ։ Այսօր սովորում ենք լսել նրան, ստուգել գրածը և քաղաքավարի ասել, երբ ինչ-որ բան սխալ է։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 08, 11, 12</span>
+    <span>Բլոկ 2 · DOM և իրադարձություններ</span>
+    <span>Դասարանում՝ գրանցման ֆորմա</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li><code>value</code> — տեքստային դաշտերի արժեքը</li>
+      <li><code>checked</code> — checkbox և radio</li>
+      <li><code>select</code> և բազմակի ընտրություն</li>
+      <li><code>submit</code> իրադարձություն և <code>FormData</code></li>
+      <li>Վալիդացիայի ֆունկցիաներ</li>
+      <li>Ռեգուլյար արտահայտությունների հիմունքներ</li>
+      <li>Սխալների ցուցադրում ինտերֆեյսում</li>
+      <li>Իրական ժամանակի ստուգում՝ <code>input</code> և <code>blur</code></li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>value — դաշտի արժեքը</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>կարդալ և գրել</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// &lt;input type="text" class="name"&gt;</span>
+<span class="k">const</span> nameInput = document.<span class="f">querySelector</span>(<span class="s">".name"</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(nameInput.value);          <span class="c">// կարդալ</span>
+
+nameInput.value = <span class="s">"Անի"</span>;              <span class="c">// գրել</span>
+nameInput.value = <span class="s">""</span>;                  <span class="c">// մաքրել</span>
+
+nameInput.<span class="f">focus</span>();                    <span class="c">// կուրսորը դնել դաշտում</span>
+nameInput.<span class="f">blur</span>();                     <span class="c">// հանել ֆոկուսը</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">value-ն միշտ տող է</span>
+      <p>Նույնիսկ <code>type="number"</code> դաշտում։ Եթե գրես 25, կստանաս <code>"25"</code> տեքստ։ Հաշվարկների համար պարտադիր՝ <code>Number(input.value)</code> (Դաս 8)։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>դասական սխալ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// &lt;input type="number" class="qty" value="5"&gt;</span>
+<span class="k">const</span> qty = document.<span class="f">querySelector</span>(<span class="s">".qty"</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="k">typeof</span> qty.value);
+<span class="f">console</span>.<span class="f">log</span>(qty.value + <span class="n">1</span>);
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Number</span>(qty.value) + <span class="n">1</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="g">string</span>
+<span class="r">51</span>
+<span class="r">6</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Միշտ trim</span>
+      <p><code>const name = input.value.trim();</code> — մարդիկ պատահաբար բացատ են դնում։ Առանց <code>trim</code>-ի <code>" "</code> դաշտը կհամարվի լրացված։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Checkbox, radio, select</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>checkbox — checked</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// &lt;input type="checkbox" class="terms"&gt;</span>
+<span class="k">const</span> terms = document.<span class="f">querySelector</span>(<span class="s">".terms"</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(terms.checked);      <span class="c">// true / false</span>
+<span class="f">console</span>.<span class="f">log</span>(terms.value);        <span class="c">// "on" — գրեթե երբեք պետք չէ</span>
+
+terms.checked = <span class="k">true</span>;           <span class="c">// նշել ծրագրայնորեն</span>
+
+terms.<span class="f">addEventListener</span>(<span class="s">"change"</span>, () =&gt; {
+  <span class="f">console</span>.<span class="f">log</span>(terms.checked ? <span class="s">"Համաձայն է"</span> : <span class="s">"Համաձայն չէ"</span>);
+});</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="e">false</span>
+<span class="r">on</span>
+<span class="r">Համաձայն է</span></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>radio — ընտրվածը գտնելը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// &lt;input type="radio" name="gender" value="male"&gt;</span>
+<span class="c">// &lt;input type="radio" name="gender" value="female"&gt;</span>
+
+<span class="k">const</span> selected = document.<span class="f">querySelector</span>(<span class="s">"input[name='gender']:checked"</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(selected?.value ?? <span class="s">"Ոչինչ ընտրված չէ"</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">female</span></pre>
+    </div>
+
+    <p>Ուշադրություն՝ <code>:checked</code> CSS սելեկտորը հիանալի աշխատում է <code>querySelector</code>-ում (Դաս 9)։ Իսկ <code>?.</code>-ը փրկում է, եթե ոչինչ ընտրված չէ (Դաս 7)։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>select</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// &lt;select class="city"&gt;</span>
+<span class="c">//   &lt;option value=""&gt;Ընտրեք քաղաքը&lt;/option&gt;</span>
+<span class="c">//   &lt;option value="yerevan"&gt;Երևան&lt;/option&gt;</span>
+<span class="c">// &lt;/select&gt;</span>
+
+<span class="k">const</span> city = document.<span class="f">querySelector</span>(<span class="s">".city"</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(city.value);
+<span class="f">console</span>.<span class="f">log</span>(city.selectedIndex);
+<span class="f">console</span>.<span class="f">log</span>(city.options[city.selectedIndex].textContent);
+
+city.<span class="f">addEventListener</span>(<span class="s">"change"</span>, () =&gt; {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Ընտրվեց՝"</span>, city.value);
+});</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">yerevan</span>
+<span class="r">1</span>
+<span class="r">Երևան</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Խորհուրդ</span>
+      <p>Առաջին <code>&lt;option&gt;</code>-ի <code>value</code>-ն թող դատարկ լինի։ Այդպես վալիդացիայում պարզ ստուգում է՝ <code>if (!city.value) → «ընտրեք քաղաքը»</code>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>submit և FormData</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հիմնական կմախքը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> form = document.<span class="f">querySelector</span>(<span class="s">".form"</span>);
+
+form.<span class="f">addEventListener</span>(<span class="s">"submit"</span>, (e) =&gt; {
+  e.<span class="f">preventDefault</span>();      <span class="c">// ՄԻՇՏ առաջին տողը</span>
+
+  <span class="k">const</span> name  = form.name.value.<span class="f">trim</span>();
+  <span class="k">const</span> email = form.email.value.<span class="f">trim</span>();
+
+  <span class="f">console</span>.<span class="f">log</span>({ name, email });
+});</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">{"name":"Անի","email":"ani@mail.com"}</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Հարմար հնարք</span>
+      <p>Եթե դաշտն ունի <code>name</code> ատրիբուտ, կարող ես դիմել ուղիղ՝ <code>form.email.value</code>՝ առանց <code>querySelector</code>-ի։ Բրաուզերն ինքն է դա ապահովում։</p>
+    </div>
+
+    <h3>FormData — բոլոր դաշտերը միանգամից</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>FormData</div><button class="copy">Պատճենել</button></div>
+<pre><code>form.<span class="f">addEventListener</span>(<span class="s">"submit"</span>, (e) =&gt; {
+  e.<span class="f">preventDefault</span>();
+
+  <span class="k">const</span> formData = <span class="k">new</span> <span class="f">FormData</span>(form);
+
+  <span class="c">// մեկ դաշտ</span>
+  <span class="f">console</span>.<span class="f">log</span>(formData.<span class="f">get</span>(<span class="s">"email"</span>));
+
+  <span class="c">// բոլորը՝ սովորական օբյեկտի վերածած</span>
+  <span class="k">const</span> data = <span class="f">Object</span>.<span class="f">fromEntries</span>(formData);
+  <span class="f">console</span>.<span class="f">log</span>(data);
+
+  <span class="c">// ցիկլով</span>
+  formData.<span class="f">forEach</span>((value, key) =&gt; {
+    <span class="f">console</span>.<span class="f">log</span>(key, <span class="s">"→"</span>, value);
+  });
+});</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">ani@mail.com</span>
+<span class="r">{"name":"Անի","email":"ani@mail.com","city":"yerevan"}</span>
+<span class="r">name → Անի</span>
+<span class="r">email → ani@mail.com</span>
+<span class="r">city → yerevan</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">FormData-ի սահմանափակումները</span>
+      <p>Հավաքում է <strong>միայն</strong> այն դաշտերը, որոնք ունեն <code>name</code> ատրիբուտ։ Չնշված checkbox-երն ընդհանրապես չեն ընդգրկվում ցուցակում։ Ուստի <code>data.terms</code>-ը կլինի <code>undefined</code>, ոչ թե <code>false</code>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Վալիդացիա</h2>
+    <p>Վալիդացիան պարզապես <code>if</code>-երի շարք է (Դաս 2)։ Կարևորը՝ ճիշտ կազմակերպելը։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>փոքր ֆունկցիաներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> isEmpty = value =&gt; value.<span class="f">trim</span>() === <span class="s">""</span>;
+
+<span class="k">const</span> minLength = (value, min) =&gt; value.<span class="f">trim</span>().length &gt;= min;
+
+<span class="k">const</span> isNumber = value =&gt; !<span class="f">Number</span>.<span class="f">isNaN</span>(<span class="f">Number</span>(value)) &amp;&amp; value.<span class="f">trim</span>() !== <span class="s">""</span>;
+
+<span class="k">const</span> inRange = (value, min, max) =&gt; {
+  <span class="k">const</span> n = <span class="f">Number</span>(value);
+  <span class="k">return</span> n &gt;= min &amp;&amp; n &lt;= max;
+};
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">isEmpty</span>(<span class="s">"   "</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">minLength</span>(<span class="s">"Անի"</span>, <span class="n">2</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">isNumber</span>(<span class="s">"25"</span>), <span class="f">isNumber</span>(<span class="s">"abc"</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">inRange</span>(<span class="s">"17"</span>, <span class="n">14</span>, <span class="n">100</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="g">true</span>
+<span class="g">true</span>
+<span class="g">true</span> <span class="e">false</span>
+<span class="g">true</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ առանձին ֆունկցիաներ</span>
+      <p>Դաս 4-ի սկզբունքը՝ <strong>մեկ ֆունկցիա = մեկ գործ</strong>։ Ամեն մեկը հեշտ է ստուգել, վերաօգտագործել բոլոր ֆորմաներում և կարդալ։ Դրանք պահիր <code>validators.js</code>-ում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Ռեգուլյար արտահայտություններ</h2>
+    <p>Regex-ը «նմուշ» է՝ տեքստի ձևը նկարագրելու համար։ Առաջին հայացքից վախեցնող է, բայց 5 նշան իմանալը բավական է 90% դեպքերի համար։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>test — ամենակարևոր մեթոդը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> pattern = /^[0-9]+$/;      <span class="c">// միայն թվեր</span>
+
+<span class="f">console</span>.<span class="f">log</span>(pattern.<span class="f">test</span>(<span class="s">"12345"</span>));
+<span class="f">console</span>.<span class="f">log</span>(pattern.<span class="f">test</span>(<span class="s">"123a5"</span>));
+<span class="f">console</span>.<span class="f">log</span>(pattern.<span class="f">test</span>(<span class="s">""</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="g">true</span>
+<span class="e">false</span>
+<span class="e">false</span></pre>
+    </div>
+
+    <h3>Հիմնական նշանները</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Նշան</th><th>Նշանակություն</th></tr>
+      <tr><td><code>^</code></td><td>Տողի սկիզբ</td></tr>
+      <tr><td><code>$</code></td><td>Տողի վերջ</td></tr>
+      <tr><td><code>[0-9]</code></td><td>Ցանկացած թվանշան</td></tr>
+      <tr><td><code>[a-z]</code></td><td>Փոքրատառ լատինական</td></tr>
+      <tr><td><code>[ա-ֆ]</code></td><td>Հայերեն փոքրատառ</td></tr>
+      <tr><td><code>+</code></td><td>Մեկ կամ ավելի անգամ</td></tr>
+      <tr><td><code>*</code></td><td>Զրո կամ ավելի անգամ</td></tr>
+      <tr><td><code>?</code></td><td>Զրո կամ մեկ անգամ</td></tr>
+      <tr><td><code>{2,4}</code></td><td>2-ից 4 անգամ</td></tr>
+      <tr><td><code>.</code></td><td>Ցանկացած նիշ</td></tr>
+      <tr><td><code>\d</code></td><td>Թվանշան (<code>[0-9]</code>-ի կարճ ձև)</td></tr>
+      <tr><td><code>\s</code></td><td>Բացատ</td></tr>
+      <tr><td><code>|</code></td><td>Կամ</td></tr>
+      <tr><td><code>\.</code></td><td>Իսկական կետ (էկրանավորված)</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>գործնական նմուշներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Էլ. հասցե — պարզ, բայց բավարար տարբերակ</span>
+<span class="k">const</span> emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+<span class="c">// «մեկ կամ ավելի նիշ (առանց բացատի և @), հետո @,</span>
+<span class="c">//  հետո նույնը, հետո կետ, հետո նույնը»</span>
+
+<span class="f">console</span>.<span class="f">log</span>(emailPattern.<span class="f">test</span>(<span class="s">"ani@mail.com"</span>));
+<span class="f">console</span>.<span class="f">log</span>(emailPattern.<span class="f">test</span>(<span class="s">"ani@mail"</span>));
+<span class="f">console</span>.<span class="f">log</span>(emailPattern.<span class="f">test</span>(<span class="s">"ani mail.com"</span>));
+
+<span class="c">// Հայկական հեռախոս՝ 0XX XXXXXX կամ +374XXXXXXXX</span>
+<span class="k">const</span> phonePattern = /^(\+374|0)\d{8}$/;
+<span class="f">console</span>.<span class="f">log</span>(phonePattern.<span class="f">test</span>(<span class="s">"+37412345678"</span>));
+<span class="f">console</span>.<span class="f">log</span>(phonePattern.<span class="f">test</span>(<span class="s">"012345678"</span>));
+<span class="f">console</span>.<span class="f">log</span>(phonePattern.<span class="f">test</span>(<span class="s">"12345"</span>));
+
+<span class="c">// Միայն տառեր և բացատ</span>
+<span class="k">const</span> namePattern = /^[a-zA-Zա-ֆԱ-Ֆ\s]+$/;
+<span class="f">console</span>.<span class="f">log</span>(namePattern.<span class="f">test</span>(<span class="s">"Անի Սարգսյան"</span>));
+<span class="f">console</span>.<span class="f">log</span>(namePattern.<span class="f">test</span>(<span class="s">"Անի123"</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="g">true</span>
+<span class="e">false</span>
+<span class="e">false</span>
+<span class="g">true</span>
+<span class="g">true</span>
+<span class="e">false</span>
+<span class="g">true</span>
+<span class="e">false</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Կարևոր զգուշացում</span>
+      <p>Կատարյալ email regex չկա։ Իրական աշխարհում բավական է պարզ ստուգումը՝ «կա՞ @, կա՞ կետ դրանից հետո»։ Հասցեի իսկությունը ստուգվում է <strong>հաստատման նամակով</strong>, ոչ regex-ով։ Մի՛ պատճենիր ինտերնետից 200 նիշանոց «կատարյալ» նմուշներ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Սխալները ցույց տալ</h2>
+    <p>Կարևոր չէ միայն <em>գտնել</em> սխալը։ Օգտագործողը պիտի հասկանա՝ <strong>որտեղ</strong> և <strong>ինչ</strong> սխալ արեց։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML կառուցվածք</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"email"</span><span class="p">&gt;</span>Էլ. հասցե<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"email"</span> <span class="f">id</span>=<span class="s">"email"</span> <span class="f">name</span>=<span class="s">"email"</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">small</span> <span class="f">class</span>=<span class="s">"field__error"</span><span class="p">&gt;&lt;/</span><span class="t">small</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+<pre><code><span class="c">/* style.css */</span>
+.field__error { display: none; color: #c62828; }
+
+.field.<span class="k">has-error</span> input        { border-color: #c62828; }
+.field.<span class="k">has-error</span> .field__error { display: block; }</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երկու ֆունկցիա</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">showError</span>(input, message) {
+  <span class="k">const</span> field = input.<span class="f">closest</span>(<span class="s">".field"</span>);       <span class="c">// Դաս 9</span>
+  field.classList.<span class="f">add</span>(<span class="s">"has-error"</span>);           <span class="c">// Դաս 10</span>
+  field.<span class="f">querySelector</span>(<span class="s">".field__error"</span>).textContent = message;
+}
+
+<span class="k">function</span> <span class="f">clearError</span>(input) {
+  <span class="k">const</span> field = input.<span class="f">closest</span>(<span class="s">".field"</span>);
+  field.classList.<span class="f">remove</span>(<span class="s">"has-error"</span>);
+  field.<span class="f">querySelector</span>(<span class="s">".field__error"</span>).textContent = <span class="s">""</span>;
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Նկատեցի՞ր</span>
+      <p>JS-ը չգիտի, թե ինչ գույն է կարմիրը։ Այն միայն ավելացնում է <code>has-error</code> դասը։ Ամբողջ տեսքը՝ CSS-ում (Դաս 10-ի ոսկե կանոնը)։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Դասարանական · Գրանցման ֆորմա</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.html</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">form</span> <span class="f">class</span>=<span class="s">"form"</span> <span class="f">novalidate</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"name"</span><span class="p">&gt;</span>Անուն<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">input</span> <span class="f">id</span>=<span class="s">"name"</span> <span class="f">name</span>=<span class="s">"name"</span> <span class="f">type</span>=<span class="s">"text"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">small</span> <span class="f">class</span>=<span class="s">"field__error"</span><span class="p">&gt;&lt;/</span><span class="t">small</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"email"</span><span class="p">&gt;</span>Էլ. հասցե<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">input</span> <span class="f">id</span>=<span class="s">"email"</span> <span class="f">name</span>=<span class="s">"email"</span> <span class="f">type</span>=<span class="s">"email"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">small</span> <span class="f">class</span>=<span class="s">"field__error"</span><span class="p">&gt;&lt;/</span><span class="t">small</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"age"</span><span class="p">&gt;</span>Տարիք<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">input</span> <span class="f">id</span>=<span class="s">"age"</span> <span class="f">name</span>=<span class="s">"age"</span> <span class="f">type</span>=<span class="s">"number"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">small</span> <span class="f">class</span>=<span class="s">"field__error"</span><span class="p">&gt;&lt;/</span><span class="t">small</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"password"</span><span class="p">&gt;</span>Գաղտնաբառ<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">input</span> <span class="f">id</span>=<span class="s">"password"</span> <span class="f">name</span>=<span class="s">"password"</span> <span class="f">type</span>=<span class="s">"password"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">small</span> <span class="f">class</span>=<span class="s">"field__error"</span><span class="p">&gt;&lt;/</span><span class="t">small</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">label</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"checkbox"</span> <span class="f">name</span>=<span class="s">"terms"</span><span class="p">&gt;</span>
+      Համաձայն եմ պայմաններին
+    <span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">small</span> <span class="f">class</span>=<span class="s">"field__error"</span><span class="p">&gt;&lt;/</span><span class="t">small</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="t">button</span> <span class="f">type</span>=<span class="s">"submit"</span><span class="p">&gt;</span>Գրանցվել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"form__success"</span><span class="p">&gt;&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="t">form</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ novalidate</span>
+      <p><code>novalidate</code>-ը անջատում է բրաուզերի սեփական հաղորդագրությունները։ Դրանք տգեղ են, թարգմանելի չեն և ամեն բրաուզերում տարբեր։ Մենք ամեն ինչ վերահսկում ենք ինքներս։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.js — կանոններ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> form    = document.<span class="f">querySelector</span>(<span class="s">".form"</span>);
+<span class="k">const</span> success = document.<span class="f">querySelector</span>(<span class="s">".form__success"</span>);
+
+<span class="k">const</span> emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+<span class="c">// Ամեն դաշտի համար՝ ֆունկցիա, որ վերադարձնում է սխալի տեքստ կամ ""</span>
+<span class="k">const</span> rules = {
+  name(value) {
+    <span class="k">if</span> (value.<span class="f">trim</span>() === <span class="s">""</span>)      <span class="k">return</span> <span class="s">"Անունը պարտադիր է"</span>;
+    <span class="k">if</span> (value.<span class="f">trim</span>().length &lt; <span class="n">2</span>) <span class="k">return</span> <span class="s">"Առնվազն 2 նիշ"</span>;
+    <span class="k">return</span> <span class="s">""</span>;
+  },
+
+  email(value) {
+    <span class="k">if</span> (value.<span class="f">trim</span>() === <span class="s">""</span>)            <span class="k">return</span> <span class="s">"Էլ. հասցեն պարտադիր է"</span>;
+    <span class="k">if</span> (!emailPattern.<span class="f">test</span>(value.<span class="f">trim</span>())) <span class="k">return</span> <span class="s">"Սխալ ձևաչափ։ Օրինակ՝ ani@mail.com"</span>;
+    <span class="k">return</span> <span class="s">""</span>;
+  },
+
+  age(value) {
+    <span class="k">if</span> (value.<span class="f">trim</span>() === <span class="s">""</span>) <span class="k">return</span> <span class="s">"Տարիքը պարտադիր է"</span>;
+    <span class="k">const</span> n = <span class="f">Number</span>(value);
+    <span class="k">if</span> (<span class="f">Number</span>.<span class="f">isNaN</span>(n))     <span class="k">return</span> <span class="s">"Մուտքագրեք թիվ"</span>;
+    <span class="k">if</span> (n &lt; <span class="n">14</span> || n &gt; <span class="n">100</span>)  <span class="k">return</span> <span class="s">"Տարիքը պիտի լինի 14-ից 100"</span>;
+    <span class="k">return</span> <span class="s">""</span>;
+  },
+
+  password(value) {
+    <span class="k">if</span> (value.length &lt; <span class="n">8</span>)                  <span class="k">return</span> <span class="s">"Առնվազն 8 նիշ"</span>;
+    <span class="k">if</span> (value === value.<span class="f">toLowerCase</span>())     <span class="k">return</span> <span class="s">"Ավելացրեք մեծատառ"</span>;
+    <span class="k">if</span> (!/\d/.<span class="f">test</span>(value))                 <span class="k">return</span> <span class="s">"Ավելացրեք թիվ"</span>;
+    <span class="k">return</span> <span class="s">""</span>;
+  }
+};</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.js — ստուգում և ուղարկում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">showError</span>(input, message) {
+  <span class="k">const</span> field = input.<span class="f">closest</span>(<span class="s">".field"</span>);
+  field.classList.<span class="f">add</span>(<span class="s">"has-error"</span>);
+  field.<span class="f">querySelector</span>(<span class="s">".field__error"</span>).textContent = message;
+}
+
+<span class="k">function</span> <span class="f">clearError</span>(input) {
+  <span class="k">const</span> field = input.<span class="f">closest</span>(<span class="s">".field"</span>);
+  field.classList.<span class="f">remove</span>(<span class="s">"has-error"</span>);
+  field.<span class="f">querySelector</span>(<span class="s">".field__error"</span>).textContent = <span class="s">""</span>;
+}
+
+<span class="c">// Ստուգում է մեկ դաշտ, վերադարձնում true/false</span>
+<span class="k">function</span> <span class="f">validateField</span>(input) {
+  <span class="k">const</span> rule = rules[input.name];
+  <span class="k">if</span> (!rule) <span class="k">return</span> <span class="k">true</span>;
+
+  <span class="k">const</span> error = <span class="f">rule</span>(input.value);
+
+  <span class="k">if</span> (error) {
+    <span class="f">showError</span>(input, error);
+    <span class="k">return</span> <span class="k">false</span>;
+  }
+
+  <span class="f">clearError</span>(input);
+  <span class="k">return</span> <span class="k">true</span>;
+}
+
+<span class="c">// ★ Իրական ժամանակի ստուգում — դելեգացիա (Դաս 12)</span>
+form.<span class="f">addEventListener</span>(<span class="s">"blur"</span>, (e) =&gt; {
+  <span class="k">if</span> (e.target.name <span class="k">in</span> rules) <span class="f">validateField</span>(e.target);
+}, <span class="k">true</span>);   <span class="c">// blur-ը չի փուչիկանում → պետք է capture փուլը</span>
+
+<span class="c">// Սխալը վերանում է անմիջապես, երբ ուղղում են</span>
+form.<span class="f">addEventListener</span>(<span class="s">"input"</span>, (e) =&gt; {
+  <span class="k">const</span> field = e.target.<span class="f">closest</span>(<span class="s">".field"</span>);
+  <span class="k">if</span> (field?.classList.<span class="f">contains</span>(<span class="s">"has-error"</span>)) {
+    <span class="f">validateField</span>(e.target);
+  }
+});
+
+<span class="c">// Ուղարկում</span>
+form.<span class="f">addEventListener</span>(<span class="s">"submit"</span>, (e) =&gt; {
+  e.<span class="f">preventDefault</span>();
+  success.textContent = <span class="s">""</span>;
+
+  <span class="c">// Ստուգում ենք ԲՈԼՈՐ դաշտերը (ոչ some — որ բոլոր սխալները երևան)</span>
+  <span class="k">const</span> inputs = [...form.<span class="f">querySelectorAll</span>(<span class="s">"input[name]"</span>)];
+  <span class="k">const</span> results = inputs.<span class="f">map</span>(<span class="f">validateField</span>);
+  <span class="k">let</span> isValid = results.<span class="f">every</span>(r =&gt; r);      <span class="c">// Դաս 6</span>
+
+  <span class="c">// Checkbox-ը առանձին</span>
+  <span class="k">const</span> terms = form.terms;
+  <span class="k">if</span> (!terms.checked) {
+    <span class="f">showError</span>(terms, <span class="s">"Անհրաժեշտ է համաձայնությունը"</span>);
+    isValid = <span class="k">false</span>;
+  } <span class="k">else</span> {
+    <span class="f">clearError</span>(terms);
+  }
+
+  <span class="k">if</span> (!isValid) {
+    form.<span class="f">querySelector</span>(<span class="s">".has-error input"</span>)?.<span class="f">focus</span>();
+    <span class="k">return</span>;
+  }
+
+  <span class="c">// Ամեն ինչ կարգին է</span>
+  <span class="k">const</span> data = <span class="f">Object</span>.<span class="f">fromEntries</span>(<span class="k">new</span> <span class="f">FormData</span>(form));
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Ուղարկվող տվյալները՝"</span>, data);
+
+  success.textContent = <span class="s">`Շնորհակալություն, </span>${data.name}<span class="s">։ Գրանցումը հաջողվեց։`</span>;
+  form.<span class="f">reset</span>();
+});</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Ուղարկվող տվյալները՝ {"name":"Անի","email":"ani@mail.com","age":"16","password":"MyPass2026","terms":"on"}</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երկու նուրբ մանրուք</span>
+      <p><strong>1.</strong> <code>blur</code>-ը և <code>focus</code>-ը <strong>չեն փուչիկանում</strong>։ Դելեգացիայի համար պիտի օգտագործես երրորդ արգումենտը՝ <code>true</code> (Դաս 12՝ որսման փուլ)։<br>
+      <strong>2.</strong> Օգտագործում ենք <code>map</code> + <code>every</code>, ոչ թե <code>some</code>-ով վաղաժամ ելք։ Այդպես <em>բոլոր</em> սխալ դաշտերը միանգամից նշվում են, ոչ միայն առաջինը։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">UX կանոն</span>
+      <p>Սխալը ցույց տուր <strong>դաշտից դուրս գալիս</strong> (<code>blur</code>), ոչ թե առաջին իսկ նիշից։ Հակառակ դեպքում մարդը դեռ «a» է գրել, արդեն կարմիր է ամեն ինչ։ Բայց երբ սխալն արդեն ցուցադրված է — ուղղիր <em>անմիջապես</em> (<code>input</code>)։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Խաղահրապարակ</h2>
+
+    <div class="pg">
+      <textarea id="pgCode" spellcheck="false">const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phonePattern = /^(\+374|0)\d{8}$/;
+
+const rules = {
+  name(v) {
+    if (v.trim() === "") return "Անունը պարտադիր է";
+    if (v.trim().length < 2) return "Առնվազն 2 նիշ";
+    return "";
+  },
+  email(v) {
+    if (v.trim() === "") return "Էլ. հասցեն պարտադիր է";
+    if (!emailPattern.test(v.trim())) return "Սխալ ձևաչափ";
+    return "";
+  },
+  password(v) {
+    if (v.length < 8) return "Առնվազն 8 նիշ";
+    if (v === v.toLowerCase()) return "Ավելացրեք մեծատառ";
+    if (!/\d/.test(v)) return "Ավելացրեք թիվ";
+    return "";
+  }
+};
+
+// Փորձարկում
+const tests = [
+  { name: "", email: "ani@mail.com", password: "MyPass2026" },
+  { name: "Ա", email: "ani@mail", password: "password" },
+  { name: "Անի", email: "ani@mail.com", password: "MyPass2026" }
+];
+
+tests.forEach((data, i) => {
+  console.log(`--- Փորձ ${i + 1} ---`);
+  let ok = true;
+  Object.entries(data).forEach(([field, value]) => {
+    const error = rules[field](value);
+    if (error) {
+      console.log(`${field}: ${error}`);
+      ok = false;
+    }
+  });
+  if (ok) console.log("Ամեն ինչ ճիշտ է");
+});
+
+console.log("--- Հեռախոս ---");
+console.log(phonePattern.test("+37412345678"));
+console.log(phonePattern.test("12345"));</textarea>
+      <div class="pg__actions">
+        <button class="run" id="runBtn">Կատարել</button>
+        <button class="clr" id="clrBtn">Մաքրել</button>
+      </div>
+<pre class="out" id="pgOut"><span class="m">Console</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ֆորմա մեկ դաշտով և կոճակով։ Սեղմելիս տպիր դաշտի արժեքը։ Համոզվիր, որ էջը չի վերաբեռնվում։</li>
+      <li>Դաշտ և պարբերություն։ <code>input</code>-ով ցույց տուր մուտքագրվածը իրական ժամանակում և նիշերի քանակը։</li>
+      <li>Checkbox՝ «Ցույց տալ գաղտնաբառը»։ Նշելիս <code>type</code>-ը դառնա <code>text</code>, հանելիս՝ նորից <code>password</code>։</li>
+      <li>Radio կոճակներ՝ վճարման եղանակի ընտրություն։ Ընտրվածը ցույց տուր էկրանին։</li>
+      <li>Select երկրների ցուցակով։ Ընտրվածի փոփոխման ժամանակ ցույց տուր համապատասխան հեռախոսի կոդը։</li>
+      <li>Գրիր <code>validators.js</code> ֆայլ՝ <code>isEmpty</code>, <code>minLength</code>, <code>isEmail</code>, <code>isPhone</code>, <code>isNumber</code>, <code>inRange</code> ֆունկցիաներով։ Ամեն մեկը ստուգիր 3 արժեքով։</li>
+      <li>Կապի ֆորմա՝ անուն, էլ. հասցե, հաղորդագրություն (<code>textarea</code>, առնվազն 10 նիշ)։ Սխալները ցույց տուր դաշտի տակ։</li>
+      <li>Ամբողջական գրանցման ֆորմա դասարանական օրինակի հիման վրա։ Ավելացրու «Կրկնել գաղտնաբառը» դաշտ և ստուգիր համընկնումը։</li>
+      <li>Ավելացրու գաղտնաբառի ուժի ցուցիչ՝ թույլ / միջին / ուժեղ, գունավոր գծով (<code>classList</code>-ով)։</li>
+      <li>Ֆորմա, որը հաջող ուղարկումից հետո ավելացնում է նոր տող աղյուսակում կամ քարտ ցուցակում (միացրու Դաս 10-ի render-ը և Դաս 12-ի դելեգացիան՝ ջնջելու համար)։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>input.value</code></td><td>Դաշտի արժեքը (միշտ տող)</td></tr>
+      <tr><td><code>input.value.trim()</code></td><td>Առանց եզրերի բացատների ✅</td></tr>
+      <tr><td><code>checkbox.checked</code></td><td><code>true</code> / <code>false</code></td></tr>
+      <tr><td><code>input[name='x']:checked</code></td><td>Ընտրված radio-ն</td></tr>
+      <tr><td><code>select.value</code></td><td>Ընտրված option-ի value-ն</td></tr>
+      <tr><td><code>form.email.value</code></td><td>Դիմում ըստ <code>name</code>-ի</td></tr>
+      <tr><td><code>new FormData(form)</code></td><td>Բոլոր դաշտերը</td></tr>
+      <tr><td><code>Object.fromEntries(fd)</code></td><td>FormData → օբյեկտ</td></tr>
+      <tr><td><code>form.reset()</code></td><td>Մաքրում է ֆորման</td></tr>
+      <tr><td><code>input.focus()</code></td><td>Կուրսորը դաշտում</td></tr>
+      <tr><td><code>e.preventDefault()</code></td><td>Ամեն <code>submit</code>-ի առաջին տողը</td></tr>
+      <tr><td><code>/նմուշ/.test(str)</code></td><td><code>true</code> / <code>false</code></td></tr>
+      <tr><td><code>novalidate</code></td><td>Անջատում է բրաուզերի հաղորդագրությունները</td></tr>
+    </table>
+    </div>
+
+    <h3>Իրադարձություններ ֆորմայում</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Իրադարձություն</th><th>Ե՞րբ</th><th>Փուչիկանո՞ւմ է</th></tr>
+      <tr><td><code>input</code></td><td>Ամեն նիշից հետո</td><td>այո</td></tr>
+      <tr><td><code>change</code></td><td>Փոփոխությունից + ֆոկուսի կորուստ</td><td>այո</td></tr>
+      <tr><td><code>submit</code></td><td>Ֆորմայի ուղարկում</td><td>այո</td></tr>
+      <tr><td><code>focus</code> / <code>blur</code></td><td>Ֆոկուս ստանալ / կորցնել</td><td><strong>ոչ</strong> ⚠️</td></tr>
+    </table>
+    </div>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Հիշո՞ւմ եմ, որ <code>value</code>-ն միշտ տող է</li>
+      <li>Գիտե՞մ, ինչու է <code>preventDefault</code>-ը պարտադիր</li>
+      <li>Կարո՞ղ եմ գտնել ընտրված radio-ն</li>
+      <li>Հասկանո՞ւմ եմ, ինչու է <code>blur</code>-ի դելեգացիային պետք <code>true</code></li>
+      <li>Կարո՞ղ եմ գրել պարզ email regex առանց պատճենելու</li>
+    </ul>
+
+    <div class="warn note">
+      <span class="tag">Շատ կարևոր</span>
+      <p>Ֆրոնտենդի վալիդացիան <strong>միայն հարմարավետության համար է</strong>։ Այն հեշտ է շրջանցել՝ բացելով DevTools։ Իրական պաշտպանությունը միշտ սերվերի կողմն է։ Դա կսովորենք PHP-ի բլոկում։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Բրաուզերի API-ներ՝ <code>localStorage</code>, <code>setTimeout</code>, <code>setInterval</code>, սքրոլ։ Վերջապես տվյալները կպահպանվեն էջը թարմացնելուց հետո, և Դաս 8-ի հետհաշվարկը կսկսի կենդանի աշխատել։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 13 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

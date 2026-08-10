@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 09 — DOM · Էլեմենտների ընտրություն</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 09 · 2 ժամ · Բլոկ 2-ի սկիզբ</p>
+  <h1>DOM · Էլեմենտների ընտրություն</h1>
+  <p class="lede">Ութ դաս գրում էինք Console-ի համար։ Այսօր վերջապես դուրս ենք գալիս էջ։ Սովորում ենք, թե ինչպես JS-ը «տեսնում է» քո HTML-ը և ինչպես գտնել ցանկացած էլեմենտ դրա մեջ։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ HTML, CSS սելեկտորներ, Դաս 01–08</span>
+    <span>Բլոկ 2 · DOM և իրադարձություններ</span>
+    <span>Տնային՝ 10 առաջադրանք</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ի՞նչ է DOM-ը և ինչո՞ւ է այն ծառ</li>
+      <li><code>document</code> օբյեկտը</li>
+      <li><code>querySelector</code> և <code>querySelectorAll</code></li>
+      <li>Հին մեթոդները՝ <code>getElementById</code> և ընկերները</li>
+      <li><code>NodeList</code> — ինչո՞վ է տարբերվում զանգվածից</li>
+      <li>Ի՞նչ անել, երբ էլեմենտը չի գտնվում (<code>null</code>)</li>
+      <li>Ինչո՞ւ է <code>defer</code>-ը կրիտիկական</li>
+      <li>Տեղաշարժվել ծառով՝ ծնող, երեխաներ, հարևաններ</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ի՞նչ է DOM-ը</h2>
+    <p><strong>DOM</strong> = <em>Document Object Model</em>։ Երբ բրաուզերը կարդում է քո HTML ֆայլը, նա տեքստից կառուցում է <strong>օբյեկտների ծառ</strong> հիշողության մեջ։ JS-ը աշխատում է հենց այդ ծառի հետ, ոչ թե ֆայլի։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>քո HTML-ը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">main</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">section</span> <span class="f">class</span>=<span class="s">"hero"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="t">h1</span><span class="p">&gt;</span>Վերնագիր<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Տեքստ<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">main</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>DOM ծառը</div><button class="copy">Պատճենել</button></div>
+<pre><code>document
+└── html
+    ├── head
+    └── body
+        └── main
+            └── section.hero
+                └── div.row
+                    └── div.col
+                        └── div.wrapper
+                            ├── h1
+                            └── p</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ընտանեկան բառապաշար</span>
+      <p><code>div.col</code>-ը <strong>ծնողն</strong> է <code>div.wrapper</code>-ի։<br>
+      <code>h1</code>-ը և <code>p</code>-ն <strong>երեխաներ</strong> են և իրար <strong>հարևաններ</strong> (sibling)։<br>
+      <code>main</code>-ը <code>h1</code>-ի <strong>նախնին</strong> է (ancestor)։</p>
+    </div>
+
+    <p>Ամեն հանգույց ծառում սովորական JS <strong>օբյեկտ</strong> է՝ հատկություններով և մեթոդներով։ Հենց դրա համար էր պետք Դաս 7-ը։</p>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>document — մուտքի դուռը</h2>
+    <p><code>document</code>-ը գլոբալ օբյեկտ է, որը բրաուզերն ինքն է ստեղծում։ Դրանից է սկսվում ամեն ինչ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>փորձիր Console-ում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">console</span>.<span class="f">log</span>(document.title);
+<span class="f">console</span>.<span class="f">log</span>(document.body);
+<span class="f">console</span>.<span class="f">log</span>(document.URL);
+<span class="f">console</span>.<span class="f">log</span>(<span class="k">typeof</span> document);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Դաս 09 — DOM · Էլեմենտների ընտրություն</span>
+<span class="m">&lt;body&gt;...&lt;/body&gt;</span>
+<span class="r">https://...</span>
+<span class="g">object</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>querySelector — մեկ էլեմենտ</h2>
+    <p>Ամենակարևոր մեթոդն է։ Ներսում գրում ես <strong>ճիշտ նույն սելեկտորը</strong>, ինչ CSS-ում։ Ոչ մի նոր բան սովորելու կարիք չկա։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>CSS-ի սելեկտորները՝ JS-ում</div><button class="copy">Պատճենել</button></div>
+<pre><code>document.<span class="f">querySelector</span>(<span class="s">"h1"</span>);              <span class="c">// թեգով</span>
+document.<span class="f">querySelector</span>(<span class="s">".wrapper"</span>);        <span class="c">// դասով</span>
+document.<span class="f">querySelector</span>(<span class="s">"#header"</span>);         <span class="c">// id-ով</span>
+document.<span class="f">querySelector</span>(<span class="s">".row .col"</span>);       <span class="c">// ներդրված</span>
+document.<span class="f">querySelector</span>(<span class="s">"section.hero .wrapper"</span>);
+document.<span class="f">querySelector</span>(<span class="s">"input[type='email']"</span>);
+document.<span class="f">querySelector</span>(<span class="s">".col:first-child"</span>);</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Կարևոր</span>
+      <p><code>querySelector</code>-ը վերադարձնում է <strong>միայն առաջին</strong> համապատասխանող էլեմենտը, նույնիսկ եթե էջում 100 հատ կա։ Իսկ եթե ոչինչ չի գտնում — վերադարձնում է <code>null</code>։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ի՞նչ է վերադարձնում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> title = document.<span class="f">querySelector</span>(<span class="s">"h1"</span>);
+<span class="k">const</span> ghost = document.<span class="f">querySelector</span>(<span class="s">".chka-tsakan-dasy"</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(title);
+<span class="f">console</span>.<span class="f">log</span>(title.textContent);
+<span class="f">console</span>.<span class="f">log</span>(ghost);
+<span class="f">console</span>.<span class="f">log</span>(ghost.textContent);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="m">&lt;h1&gt;DOM · Էլեմենտների ընտրություն&lt;/h1&gt;</span>
+<span class="r">DOM · Էլեմենտների ընտրություն</span>
+<span class="m">null</span>
+<span class="e">Uncaught TypeError: Cannot read properties of null (reading 'textContent')</span></pre>
+    </div>
+
+    <p>Այս սխալը կտեսնես <strong>հարյուր անգամ</strong>։ Այն նշանակում է․ «էլեմենտը չգտա, իսկ դու <code>null</code>-ից բան ես ուզում կարդալ»։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ապահով ձև</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> el = document.<span class="f">querySelector</span>(<span class="s">".maybe-exists"</span>);
+
+<span class="c">// տարբերակ 1 — if</span>
+<span class="k">if</span> (el) {
+  <span class="f">console</span>.<span class="f">log</span>(el.textContent);
+} <span class="k">else</span> {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Էլեմենտը չգտնվեց"</span>);
+}
+
+<span class="c">// տարբերակ 2 — ?. (Դաս 7)</span>
+<span class="f">console</span>.<span class="f">log</span>(el?.textContent ?? <span class="s">"Էլեմենտը չգտնվեց"</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Էլեմենտը չգտնվեց</span>
+<span class="r">Էլեմենտը չգտնվեց</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>querySelectorAll — բոլորը</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>querySelectorAll</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> cols = document.<span class="f">querySelectorAll</span>(<span class="s">".col"</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(cols);
+<span class="f">console</span>.<span class="f">log</span>(cols.length);
+<span class="f">console</span>.<span class="f">log</span>(cols[<span class="n">0</span>]);
+<span class="f">console</span>.<span class="f">log</span>(cols[<span class="n">0</span>].textContent);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="m">NodeList(3) [div.col, div.col, div.col]</span>
+<span class="r">3</span>
+<span class="m">&lt;div class="col"&gt;...&lt;/div&gt;</span>
+<span class="r">Առաջին սյան տեքստը</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">NodeList ≠ Array</span>
+      <p><code>querySelectorAll</code>-ը վերադարձնում է <strong>NodeList</strong> — զանգվածի <em>նման</em> բան։ Ունի <code>length</code>, ինդեքսներ և <code>forEach</code>։ Բայց <code>map</code>, <code>filter</code>, <code>reduce</code> <strong>չունի</strong>։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ինչ աշխատում է և ինչ՝ ոչ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> cols = document.<span class="f">querySelectorAll</span>(<span class="s">".col"</span>);
+
+cols.<span class="f">forEach</span>(col =&gt; <span class="f">console</span>.<span class="f">log</span>(col.textContent));  <span class="c">// ✅ աշխատում է</span>
+
+cols.<span class="f">map</span>(col =&gt; col.textContent);                       <span class="c">// ❌</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Առաջին</span>
+<span class="r">Երկրորդ</span>
+<span class="r">Երրորդ</span>
+<span class="e">Uncaught TypeError: cols.map is not a function</span></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>լուծումը՝ վերածել զանգվածի</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> cols = [...document.<span class="f">querySelectorAll</span>(<span class="s">".col"</span>)];   <span class="c">// spread (Դաս 5)</span>
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Array</span>.<span class="f">isArray</span>(cols));
+<span class="f">console</span>.<span class="f">log</span>(cols.<span class="f">map</span>(c =&gt; c.textContent));
+<span class="f">console</span>.<span class="f">log</span>(cols.<span class="f">filter</span>(c =&gt; c.textContent.length &gt; <span class="n">10</span>).length);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="g">true</span>
+<span class="r">["Առաջին", "Երկրորդ", "Երրորդ"]</span>
+<span class="r">0</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Սովորույթ</span>
+      <p>Եթե պատրաստվում ես <code>map</code> կամ <code>filter</code> օգտագործել — միանգամից գրիր <code>[...document.querySelectorAll(...)]</code>։ Այդ երեք կետը շատ ջղայնություն կխնայի քեզ։</p>
+    </div>
+
+    <h3>Չգտնվելու դեպքում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>դատարկ NodeList, ոչ null</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> nothing = document.<span class="f">querySelectorAll</span>(<span class="s">".chka"</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(nothing);
+<span class="f">console</span>.<span class="f">log</span>(nothing.length);
+
+<span class="k">if</span> (nothing.length === <span class="n">0</span>) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Ոչինչ չգտնվեց"</span>);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="m">NodeList(0) []</span>
+<span class="r">0</span>
+<span class="r">Ոչինչ չգտնվեց</span></pre>
+    </div>
+    <p>Ուշադրություն՝ <code>querySelector</code>-ը տալիս է <code>null</code>, իսկ <code>querySelectorAll</code>-ը՝ <strong>դատարկ ցուցակ</strong>։ Ուստի երկրորդի դեպքում ստուգում ենք <code>length</code>-ը։</p>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Հին մեթոդները</h2>
+    <p>Կհանդիպես հին կոդում և ձեռնարկներում։ Պիտի ճանաչես դրանք, բայց օգտագործիր <code>querySelector</code>-ը։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>getElement... ընտանիքը</div><button class="copy">Պատճենել</button></div>
+<pre><code>document.<span class="f">getElementById</span>(<span class="s">"header"</span>);          <span class="c">// առանց # նշանի</span>
+document.<span class="f">getElementsByClassName</span>(<span class="s">"col"</span>);     <span class="c">// առանց կետի</span>
+document.<span class="f">getElementsByTagName</span>(<span class="s">"p"</span>);
+
+<span class="c">// նույնը ժամանակակից ձևով</span>
+document.<span class="f">querySelector</span>(<span class="s">"#header"</span>);
+document.<span class="f">querySelectorAll</span>(<span class="s">".col"</span>);
+document.<span class="f">querySelectorAll</span>(<span class="s">"p"</span>);</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th></th><th><code>querySelector</code></th><th><code>getElementById</code></th></tr>
+      <tr><td>Սելեկտոր</td><td>CSS-ի ցանկացած</td><td>միայն id</td></tr>
+      <tr><td>Նշան</td><td><code>"#header"</code></td><td><code>"header"</code></td></tr>
+      <tr><td>Ճկունություն</td><td>ցանկացած բարդություն</td><td>շատ սահմանափակ</td></tr>
+      <tr><td>Արագություն</td><td>քիչ ավելի դանդաղ</td><td>ամենաարագը</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Մեր ընտրությունը</span>
+      <p>Օգտագործում ենք <strong>միայն</strong> <code>querySelector</code> և <code>querySelectorAll</code>։ Արագության տարբերությունը իրական նախագծերում աննկատ է, իսկ մեկ մեթոդ հիշելը շատ ավելի հեշտ է, քան չորսը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Ինչո՞ւ է defer-ը կրիտիկական</h2>
+    <p>Հիշիր Դաս 1-ը։ Հիմա կհասկանաս, թե ինչու։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>առանց defer — չի աշխատում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">head</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">script</span> <span class="f">src</span>=<span class="s">"js/main.js"</span><span class="p">&gt;&lt;/</span><span class="t">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">body</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">h1</span><span class="p">&gt;</span>Վերնագիր<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">body</span><span class="p">&gt;</span>
+
+<span class="c">// main.js</span>
+<span class="k">const</span> title = document.<span class="f">querySelector</span>(<span class="s">"h1"</span>);
+<span class="f">console</span>.<span class="f">log</span>(title);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="m">null</span>   <span class="m">← h1-ը դեռ գոյություն չունի</span></pre>
+    </div>
+
+    <p>Բրաուզերը կարդում է վերևից ներքև։ Երբ հասնում է <code>&lt;script&gt;</code>-ին, <code>&lt;h1&gt;</code>-ը դեռ <strong>կարդացված չէ</strong>, ուստի DOM ծառում այն չկա։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>defer-ով — աշխատում է ✅</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">head</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">script</span> <span class="f">src</span>=<span class="s">"js/main.js"</span> <span class="k">defer</span><span class="p">&gt;&lt;/</span><span class="t">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">head</span><span class="p">&gt;</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="m">&lt;h1&gt;Վերնագիր&lt;/h1&gt;</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ոսկե կանոն</span>
+      <p>Երբ <code>querySelector</code>-ը <code>null</code> է վերադարձնում, ստուգիր <strong>երեք բան</strong> այս հերթականությամբ․<br>
+      1. <code>defer</code> գրե՞լ ես<br>
+      2. Սելեկտորը ճի՞շտ է (կետը, վանդակագիծը մոռացե՞լ ես)<br>
+      3. Այդ էլեմենտն ընդհանրապես կա՞ HTML-ում</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Տեղաշարժվել ծառով</h2>
+    <p>Երբ արդեն գտել ես մեկ էլեմենտ, դրանից կարող ես հասնել հարևաններին, ծնողին կամ երեխաներին։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>օրինակի HTML</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="t">h3</span><span class="p">&gt;</span>Վերնագիր<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Տեքստ<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="t">button</span><span class="p">&gt;</span>Կոճակ<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <h3>Դեպի վեր՝ ծնող</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>parentElement · closest</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> btn = document.<span class="f">querySelector</span>(<span class="s">"button"</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(btn.parentElement.className);
+<span class="f">console</span>.<span class="f">log</span>(btn.parentElement.parentElement.className);
+
+<span class="c">// closest — բարձրանում է վերև, մինչև գտնի համապատասխանողը</span>
+<span class="f">console</span>.<span class="f">log</span>(btn.<span class="f">closest</span>(<span class="s">".row"</span>).className);
+<span class="f">console</span>.<span class="f">log</span>(btn.<span class="f">closest</span>(<span class="s">"section"</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">wrapper</span>
+<span class="r">col</span>
+<span class="r">row</span>
+<span class="m">null</span>   <span class="m">← այս օրինակում section չկա</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">closest — շատ կարևոր</span>
+      <p><code>parentElement.parentElement.parentElement</code> գրելը փխրուն է․ եթե վաղը HTML-ում մեկ <code>div</code> ավելացնես, ամեն ինչ կփչանա։ <code>closest(".row")</code>-ը միշտ կգտնի ճիշտը՝ անկախ խորությունից։ Դաս 12-ում այն կդառնա հիմնական գործիք։</p>
+    </div>
+
+    <h3>Դեպի ներքև՝ երեխաներ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>children · firstElementChild</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> wrapper = document.<span class="f">querySelector</span>(<span class="s">".wrapper"</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(wrapper.children.length);
+<span class="f">console</span>.<span class="f">log</span>(wrapper.children[<span class="n">0</span>].tagName);
+<span class="f">console</span>.<span class="f">log</span>(wrapper.firstElementChild.tagName);
+<span class="f">console</span>.<span class="f">log</span>(wrapper.lastElementChild.tagName);
+
+<span class="c">// querySelector-ը աշխատում է նաև էլեմենտի ներսում</span>
+<span class="f">console</span>.<span class="f">log</span>(wrapper.<span class="f">querySelector</span>(<span class="s">"p"</span>).textContent);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">3</span>
+<span class="r">H3</span>
+<span class="r">H3</span>
+<span class="r">BUTTON</span>
+<span class="r">Տեքստ</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Շատ օգտակար</span>
+      <p><code>querySelector</code>-ը կարելի է կանչել <strong>ցանկացած էլեմենտի վրա</strong>, ոչ միայն <code>document</code>-ի։ Այդ դեպքում որոնումը կատարվում է միայն այդ էլեմենտի <em>ներսում</em>։ Սա շատ կպետք գա։</p>
+    </div>
+
+    <h3>Կողքի՝ հարևաններ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>next / previousElementSibling</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> p = document.<span class="f">querySelector</span>(<span class="s">"p"</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(p.previousElementSibling.tagName);
+<span class="f">console</span>.<span class="f">log</span>(p.nextElementSibling.tagName);
+<span class="f">console</span>.<span class="f">log</span>(p.nextElementSibling.nextElementSibling);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">H3</span>
+<span class="r">BUTTON</span>
+<span class="m">null</span>   <span class="m">← button-ից հետո ուրիշ բան չկա</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Element բառը կարևոր է</span>
+      <p>Կան նաև <code>parentNode</code>, <code>childNodes</code>, <code>nextSibling</code>։ Դրանք հաշվում են նաև <strong>բացատներն ու տողադարձերը</strong> որպես հանգույցներ, ինչը շփոթեցնող է։ Միշտ օգտագործիր <code>...Element...</code> տարբերակները։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Դասարանական աշխատանք</h2>
+    <p>Վերցրու քո ցանկացած HTML/CSS նախագիծ նախորդ բլոկից և բացիր Console-ը։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.html</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">main</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">section</span> <span class="f">class</span>=<span class="s">"products"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+
+      <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"title"</span><span class="p">&gt;</span>Նոութբուք<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"price"</span><span class="p">&gt;</span>450000<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"btn"</span><span class="p">&gt;</span>Գնել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+      <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"title"</span><span class="p">&gt;</span>Մկնիկ<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"price"</span><span class="p">&gt;</span>8000<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"btn"</span><span class="p">&gt;</span>Գնել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+      <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"title"</span><span class="p">&gt;</span>Մոնիտոր<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"price"</span><span class="p">&gt;</span>120000<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"btn"</span><span class="p">&gt;</span>Գնել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">main</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// 1. Քանի՞ ապրանք կա</span>
+<span class="k">const</span> cards = document.<span class="f">querySelectorAll</span>(<span class="s">".col"</span>);
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">`Ապրանքների քանակը՝ </span>${cards.length}<span class="s">`</span>);
+
+<span class="c">// 2. Բոլոր անունները</span>
+<span class="k">const</span> titles = [...document.<span class="f">querySelectorAll</span>(<span class="s">".title"</span>)];
+<span class="f">console</span>.<span class="f">log</span>(titles.<span class="f">map</span>(t =&gt; t.textContent));
+
+<span class="c">// 3. Բոլոր գները՝ թվերով (textContent-ը միշտ տող է)</span>
+<span class="k">const</span> prices = [...document.<span class="f">querySelectorAll</span>(<span class="s">".price"</span>)]
+  .<span class="f">map</span>(p =&gt; <span class="f">Number</span>(p.textContent));
+<span class="f">console</span>.<span class="f">log</span>(prices);
+
+<span class="c">// 4. Ընդհանուր և միջին արժեքը (Դաս 6)</span>
+<span class="k">const</span> total = prices.<span class="f">reduce</span>((a, b) =&gt; a + b, <span class="n">0</span>);
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">`Ընդհանուր՝ </span>${total.<span class="f">toLocaleString</span>(<span class="s">"hy-AM"</span>)}<span class="s"> ֏`</span>);
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">`Ամենաթանկը՝ </span>${<span class="f">Math</span>.<span class="f">max</span>(...prices)}<span class="s"> ֏`</span>);
+
+<span class="c">// 5. Ամեն քարտի ներսում որոնում</span>
+cards.<span class="f">forEach</span>((card, i) =&gt; {
+  <span class="k">const</span> name  = card.<span class="f">querySelector</span>(<span class="s">".title"</span>).textContent;
+  <span class="k">const</span> price = card.<span class="f">querySelector</span>(<span class="s">".price"</span>).textContent;
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">`</span>${i + <span class="n">1</span>}<span class="s">. </span>${name}<span class="s"> — </span>${price}<span class="s"> ֏`</span>);
+});
+
+<span class="c">// 6. Կոճակից բարձրանալ դեպի իր քարտը</span>
+<span class="k">const</span> firstBtn = document.<span class="f">querySelector</span>(<span class="s">".btn"</span>);
+<span class="k">const</span> itsCard = firstBtn.<span class="f">closest</span>(<span class="s">".col"</span>);
+<span class="f">console</span>.<span class="f">log</span>(itsCard.<span class="f">querySelector</span>(<span class="s">".title"</span>).textContent);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Ապրանքների քանակը՝ 3</span>
+<span class="r">["Նոութբուք", "Մկնիկ", "Մոնիտոր"]</span>
+<span class="r">[450000, 8000, 120000]</span>
+<span class="r">Ընդհանուր՝ 578 000 ֏</span>
+<span class="r">Ամենաթանկը՝ 450000 ֏</span>
+<span class="r">1. Նոութբուք — 450000 ֏</span>
+<span class="r">2. Մկնիկ — 8000 ֏</span>
+<span class="r">3. Մոնիտոր — 120000 ֏</span>
+<span class="r">Նոութբուք</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ուշադրություն 6-րդ կետին</span>
+      <p>Կոճակից <code>closest(".col")</code>-ով բարձրանալ, հետո <code>querySelector</code>-ով ներս իջնել — սա <strong>ամենակարևոր օրինաչափությունն է</strong> DOM-ի հետ աշխատելիս։ Դաս 11–12-ում այս երկու տողը կդառնա քո ամենահաճախ գրածը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Խաղահրապարակ</h2>
+    <p>Այս անգամ խաղահրապարակը աշխատում է <strong>իսկական DOM-ի</strong> հետ՝ հենց այս էջի։ Փորձիր տարբեր սելեկտորներ և տես, թե ինչ է գտնում։</p>
+
+    <div class="pg">
+      <textarea id="pgCode" spellcheck="false">// Այս էջն ինքը DOM է — փորձարկիր դրա վրա
+
+console.log("Վերնագիրը՝", document.querySelector("h1").textContent);
+
+const sections = document.querySelectorAll("section");
+console.log("Բաժինների քանակը՝", sections.length);
+
+const headings = [...document.querySelectorAll("h2")];
+console.log(headings.map(h => h.textContent.slice(0, 20)));
+
+// Առաջին կոդի բլոկը
+const block = document.querySelector(".block");
+console.log("Երեխաների քանակը՝", block.children.length);
+console.log("Առաջին երեխան՝", block.firstElementChild.className);
+
+// closest
+const btn = document.querySelector(".copy");
+console.log("Կոճակի բլոկը՝", btn.closest(".block") !== null);
+
+// Չգոյություն ունեցող էլեմենտ
+const ghost = document.querySelector(".chka");
+console.log(ghost);
+console.log(ghost?.textContent ?? "Չգտնվեց");</textarea>
+      <div class="pg__actions">
+        <button class="run" id="runBtn">Կատարել</button>
+        <button class="clr" id="clrBtn">Մաքրել</button>
+      </div>
+<pre class="out" id="pgOut"><span class="m">Console</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Տնային աշխատանք</h2>
+    <p>Օգտագործիր քո սեփական HTML/CSS նախագիծը նախորդ բլոկից։ Ամեն պատասխան տպիր <code>console.log</code>-ով։</p>
+    <ol class="hw">
+      <li>Ընտրիր էջի <code>h1</code>-ը և տպիր դրա տեքստը։</li>
+      <li>Հաշվիր՝ քանի <code>section</code>, քանի <code>.row</code> և քանի <code>.col</code> կա էջում։</li>
+      <li>Տպիր բոլոր <code>h2</code>-ների տեքստերը զանգվածով (օգտագործիր <code>[...]</code> և <code>map</code>)։</li>
+      <li>Ընտրիր վերջին <code>.col</code>-ը և տպիր դրա ներսի ամբողջ տեքստը։</li>
+      <li>Ընտրիր առաջին <code>.wrapper</code>-ը։ Տպիր դրա երեխաների քանակը և ամեն երեխայի <code>tagName</code>-ը։</li>
+      <li>Ընտրիր ցանկացած ներքին էլեմենտ և <code>closest</code>-ով գտիր դրա <code>section</code>-ը։ Տպիր <code>section</code>-ի դասը։</li>
+      <li>Ցիկլով անցիր բոլոր <code>.col</code>-երով և ամեն մեկի ներսում գտիր վերնագիրը՝ <code>col.querySelector(...)</code>։</li>
+      <li>Փորձիր ընտրել գոյություն չունեցող դաս։ Տպիր արդյունքը և ապահով կերպով մշակիր <code>?.</code>-ով։</li>
+      <li>Դիտավորյալ հանիր <code>defer</code>-ը <code>&lt;script&gt;</code>-ից և տես, թե ինչ է լինում։ Գրիր մեկնաբանության մեջ՝ ինչ սխալ ստացար։ Հետո վերադարձրու։</li>
+      <li>Եթե էջում գներ կան՝ հավաքիր դրանք զանգվածում, վերածիր թվերի և տպիր ընդհանուրը, միջինը և ամենաթանկը։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է վերադարձնում</th></tr>
+      <tr><td><code>document.querySelector(".x")</code></td><td>Առաջին էլեմենտը կամ <code>null</code></td></tr>
+      <tr><td><code>document.querySelectorAll(".x")</code></td><td><code>NodeList</code> (կարող է դատարկ լինել)</td></tr>
+      <tr><td><code>[...document.querySelectorAll(".x")]</code></td><td>Իսկական զանգված — <code>map</code>/<code>filter</code> հասանելի են</td></tr>
+      <tr><td><code>el.querySelector(".y")</code></td><td>Որոնում միայն <code>el</code>-ի ներսում</td></tr>
+      <tr><td><code>el.parentElement</code></td><td>Ուղիղ ծնողը</td></tr>
+      <tr><td><code>el.closest(".x")</code></td><td>Մոտակա նախնին, որ համապատասխանում է</td></tr>
+      <tr><td><code>el.children</code></td><td>Ուղիղ երեխաները</td></tr>
+      <tr><td><code>el.firstElementChild</code></td><td>Առաջին երեխան</td></tr>
+      <tr><td><code>el.lastElementChild</code></td><td>Վերջին երեխան</td></tr>
+      <tr><td><code>el.nextElementSibling</code></td><td>Հաջորդ հարևանը</td></tr>
+      <tr><td><code>el.previousElementSibling</code></td><td>Նախորդ հարևանը</td></tr>
+      <tr><td><code>el.textContent</code></td><td>Ներսի տեքստը (միշտ տող)</td></tr>
+      <tr><td><code>el.tagName</code></td><td>Թեգի անունը մեծատառերով</td></tr>
+      <tr><td><code>el.className</code></td><td>Դասերը մեկ տողով</td></tr>
+    </table>
+    </div>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել՝ ինչ է DOM ծառը</li>
+      <li>Գիտե՞մ տարբերությունը <code>querySelector</code>-ի և <code>querySelectorAll</code>-ի արդյունքների միջև</li>
+      <li>Հասկանո՞ւմ եմ, ինչու <code>NodeList</code>-ի վրա <code>map</code> չկա</li>
+      <li>Կարո՞ղ եմ բացատրել, ինչու է <code>defer</code>-ը պարտադիր</li>
+      <li>Գիտե՞մ, ե՞րբ օգտագործել <code>closest</code>-ը <code>parentElement</code>-ի փոխարեն</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>DOM-ի փոփոխում։ Այսօր միայն <em>գտնում</em> էինք էլեմենտները — հաջորդ դասին կսկսենք դրանք <strong>փոխել</strong>․ տեքստ, դասեր, ոճեր, և ամենակարևորը՝ նոր էլեմենտներ ստեղծել JS-ով և դնել էջում։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 09 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

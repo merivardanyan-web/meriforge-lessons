@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 24 — Եզրափակիչ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 24 · 2 ժամ · Եզրափակիչ</p>
+  <h1>Ամփոփում և վերջնական նախագիծ</h1>
+  <p class="lede">23 դաս առաջ չգիտեիր, թե ինչ է <code>console.log</code>-ը։ Այսօր կարող ես կառուցել հավելված, որը խոսում է սերվերի հետ, պահպանում է տվյալները և ապրում է ինտերնետում։ Ամփոփենք։</p>
+
+  <div class="facts">
+    <span>JavaScript բլոկի եզրափակիչ</span>
+    <span>Վերջնական նախագիծ</span>
+    <span>Հաջորդը՝ PHP բլոկ</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ես սովորել</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դաս</th><th>Թեմա</th><th>Հիմնական գաղափարը</th></tr>
+      <tr><td>01</td><td>Ներածություն</td><td>Փոփոխականներ, տիպեր, <code>===</code></td></tr>
+      <tr><td>02</td><td>Օպերատորներ</td><td>Պայմաններ, truthy/falsy</td></tr>
+      <tr><td>03</td><td>Ցիկլեր</td><td>Կրկնություն, կուտակիչ</td></tr>
+      <tr><td>04</td><td>Ֆունկցիաներ</td><td>DRY, <code>return</code>, տեսանելիության տիրույթ</td></tr>
+      <tr><td>05</td><td>Զանգվածներ</td><td>Ինդեքսներ, հղումով փոխանցում</td></tr>
+      <tr><td>06</td><td>HOF մեթոդներ</td><td><code>map</code>, <code>filter</code>, <code>reduce</code></td></tr>
+      <tr><td>07</td><td>Օբյեկտներ</td><td>Բանալի-արժեք, destructuring, <code>this</code></td></tr>
+      <tr><td>08</td><td>Տողեր, Math, Date</td><td>Ներկառուցված գործիքներ</td></tr>
+      <tr><td>09</td><td>DOM · ընտրություն</td><td>Էջը ծառ է</td></tr>
+      <tr><td>10</td><td>DOM · փոփոխում</td><td>Ոճը՝ CSS-ում, վիճակը՝ JS-ում</td></tr>
+      <tr><td>11</td><td>Իրադարձություններ I</td><td><code>addEventListener</code>, <code>preventDefault</code></td></tr>
+      <tr><td>12</td><td>Իրադարձություններ II</td><td>Դելեգացիա, մեկ ճշմարտության աղբյուր</td></tr>
+      <tr><td>13</td><td>Ֆորմաներ</td><td>Վալիդացիա, regex</td></tr>
+      <tr><td>14</td><td>Բրաուզերի API-ներ</td><td><code>localStorage</code>, ժամաչափեր</td></tr>
+      <tr><td>15–16</td><td>Նախագիծ</td><td>Կատալոգ և զամբյուղ</td></tr>
+      <tr><td>17</td><td>Git</td><td>Տարբերակների կառավարում, հրապարակում</td></tr>
+      <tr><td>18</td><td>Մոդուլներ</td><td><code>import</code> / <code>export</code></td></tr>
+      <tr><td>19</td><td>Ասինխրոն I</td><td>Event loop, Promise</td></tr>
+      <tr><td>20</td><td>Ասինխրոն II</td><td><code>fetch</code>, <code>async/await</code></td></tr>
+      <tr><td>21</td><td>API-ներ</td><td>Էջավորում, <code>AbortController</code></td></tr>
+      <tr><td>22</td><td>OOP</td><td><code>class</code>, ժառանգում, <code>#private</code></td></tr>
+      <tr><td>23</td><td>Առաջադեմ</td><td>Փակույթներ, սխալներ, <code>Set</code>/<code>Map</code></td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ամենակարևոր հինգ գաղափարը</span>
+      <p><strong>1.</strong> Մեկ ֆունկցիա = մեկ գործ (Դաս 4)։<br>
+      <strong>2.</strong> Մեկ ճշմարտության աղբյուր → render (Դաս 12)։<br>
+      <strong>3.</strong> Ոճը՝ CSS-ում, վիճակը՝ JS-ում (Դաս 10)։<br>
+      <strong>4.</strong> Ամբողջ սինխրոն կոդն առաջինն է (Դաս 19)։<br>
+      <strong>5.</strong> Ամեն ասինխրոն գործողություն ունի երեք վիճակ (Դաս 20)։</p>
+    </div>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինքնաստուգում</h2>
+    <p>Փորձիր պատասխանել առանց նայելու։ Եթե դժվարանում ես — վերադարձիր համապատասխան դասին։</p>
+
+    <ol class="hw">
+      <li>Ի՞նչ տարբերություն կա <code>let</code>-ի և <code>const</code>-ի միջև։ Ինչո՞ւ <code>var</code> չենք օգտագործում։</li>
+      <li>Ինչո՞ւ <code>0.1 + 0.2 !== 0.3</code>։</li>
+      <li>Ի՞նչ է վերադարձնում ֆունկցիան, եթե <code>return</code> չկա։</li>
+      <li>Ի՞նչ տարբերություն կա <code>map</code>-ի և <code>forEach</code>-ի միջև։</li>
+      <li>Ինչո՞ւ <code>[1, 10, 5].sort()</code>-ը սխալ արդյունք է տալիս։</li>
+      <li>Ի՞նչ է անում <code>[...arr]</code>-ը և ինչո՞ւ է պետք։</li>
+      <li>Ե՞րբ է <code>querySelector</code>-ը վերադարձնում <code>null</code>։</li>
+      <li>Ինչո՞ւ <code>innerHTML</code>-ը վտանգավոր է օգտագործողի տվյալների հետ։</li>
+      <li>Ի՞նչ տարբերություն կա <code>e.target</code>-ի և <code>e.currentTarget</code>-ի միջև։</li>
+      <li>Ինչո՞ւ են կորչում մշակիչները <code>innerHTML</code>-ից հետո և ինչպե՞ս լուծել։</li>
+      <li>Ինչո՞ւ է <code>preventDefault</code>-ը պարտադիր ֆորմայի <code>submit</code>-ում։</li>
+      <li>Ինչո՞ւ <code>localStorage.getItem("x") === true</code>-ն միշտ <code>false</code> է։</li>
+      <li>Ի՞նչ հերթականությամբ կտպվի՝ <code>log("A")</code>, <code>setTimeout(log("B"), 0)</code>, <code>log("C")</code>։</li>
+      <li>Ինչո՞ւ 404 կարգավիճակը չի ընկնում <code>catch</code>-ի մեջ։</li>
+      <li>Ի՞նչ տարբերություն կա debounce-ի և <code>AbortController</code>-ի միջև։</li>
+      <li>Ինչո՞ւ է կորչում <code>this</code>-ը, երբ մեթոդը պոկում ես օբյեկտից։</li>
+      <li>Ե՞րբ arrow ֆունկցիա, ե՞րբ սովորական։</li>
+      <li>Ի՞նչ է անում <code>super()</code>-ը և ինչո՞ւ է պարտադիր։</li>
+      <li>Ինչո՞ւ <code>var</code>-ով ցիկլում <code>setTimeout</code>-ը տպում է 4, 4, 4։</li>
+      <li>Ինչո՞ւ CORS-ը JS-ով շրջանցելի չէ։</li>
+    </ol>
+
+    <div class="tip note">
+      <span class="tag">Եթե 15+ հարցի պատասխանեցիր</span>
+      <p>Հիմքը ամուր է։ Մնացածը կլրացվի պրակտիկայով։ Իսկ եթե պակաս՝ դա էլ նորմալ է. վերադարձիր այն դասերին և վերանայիր տնայինները։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Վերջնական նախագիծ</h2>
+    <p>Ընտրիր <strong>մեկը</strong> երեքից։ Կամ առաջարկիր քոնը՝ համաձայնեցնելով պահանջների հետ։</p>
+
+    <h3>Տարբերակ Ա · Ֆիլմերի կատալոգ</h3>
+    <ul class="goals">
+      <li>Բեռնում API-ից (կամ լոկալ <code>data.js</code>-ից)</li>
+      <li>Որոնում debounce-ով, ֆիլտր ժանրով, տեսակավորում</li>
+      <li>Էջավորում</li>
+      <li>«Հավանածներ» ցուցակ՝ պահպանմամբ</li>
+      <li>Մանրամասների մոդալ</li>
+    </ul>
+
+    <h3>Տարբերակ Բ · Ծախսերի հաշվառում</h3>
+    <ul class="goals">
+      <li>Ֆորմա՝ գումար, կատեգորիա, ամսաթիվ, նկարագրություն</li>
+      <li>Լիարժեք վալիդացիա սխալի հաղորդագրություններով</li>
+      <li>Ցուցակ՝ խմբագրմամբ և ջնջմամբ</li>
+      <li>Ֆիլտր ամսով և կատեգորիայով</li>
+      <li>Վիճակագրություն՝ ընդհանուր, միջին, ամենաշատը</li>
+      <li>Ամեն ինչ պահպանվում է <code>localStorage</code>-ում</li>
+    </ul>
+
+    <h3>Տարբերակ Գ · Եղանակի հավելված</h3>
+    <ul class="goals">
+      <li>Քաղաքի որոնում debounce-ով և <code>AbortController</code>-ով</li>
+      <li>Ընթացիկ եղանակ և 5-օրյա կանխատեսում</li>
+      <li>Ընտրված քաղաքների ցուցակ՝ պահպանմամբ</li>
+      <li>Բոլոր վիճակների մշակում՝ բեռնում, սխալ, դատարկ</li>
+      <li>Մուգ/բաց թեմա</li>
+    </ul>
+
+    <div class="warn note">
+      <span class="tag">Պարտադիր բոլորի համար</span>
+      <p><strong>1.</strong> Կոդը բաժանված է ES մոդուլների (առնվազն 4 ֆայլ)։<br>
+      <strong>2.</strong> Մեկ ճշմարտության աղբյուր → <code>render()</code>։<br>
+      <strong>3.</strong> Իրադարձությունները՝ դելեգացիայով։<br>
+      <strong>4.</strong> Դատարկ և սխալի վիճակների մշակում։<br>
+      <strong>5.</strong> Ձեր <code>.row / .col / .wrapper</code> կմախքը։<br>
+      <strong>6.</strong> Ադապտիվ դիզայն։<br>
+      <strong>7.</strong> Git՝ առնվազն 10 իմաստալից commit։<br>
+      <strong>8.</strong> Հրապարակված GitHub Pages-ով։<br>
+      <strong>9.</strong> README՝ նկարագրությամբ և հասցեով։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Գնահատման չափանիշները</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Բաժին</th><th>Ինչ է ստուգվում</th><th>Միավոր</th></tr>
+      <tr><td>Ֆունկցիոնալություն</td><td>Ամեն ինչ աշխատում է, սխալներ չկան Console-ում</td><td>25</td></tr>
+      <tr><td>Կոդի կառուցվածք</td><td>Մոդուլներ, մեկ ֆունկցիա = մեկ գործ, կրկնություն չկա</td><td>20</td></tr>
+      <tr><td>Վիճակի կառավարում</td><td>Մեկ աղբյուր, ուղիղ DOM-ի փոփոխում չկա</td><td>15</td></tr>
+      <tr><td>Եզրային դեպքեր</td><td>Դատարկ, բեռնում, սխալ, չգտնվեց</td><td>15</td></tr>
+      <tr><td>UI և ադապտիվություն</td><td>Հարմար է, աշխատում է հեռախոսում</td><td>10</td></tr>
+      <tr><td>Git</td><td>Իմաստալից commit-եր, README</td><td>10</td></tr>
+      <tr><td>Ներկայացում</td><td>Կարողանում ես բացատրել քո կոդը</td><td>5</td></tr>
+    </table>
+    </div>
+
+    <h3>Ի՞նչ է իջեցնում գնահատականը</h3>
+    <ul class="goals">
+      <li>Կարմիր սխալներ Console-ում</li>
+      <li>Մոռացված <code>console.log</code>-եր</li>
+      <li><code>var</code>-ի օգտագործում</li>
+      <li>Կրկնվող կոդ երեք և ավելի անգամ</li>
+      <li>Դատարկ <code>catch</code> բլոկներ</li>
+      <li>Ուղիղ DOM-ի փոփոխում վիճակի փոխարեն</li>
+      <li>Կախարդական թվեր առանց անվան</li>
+      <li>Ֆորմա առանց վալիդացիայի</li>
+      <li>Հեռախոսում կոտրված դասավորություն</li>
+    </ul>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Ներկայացման կառուցվածք</h2>
+    <p>7–10 րոպե։ Կառուցվածքը՝</p>
+
+    <ol>
+      <li><strong>Ցուցադրություն (3 րոպե)</strong> — բացիր հրապարակված կայքը և ցույց տուր հիմնական սցենարը։ Ոչ թե պատմիր, այլ <em>ցույց տուր</em>։</li>
+      <li><strong>Ճարտարապետություն (2 րոպե)</strong> — ինչ ֆայլեր կան, ինչի՞ համար է ամեն մեկը, ինչպե՞ս են կապված։</li>
+      <li><strong>Հետաքրքիր կտոր (2 րոպե)</strong> — ցույց տուր կոդի այն մասը, որով հպարտ ես, և բացատրիր ինչու։</li>
+      <li><strong>Դժվարությունը (2 րոպե)</strong> — ի՞նչ չէր ստացվում և ինչպե՞ս լուծեցիր։ Սա ամենակարևոր մասն է։</li>
+      <li><strong>Հարցեր (1 րոպե)</strong></li>
+    </ol>
+
+    <div class="tip note">
+      <span class="tag">Խորհուրդ</span>
+      <p>Պատրաստ եղիր հարցին՝ <em>«ի՞նչ կանեիր այլ կերպ, եթե սկսեիր նորից»</em>։ Այս հարցի լավ պատասխանը ցույց է տալիս, որ իսկապես հասկանում ես քո կոդը, ոչ միայն գրել ես այն։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Կոդի վերջնական ստուգաթերթ</h2>
+    <p>Անցիր սա հանձնելուց առաջ։</p>
+
+    <h3>Ֆունկցիոնալություն</h3>
+    <ul class="goals">
+      <li>Console-ը մաքուր է — ոչ մի կարմիր</li>
+      <li>Ամեն կոճակ սեղմվում է և ինչ-որ բան անում</li>
+      <li>Էջը թարմացնելուց հետո տվյալները տեղում են</li>
+      <li>Ֆորմաները մերժում են սխալ տվյալները</li>
+      <li>Աշխատում է հեռախոսի լայնությամբ</li>
+    </ul>
+
+    <h3>Եզրային դեպքեր</h3>
+    <ul class="goals">
+      <li>Դատարկ ցուցակ — կա՞ հաղորդագրություն</li>
+      <li>Ինտերնետը անջատված (Network → Offline) — կա՞ սխալի մշակում</li>
+      <li>Որոնում, որը ոչինչ չի գտնում</li>
+      <li>Շատ երկար տեքստ դաշտում</li>
+      <li>Կրկնակի արագ սեղմում կոճակին</li>
+    </ul>
+
+    <h3>Կոդ</h3>
+    <ul class="goals">
+      <li>Ոչ մի <code>var</code></li>
+      <li>Ոչ մի մոռացված <code>console.log</code> կամ <code>debugger</code></li>
+      <li>Ֆունկցիաների անունները սկսվում են բայով</li>
+      <li>Չկա կրկնվող կոդ</li>
+      <li>Չկան կախարդական թվեր</li>
+      <li>Ամեն <code>fetch</code> ունի <code>response.ok</code>-ի ստուգում</li>
+      <li>Ամեն <code>catch</code> ինչ-որ բան անում է</li>
+    </ul>
+
+    <h3>Git</h3>
+    <ul class="goals">
+      <li>Առնվազն 10 commit՝ իմաստալից հաղորդագրություններով</li>
+      <li>Կա <code>.gitignore</code></li>
+      <li>Կա README՝ հասցեով</li>
+      <li>Հրապարակված տարբերակն աշխատում է</li>
+    </ul>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Խաղահրապարակ · վերջին ստուգում</h2>
+    <p>Կանխագուշակիր ամեն տողի արդյունքը, հետո կատարիր։</p>
+
+    <div class="pg">
+      <textarea id="pgCode" spellcheck="false">// 1. Տիպեր և համեմատություն
+console.log(0.1 + 0.2 === 0.3);
+console.log("5" == 5, "5" === 5);
+console.log([] == false, [] ? "truthy" : "falsy");
+console.log(null ?? "լռելյայն", 0 || "լռելյայն", 0 ?? "լռելյայն");
+
+// 2. Զանգվածներ
+console.log([1, 10, 5, 25].sort());
+console.log([1, 10, 5, 25].sort((a, b) => a - b));
+
+const arr = [1, 2, 3];
+const copy = arr;
+const real = [...arr];
+copy.push(4);
+console.log(arr.length, real.length);
+
+// 3. HOF
+const nums = [1, 2, 3, 4, 5];
+console.log(nums.map(n => n * 2).filter(n => n > 4).reduce((a, b) => a + b, 0));
+console.log(nums.map(n => { n * 2 }));
+
+// 4. Օբյեկտներ և this
+const user = {
+  name: "Անի",
+  greet() { return `Բարև, ${this.name}`; },
+  greetArrow: () => `Բարև, ${this?.name}`
+};
+console.log(user.greet());
+console.log(user.greetArrow());
+
+// 5. Փակույթ
+function counter() {
+  let n = 0;
+  return () => ++n;
+}
+const c1 = counter();
+const c2 = counter();
+console.log(c1(), c1(), c2());
+
+// 6. Հերթականություն
+console.log("--- հերթականություն ---");
+console.log("A");
+Promise.resolve().then(() => console.log("B"));
+console.log("C");
+// D-ն setTimeout-ով այս պատուհանում չի երևա — տես F12
+
+// 7. Set և Map
+console.log("--- Set/Map ---");
+console.log([...new Set([1, 1, 2, 2, 3])]);
+const m = new Map([["a", 1], ["b", 2]]);
+console.log(m.get("a"), m.size, [...m.keys()]);
+
+// 8. Անփոփոխելիություն
+const todo = { id: 1, done: false };
+const updated = { ...todo, done: true };
+console.log(todo.done, updated.done, todo === updated);</textarea>
+      <div class="pg__actions">
+        <button class="run" id="runBtn">Կատարել</button>
+        <button class="clr" id="clrBtn">Մաքրել</button>
+      </div>
+<pre class="out" id="pgOut"><span class="m">Console</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Ի՞նչ է սպասվում հետո</h2>
+
+    <h3>Անմիջապես՝ PHP բլոկ (24 դաս)</h3>
+    <p>Անցնում ենք <strong>սերվերի կողմ</strong>։ Մինչ այժմ ամեն ինչ ապրում էր բրաուզերում և կորչում էր էջը փակելիս (բացի <code>localStorage</code>-ից)։ Հիմա տվյալները կպահվեն իսկապես։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ինչ ենք սովորելու</th><th>Ինչին է կապվում</th></tr>
+      <tr><td>PHP-ի հիմունքներ</td><td>Փոփոխականներ, ցիկլեր, ֆունկցիաներ — ծանոթ են Դաս 1–4-ից</td></tr>
+      <tr><td>Ֆորմաների մշակում սերվերում</td><td>Դաս 13՝ վալիդացիա — հիմա իսկական պաշտպանություն</td></tr>
+      <tr><td>MySQL և տվյալների բազա</td><td>Դաս 14՝ պահպանում, բայց իսկական</td></tr>
+      <tr><td>OOP PHP-ում</td><td>Դաս 22՝ նույն դասերն ու ժառանգումը</td></tr>
+      <tr><td>MVC ճարտարապետություն</td><td>Դաս 18՝ մոդուլների բաժանում՝ մեծ մասշտաբով</td></tr>
+      <tr><td>Սեփական API</td><td>Դաս 20–21՝ հիմա <em>դու</em> ես գրում այն սերվերը</td></tr>
+      <tr><td>Laravel</td><td>Ամեն ինչ միասին՝ իսկական ֆրեյմվորք</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Կարևոր հասկացողություն</span>
+      <p>PHP-ի բլոկում շատ բան ծանոթ կթվա։ Դա պատահական չէ։ Ծրագրավորման <strong>գաղափարները նույնն են</strong> բոլոր լեզուներում՝ փոփոխականներ, պայմաններ, ցիկլեր, ֆունկցիաներ, օբյեկտներ։ Փոխվում է շարահյուսությունը։<br><br>
+      Առաջին լեզուն ամենադժվարն է։ Երկրորդը՝ շատ ավելի հեշտ։</p>
+    </div>
+
+    <h3>Ավելի ուշ՝ ֆրեյմվորքեր</h3>
+    <p>React կամ Vue — բայց <strong>հիմա դրանք պետք չեն</strong>։ Ինչո՞ւ։ Որովհետև դու արդեն կառուցել ես ձեռքով այն, ինչ նրանք ավտոմատացնում են։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ինչ արեցիր ձեռքով</th><th>Ինչ է անում React-ը</th></tr>
+      <tr><td><code>state</code> օբյեկտ → <code>render()</code></td><td><code>useState</code> → ավտոմատ վերագծում</td></tr>
+      <tr><td><code>createCard()</code> ֆունկցիա</td><td>Կոմպոնենտ</td></tr>
+      <tr><td><code>map().join("")</code></td><td><code>{items.map(...)}</code></td></tr>
+      <tr><td>Դելեգացիա</td><td><code>onClick</code> — ներսում նույն մեխանիզմն է</td></tr>
+      <tr><td>Անփոփոխ թարմացում</td><td>Պարտադիր պահանջ</td></tr>
+      <tr><td>ES մոդուլներ</td><td>Ճիշտ նույնը</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ուրախ լուր</span>
+      <p>Երբ սկսես React, առաջին օրվանից կհասկանաս՝ <em>ինչու</em> է այն այդպես կառուցված։ Այն մարդիկ, ովքեր սկսում են ուղիղ ֆրեյմվորքից, տարիներ շարունակ չեն հասկանում, թե ինչ է կատարվում ներսում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Ինչպես շարունակել սովորել</h2>
+
+    <h3>Ամեն օր</h3>
+    <ul class="goals">
+      <li>Գրիր կոդ — թեկուզ 20 րոպե։ Կանոնավորությունը կարևոր է քանակից</li>
+      <li>Կարդա ուրիշների կոդը GitHub-ում</li>
+      <li>Երբ սխալ ես տեսնում — նախ փորձիր ինքդ հասկանալ, հետո որոնիր</li>
+    </ul>
+
+    <h3>Հուսալի աղբյուրներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ռեսուրս</th><th>Ինչի համար</th></tr>
+      <tr><td><strong>MDN Web Docs</strong></td><td>Պաշտոնական փաստաթղթեր։ Ամեն մեթոդի ճշգրիտ նկարագրություն</td></tr>
+      <tr><td><strong>javascript.info</strong></td><td>Լավագույն ձեռնարկը՝ հիմունքներից մինչև խորը թեմաներ</td></tr>
+      <tr><td><strong>caniuse.com</strong></td><td>Աշխատո՞ւմ է այս հնարավորությունը բրաուզերներում</td></tr>
+      <tr><td><strong>Stack Overflow</strong></td><td>Կոնկրետ սխալների լուծումներ</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Արհեստական բանականության մասին</span>
+      <p>AI-ն կարող է գրել կոդ քո փոխարեն։ Բայց հիշիր՝ <strong>քեզնից պահանջվում է հասկանալ այն</strong>։ Օգտագործիր AI-ն որպես ուսուցիչ («բացատրիր, ինչու է սա աշխատում»), ոչ որպես կատարող («գրիր ինձ համար»)։<br><br>
+      Այն ծրագրավորողը, ով չի հասկանում իր կոդը, չի կարող այն ուղղել, երբ այն կոտրվի։ Իսկ այն միշտ կոտրվում է։</p>
+    </div>
+
+    <h3>Հաջորդ քայլերը՝ ինքնուրույն</h3>
+    <ul class="goals">
+      <li>Կրկնիր վերջնական նախագիծը՝ բոլորովին այլ թեմայով</li>
+      <li>Վերցրու հին նախագիծ և բարելավիր՝ հիմա արդեն ավելի շատ գիտես</li>
+      <li>Փորձիր օգնել ընկերոջը՝ բացատրելը լավագույն ուսուցումն է</li>
+      <li>Հավաքիր պորտֆոլիո GitHub-ում — 3–4 ավարտուն նախագիծ</li>
+    </ul>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Վերջին խոսք</h2>
+
+    <p>Երբ սկսում էիր, կոդը թվում էր անհասկանալի նշանների շարք։ Հիմա կարդում ես այն և հասկանում։ Դա մեծ փոփոխություն է, թեև այն աստիճանաբար էր գալիս և գուցե չնկատեցիր։</p>
+
+    <p>Հիշիր երկու բան․</p>
+
+    <div class="note">
+      <span class="tag">Առաջին</span>
+      <p><strong>Ոչ ոք ամեն ինչ չի հիշում։</strong> Փորձառու ծրագրավորողները նույնպես որոնում են MDN-ում՝ ինչ արգումենտներ է վերցնում <code>slice</code>-ը։ Կարևորը ոչ թե անգիր իմանալն է, այլ <em>իմանալը՝ ինչ փնտրել և ինչպես մտածել</em>։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Երկրորդ</span>
+      <p><strong>Կոդը չի աշխատում առաջին անգամից։</strong> Երբեք։ Ոչ մեկի մոտ։ Սխալները ձախողում չեն — դրանք աշխատանքի սովորական մասն են։ Տարբերությունը սկսնակի և փորձառուի միջև ոչ թե սխալների քանակն է, այլ դրանք գտնելու արագությունը։</p>
+    </div>
+
+    <p>Հաջորդ բլոկում սերվերի կողմն է։ Բեր քո վերջնական նախագիծը — շուտով այն կսկսի աշխատել իսկական տվյալների բազայի հետ։</p>
+
+    <div class="tip note">
+      <span class="tag">Հաջողություն</span>
+      <p>JavaScript բլոկն ավարտված է։ 24 դաս, մեկ մեծ նախագիծ, հրապարակված կայք և հմտություն, որը մնում է քեզ հետ։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 24 / 24 · ✓</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

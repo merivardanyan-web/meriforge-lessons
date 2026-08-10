@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 14 — Ադապտիվություն</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 14 · 2 ժամ</p>
+  <h1>Ադապտիվություն</h1>
+  <p class="lede">Այցելուների կեսից ավելին գալիս է հեռախոսով։ Այսօր սովորում ենք media queries, ընտրում ենք breakpoint-ները և մեր <code>.w-*</code> համակարգը դարձնում ենք ճկուն։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 10–13</span>
+    <span>Բլոկ 1 · Ադապտիվություն</span>
+    <span>global.css-ը էապես աճում է</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li><code>viewport</code> — ինչու առանց դրա ոչինչ չի աշխատում</li>
+      <li>Media queries — շարահյուսություն</li>
+      <li>Breakpoint-ների ընտրություն</li>
+      <li>Mobile-first vs desktop-first</li>
+      <li>Ադապտիվ <code>.w-*</code> դասեր</li>
+      <li>Ադապտիվ տիպոգրաֆիա և <code>clamp()</code></li>
+      <li>Փորձարկում DevTools-ով</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>viewport — հիմքի հիմքը</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Դաս 1-ից՝ հիմա հասկանալի է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">meta</span> <span class="f">name</span>=<span class="s">"viewport"</span> <span class="f">content</span>=<span class="s">"width=device-width, initial-scale=1.0"</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="tree">ԱՌԱՆՑ viewport-ի              viewport-ով
+┌──────────────┐              ┌──────────────┐
+│ ┌──────────┐ │              │  Վերնագիր    │
+│ │ Վերնագիր │ │              │              │
+│ │ մանրիկ   │ │              │  Տեքստը      │
+│ │ տեքստ    │ │              │  ընթեռնելի   │
+│ └──────────┘ │              │  չափի է      │
+│  980px էջը   │              │              │
+│  սեղմված է   │              │  375px       │
+└──────────────┘              └──────────────┘</div>
+
+    <div class="warn note">
+      <span class="tag">Ի՞նչ է կատարվում առանց դրա</span>
+      <p>Հեռախոսի բրաուզերը ձևացնում է, թե էկրանը 980px է, հետո ամբողջ էջը <strong>փոքրացնում</strong> է։ Ամեն ինչ դառնում է մանրիկ, և media queries-ը երբեք չի գործարկվում — բրաուզերը կարծում է, թե 980px է։<br><br>
+      Առանց այս մեկ տողի ամբողջ այսօրվա դասը անիմաստ է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Media query</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>շարահյուսություն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">@media</span> (<span class="f">max-width</span>: <span class="n">768px</span>) {
+    <span class="c">/* Կիրառվում է, երբ էկրանը 768px ԿԱՄ ՊԱԿԱՍ է */</span>
+    <span class="k">.row</span> { <span class="f">padding</span>: <span class="n">0</span> <span class="n">10px</span>; }
+}
+
+<span class="k">@media</span> (<span class="f">min-width</span>: <span class="n">769px</span>) {
+    <span class="c">/* Կիրառվում է, երբ էկրանը 769px ԿԱՄ ԱՎԵԼԻ է */</span>
+}
+
+<span class="k">@media</span> (<span class="f">min-width</span>: <span class="n">768px</span>) <span class="k">and</span> (<span class="f">max-width</span>: <span class="n">1024px</span>) {
+    <span class="c">/* Միջակայք */</span>
+}</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Նշանակություն</th></tr>
+      <tr><td><code>max-width: 768px</code></td><td>Մինչև 768px ներառյալ — <strong>ներքև</strong></td></tr>
+      <tr><td><code>min-width: 768px</code></td><td>768px-ից սկսած — <strong>վեր</strong></td></tr>
+      <tr><td><code>orientation: landscape</code></td><td>Հորիզոնական դիրք</td></tr>
+      <tr><td><code>prefers-color-scheme: dark</code></td><td>Համակարգի մուգ թեմա</td></tr>
+      <tr><td><code>prefers-reduced-motion</code></td><td>Անիմացիաների նվազեցում</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Media query-ները միշտ ՎԵՐՋՈՒՄ</span>
+      <p>Դրանք ունեն <strong>նույն սպեցիֆիկությունը</strong>, ինչ սովորական կանոնները (Դաս 6)։ Հաղթում է վերջինը գրվածը։<br><br>
+      Եթե գրես media query-ն վերևում, իսկ <code>.row { padding: 0 50px }</code>-ը՝ ներքևում, media query-ն երբեք չի աշխատի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Breakpoint-ներ</h2>
+    <p>Կետեր, որտեղ դասավորությունը փոխվում է։ Չկա «ճիշտ» ցուցակ, բայց կան տարածված արժեքներ։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Անուն</th><th>Լայնություն</th><th>Ի՞նչ սարք</th></tr>
+      <tr><td><strong>sm</strong></td><td>576px</td><td>Հեռախոս</td></tr>
+      <tr><td><strong>md</strong></td><td>768px</td><td>Պլանշետ ուղղահայաց</td></tr>
+      <tr><td><strong>lg</strong></td><td>992px</td><td>Պլանշետ հորիզոնական, փոքր նոութբուք</td></tr>
+      <tr><td><strong>xl</strong></td><td>1200px</td><td>Համակարգիչ</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչպես ընտրել իրականում</span>
+      <p>Մի՛ ընտրիր ըստ սարքերի — դրանք հազարավոր են։<br><br>
+      Փոխարենը՝ <strong>նեղացրու պատուհանը դանդաղ</strong> և նայիր, թե որտեղ է դասավորությունը սկսում վատ երևալ։ Հենց այնտեղ դիր breakpoint։<br><br>
+      Երեք breakpoint սովորաբար բավական է։ Յոթ breakpoint նշանակում է, որ ինչ-որ բան սխալ է կառուցված։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Mobile-first vs desktop-first</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Desktop-first — max-width</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Բազան՝ մեծ էկրան */</span>
+<span class="k">.col</span> { <span class="f">width</span>: <span class="n">25%</span>; }
+
+<span class="k">@media</span> (<span class="f">max-width</span>: <span class="n">992px</span>) { <span class="k">.col</span> { <span class="f">width</span>: <span class="n">50%</span>; } }
+<span class="k">@media</span> (<span class="f">max-width</span>: <span class="n">576px</span>) { <span class="k">.col</span> { <span class="f">width</span>: <span class="n">100%</span>; } }</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Mobile-first — min-width</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Բազան՝ հեռախոս */</span>
+<span class="k">.col</span> { <span class="f">width</span>: <span class="n">100%</span>; }
+
+<span class="k">@media</span> (<span class="f">min-width</span>: <span class="n">576px</span>) { <span class="k">.col</span> { <span class="f">width</span>: <span class="n">50%</span>; } }
+<span class="k">@media</span> (<span class="f">min-width</span>: <span class="n">992px</span>) { <span class="k">.col</span> { <span class="f">width</span>: <span class="n">25%</span>; } }</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th></th><th>Desktop-first</th><th>Mobile-first</th></tr>
+      <tr><td>Բազան</td><td>Մեծ էկրան</td><td>Հեռախոս</td></tr>
+      <tr><td>Հեռախոսը բեռնում է</td><td>Բազա + վերագրումներ</td><td>✅ Միայն բազան</td></tr>
+      <tr><td>Համապատասխանում է մակետին</td><td>✅ Դիզայնը սովորաբար desktop է</td><td>Պիտի պատկերացնես</td></tr>
+      <tr><td>Ստիպում է մտածել բովանդակության մասին</td><td>Ոչ</td><td>✅ Այո</td></tr>
+      <tr><td>Ընդունված մոտեցում</td><td>Հին</td><td>✅ Ժամանակակից</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Մեր ընտրությունը</span>
+      <p>Օգտագործում ենք <strong>desktop-first</strong> (<code>max-width</code>), որովհետև մեր մակետերը desktop են, և այդպես ուղիղ համապատասխանում է Դաս 13-ի աշխատանքային հոսքին։<br><br>
+      Բայց իմացիր՝ իրական թիմերում mobile-first-ը ավելի տարածված է։ Երբ հանդիպես դրան, տարբերությունը միայն <code>min-width</code> vs <code>max-width</code> է և հերթականությունը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Ադապտիվ .w-* դասեր</h2>
+    <p>Ահա ինչպես մեր համակարգը դառնում է ճկուն։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>css/global.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ---------- Ադապտիվ լայնություններ ----------
+   Օրինաչափությունը՝ .w-md-50 = «մինչև 992px դառնում է 50%»
+   HTML-ում գրվում է ՄԵԾ էկրանի դասից հետո՝
+   &lt;div class="col w-25 w-md-50 w-sm-100"&gt;               */</span>
+
+<span class="k">@media</span> (<span class="f">max-width</span>: <span class="n">992px</span>) {
+    <span class="k">.w-md-25</span>  { <span class="f">width</span>: <span class="n">25%</span>; }
+    <span class="k">.w-md-33</span>  { <span class="f">width</span>: <span class="n">33.3333%</span>; }
+    <span class="k">.w-md-50</span>  { <span class="f">width</span>: <span class="n">50%</span>; }
+    <span class="k">.w-md-100</span> { <span class="f">width</span>: <span class="n">100%</span>; }
+}
+
+<span class="k">@media</span> (<span class="f">max-width</span>: <span class="n">576px</span>) {
+    <span class="k">.w-sm-50</span>  { <span class="f">width</span>: <span class="n">50%</span>; }
+    <span class="k">.w-sm-100</span> { <span class="f">width</span>: <span class="n">100%</span>; }
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML-ում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row flex-wrap"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-25 w-md-50 w-sm-100"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-25 w-md-50 w-sm-100"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-25 w-md-50 w-sm-100"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-25 w-md-50 w-sm-100"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="tree">&gt; 992px          4 սյուն    [ ][ ][ ][ ]
+576–992px        2 սյուն    [  ][  ]
+                            [  ][  ]
+&lt; 576px          1 սյուն    [      ]
+                            [      ]
+                            [      ]
+                            [      ]</div>
+
+    <div class="warn note">
+      <span class="tag">flex-wrap-ը պարտադիր է</span>
+      <p>Առանց <code>flex-wrap: wrap</code>-ի սյուները չեն տողադարձվի — դրանք պարզապես կսեղմվեն։ 50%-ը կլինի 50%, բայց չորսն էլ մեկ տողում։<br><br>
+      Ուստի ամեն <code>.row</code>, որի սյուները փոխվում են, պիտի ունենա <code>flex-wrap</code>։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Այս մոտեցման սահմանը</span>
+      <p>Հիշո՞ւմ ես Դաս 13-ի քննարկումը utility-ի մասին։ Ահա հենց այն տեղը, որտեղ դասերը սկսում են բազմապատկվել՝ <code>w-25 w-md-50 w-sm-100</code>։<br><br>
+      Այս պատճառով ավելացնում ենք միայն <strong>4 միջին և 2 փոքր</strong> տարբերակ — նրանք, որ իսկապես պետք են։ Եթե ամեն լայնության համար ստեղծեինք երեք տարբերակ, կստանայինք 36 դաս։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Ի՞նչ ևս պիտի փոխվի</h2>
+    <p>Սյուները միայն սկիզբն են։ Ահա ամբողջ ցուցակը։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>css/main.css — ադապտիվ բլոկը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ============ ՊԼԱՆՇԵՏ ============ */</span>
+<span class="k">@media</span> (<span class="f">max-width</span>: <span class="n">992px</span>) {
+
+    <span class="c">/* Վերնագրերը փոքրանում են */</span>
+    <span class="t">h1</span>, <span class="k">.title-1</span> { <span class="f">font-size</span>: <span class="n">1.75rem</span>; }
+    <span class="t">h2</span>, <span class="k">.title-2</span> { <span class="f">font-size</span>: <span class="n">1.375rem</span>; }
+}
+
+<span class="c">/* ============ ՀԵՌԱԽՈՍ ============ */</span>
+<span class="k">@media</span> (<span class="f">max-width</span>: <span class="n">768px</span>) {
+
+    <span class="c">/* 1. Պատերը — 60px-ը շատ է */</span>
+    <span class="k">:root</span> { <span class="f">--wall</span>: <span class="n">20px</span>; }
+
+    <span class="c">/* 2. Բաժինների ուղղահայաց բացակը */</span>
+    <span class="t">section</span> { <span class="f">padding</span>: <span class="n">30px</span> <span class="n">0</span>; }
+
+    <span class="c">/* 3. Վերնագրերը */</span>
+    <span class="t">h1</span>, <span class="k">.title-1</span> { <span class="f">font-size</span>: <span class="n">1.5rem</span>; }
+
+    <span class="c">/* 4. Header-ը՝ ուղղահայաց */</span>
+    <span class="t">header</span> <span class="k">.row</span> { <span class="f">flex-wrap</span>: <span class="s">wrap</span>; }
+    <span class="k">.menu</span> { <span class="f">flex-wrap</span>: <span class="s">wrap</span>; <span class="f">justify-content</span>: <span class="s">center</span>; }
+
+    <span class="c">/* 5. Կոճակները՝ ամբողջ լայնությամբ */</span>
+    <span class="k">.btn-block-sm</span> { <span class="f">width</span>: <span class="n">100%</span>; <span class="f">text-align</span>: <span class="s">center</span>; }
+
+    <span class="c">/* 6. Աղյուսակները՝ սքրոլով */</span>
+    <span class="k">.table-wrap</span> { <span class="f">overflow-x</span>: <span class="s">auto</span>; }
+}</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ի՞նչ</th><th>Ինչու</th></tr>
+      <tr><td>Պատերը</td><td>60px × 2 = 120px 375px էկրանից → մնում է 255px</td></tr>
+      <tr><td>Վերնագրերը</td><td>34px վերնագիրը կոտրվում է 3 տողի</td></tr>
+      <tr><td>Ուղղահայաց բացակները</td><td>Հեռախոսում ոլորելը թանկ է</td></tr>
+      <tr><td>Մենյուն</td><td>Հորիզոնականը չի տեղավորվում</td></tr>
+      <tr><td>Կոճակները</td><td>Ամբողջ լայնությամբ՝ ավելի հեշտ սեղմելի</td></tr>
+      <tr><td>Աղյուսակները</td><td>Չեն սեղմվում — պետք է սքրոլ</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Մեկ փոփոխական, մեծ ազդեցություն</span>
+      <p>Նկատեցի՞ր՝ <code>:root { --wall: 20px }</code> մեկ տողը փոխում է <strong>բոլոր</strong> <code>.row</code>-երի պատերը։<br><br>
+      Դա Դաս 13-ի <code>calc(var(--wall) - var(--gap))</code>-ի պտուղն է։ Առանց փոփոխականների պիտի փնտրեիր բոլոր տեղերը, որտեղ 50px է գրված։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>clamp() — առանց media query</h2>
+    <p>Երբեմն media query-ի փոխարեն կարելի է գրել մեկ տող, որը սահուն փոխվում է։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երեք արժեք</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="t">h1</span> {
+    <span class="f">font-size</span>: <span class="s">clamp</span>(<span class="n">1.5rem</span>, <span class="n">4vw</span>, <span class="n">2.125rem</span>);
+    <span class="c">/*              ↑        ↑       ↑          */</span>
+    <span class="c">/*          նվազագույն ցանկալի առավելագույն */</span>
+}</code></pre>
+    </div>
+
+    <div class="tree">Էկրանի լայնություն    font-size
+   375px               1.5rem   (նվազագույնը)
+   600px               1.5rem
+   800px               2rem     (4vw = 32px)
+  1200px               2.125rem (առավելագույնը)
+  1920px               2.125rem</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>օգտակար կիրառություններ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Վերնագրեր */</span>
+<span class="t">h1</span> { <span class="f">font-size</span>: <span class="s">clamp</span>(<span class="n">1.5rem</span>, <span class="n">4vw</span>, <span class="n">2.125rem</span>); }
+<span class="t">h2</span> { <span class="f">font-size</span>: <span class="s">clamp</span>(<span class="n">1.25rem</span>, <span class="n">3vw</span>, <span class="n">1.5rem</span>); }
+
+<span class="c">/* Պատերը */</span>
+<span class="k">:root</span> { <span class="f">--wall</span>: <span class="s">clamp</span>(<span class="n">20px</span>, <span class="n">5vw</span>, <span class="n">60px</span>); }
+
+<span class="c">/* Բաժինների բացակը */</span>
+<span class="t">section</span> { <span class="f">padding</span>: <span class="s">clamp</span>(<span class="n">30px</span>, <span class="n">6vw</span>, <span class="n">60px</span>) <span class="n">0</span>; }</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ե՞րբ clamp, ե՞րբ media query</span>
+      <p><strong><code>clamp()</code></strong> — երբ արժեքը պիտի փոխվի <em>սահուն</em>․ տառաչափեր, բացակներ, պատեր։<br><br>
+      <strong>Media query</strong> — երբ պիտի փոխվի <em>կառուցվածքը</em>․ 4 սյուն դառնում է 1, մենյուն դառնում է բուրգեր, բլոկը թաքնվում է։<br><br>
+      <code>clamp()</code>-ը չի կարող փոխել <code>flex-direction</code>-ը կամ թաքցնել էլեմենտ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Փորձարկում</h2>
+
+    <div class="tip note">
+      <span class="tag">DevTools-ի սարքի ռեժիմ</span>
+      <p><strong>1.</strong> <kbd>F12</kbd> → վերևի ձախ անկյունում հեռախոսի պատկերակը (կամ <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd>)<br>
+      <strong>2.</strong> Վերևում ընտրիր սարքը կամ քաշիր եզրերը՝ ձեռքով<br>
+      <strong>3.</strong> Ուշադրություն դարձրու լայնության թվին — այնտեղ ես տեսնում breakpoint-ները<br>
+      <strong>4.</strong> <em>Responsive</em> ռեժիմում քաշիր դանդաղ և նայիր, որտեղ է կոտրվում</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Լայնություն</th><th>Ի՞նչ ստուգել</th></tr>
+      <tr><td><strong>375px</strong></td><td>iPhone SE — ամենափոքր տարածված</td></tr>
+      <tr><td><strong>390px</strong></td><td>Ժամանակակից հեռախոսներ</td></tr>
+      <tr><td><strong>768px</strong></td><td>Պլանշետ</td></tr>
+      <tr><td><strong>1440px</strong></td><td>Նոութբուք</td></tr>
+      <tr><td><strong>1920px</strong></td><td>Մեծ մոնիտոր</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Հորիզոնական սքրոլի որսը</span>
+      <p>Եթե հեռախոսում էջը շարժվում է կողքի — ինչ-որ բան դուրս է եկել։ Ինչպես գտնել՝<br><br>
+      Console-ում գործարկիր՝<br>
+      <code>document.querySelectorAll('*').forEach(e =&gt; { if (e.offsetWidth &gt; document.body.offsetWidth) console.log(e) })</code><br><br>
+      Կամ ժամանակավորապես՝ <code>* { outline: 1px solid red }</code> և նայիր, թե որն է դուրս գալիս։<br><br>
+      <strong>Երբեք մի՛ ծածկիր</strong> <code>body { overflow-x: hidden }</code>-ով — խնդիրը կմնա, պարզապես անտեսանելի կդառնա։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Իրական սարքի փորձարկում</span>
+      <p>DevTools-ը լավն է, բայց չի ցույց տալիս ամեն ինչ՝ իրական մատի չափը, արևի տակ կոնտրաստը, դանդաղ ինտերնետը։<br><br>
+      Եթե Live Server-ը գործարկես, տերմինալում կերևա երկրորդ հասցե՝ <code>http://192.168.x.x:5500</code>։ Բացիր այն հեռախոսում՝ նույն Wi-Fi-ում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Խաղահրապարակ</h2>
+    <p>Նեղացրու պատուհանը կամ քաշիր նախադիտման եզրը՝ տեսնելու համար breakpoint-ները։</p>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="css">CSS</button>
+        <button class="live__tab" data-pane="html">HTML</button>
+      </div>
+      <textarea class="live__code" data-pane="css">:root {
+    --dark: #253237;
+    --secondary: #003459;
+    --bg: #f5f5f5;
+    --text: #1a1a1a;
+    --on-dark: #fff;
+    --wall: 40px;
+    --gap: 8px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+}
+
+.row { display: flex; padding: 0 calc(var(--wall) - var(--gap)); }
+.flex-wrap { flex-wrap: wrap; }
+.col { padding: var(--gap); }
+
+.w-25  { width: 25%; }
+.w-100 { width: 100%; }
+
+section { padding: 24px 0; }
+
+h1 { font-size: clamp(1.25rem, 5vw, 2rem); line-height: 1.2; }
+h2 { font-size: 1.25rem; }
+
+.card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px;
+    height: 100%;
+}
+
+.badge {
+    display: inline-block;
+    background: var(--secondary);
+    color: var(--on-dark);
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+#hero { background: var(--dark); color: var(--on-dark); }
+
+/* ===== ԱԴԱՊՏԻՎ ԴԱՍԵՐ ===== */
+@media (max-width: 992px) {
+    .w-md-50  { width: 50%; }
+    .w-md-100 { width: 100%; }
+}
+
+@media (max-width: 576px) {
+    .w-sm-100 { width: 100%; }
+}
+
+/* ===== ԱԴԱՊՏԻՎ ՈՃԵՐ ===== */
+@media (max-width: 768px) {
+    :root { --wall: 16px; }
+    section { padding: 16px 0; }
+}
+
+/* Ցուցիչ՝ որ breakpoint-ը գործում է */
+.indicator::after { content: "> 992px  ·  4 սյուն"; }
+
+@media (max-width: 992px) {
+    .indicator::after { content: "576–992px  ·  2 սյուն"; }
+}
+
+@media (max-width: 576px) {
+    .indicator::after { content: "< 576px  ·  1 սյուն"; }
+}</textarea>
+      <textarea class="live__code is-hidden" data-pane="html">&lt;section id="hero"&gt;
+    &lt;div class="row"&gt;
+        &lt;div class="col w-100"&gt;
+            &lt;h1&gt;Ադապտիվ դասավորություն&lt;/h1&gt;
+            &lt;p class="badge indicator"&gt;&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;section&gt;
+    &lt;div class="row"&gt;
+        &lt;div class="col w-100"&gt;&lt;h2&gt;Ապրանքներ&lt;/h2&gt;&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class="row flex-wrap"&gt;
+        &lt;div class="col w-25 w-md-50 w-sm-100"&gt;
+            &lt;div class="card"&gt;&lt;strong&gt;Առաջին&lt;/strong&gt;&lt;p&gt;w-25 w-md-50 w-sm-100&lt;/p&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="col w-25 w-md-50 w-sm-100"&gt;
+            &lt;div class="card"&gt;&lt;strong&gt;Երկրորդ&lt;/strong&gt;&lt;p&gt;w-25 w-md-50 w-sm-100&lt;/p&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="col w-25 w-md-50 w-sm-100"&gt;
+            &lt;div class="card"&gt;&lt;strong&gt;Երրորդ&lt;/strong&gt;&lt;p&gt;w-25 w-md-50 w-sm-100&lt;/p&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="col w-25 w-md-50 w-sm-100"&gt;
+            &lt;div class="card"&gt;&lt;strong&gt;Չորրորդ&lt;/strong&gt;&lt;p&gt;w-25 w-md-50 w-sm-100&lt;/p&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/section&gt;</textarea>
+      <div class="live__actions">
+        <span>Քաշիր նախադիտման ներքևի եզրը կամ նեղացրու պատուհանը</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Փորձիր</span>
+      <p><strong>1.</strong> Ջնջիր <code>flex-wrap</code>-ը <code>.row</code>-ից — սյուները կտողադարձվե՞ն։<br>
+      <strong>2.</strong> Փոխիր <code>clamp(1.25rem, 5vw, 2rem)</code>-ը <code>2rem</code>-ի և նեղացրու։<br>
+      <strong>3.</strong> Փոխիր breakpoint-ը 992-ից 700-ի։<br>
+      <strong>4.</strong> Ջնջիր <code>:root { --wall: 16px }</code>-ը 768-ի բլոկից։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Դասարանական</h2>
+    <p>Վերցնում ենք Դաս 13-ի էջը և դարձնում ենք ադապտիվ։</p>
+
+    <ol>
+      <li>Ստուգիր, որ <code>viewport</code> meta-ն կա</li>
+      <li>Ավելացրու <code>global.css</code>-ում ադապտիվ <code>.w-*</code> դասերը</li>
+      <li>Ավելացրու <code>flex-wrap</code> բոլոր <code>.row</code>-երին, որտեղ սյուներ կան</li>
+      <li>HTML-ում ավելացրու <code>w-md-*</code> և <code>w-sm-*</code></li>
+      <li><code>main.css</code>-ի <strong>վերջում</strong> ավելացրու ադապտիվ բլոկը</li>
+      <li>Փոխիր <code>--wall</code>-ը 768px-ից ներքև</li>
+      <li>Փոքրացրու վերնագրերը կամ օգտագործիր <code>clamp()</code></li>
+      <li>Ստուգիր 375, 768, 1440 լայնություններով</li>
+      <li>Ստուգիր հորիզոնական սքրոլի բացակայությունը</li>
+    </ol>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css — ամբողջական ադապտիվ բլոկը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ============ 9. ԱԴԱՊՏԻՎՈՒԹՅՈՒՆ ============
+   Միշտ ֆայլի ՎԵՐՋՈՒՄ                            */</span>
+
+<span class="k">@media</span> (<span class="f">max-width</span>: <span class="n">992px</span>) {
+    <span class="t">h1</span>, <span class="k">.title-1</span> { <span class="f">font-size</span>: <span class="n">1.75rem</span>; }
+    <span class="t">h2</span>, <span class="k">.title-2</span> { <span class="f">font-size</span>: <span class="n">1.375rem</span>; }
+}
+
+<span class="k">@media</span> (<span class="f">max-width</span>: <span class="n">768px</span>) {
+    <span class="k">:root</span> { <span class="f">--wall</span>: <span class="n">20px</span>; }
+
+    <span class="t">section</span> { <span class="f">padding</span>: <span class="n">30px</span> <span class="n">0</span>; }
+
+    <span class="t">h1</span>, <span class="k">.title-1</span> { <span class="f">font-size</span>: <span class="n">1.5rem</span>; }
+
+    <span class="t">header</span> <span class="k">.row</span> { <span class="f">flex-wrap</span>: <span class="s">wrap</span>; <span class="f">justify-content</span>: <span class="s">center</span>; }
+    <span class="k">.menu</span>       { <span class="f">flex-wrap</span>: <span class="s">wrap</span>; <span class="f">justify-content</span>: <span class="s">center</span>; }
+
+    <span class="k">#hero</span> { <span class="f">padding</span>: <span class="n">30px</span> <span class="n">0</span>; <span class="f">text-align</span>: <span class="s">center</span>; }
+    <span class="k">#hero</span> <span class="k">.btn</span> { <span class="f">width</span>: <span class="n">100%</span>; <span class="f">text-align</span>: <span class="s">center</span>; }
+}
+
+<span class="k">@media</span> (<span class="f">max-width</span>: <span class="n">576px</span>) {
+    <span class="k">.btn</span> { <span class="f">padding</span>: <span class="n">12px</span> <span class="n">16px</span>; }
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ամենահաճախ սխալը դասարանում</span>
+      <p>Media query-ն գրված է ֆայլի <strong>մեջտեղում</strong>, և ներքևի կանոնները վերագրում են այն։<br><br>
+      Կանոն՝ ադապտիվ բլոկը միշտ <code>main.css</code>-ի վերջին բաժինն է։ Դա նաև հարմար է — բոլոր ադապտիվ ոճերը մեկ տեղում են։</p>
+    </div>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ջնջիր <code>viewport</code> meta-ն և բացիր հեռախոսում (կամ DevTools-ի սարքի ռեժիմում)։ Ուղարկիր սքրինշոթ։ Վերականգնիր։</li>
+      <li>Ավելացրու <code>global.css</code>-ում ադապտիվ <code>.w-*</code> դասերը։</li>
+      <li>Կառուցիր 4-սյունանոց ցանց, որը դառնում է 2, ապա 1։ Ստուգիր երեք լայնությամբ։</li>
+      <li>Ջնջիր <code>flex-wrap</code>-ը և նկարագրիր, ինչ եղավ։</li>
+      <li>Դարձրու պատերը ադապտիվ երկու ձևով՝ media query-ով և <code>clamp()</code>-ով։ Համեմատիր։</li>
+      <li>Կիրառիր <code>clamp()</code> բոլոր վերնագրերին։ Նեղացրու պատուհանը դանդաղ և նկարագրիր վարքագիծը։</li>
+      <li>Դիտավորյալ ստեղծիր հորիզոնական սքրոլ (օրինակ՝ <code>width: 120%</code> ինչ-որ բլոկի վրա)։ Գտիր այն Console-ի կոդով։</li>
+      <li>Բացիր քո էջը իրական հեռախոսում Live Server-ի ցանցային հասցեով։ Նկարագրիր, ինչ նկատեցիր, որ DevTools-ում չէիր տեսնում։</li>
+      <li>Դարձրու Դաս 12-ի footer-ը ադապտիվ՝ 40/20/40-ից 100/50/50, ապա 100/100/100։</li>
+      <li>Վերցրու Դաս 13-ի ամբողջ էջը և դարձրու ամբողջովին ադապտիվ։ Ստուգիր՝ 375, 576, 768, 992, 1440։ Ուղարկիր հինգ սքրինշոթ։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 12 ============ -->
+  <section id="s12">
+    <h2><span class="num">12</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>&lt;meta name="viewport"&gt;</code></td><td>Առանց սրա ոչինչ չի աշխատում ⭐</td></tr>
+      <tr><td><code>@media (max-width: 768px)</code></td><td>Մինչև 768px — ներքև</td></tr>
+      <tr><td><code>@media (min-width: 768px)</code></td><td>768px-ից — վեր</td></tr>
+      <tr><td><code>clamp(min, ցանկալի, max)</code></td><td>Սահուն փոփոխություն ⭐</td></tr>
+      <tr><td><code>vw</code></td><td>Էկրանի լայնության 1%</td></tr>
+      <tr><td><code>flex-wrap: wrap</code></td><td>Առանց սրա սյուները չեն տողադարձվի ⭐</td></tr>
+      <tr><td><code>:root { --wall: 20px }</code></td><td>Մեկ տողով բոլոր պատերը</td></tr>
+      <tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd></td><td>DevTools-ի սարքի ռեժիմ</td></tr>
+    </table>
+    </div>
+
+    <h3>Breakpoint-ները</h3>
+    <div class="tree">576px   հեռախոս
+768px   պլանշետ
+992px   փոքր նոութբուք
+1200px  համակարգիչ</div>
+
+    <h3>Ի՞նչ ավելացավ global.css-ում այսօր</h3>
+    <div class="tree">✓ @media (max-width: 992px) → .w-md-25 / 33 / 50 / 100
+✓ @media (max-width: 576px) → .w-sm-50 / 100</div>
+
+    <h3>Ի՞նչ ավելացավ main.css-ում</h3>
+    <div class="tree">✓ Բաժին 9՝ ադապտիվություն (ֆայլի վերջում)
+  · --wall-ի փոփոխություն
+  · վերնագրերի չափեր
+  · header և menu
+  · կոճակների լայնություն</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Կա <code>viewport</code> meta</li>
+      <li>Media query-ները ֆայլի վերջում են</li>
+      <li>Բոլոր <code>.row</code>-երն ունեն <code>flex-wrap</code>, որտեղ պետք է</li>
+      <li>Պատերը փոքրանում են հեռախոսում</li>
+      <li>Վերնագրերը չեն կոտրվում 375px-ում</li>
+      <li>Չկա հորիզոնական սքրոլ</li>
+      <li>Կոճակների սեղմելի տարածքը ≥ 44px</li>
+      <li>Աղյուսակներն ունեն <code>overflow-x: auto</code></li>
+      <li>Ստուգված է 375, 768, 1440 լայնություններով</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչու <code>viewport</code>-ն է առաջինը</li>
+      <li>Գիտե՞մ տարբերությունը <code>max-width</code>-ի և <code>min-width</code>-ի միջև</li>
+      <li>Հասկանո՞ւմ եմ, ինչու media query-ները վերջում են</li>
+      <li>Գիտե՞մ, ե՞րբ <code>clamp()</code>, ե՞րբ media query</li>
+      <li>Կարո՞ղ եմ գտնել հորիզոնական սքրոլի պատճառը</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p><code>position</code> և <code>z-index</code>։ Կսովորենք հանել էլեմենտը նորմալ հոսքից՝ կպչուն header, մոդալ պատուհան, պիտակ նկարի անկյունում։ Եվ կհասկանանք, ինչու է <code>z-index</code>-ը երբեմն «չաշխատում»։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 14 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

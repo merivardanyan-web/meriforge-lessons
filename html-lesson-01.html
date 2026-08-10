@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 1 — Ինչպես է աշխատում վեբը</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 1 · 2 ժամ</p>
+  <h1>Ինչպես է աշխատում վեբը</h1>
+  <p class="lede">Առաջին դասը։ Հասկանում ենք, թե ինչ է կատարվում, երբ բացում ես կայք, տեղադրում ենք գործիքները և գրում ենք առաջին էջը, որը կաշխատի իսկական բրաուզերում։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ չկա</span>
+    <span>Բլոկ 1 · HTML հիմունքներ</span>
+    <span>Արդյունք՝ առաջին էջը</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ի՞նչ է կատարվում, երբ մուտքագրում ես կայքի հասցեն</li>
+      <li>HTML, CSS և JavaScript — երեք տարբեր դեր</li>
+      <li>VS Code և Live Server</li>
+      <li>Նախագծի ճիշտ կառուցվածքը</li>
+      <li>Էջի կմախքը՝ <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, <code>&lt;body&gt;</code></li>
+      <li>Թեգեր, ատրիբուտներ, ներդրվածություն</li>
+      <li>DevTools — բրաուզերի ռենտգենը</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ի՞նչ է կատարվում, երբ բացում ես կայք</h2>
+    <p>Մուտքագրում ես <code>example.am</code> և սեղմում Enter։ Հաջորդ մեկ վայրկյանում տեղի է ունենում հետևյալը։</p>
+
+    <div class="tree">  Քո համակարգիչը                         Սերվերը
+  (բրաուզեր)                          (ուրիշի համակարգիչ)
+       │                                      │
+       │   «Տո՛ւր example.am էջը»              │
+       │ ────────────────────────────────────► │
+       │                                      │
+       │        index.html + style.css        │
+       │ ◄──────────────────────────────────── │
+       │                                      │
+   Բրաուզերը կարդում է ֆայլերը
+   և նկարում է էջը էկրանին</div>
+
+    <div class="note">
+      <span class="tag">Կարևոր հասկացողություն</span>
+      <p>Սերվերը հատուկ կախարդական սարք չէ։ Դա սովորական համակարգիչ է, որը միշտ միացած է և ֆայլեր է տալիս, երբ նրանից խնդրում են։ Քո համակարգիչն էլ կարող է սերվեր դառնալ — հենց դա կանենք Live Server-ով։</p>
+    </div>
+
+    <p>Այսինքն՝ <strong>կայքը ֆայլերի հավաքածու է</strong>։ Դու գրում ես այդ ֆայլերը, բրաուզերը կարդում է դրանք։ Ամբողջ դասընթացը հենց այդ ֆայլերը գրելու մասին է։</p>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Երեք լեզու, երեք դեր</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Լեզու</th><th>Դերը</th><th>Համեմատություն</th></tr>
+      <tr><td><strong>HTML</strong></td><td>Ի՞նչ կա էջում</td><td>Կմախք</td></tr>
+      <tr><td><strong>CSS</strong></td><td>Ինչպիսի՞ն է այն</td><td>Հագուստ</td></tr>
+      <tr><td><strong>JavaScript</strong></td><td>Ի՞նչ է անում</td><td>Ուղեղ</td></tr>
+    </table>
+    </div>
+
+    <p>Առաջին 5 դասին զբաղվում ենք միայն կմախքով։ Հագուստը կսկսվի 6-րդ դասից, ուղեղը՝ երկրորդ բլոկում։</p>
+
+    <div class="warn note">
+      <span class="tag">Հաճախ շփոթում են</span>
+      <p>HTML-ը <strong>ծրագրավորման լեզու չէ</strong>։ Այնտեղ չկան պայմաններ, ցիկլեր, հաշվարկներ։ Դա <em>նշագրման</em> լեզու է․ դու պարզապես ասում ես՝ «սա վերնագիր է, սա պարբերություն է, սա նկար է»։ Դրա համար այն արագ է սովորվում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Գործիքները</h2>
+
+    <h3>VS Code</h3>
+    <p>Անվճար խմբագրիչ Microsoft-ից։ Ներբեռնիր <code>code.visualstudio.com</code>-ից։ Դա այն ծրագիրն է, որտեղ կանցկացնես հաջորդ 72 դասը։</p>
+
+    <h3>Երկու պարտադիր ընդլայնում</h3>
+    <p>VS Code → ձախից քառակուսիների պատկերակը (Extensions) → որոնիր և տեղադրիր․</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ընդլայնում</th><th>Ինչի համար</th></tr>
+      <tr><td><strong>Live Server</strong></td><td>Բացում է էջը և ինքնաբերաբար թարմացնում պահպանելիս</td></tr>
+      <tr><td><strong>Auto Rename Tag</strong></td><td>Թեգի անունը փոխելիս ուղղում է նաև զույգը</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչպես գործարկել Live Server-ը</span>
+      <p>Աջ սեղմում <code>index.html</code>-ի վրա → <em>Open with Live Server</em>։ Կբացվի բրաուզերը <code>http://127.0.0.1:5500</code> հասցեով։<br><br>
+      Հիմա ամեն անգամ, երբ պահպանում ես ֆայլը (<code>Ctrl + S</code>), էջն ինքնաբերաբար թարմանում է։ Ձեռքով F5 սեղմել պետք չէ։</p>
+    </div>
+
+    <h3>Բրաուզեր</h3>
+    <p>Chrome կամ Firefox։ Կարևորը՝ ունենան DevTools, որին կանդրադառնանք 08-րդ բաժնում։</p>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Նախագծի կառուցվածքը</h2>
+    <p>Ամեն նոր նախագիծ սկսվում է նույն կառուցվածքով։ Այս ձևը կպահենք բոլոր 72 դասերի ընթացքում։</p>
+
+    <div class="tree">my-project/
+├── index.html          ← գլխավոր էջը
+├── css/
+│   ├── global.css      ← կհայտնվի 6-րդ դասին
+│   └── main.css        ← կհայտնվի 6-րդ դասին
+└── images/             ← բոլոր նկարները</div>
+
+    <div class="warn note">
+      <span class="tag">Երեք խիստ կանոն անվանման համար</span>
+      <p><strong>1.</strong> Միայն լատինատառ։ Ոչ մի հայերեն կամ ռուսերեն տառ ֆայլի անվան մեջ։<br>
+      <strong>2.</strong> Ոչ մի բացատ։ Բացատի փոխարեն՝ գծիկ․ <code>about-us.html</code>, ոչ <code>about us.html</code>։<br>
+      <strong>3.</strong> Միայն փոքրատառ։ Սերվերի համար <code>Logo.png</code> և <code>logo.png</code> երկու տարբեր ֆայլ են։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ հենց index.html</span>
+      <p>Դա պայմանավորվածություն է․ երբ բացում ես կայքի հասցեն առանց ֆայլի անվան, սերվերն ինքնաբերաբար տալիս է <code>index.html</code>-ը։ Այդ պատճառով գլխավոր էջը միշտ այդպես է կոչվում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Էջի կմախքը</h2>
+    <p>Ամեն HTML ֆայլ սկսվում է նույն կառուցվածքով։ Այն կգրես հարյուրավոր անգամ, ուստի հասկանանք ամեն տողը։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.html</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;!</span><span class="k">DOCTYPE</span> <span class="t">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">html</span> <span class="f">lang</span>=<span class="s">"hy"</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">charset</span>=<span class="s">"UTF-8"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">name</span>=<span class="s">"viewport"</span> <span class="f">content</span>=<span class="s">"width=device-width, initial-scale=1.0"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">title</span><span class="p">&gt;</span>Իմ առաջին էջը<span class="p">&lt;/</span><span class="t">title</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">head</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">body</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">h1</span><span class="p">&gt;</span>Բարև, աշխարհ<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">body</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="t">html</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Տող</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>&lt;!DOCTYPE html&gt;</code></td><td>«Սա ժամանակակից HTML է»։ Առանց սրա բրաուզերն անցնում է հին ռեժիմի</td></tr>
+      <tr><td><code>&lt;html lang="hy"&gt;</code></td><td>Ամբողջ էջի պատյանը։ <code>lang</code>-ը ասում է՝ ի՞նչ լեզվով է բովանդակությունը</td></tr>
+      <tr><td><code>&lt;head&gt;</code></td><td>Տեղեկություն էջի <em>մասին</em>։ Էկրանին չի երևում</td></tr>
+      <tr><td><code>&lt;meta charset="UTF-8"&gt;</code></td><td>Հայերեն տառերի աջակցություն</td></tr>
+      <tr><td><code>&lt;meta name="viewport"&gt;</code></td><td>Հեռախոսում ճիշտ ցուցադրում</td></tr>
+      <tr><td><code>&lt;title&gt;</code></td><td>Ներդիրի վրայի տեքստը</td></tr>
+      <tr><td><code>&lt;body&gt;</code></td><td>Այն ամենը, ինչ երևում է էկրանին</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Առանց charset-ի</span>
+      <p>Հայերեն տեքստը կվերածվի անհասկանալի նշանների՝ <code>Ô²Õ¡Ö€Ö‡</code>։ Սա ամենահաճախ հանդիպող սկսնակի խնդիրն է։ <code>&lt;meta charset="UTF-8"&gt;</code>-ը պիտի լինի <code>&lt;head&gt;</code>-ի ամենասկզբում։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Արագ ձև</span>
+      <p>VS Code-ում դատարկ <code>.html</code> ֆայլում գրիր <code>!</code> և սեղմիր <kbd>Tab</kbd>։ Ամբողջ կմախքը կհայտնվի ինքնաբերաբար։ Բայց նախ մի քանի անգամ գրիր ձեռքով — որ հասկանաս, ոչ միայն օգտվես։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Թեգեր և ատրիբուտներ</h2>
+
+    <div class="tree">   բացվող թեգ        բովանդակություն      փակվող թեգ
+        │                    │                  │
+        ▼                    ▼                  ▼
+    &lt;h1&gt;         Բարև, աշխարհ          &lt;/h1&gt;
+    └──┬──┘                                └──┬──┘
+   անունը՝ h1                          նույն անունը + /</div>
+
+    <p>Թեգերի մեծ մասն ունի զույգ՝ բացվող և փակվող։ Բայց կան նաև <strong>ինքնափակվող</strong> թեգեր, որոնք բովանդակություն չունեն։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երկու տեսակ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- Զույգ թեգեր --&gt;</span>
+<span class="p">&lt;</span><span class="t">h1</span><span class="p">&gt;</span>Վերնագիր<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Պարբերություն<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Ինքնափակվող --&gt;</span>
+<span class="p">&lt;</span><span class="t">br</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">hr</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">img</span> <span class="f">src</span>=<span class="s">"images/cat.jpg"</span> <span class="f">alt</span>=<span class="s">"Կատու պատուհանին"</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <h3>Ատրիբուտներ</h3>
+    <p>Ատրիբուտը լրացուցիչ տեղեկություն է թեգի մասին։ Գրվում է <strong>բացվող</strong> թեգի ներսում։</p>
+
+    <div class="tree">&lt;img src="images/cat.jpg" alt="Կատու պատուհանին"&gt;
+      └┬┘  └──────┬──────┘  └┬┘  └────────┬───────┘
+    անունը    արժեքը      անունը       արժեքը</div>
+
+    <div class="note">
+      <span class="tag">Կանոններ</span>
+      <p>Արժեքը միշտ չակերտների մեջ։ Ատրիբուտները բաժանվում են բացատով։ Հերթականությունը նշանակություն չունի։</p>
+    </div>
+
+    <h3>Մեկնաբանություններ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>բրաուզերը դրանք անտեսում է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- Այս տեքստը էջում չի երևա --&gt;</span>
+
+<span class="c">&lt;!-- Հարմար է բաժինները նշելու համար --&gt;</span>
+<span class="p">&lt;</span><span class="t">header</span><span class="p">&gt;</span> ... <span class="p">&lt;/</span><span class="t">header</span><span class="p">&gt;</span>
+<span class="c">&lt;!-- header-ի վերջ --&gt;</span></code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Ներդրվածություն և ինդենտացիա</h2>
+    <p>Թեգերը կարող են լինել իրար ներսում։ Դա կոչվում է <strong>ներդրվածություն</strong>, և դա HTML-ի ամենակարևոր գաղափարն է։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>✅ ճիշտ — ինչպես տուփերը իրար մեջ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">body</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">h1</span><span class="p">&gt;</span>Վերնագիր<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Տեքստ<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">body</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ սխալ — թեգերը խաչվում են</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">h1</span><span class="p">&gt;</span>Վերնագիր
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Կանոն</span>
+      <p><strong>Ինչ վերջինն է բացվել, առաջինը պիտի փակվի։</strong> Ինչպես փակագծերը մաթեմատիկայում։ Եթե բացել ես <code>&lt;div&gt;</code>, հետո <code>&lt;h1&gt;</code>, ապա նախ պիտի փակես <code>&lt;/h1&gt;</code>, հետո՝ <code>&lt;/div&gt;</code>։</p>
+    </div>
+
+    <h3>Ինդենտացիա</h3>
+    <p>Ամեն ներդրված մակարդակ շեղվում է աջ՝ 4 բացատով (կամ Tab-ով)։ Բրաուզերի համար դա նշանակություն չունի — <strong>մարդու համար՝ ամեն ինչ</strong>։</p>
+
+    <div class="tip note">
+      <span class="tag">Ինքնաբերաբար</span>
+      <p>VS Code-ում <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd> — ինքնաբերաբար դասավորում է ամբողջ ֆայլը։ Օգտագործիր հաճախ։ Իսկ եթե ինդենտացիան կոտրվում է — ուրեմն ինչ-որ թեգ չի փակվել։ Դա անվճար սխալի ցուցիչ է։</p>
+    </div>
+
+    <h3>Փորձիր ինքդ</h3>
+    <p>Փոխիր տեքստը, ավելացրու նոր թեգեր։ Արդյունքը թարմանում է ինքնաբերաբար։</p>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="html">HTML</button>
+      </div>
+      <textarea class="live__code" data-pane="html">&lt;h1&gt;Բարև, աշխարհ&lt;/h1&gt;
+
+&lt;p&gt;Սա իմ առաջին պարբերությունն է։&lt;/p&gt;
+
+&lt;div&gt;
+    &lt;h2&gt;Ներդրված բաժին&lt;/h2&gt;
+    &lt;p&gt;Այս պարբերությունը div-ի ներսում է։&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Փորձիր՝ ջնջիր &lt;/div&gt;-ը և տես ինչ կլինի։&lt;/p&gt;</textarea>
+      <div class="live__actions">
+        <span>Արդյունքը թարմանում է գրելիս</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>DevTools</h2>
+    <p>Բրաուզերի ներկառուցված գործիքը, որով կարող ես տեսնել ցանկացած կայքի HTML-ը։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ինչպես բացել</th><th>Ստեղներ</th></tr>
+      <tr><td>Ամենուր</td><td><kbd>F12</kbd></td></tr>
+      <tr><td>Windows</td><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>I</kbd></td></tr>
+      <tr><td>Mac</td><td><kbd>Cmd</kbd> + <kbd>Option</kbd> + <kbd>I</kbd></td></tr>
+      <tr><td>Կոնկրետ էլեմենտի վրա</td><td>Աջ սեղմում → <em>Inspect</em></td></tr>
+    </table>
+    </div>
+
+    <p><strong>Elements</strong> ներդիրում երևում է էջի ամբողջ HTML-ը։ Կարող ես․</p>
+    <ul>
+      <li>Սավառնել թեգի վրայով — էջում այն կլուսավորվի</li>
+      <li>Կրկնակի սեղմել տեքստի վրա և փոխել այն</li>
+      <li>Ջնջել ցանկացած էլեմենտ <kbd>Delete</kbd>-ով</li>
+    </ul>
+
+    <div class="note">
+      <span class="tag">Հանգիստ, ոչինչ չես կոտրի</span>
+      <p>DevTools-ի փոփոխությունները տեղի են ունենում <strong>միայն քո էկրանին</strong> և անհետանում են էջը թարմացնելիս։ Իսկական կայքին ոչինչ չի պատահում։ Ուստի փորձարկիր ազատ։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Առաջադրանք հենց հիմա</span>
+      <p>Բացիր ցանկացած ճանաչված կայք, սեղմիր <kbd>F12</kbd> և նայիր Elements-ը։ Կտեսնես նույն <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, <code>&lt;body&gt;</code> կառուցվածքը, ինչ հենց նոր գրեցինք։ Ամեն կայք այդպես է կառուցված։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Դասարանական · իմ առաջին էջը</h2>
+    <p>Քայլ առ քայլ։ Ամեն կետից հետո պահպանիր և նայիր բրաուզերում։</p>
+
+    <ol>
+      <li>Ստեղծիր թղթապանակ՝ <code>lesson-01</code></li>
+      <li>Բացիր այն VS Code-ով՝ <em>File → Open Folder</em></li>
+      <li>Ստեղծիր <code>index.html</code></li>
+      <li>Գրիր կմախքը ձեռքով (առանց <code>!</code> + Tab)</li>
+      <li>Գործարկիր Live Server-ը</li>
+      <li>Լրացրու <code>&lt;body&gt;</code>-ն ներքևի օրինակի պես</li>
+      <li>Ամեն փոփոխությունից հետո՝ <kbd>Ctrl</kbd> + <kbd>S</kbd> և նայիր բրաուզերին</li>
+    </ol>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.html — ամբողջական</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;!</span><span class="k">DOCTYPE</span> <span class="t">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">html</span> <span class="f">lang</span>=<span class="s">"hy"</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">charset</span>=<span class="s">"UTF-8"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">name</span>=<span class="s">"viewport"</span> <span class="f">content</span>=<span class="s">"width=device-width, initial-scale=1.0"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">title</span><span class="p">&gt;</span>Անի Սարգսյան — իմ էջը<span class="p">&lt;/</span><span class="t">title</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">head</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">body</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- Վերնագիր --&gt;</span>
+    <span class="p">&lt;</span><span class="t">h1</span><span class="p">&gt;</span>Անի Սարգսյան<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Սովորում եմ վեբ ծրագրավորում<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">hr</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- Իմ մասին --&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">h2</span><span class="p">&gt;</span>Իմ մասին<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Ես 14 տարեկան եմ և սովորում եմ 8-րդ դասարանում։<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Սիրում եմ շախմատ և երաժշտություն։<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- Իմ նպատակները --&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">h2</span><span class="p">&gt;</span>Իմ նպատակները<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">h3</span><span class="p">&gt;</span>Այս տարի<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Սովորել HTML և CSS։<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">h3</span><span class="p">&gt;</span>Հաջորդ տարի<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Կառուցել իմ սեփական կայքը։<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="t">body</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="t">html</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <h3>Կենդանի փորձարկում</h3>
+    <p>Նույն էջը՝ խմբագրելի։ Փոխիր անունը, ավելացրու նոր բաժին։</p>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="html">HTML</button>
+      </div>
+      <textarea class="live__code" data-pane="html">&lt;h1&gt;Անի Սարգսյան&lt;/h1&gt;
+&lt;p&gt;Սովորում եմ վեբ ծրագրավորում&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;div&gt;
+    &lt;h2&gt;Իմ մասին&lt;/h2&gt;
+    &lt;p&gt;Ես 14 տարեկան եմ և սովորում եմ 8-րդ դասարանում։&lt;/p&gt;
+    &lt;p&gt;Սիրում եմ շախմատ և երաժշտություն։&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+    &lt;h2&gt;Իմ նպատակները&lt;/h2&gt;
+    &lt;h3&gt;Այս տարի&lt;/h3&gt;
+    &lt;p&gt;Սովորել HTML և CSS։&lt;/p&gt;
+&lt;/div&gt;</textarea>
+      <div class="live__actions">
+        <span>Փոխիր և տես արդյունքը</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+
+    <div class="note">
+      <span class="tag">Նկատեցի՞ր</span>
+      <p><code>h1</code>-ը մեծ է, <code>h2</code>-ը փոքր, պարբերությունների միջև բացակ կա։ Դա <strong>բրաուզերի լռելյայն ոճն է</strong> — մենք դեռ ոչ մի CSS չենք գրել։ 6-րդ դասին կսկսենք այդ ամենը վերահսկել ինքներս։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Տեղադրիր VS Code-ը, Live Server-ը և Auto Rename Tag-ը։ Ուղարկիր սքրինշոթ։</li>
+      <li>Ստեղծիր <code>lesson-01</code> թղթապանակը ճիշտ կառուցվածքով՝ <code>index.html</code>, <code>css/</code>, <code>images/</code>։</li>
+      <li>Գրիր HTML կմախքը <strong>ձեռքով</strong>, առանց <code>!</code> + Tab։ Առնվազն երեք անգամ՝ երեք տարբեր ֆայլում։</li>
+      <li>Կառուցիր էջ քո մասին՝ առնվազն մեկ <code>h1</code>, երկու <code>h2</code>, չորս <code>p</code> և մեկ <code>hr</code>։</li>
+      <li>Ավելացրու առնվազն երեք մեկնաբանություն, որոնք նշում են բաժինները։</li>
+      <li>Դիտավորյալ մի՛ փակիր որևէ թեգ։ Պահպանիր, նայիր բրաուզերում և գրիր՝ ի՞նչ կոտրվեց։ Հետո ուղղիր։</li>
+      <li>Ջնջիր <code>&lt;meta charset="UTF-8"&gt;</code> տողը։ Ի՞նչ եղավ հայերեն տեքստի հետ։ Վերականգնիր։</li>
+      <li>Փոխիր <code>&lt;title&gt;</code>-ը և ցույց տուր, թե որտեղ է այն երևում բրաուզերում։</li>
+      <li>Բացիր որևէ ճանաչված կայք DevTools-ով։ Գտիր այնտեղ <code>&lt;h1&gt;</code>-ը և փոխիր տեքստը։ Ուղարկիր սքրինշոթ։</li>
+      <li>Գրիր 3–4 նախադասությամբ՝ ի՞նչ է կատարվում, երբ մուտքագրում ես կայքի հասցեն։ Սեփական բառերով։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>&lt;!DOCTYPE html&gt;</code></td><td>Ժամանակակից HTML</td></tr>
+      <tr><td><code>&lt;html lang="hy"&gt;</code></td><td>Էջի պատյանը, լեզուն</td></tr>
+      <tr><td><code>&lt;head&gt;</code></td><td>Տեղեկություն էջի մասին</td></tr>
+      <tr><td><code>&lt;meta charset="UTF-8"&gt;</code></td><td>Հայերեն տառեր ⭐</td></tr>
+      <tr><td><code>&lt;meta name="viewport"&gt;</code></td><td>Ճիշտ ցուցադրում հեռախոսում</td></tr>
+      <tr><td><code>&lt;title&gt;</code></td><td>Ներդիրի վերնագիրը</td></tr>
+      <tr><td><code>&lt;body&gt;</code></td><td>Տեսանելի բովանդակությունը</td></tr>
+      <tr><td><code>&lt;h1&gt;</code>…<code>&lt;h6&gt;</code></td><td>Վերնագրեր</td></tr>
+      <tr><td><code>&lt;p&gt;</code></td><td>Պարբերություն</td></tr>
+      <tr><td><code>&lt;div&gt;</code></td><td>Բլոկ՝ խմբավորելու համար</td></tr>
+      <tr><td><code>&lt;br&gt;</code>, <code>&lt;hr&gt;</code></td><td>Տողադարձ, հորիզոնական գիծ</td></tr>
+      <tr><td><code>&lt;!-- ... --&gt;</code></td><td>Մեկնաբանություն</td></tr>
+    </table>
+    </div>
+
+    <h3>Ստեղնաշարի համադրություններ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Համադրություն</th><th>Ինչ է անում</th></tr>
+      <tr><td><kbd>!</kbd> + <kbd>Tab</kbd></td><td>HTML կմախքը</td></tr>
+      <tr><td><kbd>Ctrl</kbd> + <kbd>S</kbd></td><td>Պահպանել</td></tr>
+      <tr><td><kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>F</kbd></td><td>Դասավորել կոդը</td></tr>
+      <tr><td><kbd>Ctrl</kbd> + <kbd>/</kbd></td><td>Մեկնաբանել տողը</td></tr>
+      <tr><td><kbd>F12</kbd></td><td>DevTools</td></tr>
+    </table>
+    </div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Ֆայլը կոչվում է <code>index.html</code></li>
+      <li>Կա <code>&lt;!DOCTYPE html&gt;</code></li>
+      <li>Կա <code>&lt;meta charset="UTF-8"&gt;</code> և հայերենը ճիշտ է երևում</li>
+      <li><code>&lt;title&gt;</code>-ը իմաստալից է, ոչ «Document»</li>
+      <li>Բոլոր թեգերը փակված են</li>
+      <li>Ինդենտացիան ճիշտ է</li>
+      <li>Ֆայլերի անունները՝ լատինատառ, փոքրատառ, առանց բացատի</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչ է սերվերը</li>
+      <li>Գիտե՞մ տարբերությունը <code>&lt;head&gt;</code>-ի և <code>&lt;body&gt;</code>-ի միջև</li>
+      <li>Կարո՞ղ եմ գրել կմախքը առանց նայելու</li>
+      <li>Հասկանո՞ւմ եմ, ինչու է <code>charset</code>-ը պարտադիր</li>
+      <li>Գիտե՞մ, ինչ է ատրիբուտը</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Տեքստ և բովանդակություն՝ վերնագրերի հիերարխիա, ցուցակներ, հղումներ, նկարներ և ֆայլերի ուղիներ։ Էջը կսկսի իսկապես բովանդակալից դառնալ։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 01 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

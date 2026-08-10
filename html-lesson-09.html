@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 9 — display և նորմալ հոսք</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 9 · 2 ժամ</p>
+  <h1>display և նորմալ հոսք</h1>
+  <p class="lede">Ինչո՞ւ են <code>div</code>-երը շարվում իրար տակ, իսկ <code>span</code>-երը՝ կողք կողքի։ Այսօր հասկանում ենք էջի բնական հոսքը — վերջին քայլը մինչև մեր դասավորության համակարգը։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 06–08</span>
+    <span>Բլոկ 1 · CSS հիմունքներ</span>
+    <span>Կամուրջ Դաս 10-ին</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ի՞նչ է նորմալ հոսքը</li>
+      <li><code>block</code> — ամբողջ տողով</li>
+      <li><code>inline</code> — տեքստի հոսքում</li>
+      <li><code>inline-block</code> — երկուսի միջև</li>
+      <li><code>display: none</code> vs <code>visibility: hidden</code></li>
+      <li><code>overflow</code></li>
+      <li>Ինչո՞ւ <code>inline-block</code>-ը բավարար չէ դասավորության համար</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Նորմալ հոսք</h2>
+    <p>Բրաուզերն ունի լռելյայն ձև՝ էլեմենտները դասավորելու։ Այն կոչվում է <strong>նորմալ հոսք</strong>, և այն աշխատում է, նույնիսկ եթե ոչ մի CSS չես գրել։</p>
+
+    <div class="tree">Երկու հիմնական վարքագիծ
+
+  BLOCK                       INLINE
+  ┌────────────────────┐      տեքստ [span] տեքստ [b] տեքստ
+  │  div               │      հոսում է որպես բառեր՝
+  └────────────────────┘      ձախից աջ, տողադարձով
+  ┌────────────────────┐
+  │  p                 │
+  └────────────────────┘
+  ամեն մեկը՝ նոր տողից
+  և ամբողջ լայնությամբ</div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Block թեգեր</th><th>Inline թեգեր</th></tr>
+      <tr><td><code>div</code>, <code>p</code>, <code>h1</code>–<code>h6</code></td><td><code>span</code>, <code>a</code>, <code>strong</code>, <code>em</code></td></tr>
+      <tr><td><code>ul</code>, <code>ol</code>, <code>li</code></td><td><code>img</code>, <code>input</code>, <code>button</code></td></tr>
+      <tr><td><code>section</code>, <code>article</code>, <code>header</code></td><td><code>small</code>, <code>code</code>, <code>label</code></td></tr>
+      <tr><td><code>form</code>, <code>table</code></td><td>—</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Սա լռելյայն է, ոչ վերջնական</span>
+      <p><code>display</code> հատկությամբ կարող ես ցանկացած էլեմենտի վարքագիծը փոխել։ <code>li { display: inline }</code> — և ցուցակը դառնում է հորիզոնական մենյու։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>block</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>վարքագիծը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.box</span> {
+    <span class="f">display</span>: <span class="s">block</span>;
+
+    <span class="c">/* Ամեն ինչ աշխատում է */</span>
+    <span class="f">width</span>: <span class="n">300px</span>;
+    <span class="f">height</span>: <span class="n">200px</span>;
+    <span class="f">margin</span>: <span class="n">20px</span>;
+    <span class="f">padding</span>: <span class="n">20px</span>;
+}</code></pre>
+    </div>
+
+    <ul>
+      <li>Սկսվում է <strong>նոր տողից</strong></li>
+      <li>Զբաղեցնում է <strong>ամբողջ հասանելի լայնությունը</strong>, եթե <code>width</code> չկա</li>
+      <li>Ընդունում է <code>width</code>, <code>height</code>, բոլոր <code>margin</code>-ները և <code>padding</code>-ները</li>
+      <li>Կարելի է կենտրոնացնել <code>margin: 0 auto</code>-ով</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">«Ամբողջ լայնությունը» ինչ է նշանակում</span>
+      <p>Ոչ թե էկրանի, այլ <strong>ծնողի</strong> լայնությունը։ <code>div</code>-ը 300px լայնությամբ ծնողի ներսում կլինի 300px, ոչ 1920։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>inline</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>սահմանափակումները</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.tag</span> {
+    <span class="f">display</span>: <span class="s">inline</span>;
+
+    <span class="f">width</span>: <span class="n">200px</span>;        <span class="c">/* ❌ անտեսվում է */</span>
+    <span class="f">height</span>: <span class="n">100px</span>;       <span class="c">/* ❌ անտեսվում է */</span>
+    <span class="f">margin-top</span>: <span class="n">20px</span>;    <span class="c">/* ❌ անտեսվում է */</span>
+    <span class="f">margin-bottom</span>: <span class="n">20px</span>; <span class="c">/* ❌ անտեսվում է */</span>
+
+    <span class="f">margin-left</span>: <span class="n">20px</span>;   <span class="c">/* ✅ աշխատում է */</span>
+    <span class="f">padding</span>: <span class="n">20px</span>;       <span class="c">/* ⚠ աշխատում է, բայց... */</span>
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ուղղահայաց padding-ի տարօրինակությունը</span>
+      <p><code>inline</code> էլեմենտի վրա ուղղահայաց <code>padding</code>-ը <em>նկարվում է</em> (ֆոնը մեծանում է), բայց <strong>տեղ չի զբաղեցնում</strong>։ Արդյունքում այն մտնում է հարևան տողերի վրա և ծածկում դրանք։<br><br>
+      Հենց դրա համար են <code>inline</code> էլեմենտները անհարմար ցանկացած դասավորության համար։</p>
+    </div>
+
+    <ul>
+      <li><strong>Չի</strong> սկսվում նոր տողից</li>
+      <li>Զբաղեցնում է <strong>միայն իր բովանդակության</strong> չափը</li>
+      <li>Անտեսում է <code>width</code>, <code>height</code>, ուղղահայաց <code>margin</code></li>
+      <li>Հոսում է որպես տեքստ, տողադարձվում է</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հիմա պարզ է</span>
+      <p>Հիշո՞ւմ ես Դաս 6-ի <code>global.css</code>-ից՝ <code>a { display: inline-block }</code>։<br><br>
+      Հղումը լռելյայն <code>inline</code> է։ Առանց այդ տողի կոճակ-հղումին չէիր կարողանա տալ <code>padding: 10px 20px</code> և չափեր։ Հիմա գիտես՝ ինչու է այն այնտեղ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>inline-block</h2>
+    <p>Հիբրիդ․ դրսից <code>inline</code> է (կողք կողքի), ներսից՝ <code>block</code> (ընդունում է չափեր)։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>լավագույնը երկուսից</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.btn</span> {
+    <span class="f">display</span>: <span class="s">inline-block</span>;
+
+    <span class="f">width</span>: <span class="n">150px</span>;       <span class="c">/* ✅ */</span>
+    <span class="f">height</span>: <span class="n">44px</span>;        <span class="c">/* ✅ */</span>
+    <span class="f">margin</span>: <span class="n">10px</span>;        <span class="c">/* ✅ բոլոր ուղղություններով */</span>
+    <span class="f">padding</span>: <span class="n">12px</span> <span class="n">24px</span>;  <span class="c">/* ✅ ճիշտ է աշխատում */</span>
+}</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th></th><th><code>block</code></th><th><code>inline</code></th><th><code>inline-block</code></th></tr>
+      <tr><td>Նոր տողից</td><td>Այո</td><td>Ոչ</td><td>Ոչ</td></tr>
+      <tr><td>Ամբողջ լայնությամբ</td><td>Այո</td><td>Ոչ</td><td>Ոչ</td></tr>
+      <tr><td><code>width</code>/<code>height</code></td><td>✅</td><td>❌</td><td>✅</td></tr>
+      <tr><td>Ուղղահայաց <code>margin</code></td><td>✅</td><td>❌</td><td>✅</td></tr>
+      <tr><td>Հորիզոնական <code>margin</code></td><td>✅</td><td>✅</td><td>✅</td></tr>
+      <tr><td>Կողք կողքի</td><td>❌</td><td>✅</td><td>✅</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Ինչո՞ւ inline-block-ը բավարար չէ</h2>
+    <p>Թվում է՝ գտանք լուծումը դասավորության համար։ Բլոկները կողք կողքի են և ընդունում են չափեր։ Բայց կան երեք լուրջ խնդիր։</p>
+
+    <h3>Խնդիր 1 — առեղծվածային բացակը</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երեք սյուն 33.33%-ով չեն տեղավորվում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- HTML --&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>1<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>2<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>3<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+<pre><code><span class="k">.col</span> {
+    <span class="f">display</span>: <span class="s">inline-block</span>;
+    <span class="f">width</span>: <span class="n">33.33%</span>;
+}
+<span class="c">/* Երրորդ սյունը ընկնում է ներքև */</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Պատճառը</span>
+      <p><code>inline-block</code> էլեմենտները հոսում են <strong>որպես բառեր</strong>։ Իսկ HTML-ում դրանց միջև կա տողադարձ, որը բրաուզերի համար <strong>բացատ</strong> է — մոտ 4px։<br><br>
+      33.33% + 4px + 33.33% + 4px + 33.33% &gt; 100%։ Երրորդն ընկնում է։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>«լուծումները», որոնք տգեղ են</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- 1. Գրել առանց տողադարձի --&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>1<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>2<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>3<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- 2. Կոմենտարով «կուլ տալ» բացատը --&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>1<span class="p">&lt;/</span><span class="t">div</span><span class="c">&lt;!--
+--&gt;</span><span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>2<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+<span class="c">/* 3. Ծնողին font-size: 0 */</span>
+<span class="k">.row</span> { <span class="f">font-size</span>: <span class="n">0</span>; }
+<span class="k">.col</span> { <span class="f">font-size</span>: <span class="n">16px</span>; }   <span class="c">/* վերականգնել ամեն երեխայում */</span></code></pre>
+    </div>
+
+    <p>Բոլորն էլ աշխատում են, և բոլորն էլ վատն են։ Առաջինը՝ կոդն անընթեռնելի է դառնում։ Երկրորդը՝ տարօրինակ է։ Երրորդը՝ պիտի հիշես վերականգնել տառաչափը ամենուր։</p>
+
+    <h3>Խնդիր 2 — ուղղահայաց հավասարեցում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>տարբեր բարձրության քարտեր</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Երկու քարտ՝ մեկը 200px, մյուսը 300px բարձրությամբ
+   Ի՞նչ է լինում — դրանք հավասարեցվում են ըստ ՎԵՐՋԻՆ ՏՈՂԻ,
+   ոչ ըստ վերին եզրի                                        */</span>
+
+<span class="k">.col</span> { <span class="f">vertical-align</span>: <span class="s">top</span>; }   <span class="c">/* պիտի գրես ձեռքով */</span></code></pre>
+    </div>
+
+    <h3>Խնդիր 3 — հավասար բարձրություն</h3>
+    <p>Երեք քարտ տարբեր տեքստերով։ Ուզում ես, որ դրանք լինեն <strong>հավասար բարձրության</strong>, և կոճակները՝ նույն մակարդակին։ <code>inline-block</code>-ով դա <em>հնարավոր չէ</em> առանց ֆիքսված բարձրության։</p>
+
+    <div class="tip note">
+      <span class="tag">Ահա թե ինչու է եկել Flexbox-ը</span>
+      <p>2010-ականներին դասավորությունը կառուցում էին <code>float</code>-ով և <code>inline-block</code>-ով՝ բոլոր այս հնարքներով։<br><br>
+      <strong>Flexbox-ը լուծում է բոլոր երեք խնդիրը միանգամից.</strong> բացատներ չկան, <code>gap</code>-ը կանխատեսելի է, երեխաները լռելյայն հավասար բարձրության են։<br><br>
+      11-րդ դասին կսովորենք այն։ Իսկ մինչ այդ՝ 10-րդ դասին կկառուցենք կմախքը, որի վրա այն կնստի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Թաքցնելու ձևերը</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երեք տարբեր բան</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* 1. Ամբողջովին անհետանում է, տեղ չի զբաղեցնում */</span>
+<span class="k">.hidden</span> { <span class="f">display</span>: <span class="s">none</span>; }
+
+<span class="c">/* 2. Անտեսանելի է, բայց տեղը մնում է */</span>
+<span class="k">.invisible</span> { <span class="f">visibility</span>: <span class="s">hidden</span>; }
+
+<span class="c">/* 3. Թափանցիկ է, տեղը մնում է, դեռ սեղմելի է */</span>
+<span class="k">.transparent</span> { <span class="f">opacity</span>: <span class="n">0</span>; }</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th></th><th>Տեղ զբաղեցնո՞ւմ է</th><th>Սեղմելի՞ է</th><th>Էկրանընթերցիչը կարդո՞ւմ է</th></tr>
+      <tr><td><code>display: none</code></td><td>Ոչ</td><td>Ոչ</td><td><strong>Ոչ</strong></td></tr>
+      <tr><td><code>visibility: hidden</code></td><td>Այո</td><td>Ոչ</td><td>Ոչ</td></tr>
+      <tr><td><code>opacity: 0</code></td><td>Այո</td><td><strong>Այո</strong></td><td>Այո</td></tr>
+      <tr><td><code>.visually-hidden</code></td><td>Ոչ</td><td>—</td><td><strong>Այո</strong></td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">opacity: 0-ի թակարդը</span>
+      <p>Թափանցիկ կոճակը <strong>դեռ սեղմվում է</strong>։ Օգտագործողը սեղմում է դատարկ տեղում և ինչ-որ բան է կատարվում։ Եթե ուզում ես իսկապես անջատել՝ ավելացրու նաև <code>pointer-events: none</code>։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Հիշիր .visually-hidden-ը</span>
+      <p>Դաս 6-ի <code>global.css</code>-ից։ Այն օգտագործվում է, երբ տեքստը պետք է <strong>միայն</strong> էկրանընթերցիչին՝ օրինակ, բաժնի վերնագիրը, որը դիզայնում չկա։ <code>display: none</code>-ը այդ դեպքում սխալ ընտրություն է — այն թաքցնում է բոլորից։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>overflow</h2>
+    <p>Ի՞նչ անել, երբ բովանդակությունը չի տեղավորվում տուփի մեջ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>չորս արժեք</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.box</span> { <span class="f">overflow</span>: <span class="s">visible</span>; }  <span class="c">/* լռելյայն — դուրս է գալիս */</span>
+<span class="k">.box</span> { <span class="f">overflow</span>: <span class="s">hidden</span>;  }  <span class="c">/* կտրվում է */</span>
+<span class="k">.box</span> { <span class="f">overflow</span>: <span class="s">scroll</span>;  }  <span class="c">/* միշտ սքրոլ */</span>
+<span class="k">.box</span> { <span class="f">overflow</span>: <span class="s">auto</span>;    }  <span class="c">/* սքրոլ միայն երբ պետք է ✅ */</span>
+
+<span class="c">/* Առանձին առանցքներով */</span>
+<span class="k">.table-wrap</span> {
+    <span class="f">overflow-x</span>: <span class="s">auto</span>;
+    <span class="f">overflow-y</span>: <span class="s">hidden</span>;
+}</code></pre>
+    </div>
+
+    <h3>Երկու սովորական կիրառություն</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>գործնականում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* 1. Կլորացված քարտ նկարով */</span>
+<span class="k">.card</span> {
+    <span class="f">border-radius</span>: <span class="n">12px</span>;
+    <span class="f">overflow</span>: <span class="s">hidden</span>;    <span class="c">/* նկարի անկյունները կկտրվեն */</span>
+}
+
+<span class="c">/* 2. Լայն աղյուսակ հեռախոսում */</span>
+<span class="k">.table-wrap</span> {
+    <span class="f">overflow-x</span>: <span class="s">auto</span>;    <span class="c">/* աղյուսակը սքրոլվում է, էջը՝ ոչ */</span>
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Հորիզոնական սքրոլը էջի վրա — սխալ</span>
+      <p>Եթե ամբողջ էջը հորիզոնական սքրոլվում է հեռախոսում, ինչ-որ բան դուրս է եկել։ <strong>Մի՛ ծածկիր այն <code>overflow-x: hidden</code>-ով <code>body</code>-ի վրա</strong> — գտիր մեղավոր էլեմենտը։<br><br>
+      DevTools → հեռախոսի ռեժիմ → նեղացրու էկրանը և տես, թե ինչն է դուրս գալիս։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Երկար բառերի կտրումը</span>
+      <p>Հայերենում բառերը երկար են և կարող են դուրս գալ նեղ բլոկից։ Լուծում՝<br>
+      <code>overflow-wrap: break-word;</code> — բառը կտողադարձվի, եթե չի տեղավորվում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Խաղահրապարակ</h2>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="css">CSS</button>
+        <button class="live__tab" data-pane="html">HTML</button>
+      </div>
+      <textarea class="live__code" data-pane="css">body {
+    font-family: system-ui, sans-serif;
+    margin: 0;
+    padding: 16px;
+    background: #f5f5f5;
+}
+
+h3 { margin: 20px 0 8px; font-size: 15px; }
+
+/* ===== 1. block vs inline ===== */
+.b, .i {
+    background: #9db4c0;
+    width: 200px;
+    height: 50px;
+    margin: 10px;
+    padding: 10px;
+}
+
+.b { display: block; }
+.i { display: inline; }   /* width, height, ուղղահայաց margin անտեսվում են */
+
+/* ===== 2. inline-block-ի բացակի խնդիրը ===== */
+.row-ib {
+    background: #ddd;
+    /* Փորձիր՝ font-size: 0; */
+}
+
+.col-ib {
+    display: inline-block;
+    width: 33.33%;
+    background: #003459;
+    color: white;
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 14px;
+    vertical-align: top;   /* առանց սրա հավասարեցումը կկոտրվի */
+}
+
+/* ===== 3. Թաքցնելու ձևերը ===== */
+.demo span {
+    background: #003459;
+    color: white;
+    padding: 6px 10px;
+    margin-right: 6px;
+}
+
+.hide-none      { display: none; }
+.hide-visible   { visibility: hidden; }
+.hide-opacity   { opacity: 0; }
+
+/* ===== 4. overflow ===== */
+.of {
+    width: 200px;
+    height: 70px;
+    background: white;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #999;
+}
+
+.of-visible { overflow: visible; }
+.of-hidden  { overflow: hidden; }
+.of-auto    { overflow: auto; }</textarea>
+      <textarea class="live__code is-hidden" data-pane="html">&lt;h3&gt;1. block vs inline&lt;/h3&gt;
+&lt;div class="b"&gt;block&lt;/div&gt;
+&lt;span class="i"&gt;inline — չափերն անտեսվում են&lt;/span&gt;
+&lt;span class="i"&gt;երկրորդը&lt;/span&gt;
+
+&lt;h3&gt;2. Երեք սյուն 33.33%-ով&lt;/h3&gt;
+&lt;div class="row-ib"&gt;
+    &lt;div class="col-ib"&gt;Առաջին&lt;/div&gt;
+    &lt;div class="col-ib"&gt;Երկրորդ&lt;/div&gt;
+    &lt;div class="col-ib"&gt;Երրորդը ընկնում է ներքև&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3&gt;3. Թաքցնելու ձևերը&lt;/h3&gt;
+&lt;div class="demo"&gt;
+    &lt;span&gt;սովորական&lt;/span&gt;
+    &lt;span class="hide-none"&gt;display none&lt;/span&gt;
+    &lt;span class="hide-visible"&gt;visibility&lt;/span&gt;
+    &lt;span class="hide-opacity"&gt;opacity&lt;/span&gt;
+    &lt;span&gt;վերջին&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;h3&gt;4. overflow&lt;/h3&gt;
+&lt;div class="of of-visible"&gt;visible — այս երկար տեքստը դուրս է գալիս տուփից և ծածկում ներքևինը&lt;/div&gt;
+&lt;div class="of of-hidden"&gt;hidden — այս երկար տեքստը կտրվում է և մնացածը չի երևում&lt;/div&gt;
+&lt;div class="of of-auto"&gt;auto — այս երկար տեքստը ստանում է սքրոլ, և կարող ես կարդալ ամբողջը&lt;/div&gt;</textarea>
+      <div class="live__actions">
+        <span>Փորձիր ավելացնել font-size: 0 .row-ib-ին</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Փորձիր</span>
+      <p><strong>1.</strong> Ավելացրու <code>.row-ib { font-size: 0 }</code> — երրորդ սյունը կբարձրանա՞։<br>
+      <strong>2.</strong> Ջնջիր <code>vertical-align: top</code>-ը և տես, ինչ եղավ։<br>
+      <strong>3.</strong> Փոխիր <code>.i</code>-ն <code>inline-block</code>-ի։<br>
+      <strong>4.</strong> Նկատիր, որ <code>display: none</code>-ի տարրը ընդհանրապես չկա, իսկ մյուս երկուսի տեղը մնացել է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Դասարանական</h2>
+    <p>Հորիզոնական մենյու — դասական օրինակ, թե ինչպես <code>display</code>-ը փոխում է ամեն ինչ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">nav</span> <span class="f">aria-label</span>=<span class="s">"Գլխավոր մենյու"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">ul</span> <span class="f">class</span>=<span class="s">"menu"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span><span class="p">&gt;</span>Գլխավոր<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span><span class="p">&gt;</span>Ապրանքներ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span><span class="p">&gt;</span>Մեր մասին<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span><span class="p">&gt;</span>Կապ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">nav</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>քայլ առ քայլ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Քայլ 1 — li-երը դառնում են հորիզոնական */</span>
+<span class="k">.menu</span> <span class="t">li</span> {
+    <span class="f">display</span>: <span class="s">inline-block</span>;
+}
+
+<span class="c">/* Քայլ 2 — հղումներին տալիս ենք padding
+   (հնարավոր է, որովհետև global.css-ում
+    a { display: inline-block } արդեն կա)   */</span>
+<span class="k">.menu</span> <span class="t">a</span> {
+    <span class="f">padding</span>: <span class="n">12px</span> <span class="n">18px</span>;
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--text</span>);
+    <span class="f">border-radius</span>: <span class="n">6px</span>;
+}
+
+<span class="c">/* Քայլ 3 — վիճակներ */</span>
+<span class="k">.menu</span> <span class="t">a</span>:<span class="k">hover</span>,
+<span class="k">.menu</span> <span class="t">a</span>:<span class="k">focus-visible</span> {
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--secondary</span>);
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--on-dark</span>);
+}
+
+<span class="k">.menu</span> <span class="t">a</span><span class="k">.is-active</span> {
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--light</span>);
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ուշադրություն սեղմելի տարածքին</span>
+      <p><code>padding</code>-ը դրված է <strong>հղումի</strong> վրա, ոչ <code>li</code>-ի։ Դրա շնորհիվ ամբողջ ուղղանկյունը սեղմելի է։<br><br>
+      Եթե <code>padding</code>-ը լիներ <code>li</code>-ի վրա, օգտագործողը պիտի ուղիղ տառերին սեղմեր։ Հեռախոսում դա տառապանք է։ Նվազագույն հարմարավետ չափը՝ <strong>44×44px</strong>։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Այս մենյուն ունի բացակի խնդիրը</span>
+      <p><code>li</code>-երի միջև կան 4px բացակներ՝ HTML-ի տողադարձերից։ Մենյուի համար դա նույնիսկ լավ է թվում։ Բայց երբ պետք լինի ճշգրիտ վերահսկել բացակները — 11-րդ դասին կանցնենք Flexbox-ի, և այնտեղ <code>gap: 10px</code>-ը կլուծի ամեն ինչ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ստեղծիր երեք բլոկ՝ <code>block</code>, <code>inline</code>, <code>inline-block</code>։ Ամեն մեկին տուր նույն <code>width</code>, <code>height</code>, <code>margin</code>։ Նկարագրիր տարբերությունները։</li>
+      <li>Ցուցադրիր, որ <code>inline</code>-ի ուղղահայաց <code>padding</code>-ը նկարվում է, բայց տեղ չի զբաղեցնում։</li>
+      <li>Կառուցիր երեք սյուն <code>inline-block</code>-ով և <code>33.33%</code>-ով։ Ցույց տուր խնդիրը, ապա լուծիր բոլոր երեք ձևով։</li>
+      <li>Ցուցադրիր <code>vertical-align: top</code>-ի ազդեցությունը տարբեր բարձրության բլոկների վրա։</li>
+      <li>Համեմատիր <code>display: none</code>, <code>visibility: hidden</code> և <code>opacity: 0</code>։ Ապացուցիր, որ <code>opacity: 0</code>-ով կոճակը դեռ սեղմվում է։</li>
+      <li>Օգտագործիր <code>.visually-hidden</code> դասը՝ բաժնի վերնագիր ավելացնելու համար, որը դիզայնում չկա։</li>
+      <li>Ցուցադրիր <code>overflow</code>-ի չորս արժեքը՝ նույն երկար տեքստով։</li>
+      <li>Վերցրու Դաս 3-ի աղյուսակը և փաթեթավորիր <code>.table-wrap { overflow-x: auto }</code>-ի մեջ։ Ստուգիր հեռախոսի ռեժիմում։</li>
+      <li>Կառուցիր հորիզոնական մենյու դասարանական օրինակի պես։ Համոզվիր, որ սեղմելի տարածքը 44px-ից մեծ է։</li>
+      <li>Կառուցիր էջ, որտեղ ամբողջ լայնությամբ header-ը և footer-ը <code>block</code> են, մենյուն՝ հորիզոնական, իսկ բովանդակությունը՝ կենտրոնացված <code>max-width</code>-ով։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Արժեք</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>display: block</code></td><td>Նոր տողից, ամբողջ լայնությամբ</td></tr>
+      <tr><td><code>display: inline</code></td><td>Տեքստի հոսքում, չափերն անտեսվում են</td></tr>
+      <tr><td><code>display: inline-block</code></td><td>Կողք կողքի + չափերն աշխատում են</td></tr>
+      <tr><td><code>display: none</code></td><td>Անհետանում է ամբողջովին</td></tr>
+      <tr><td><code>visibility: hidden</code></td><td>Անտեսանելի, տեղը մնում է</td></tr>
+      <tr><td><code>opacity: 0</code></td><td>Թափանցիկ, դեռ սեղմելի ⚠️</td></tr>
+      <tr><td><code>overflow: auto</code></td><td>Սքրոլ միայն երբ պետք է ⭐</td></tr>
+      <tr><td><code>overflow: hidden</code></td><td>Կտրում է</td></tr>
+      <tr><td><code>overflow-wrap: break-word</code></td><td>Երկար բառերի տողադարձ</td></tr>
+      <tr><td><code>vertical-align: top</code></td><td><code>inline-block</code>-ի հավասարեցում</td></tr>
+      <tr><td><code>pointer-events: none</code></td><td>Անջատում է սեղմումները</td></tr>
+    </table>
+    </div>
+
+    <h3>Ի՞նչ ավելացավ global.css-ում այսօր</h3>
+    <div class="tree">✓ .d-none         { display: none; }
+✓ .d-block        { display: block; }
+✓ .d-inline-block { display: inline-block; }</div>
+
+    <div class="note">
+      <span class="tag">Եվ մեկ բան պարզ դարձավ</span>
+      <p>Դաս 6-ի <code>a { display: inline-block }</code>-ը հիմա հասկանալի է․ առանց դրա հղումին չէիր կարող տալ <code>padding</code> և չափեր։ Ամեն կոճակ-հղում կախված է այդ մեկ տողից։</p>
+    </div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Հղումների սեղմելի տարածքը ≥ 44×44px</li>
+      <li><code>padding</code>-ը հղումի վրա է, ոչ <code>li</code>-ի</li>
+      <li>Չկա հորիզոնական սքրոլ ամբողջ էջի վրա</li>
+      <li>Լայն աղյուսակները փաթեթավորված են <code>overflow-x: auto</code>-ով</li>
+      <li><code>opacity: 0</code>-ի փոխարեն օգտագործվում է <code>display: none</code>, երբ էլեմենտն իսկապես պետք չէ</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչու <code>inline</code>-ը չի ընդունում <code>height</code></li>
+      <li>Գիտե՞մ, որտեղից է գալիս <code>inline-block</code>-ի 4px բացակը</li>
+      <li>Հասկանո՞ւմ եմ երեք թաքցնելու ձևերի տարբերությունը</li>
+      <li>Կարո՞ղ եմ բացատրել, ինչու <code>inline-block</code>-ը բավարար չէ դասավորության համար</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին — կարևոր անցում</span>
+      <p>Ավարտում ենք CSS-ի հիմունքները և անցնում <strong>դասավորության մեթոդաբանությանը</strong>։<br><br>
+      Դաս 10-ը լինելու է բոլորովին այլ․ նոր հատկություններ չենք սովորի։ Փոխարենը կկառուցենք <code>main &gt; section &gt; .row &gt; .col &gt; .wrapper</code> համակարգը և կհասկանանք՝ ինչու հենց այսպես։ Դա այն կմախքն է, որի վրա կնստի մնացած ամեն ինչը։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 09 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

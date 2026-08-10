@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 10 — Կառուցվածքի համակարգը</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 10 · 2 ժամ · Հիմնարար դաս</p>
+  <h1>Կառուցվածքի համակարգը</h1>
+  <p class="lede">Այսօր նոր CSS հատկություններ չենք սովորի։ Փոխարենը կկառուցենք <strong>համակարգ</strong>, որով կաշխատես մնացած 62 դասը՝ <code>main &gt; section &gt; .row &gt; .col &gt; .wrapper</code>։ Սա դասընթացի ամենակարևոր դասերից է։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 01–09</span>
+    <span>Բլոկ 1 · Կառուցվածք</span>
+    <span>Կրկնվում է Դաս 11–12-ին</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ինչո՞ւ է պետք համակարգ</li>
+      <li>Հինգ շերտը և ամեն մեկի պատասխանատվությունը</li>
+      <li><code>.row</code> — պատերը</li>
+      <li><code>.col</code> — բացակները</li>
+      <li><code>.wrapper</code> — տեսքը</li>
+      <li>Լայնությունների համակարգը</li>
+      <li>Տիպիկ սխալները</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Խնդիրը</h2>
+    <p>Պատկերացրու պարզ առաջադրանք․ երեք քարտ կողք կողքի, դրանց միջև 20px բացակ, էջի եզրերից՝ 60px։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>առաջին միտքը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.card</span> {
+    <span class="f">width</span>: <span class="n">33.33%</span>;
+    <span class="f">margin</span>: <span class="n">10px</span>;
+    <span class="f">background</span>: <span class="s">white</span>;
+    <span class="f">border-radius</span>: <span class="n">12px</span>;
+    <span class="f">padding</span>: <span class="n">16px</span>;
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ի՞նչ կոտրվեց</span>
+      <p><strong>1.</strong> 33.33% + margin-եր &gt; 100% — երրորդ քարտն ընկնում է ներքև։<br>
+      <strong>2.</strong> <code>margin: 10px</code>-ը կա նաև <strong>ձախ եզրին և աջ եզրին</strong> — բայց այնտեղ բացակ պետք չէր։<br>
+      <strong>3.</strong> Վաղը քարտի ֆոնը պիտի փոխես — ուղղում ես նույն դասը, որտեղ նաև լայնությունն է։<br>
+      <strong>4.</strong> Երկրորդ բաժնում նույն քարտերը պիտի լինեն 25%-ով — պիտի ստեղծես <code>.card-small</code>։</p>
+    </div>
+
+    <p>Խնդիրը մեկն է․ <strong>մեկ դասը փորձում է անել չորս գործ</strong> — դասավորել, բացակ ստեղծել, չափ սահմանել և տեսք տալ։</p>
+
+    <div class="tip note">
+      <span class="tag">Լուծման գաղափարը</span>
+      <p>Բաժանել այդ չորս պատասխանատվությունը <strong>չորս տարբեր շերտի</strong>։ Ամեն շերտը պատասխանում է ուղիղ մեկ հարցի։<br><br>
+      Այս սկզբունքը կոչվում է <em>պատասխանատվությունների բաժանում</em>, և այն աշխատում է ոչ միայն CSS-ում — երկրորդ և երրորդ բլոկներում կտեսնես նույնը JavaScript-ում և PHP-ում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Հինգ շերտ</h2>
+
+    <div class="tree">&lt;main&gt;
+ │
+ └── &lt;section id="products"&gt;        ← ի՞նչ բաժին է սա
+      │
+      └── &lt;div class="row"&gt;         ← որտե՞ղ են պատերը
+           │
+           ├── &lt;div class="col w-33"&gt;   ← որքա՞ն լայն, որքա՞ն բացակ
+           │    └── &lt;div class="wrapper"&gt;   ← ինչպիսի՞ն է տեսքը
+           │
+           ├── &lt;div class="col w-33"&gt;
+           │    └── &lt;div class="wrapper"&gt;
+           │
+           └── &lt;div class="col w-33"&gt;
+                └── &lt;div class="wrapper"&gt;</div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Շերտ</th><th>Պատասխանում է հարցին</th><th>Ի՞նչ CSS ունի</th></tr>
+      <tr><td><code>main</code></td><td>Հիմնական բովանդակությունն է</td><td>Գրեթե ոչինչ</td></tr>
+      <tr><td><code>section</code></td><td>Ի՞նչ բաժին է սա</td><td>Ֆոն, ուղղահայաց <code>padding</code></td></tr>
+      <tr><td><code>.row</code></td><td>Որտե՞ղ են կողային պատերը</td><td><code>display: flex</code>, <code>padding: 0 60px</code></td></tr>
+      <tr><td><code>.col</code></td><td>Որքա՞ն լայն և որքա՞ն բացակ</td><td><code>width</code>, <code>padding: 10px</code></td></tr>
+      <tr><td><code>.wrapper</code></td><td>Ինչպիսի՞ն է տեսքը</td><td>Ֆոն, եզրագիծ, ստվեր, կլորացում</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Գլխավոր կանոնը</span>
+      <p><strong>Երբեք մի՛ խառնիր շերտերի պատասխանատվությունները։</strong><br><br>
+      Ֆոն <code>.col</code>-ի վրա — ❌<br>
+      Լայնություն <code>.wrapper</code>-ի վրա — ❌<br>
+      Բացակ <code>.wrapper</code>-ի <code>margin</code>-ով — ❌<br><br>
+      Երբ սա պահպանվում է, ամեն ինչ աշխատում է կանխատեսելի։ Երբ խախտվում է — սկսվում է քաոսը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>section — շերտը էջում</h2>
+    <p>Դաս 5-ից գիտենք․ էջը բաժանվում է հորիզոնական շերտերի։ Ամեն <code>section</code> մեկ շերտ է։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>css/main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Ընդհանուր բոլոր բաժինների համար */</span>
+<span class="t">section</span> {
+    <span class="f">padding</span>: <span class="n">60px</span> <span class="n">0</span>;      <span class="c">/* ուղղահայաց բացակ — վեր և վար */</span>
+}
+
+<span class="c">/* Կոնկրետ բաժնի ոճեր */</span>
+<span class="k">#hero</span> {
+    <span class="f">background-color</span>: <span class="s">var</span>(<span class="f">--dark</span>);
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--on-dark</span>);
+}
+
+<span class="k">#products</span> {
+    <span class="f">background-color</span>: <span class="s">var</span>(<span class="f">--bg</span>);
+}</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ուշադրություն ուղղություններին</span>
+      <p><code>section</code> → <strong>ուղղահայաց</strong> բացակ (<code>padding: 60px 0</code>)<br>
+      <code>.row</code> → <strong>հորիզոնական</strong> բացակ (<code>padding: 0 60px</code>)<br><br>
+      Երկուսը միասին տալիս են ամբողջական «շրջանակը»։ Բայց դրանք առանձին են, որովհետև ուղղահայաց բացակը կարող է տարբեր լինել բաժնից բաժին, իսկ պատերը՝ միշտ նույնը։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ ֆոնը section-ի վրա, ոչ .row-ի</span>
+      <p><code>section</code>-ը ձգվում է <strong>ամբողջ էկրանի լայնությամբ</strong>։ Եթե ֆոնը դնես <code>.row</code>-ի վրա, այն կավարտվի 60px պատերի հետ միասին — կստացվի, որ գունավոր շերտն ամբողջ էկրանով չէ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>.row — պատերը</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երկու ֆայլ, երկու պատասխանատվություն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* css/global.css — ՎԱՐՔԱԳԻԾԸ (նույնն է ամեն նախագծում) */</span>
+<span class="k">.row</span> {
+    <span class="f">display</span>: <span class="s">flex</span>;
+}
+
+<span class="c">/* css/main.css — ՉԱՓԸ (փոխվում է նախագծից նախագիծ) */</span>
+<span class="k">.row</span> {
+    <span class="f">padding</span>: <span class="n">0</span> <span class="n">60px</span>;
+}</code></pre>
+    </div>
+
+    <div class="tree">┌─────────────────────────────────────────────┐
+│  section  (ամբողջ էկրանով, ֆոնով)           │
+│                                             │
+│  ←60px→ ┌───────────────────────┐ ←60px→    │
+│         │       .row            │           │
+│         │  երեխաները՝ կողք կողքի │           │
+│         └───────────────────────┘           │
+│                                             │
+└─────────────────────────────────────────────┘
+         ↑                       ↑
+       ձախ պատ               աջ պատ</div>
+
+    <div class="note">
+      <span class="tag">display: flex — առայժմ ընդունիր որպես տրված</span>
+      <p>Այս մեկ տողը երեխաներին դասավորում է <strong>կողք կողքի</strong>՝ առանց Դաս 9-ի 4px բացակների խնդրի։<br><br>
+        Ինչպես է այն աշխատում — մանրամասն 11-րդ դասին։ Այսօր կենտրոնանում ենք <em>կառուցվածքի</em> վրա, ոչ մեխանիզմի։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ պատերը .row-ի վրա, ոչ section-ի</span>
+      <p>Որովհետև մեկ <code>section</code>-ը կարող է ունենալ <strong>մի քանի <code>.row</code></strong>՝ վերնագրի տողը, քարտերի տողը, կոճակի տողը։ Բոլորն էլ պիտի ունենան նույն պատերը։<br><br>
+      Եթե պատերը լինեին <code>section</code>-ի վրա, հետո չէիր կարողանա ինչ-որ տող դարձնել ամբողջ լայնությամբ (օրինակ՝ նկարների շերտ առանց եզրերի)։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>մի քանի row մեկ section-ում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">section</span> <span class="f">id</span>=<span class="s">"products"</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- Տող 1՝ վերնագիր --&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-100"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">h2</span><span class="p">&gt;</span>Մեր ապրանքները<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- Տող 2՝ քարտեր --&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-33"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-33"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-33"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span></code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>.col — բացակները</h2>
+    <p>Ահա այն շերտը, որը լուծում է 01-րդ բաժնի գլխավոր խնդիրը։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>css/main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.col</span> {
+    <span class="f">padding</span>: <span class="n">10px</span>;
+}</code></pre>
+    </div>
+
+    <div class="tree">Երկու քարտի միջև՝ 10 + 10 = 20px
+
+┌──── .col ────┐┌──── .col ────┐
+│ ←10px→       ││       ←10px→ │
+│  ┌────────┐  ││  ┌────────┐  │
+│  │.wrapper│  ││  │.wrapper│  │
+│  └────────┘  ││  └────────┘  │
+│              ││              │
+└──────────────┘└──────────────┘
+ ↑                            ↑
+ այս 10px-ը ընկնում է .row-ի պատի վրա</div>
+
+    <div class="tip note">
+      <span class="tag">Խորամանկ և պարզ</span>
+      <p>Ամեն <code>.col</code> ունի 10px ներսի բացակ բոլոր կողմերից։ Երկու հարևան սյուների միջև ստացվում է <strong>20px</strong>։<br><br>
+      Իսկ ամենաձախ և ամենաաջ սյուների արտաքին 10px-ը <em>գումարվում է</em> <code>.row</code>-ի 60px-ին։ Եթե ուզում ես ուղիղ 60px՝ գրիր <code>.row { padding: 0 50px }</code>։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ padding, ոչ margin</span>
+      <p><strong>1.</strong> <code>padding</code>-ը ներսում է, ուստի <code>width: 33.33%</code>-ը մնում է ուղիղ 33.33% (շնորհիվ <code>box-sizing: border-box</code>-ի, Դաս 8)։ <code>margin</code>-ի դեպքում լայնությունը կգերազանցեր 100%-ը։<br>
+      <strong>2.</strong> <code>margin</code>-ները կարող են «կպչել» իրար (margin collapse, Դաս 8)։ <code>padding</code>-ի հետ այդ խնդիրը չկա։<br>
+      <strong>3.</strong> Դատարկ <code>.col</code>-ը չի ստեղծում տեսանելի բացակ, որովհետև ֆոն չունի։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">.col-ը միշտ դատարկ է</span>
+      <p><code>.col</code>-ը <strong>ոչ մի տեսողական ոճ չունի</strong> — ոչ ֆոն, ոչ եզրագիծ, ոչ ստվեր։ Այն միայն տարածություն է հատկացնում։<br><br>
+      Եթե երբևէ ուզես ֆոն դնել <code>.col</code>-ի վրա, կտեսնես, որ բացակները անհետանում են — գունավոր ուղղանկյունները կկպչեն իրար։ Հենց դրա համար ֆոնը գնում է <code>.wrapper</code>-ի վրա։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>.wrapper — տեսքը</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>global.css + main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* global.css — վարքագիծը */</span>
+<span class="k">.wrapper</span> {
+    <span class="f">height</span>: <span class="n">100%</span>;    <span class="c">/* լցնում է ամբողջ .col-ը */</span>
+}
+
+<span class="c">/* main.css — կոնկրետ բաժնի տեսքը */</span>
+<span class="k">#products</span> <span class="k">.wrapper</span> {
+    <span class="f">background</span>: <span class="s">white</span>;
+    <span class="f">border-radius</span>: <span class="n">12px</span>;
+    <span class="f">overflow</span>: <span class="s">hidden</span>;
+    <span class="f">box-shadow</span>: <span class="n">0</span> <span class="n">2px</span> <span class="n">8px</span> <span class="s">rgba</span>(<span class="n">0</span>,<span class="n">0</span>,<span class="n">0</span>,<span class="n">.08</span>);
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">height: 100% — ինչու է կարևոր</span>
+      <p>Երեք քարտ տարբեր երկարության տեքստերով։ <code>display: flex</code>-ի շնորհիվ <strong>սյուները</strong> հավասար բարձրության են։ Բայց ներսի <code>.wrapper</code>-ները՝ ոչ, եթե չնշես։<br><br>
+      <code>height: 100%</code>-ը ստիպում է սպիտակ քարտին լցնել ամբողջ սյունը։ Արդյունքում բոլոր քարտերը հավասար են՝ անկախ բովանդակությունից։<br><br>
+      Հիշո՞ւմ ես Դաս 9-ի երրորդ խնդիրը՝ «հավասար բարձրություն հնարավոր չէ»։ Ահա լուծումը։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ բաժնային սելեկտոր՝ #products .wrapper</span>
+      <p><code>.wrapper</code>-ը օգտագործվում է <strong>ամենուր</strong> — և hero-ում, և ապրանքներում, և footer-ում։ Եթե գրես պարզապես <code>.wrapper { background: white }</code>, սպիտակ ֆոնը կհայտնվի բոլոր բաժիններում։<br><br>
+      Ուստի կոնկրետ տեսքը միշտ կապում ենք բաժնին՝ <code>#products .wrapper</code>, <code>#team .wrapper</code>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Լայնությունների համակարգը</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>css/global.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.w-10</span>  { <span class="f">width</span>: <span class="n">10%</span>; }
+<span class="k">.w-20</span>  { <span class="f">width</span>: <span class="n">20%</span>; }
+<span class="k">.w-25</span>  { <span class="f">width</span>: <span class="n">25%</span>; }
+<span class="k">.w-30</span>  { <span class="f">width</span>: <span class="n">30%</span>; }
+<span class="k">.w-33</span>  { <span class="f">width</span>: <span class="n">33.3333%</span>; }
+<span class="k">.w-40</span>  { <span class="f">width</span>: <span class="n">40%</span>; }
+<span class="k">.w-50</span>  { <span class="f">width</span>: <span class="n">50%</span>; }
+<span class="k">.w-60</span>  { <span class="f">width</span>: <span class="n">60%</span>; }
+<span class="k">.w-70</span>  { <span class="f">width</span>: <span class="n">70%</span>; }
+<span class="k">.w-75</span>  { <span class="f">width</span>: <span class="n">75%</span>; }
+<span class="k">.w-80</span>  { <span class="f">width</span>: <span class="n">80%</span>; }
+<span class="k">.w-100</span> { <span class="f">width</span>: <span class="n">100%</span>; }</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML-ում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- Չորս սյուն --&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-25"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-25"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-25"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-25"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Անհամաչափ՝ 70 / 30 --&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-70"</span><span class="p">&gt;</span>Հոդված<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-30"</span><span class="p">&gt;</span>Կողքի բլոկ<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ 33.3333%, ոչ 33%</span>
+      <p>33% × 3 = 99%։ Կմնա 1% դատարկ տեղ աջ կողմում — փոքր, բայց նկատելի։<br>
+      33.3333% × 3 = 99.9999% — գործնականում ուղիղ 100%։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Այս մոտեցումը կոչվում է utility-դասեր</span>
+      <p>Դասը մեկ գործ է անում, և անունը ուղիղ ասում է՝ ինչ։ <code>.w-25</code> = «լայնությունը 25%»։<br><br>
+      Կա նաև այլ մոտեցում՝ ամեն կոմպոնենտի համար սեփական դաս (<code>.product-card</code>, <code>.product-card__image</code>)։ Երկուսի առավելություններն ու թերությունները կհամեմատենք 13-րդ դասին։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Տիպիկ սխալներ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ 1. Բաց թողնված շերտ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- .wrapper-ը բացակայում է --&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-33"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">h3</span><span class="p">&gt;</span>Վերնագիր<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- ✅ Ճիշտ --&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-33"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">h3</span><span class="p">&gt;</span>Վերնագիր<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <p>Հիշիր Դաս 3-ի աղյուսակը՝ <code>table &gt; tr &gt; td</code>։ Այնտեղ շերտ բաց թողնելը սխալ էր։ Այստեղ նույնպես։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ 2. Ֆոն .col-ի վրա</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ❌ Բացակները անհետանում են */</span>
+<span class="k">.col</span> { <span class="f">background</span>: <span class="s">white</span>; }
+
+<span class="c">/* ✅ */</span>
+<span class="k">#products</span> <span class="k">.wrapper</span> { <span class="f">background</span>: <span class="s">white</span>; }</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ 3. Բացակ margin-ով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ❌ Կոտրում է 33.33%-ը */</span>
+<span class="k">.wrapper</span> { <span class="f">margin</span>: <span class="n">10px</span>; }
+
+<span class="c">/* ✅ Բացակը միշտ .col-ի padding-ն է */</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ 4. .row առանց .col-ի</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- ❌ Տեքստը ուղիղ .row-ի մեջ --&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">h2</span><span class="p">&gt;</span>Վերնագիր<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- ✅ Նույնիսկ մեկ էլեմենտի դեպքում --&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-100"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">h2</span><span class="p">&gt;</span>Վերնագիր<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Հետևողականությունը կարևոր է</span>
+      <p>Թվում է՝ մեկ վերնագրի համար <code>.col</code>-ը ավելորդ է։ Բայց երբ կառուցվածքը միշտ նույնն է, դու <strong>մտածում ես ավելի քիչ</strong>։ Չես հիշում՝ որտեղ շերտ կա, որտեղ՝ ոչ։<br><br>
+      Բացի այդ՝ վաղը այդ վերնագրի կողքին կհայտնվի կոճակ, և կառուցվածքն արդեն պատրաստ կլինի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Խաղահրապարակ</h2>
+    <p>Ամբողջ համակարգը՝ աշխատող վիճակում։ Փոխիր <code>.w-*</code> դասերը, ավելացրու սյուներ։</p>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="html">HTML</button>
+        <button class="live__tab" data-pane="css">CSS</button>
+      </div>
+      <textarea class="live__code" data-pane="html">&lt;main&gt;
+
+    &lt;section id="hero"&gt;
+        &lt;div class="row"&gt;
+            &lt;div class="col w-100"&gt;
+                &lt;div class="wrapper"&gt;
+                    &lt;h1&gt;Ամբողջ լայնությամբ&lt;/h1&gt;
+                    &lt;p&gt;Մեկ սյուն՝ w-100&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;section id="products"&gt;
+
+        &lt;div class="row"&gt;
+            &lt;div class="col w-100"&gt;
+                &lt;h2&gt;Երեք սյուն&lt;/h2&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class="row"&gt;
+            &lt;div class="col w-33"&gt;
+                &lt;div class="wrapper"&gt;
+                    &lt;h3&gt;Առաջին&lt;/h3&gt;
+                    &lt;p&gt;Կարճ տեքստ&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="col w-33"&gt;
+                &lt;div class="wrapper"&gt;
+                    &lt;h3&gt;Երկրորդ&lt;/h3&gt;
+                    &lt;p&gt;Այս քարտն ունի շատ ավելի երկար տեքստ,
+                    բայց բոլոր քարտերը մնում են հավասար
+                    բարձրության՝ շնորհիվ height: 100%-ի&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="col w-33"&gt;
+                &lt;div class="wrapper"&gt;
+                    &lt;h3&gt;Երրորդ&lt;/h3&gt;
+                    &lt;p&gt;Կարճ&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class="row"&gt;
+            &lt;div class="col w-70"&gt;
+                &lt;div class="wrapper"&gt;
+                    &lt;h3&gt;70%&lt;/h3&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="col w-30"&gt;
+                &lt;div class="wrapper"&gt;
+                    &lt;h3&gt;30%&lt;/h3&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+    &lt;/section&gt;
+
+&lt;/main&gt;</textarea>
+      <textarea class="live__code is-hidden" data-pane="css">/* ===== global.css ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+.row { display: flex; }
+.wrapper { height: 100%; }
+
+.w-25  { width: 25%; }
+.w-30  { width: 30%; }
+.w-33  { width: 33.3333%; }
+.w-50  { width: 50%; }
+.w-70  { width: 70%; }
+.w-100 { width: 100%; }
+
+/* ===== main.css ===== */
+body {
+    font-family: system-ui, sans-serif;
+    line-height: 1.5;
+    background: #f5f5f5;
+}
+
+section { padding: 30px 0; }
+
+.row { padding: 0 30px; }   /* ← պատերը */
+.col { padding: 10px; }     /* ← բացակները */
+
+#hero {
+    background: #253237;
+    color: white;
+}
+
+#hero .wrapper {
+    padding: 20px;
+}
+
+#products .wrapper {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+h2 { margin-bottom: 8px; }
+h3 { margin-bottom: 6px; }
+
+/* Փորձարկման համար — միացրու սահմանները */
+/*
+.row { outline: 1px dashed red; }
+.col { outline: 1px dashed blue; }
+.wrapper { outline: 1px dashed green; }
+*/</textarea>
+      <div class="live__actions">
+        <span>CSS ներդիրում կա փորձարկման բլոկ</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Փորձիր</span>
+      <p><strong>1.</strong> Բացիր CSS ներդիրը և հանիր մեկնաբանությունը վերջին բլոկից — կտեսնես բոլոր շերտերի սահմանները։<br>
+      <strong>2.</strong> Փոխիր <code>w-33</code>-ը <code>w-50</code>-ի։<br>
+      <strong>3.</strong> Ջնջիր <code>.wrapper { height: 100% }</code>-ը։<br>
+      <strong>4.</strong> Փորձիր տեղափոխել <code>background: white</code>-ը <code>.col</code>-ի վրա։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Դասարանական</h2>
+    <p>Կառուցում ենք բաժին զրոյից՝ շերտ առ շերտ։ Ամեն քայլից հետո՝ պահպանիր և նայիր։</p>
+
+    <ol>
+      <li>Ստեղծիր <code>&lt;section id="team"&gt;</code></li>
+      <li>Ներսում՝ առաջին <code>.row</code> վերնագրի համար, ներսում <code>.col w-100</code></li>
+      <li>Երկրորդ <code>.row</code>՝ չորս <code>.col w-25</code></li>
+      <li>Ամեն սյան ներսում՝ <code>.wrapper</code></li>
+      <li><code>.wrapper</code>-ի ներսում՝ նկար, անուն, պաշտոն</li>
+      <li>Ավելացրու <code>global.css</code>-ի կանոնները</li>
+      <li>Ավելացրու <code>main.css</code>-ի պատերն ու բացակները</li>
+      <li>Ոճավորիր <code>#team .wrapper</code>-ը</li>
+    </ol>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>վերջնական HTML</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">section</span> <span class="f">id</span>=<span class="s">"team"</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-100 text-center"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">h2</span><span class="p">&gt;</span>Մեր թիմը<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-25"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper text-center"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">picture</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">img</span> <span class="f">src</span>=<span class="s">"images/ani.jpg"</span> <span class="f">alt</span>=<span class="s">"Անի Սարգսյան"</span><span class="p">&gt;</span>
+                <span class="p">&lt;/</span><span class="t">picture</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"title-4"</span><span class="p">&gt;</span>Անի Սարգսյան<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"text-muted"</span><span class="p">&gt;</span>Դիզայներ<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="c">&lt;!-- ԵՒս երեք նույն կառուցվածքով --&gt;</span>
+
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>css/main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ---------- Կմախքի չափերը ---------- */</span>
+<span class="t">section</span> { <span class="f">padding</span>: <span class="n">60px</span> <span class="n">0</span>; }
+<span class="k">.row</span>    { <span class="f">padding</span>: <span class="n">0</span> <span class="n">50px</span>; }
+<span class="k">.col</span>    { <span class="f">padding</span>: <span class="n">10px</span>; }
+
+<span class="c">/* ---------- Թիմի բաժինը ---------- */</span>
+<span class="k">#team</span> <span class="k">.wrapper</span> {
+    <span class="f">background</span>: <span class="s">white</span>;
+    <span class="f">border-radius</span>: <span class="n">12px</span>;
+    <span class="f">overflow</span>: <span class="s">hidden</span>;
+    <span class="f">padding-bottom</span>: <span class="n">16px</span>;
+}
+
+<span class="k">#team</span> <span class="t">img</span> {
+    <span class="f">width</span>: <span class="n">100%</span>;
+    <span class="f">margin-bottom</span>: <span class="n">12px</span>;
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ստուգիր DevTools-ով</span>
+      <p>Ընտրիր ցանկացած <code>.col</code> և նայիր box model դիագրամը։ Կտեսնես 10px <code>padding</code> և զրո <code>margin</code>։<br><br>
+      Ապա ընտրիր <code>.wrapper</code>-ը — այնտեղ ֆոն կա, բայց <code>margin</code> չկա։ Ամեն շերտ իր գործն է անում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ավելացրու <code>global.css</code>-ում <code>.row</code>, <code>.wrapper</code> և բոլոր <code>.w-*</code> դասերը։</li>
+      <li>Ավելացրու <code>main.css</code>-ում <code>section</code>-ի, <code>.row</code>-ի և <code>.col</code>-ի չափերը։</li>
+      <li>Կառուցիր բաժին չորս սյունով (<code>w-25</code>)։ Ստուգիր, որ բացակները հավասար են։</li>
+      <li>Կառուցիր բաժին երկու անհամաչափ սյունով՝ <code>w-70</code> և <code>w-30</code>։</li>
+      <li>Կառուցիր <code>section</code>, որի ներսում կան <strong>երեք տարբեր <code>.row</code></strong>՝ վերնագիր, բովանդակություն, կոճակ։</li>
+      <li>Ցուցադրիր <code>height: 100%</code>-ի ազդեցությունը՝ երեք քարտ շատ տարբեր երկարության տեքստերով, առաջ և հետո։</li>
+      <li>Դիտավորյալ դիր ֆոն <code>.col</code>-ի վրա։ Նկարագրիր՝ ինչ կոտրվեց և ինչու։</li>
+      <li>Դիտավորյալ բաց թող <code>.wrapper</code>-ը մեկ սյան մեջ։ Համեմատիր հարևանների հետ։</li>
+      <li>Ժամանակավորապես ավելացրու <code>outline</code>-ներ բոլոր երեք շերտին տարբեր գույներով։ Ուղարկիր սքրինշոթ։</li>
+      <li>Վերցրու Դաս 5-ի սեմանտիկ էջը և վերակառուցիր այն ամբողջովին այս համակարգով։ Ամեն բաժին պիտի ունենա <code>id</code>, ամեն սյուն՝ <code>.wrapper</code>։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 12 ============ -->
+  <section id="s12">
+    <h2><span class="num">12</span>Հիշելու թերթիկ</h2>
+
+    <div class="tree">main &gt; section &gt; .row &gt; .col &gt; .wrapper</div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Շերտ</th><th>Պատասխանատվություն</th><th>ՉԻ անում</th></tr>
+      <tr><td><code>section</code></td><td>Ֆոն, ուղղահայաց բացակ</td><td>Կողային պատեր</td></tr>
+      <tr><td><code>.row</code></td><td><code>display: flex</code>, կողային պատեր</td><td>Ֆոն, չափեր</td></tr>
+      <tr><td><code>.col</code></td><td>Լայնություն, բացակ (<code>padding</code>)</td><td>Ֆոն, եզրագիծ, ստվեր</td></tr>
+      <tr><td><code>.wrapper</code></td><td>Ամբողջ տեսքը</td><td>Լայնություն, <code>margin</code></td></tr>
+    </table>
+    </div>
+
+    <h3>Ի՞նչ ավելացավ global.css-ում այսօր</h3>
+    <div class="tree">✓ .row     { display: flex; }
+✓ .wrapper { height: 100%; }
+✓ .h-100   { height: 100%; }
+✓ .w-10 … .w-100   (12 դաս)</div>
+
+    <h3>Ի՞նչ ավելացավ main.css-ում</h3>
+    <div class="tree">✓ section { padding: 60px 0; }
+✓ .row    { padding: 0 50px; }
+✓ .col    { padding: 10px; }</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Ամեն <code>section</code> ունի <code>id</code></li>
+      <li>Ամեն <code>.row</code>-ի ուղիղ երեխան <code>.col</code> է</li>
+      <li>Ամեն <code>.col</code>-ի ներսում կա <code>.wrapper</code></li>
+      <li>Ամեն <code>.col</code> ունի <code>.w-*</code> դաս</li>
+      <li>Ֆոնը <code>.wrapper</code>-ի վրա է, ոչ <code>.col</code>-ի</li>
+      <li>Բացակները <code>.col</code>-ի <code>padding</code>-ն են, ոչ <code>margin</code></li>
+      <li>Կոնկրետ ոճերը կապված են բաժնին՝ <code>#section .wrapper</code></li>
+      <li>Մեկ սյան դեպքում էլ կառուցվածքը ամբողջական է</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ անվանել հինգ շերտը հերթականությամբ</li>
+      <li>Գիտե՞մ, ինչու ֆոնը <code>.wrapper</code>-ի վրա է</li>
+      <li>Հասկանո՞ւմ եմ, ինչու <code>padding</code>, ոչ <code>margin</code></li>
+      <li>Գիտե՞մ, ինչու պատերը <code>.row</code>-ի վրա են, ոչ <code>section</code>-ի</li>
+      <li>Կարո՞ղ եմ բացատրել <code>height: 100%</code>-ի իմաստը</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ երկու դասը</span>
+      <p>Այս համակարգը <strong>կկրկնվի</strong> 11-րդ և 12-րդ դասերին։ Ամեն անգամ կկառուցենք նոր բաժին, բայց զուգահեռ կսովորենք Flexbox-ը՝ նախ առանցքներն ու հավասարեցումը, ապա <code>flex-grow</code>-ը և <code>gap</code>-ը։<br><br>
+      Այդ ժամանակ վերջապես կհասկանաս, թե ինչ է անում <code>display: flex</code>-ը, որը այսօր ընդունեցիր որպես տրված։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 10 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

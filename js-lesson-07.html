@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 07 — Օբյեկտներ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 07 · 2 ժամ</p>
+  <h1>Օբյեկտներ</h1>
+  <p class="lede">Զանգվածը լավ է, երբ բոլոր տարրերը նույն տեսակի են։ Բայց ինչպե՞ս նկարագրել <em>մեկ</em> մարդուն՝ անունով, տարիքով, քաղաքով։ Այսօր սովորում ենք JS-ի ամենակարևոր կառուցվածքը։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 04–06</span>
+    <span>Բլոկ 1 · Լեզվի հիմքերը</span>
+    <span>Տնային՝ 10 առաջադրանք</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ինչո՞վ է օբյեկտը տարբերվում զանգվածից</li>
+      <li>Ստեղծել, կարդալ, փոխել, ջնջել հատկություններ</li>
+      <li>Կետ և քառակուսի փակագծեր՝ ե՞րբ որը</li>
+      <li>Ներդրված օբյեկտներ և <code>?.</code></li>
+      <li>Մեթոդներ և <code>this</code></li>
+      <li><code>Object.keys</code>, <code>values</code>, <code>entries</code></li>
+      <li>Destructuring — «քանդել» օբյեկտը փոփոխականների</li>
+      <li>Օբյեկտների զանգված — իրական տվյալների ձևը</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչո՞ւ է պետք օբյեկտը</h2>
+    <p>Փորձենք զանգվածով նկարագրել մեկ աշակերտի։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>զանգվածով — վատ գաղափար</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> student = [<span class="s">"Անի"</span>, <span class="n">14</span>, <span class="s">"Երևան"</span>, <span class="k">true</span>];
+
+<span class="f">console</span>.<span class="f">log</span>(student[<span class="n">0</span>]);
+<span class="f">console</span>.<span class="f">log</span>(student[<span class="n">3</span>]);   <span class="c">// ի՞նչ է սա նշանակում</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Անի</span>
+<span class="g">true</span></pre>
+    </div>
+
+    <p><code>student[3]</code>-ը <code>true</code> է։ Բայց <em>ի՞նչ</em> է <code>true</code>։ Ակտիվ է։ Ամուսնացած է։ Դասը հանձնե՞լ է։ Ոչ ոք չգիտի։ Բացի այդ՝ պիտի անգիր անես, որ 1-ը տարիքն է, 2-ը՝ քաղաքը։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>օբյեկտով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> student = {
+  name: <span class="s">"Անի"</span>,
+  age: <span class="n">14</span>,
+  city: <span class="s">"Երևան"</span>,
+  isActive: <span class="k">true</span>
+};
+
+<span class="f">console</span>.<span class="f">log</span>(student.name);
+<span class="f">console</span>.<span class="f">log</span>(student.isActive);
+<span class="f">console</span>.<span class="f">log</span>(student);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Անի</span>
+<span class="g">true</span>
+<span class="r">{"name":"Անի","age":14,"city":"Երևան","isActive":true}</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Տարբերությունը</span>
+      <p><strong>Զանգված</strong> — շատ <em>նույնատիպ</em> բան, հերթականությունը կարևոր է, հասցեն՝ թիվ։<br>
+      <strong>Օբյեկտ</strong> — մեկ բանի <em>տարբեր հատկություններ</em>, հերթականությունը կարևոր չէ, հասցեն՝ անուն։</p>
+    </div>
+
+    <h3>Տերմիններ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>անվանումները</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> student = {
+  name: <span class="s">"Անի"</span>
+<span class="c">//  ↑      ↑</span>
+<span class="c">// բանալի  արժեք   (key : value)</span>
+};
+
+<span class="c">// "name: Անի" զույգը կոչվում է ՀԱՏԿՈՒԹՅՈՒՆ (property)</span></code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Կարդալ, փոխել, ավելացնել, ջնջել</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հիմնական գործողությունները</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> user = {
+  name: <span class="s">"Դավիթ"</span>,
+  age: <span class="n">20</span>
+};
+
+<span class="c">// կարդալ</span>
+<span class="f">console</span>.<span class="f">log</span>(user.name);
+
+<span class="c">// փոխել</span>
+user.age = <span class="n">21</span>;
+
+<span class="c">// ավելացնել նոր հատկություն</span>
+user.city = <span class="s">"Գյումրի"</span>;
+user.isAdmin = <span class="k">false</span>;
+
+<span class="c">// ջնջել</span>
+<span class="k">delete</span> user.isAdmin;
+
+<span class="f">console</span>.<span class="f">log</span>(user);
+<span class="f">console</span>.<span class="f">log</span>(user.email);      <span class="c">// չկա այդպիսի հատկություն</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Դավիթ</span>
+<span class="r">{"name":"Դավիթ","age":21,"city":"Գյումրի"}</span>
+<span class="m">undefined</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">const-ը այստեղ էլ չի խանգարում</span>
+      <p>Ինչպես զանգվածների դեպքում՝ <code>const</code>-ը արգելում է փոխարինել <strong>ամբողջ օբյեկտը</strong>, բայց ոչ նրա հատկությունները։ <code>user = {}</code> → սխալ։ <code>user.age = 21</code> → կարելի է։</p>
+    </div>
+
+    <h3>Կետ, թե՞ քառակուսի փակագծեր</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երկու ձև</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> user = { name: <span class="s">"Անի"</span>, <span class="s">"favorite color"</span>: <span class="s">"կապույտ"</span> };
+
+<span class="f">console</span>.<span class="f">log</span>(user.name);                <span class="c">// կետով — սովորական դեպք</span>
+<span class="f">console</span>.<span class="f">log</span>(user[<span class="s">"name"</span>]);             <span class="c">// նույնը փակագծերով</span>
+
+<span class="c">// user.favorite color  ← սա սխալ կլիներ, բացատ կա</span>
+<span class="f">console</span>.<span class="f">log</span>(user[<span class="s">"favorite color"</span>]);
+
+<span class="c">// Ամենակարևոր դեպքը՝ բանալին փոփոխականում է</span>
+<span class="k">const</span> key = <span class="s">"name"</span>;
+<span class="f">console</span>.<span class="f">log</span>(user[key]);
+<span class="f">console</span>.<span class="f">log</span>(user.key);                 <span class="c">// փնտրում է "key" անունով հատկություն</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Անի</span>
+<span class="r">Անի</span>
+<span class="r">կապույտ</span>
+<span class="r">Անի</span>
+<span class="m">undefined</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Կանոն</span>
+      <p>Օգտագործիր <strong>կետ</strong>՝ 95% դեպքերում։ <strong>Փակագծեր</strong>՝ երբ բանալին բացատ կամ գծիկ ունի, կամ երբ բանալին <em>փոփոխականում</em> է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ներդրված օբյեկտներ</h2>
+    <p>Հատկության արժեքը կարող է լինել ցանկացած բան՝ նաև ուրիշ օբյեկտ կամ զանգված։ Իրական տվյալները միշտ այսպիսի տեսք ունեն։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>օբյեկտ օբյեկտի մեջ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> user = {
+  name: <span class="s">"Անի"</span>,
+  age: <span class="n">14</span>,
+  address: {
+    city: <span class="s">"Երևան"</span>,
+    street: <span class="s">"Աբովյան"</span>,
+    building: <span class="n">25</span>
+  },
+  hobbies: [<span class="s">"նկարչություն"</span>, <span class="s">"շախմատ"</span>, <span class="s">"լող"</span>]
+};
+
+<span class="f">console</span>.<span class="f">log</span>(user.address.city);
+<span class="f">console</span>.<span class="f">log</span>(user.hobbies[<span class="n">0</span>]);
+<span class="f">console</span>.<span class="f">log</span>(user.hobbies.length);
+<span class="f">console</span>.<span class="f">log</span>(user.hobbies.<span class="f">join</span>(<span class="s">", "</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Երևան</span>
+<span class="r">նկարչություն</span>
+<span class="r">3</span>
+<span class="r">նկարչություն, շախմատ, լող</span></pre>
+    </div>
+
+    <h3>Երբ խորությունը վտանգավոր է դառնում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>դասական սխալ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> user = { name: <span class="s">"Դավիթ"</span> };   <span class="c">// address չկա</span>
+
+<span class="f">console</span>.<span class="f">log</span>(user.address);
+<span class="f">console</span>.<span class="f">log</span>(user.address.city);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="m">undefined</span>
+<span class="e">Uncaught TypeError: Cannot read properties of undefined (reading 'city')</span></pre>
+    </div>
+
+    <p>Սա ամենահաճախ հանդիպող սխալն է իրական նախագծերում։ <code>user.address</code>-ը <code>undefined</code> է, իսկ <code>undefined</code>-ից «քաղաք» կարդալ չի լինում։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>?. — ապահով դիմում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> user = { name: <span class="s">"Դավիթ"</span> };
+
+<span class="f">console</span>.<span class="f">log</span>(user.address?.city);
+<span class="f">console</span>.<span class="f">log</span>(user.address?.city ?? <span class="s">"Քաղաքը նշված չէ"</span>);
+<span class="f">console</span>.<span class="f">log</span>(user.hobbies?.[<span class="n">0</span>]);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="m">undefined</span>
+<span class="r">Քաղաքը նշված չէ</span>
+<span class="m">undefined</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">?. կարդացվում է այսպես</span>
+      <p><em>«Եթե ձախ կողմը կա — շարունակիր։ Եթե չկա — կանգնիր և վերադարձրու <code>undefined</code>՝ առանց սխալ գցելու»</em>։ Հիշիր Դաս 2-ի <code>??</code>-ը — երկուսը հիանալի աշխատում են միասին։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Մեթոդներ և this</h2>
+    <p>Հատկության արժեքը կարող է լինել նաև <strong>ֆունկցիա</strong>։ Այդ դեպքում այն կոչվում է <strong>մեթոդ</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>մեթոդ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> user = {
+  name: <span class="s">"Անի"</span>,
+  age: <span class="n">14</span>,
+
+  sayHi() {                       <span class="c">// կարճ ձև</span>
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Բարև։"</span>);
+  },
+
+  introduce: <span class="k">function</span>() {          <span class="c">// երկար ձև — նույնն է</span>
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Ես աշակերտ եմ։"</span>);
+  }
+};
+
+user.<span class="f">sayHi</span>();
+user.<span class="f">introduce</span>();</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Բարև։</span>
+<span class="r">Ես աշակերտ եմ։</span></pre>
+    </div>
+
+    <h3><code>this</code> — «ես ինքս»</h3>
+    <p>Մեթոդի ներսում <code>this</code>-ը նշանակում է <strong>այն օբյեկտը, որի կողքին կետն է կանգնած կանչի պահին</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>this</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> user = {
+  name: <span class="s">"Անի"</span>,
+  age: <span class="n">14</span>,
+
+  introduce() {
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">`Ես </span>${<span class="k">this</span>.name}<span class="s"> եմ, </span>${<span class="k">this</span>.age}<span class="s"> տարեկան։`</span>);
+  },
+
+  birthday() {
+    <span class="k">this</span>.age++;
+    <span class="k">return</span> <span class="s">`Շնորհավոր։ Հիմա </span>${<span class="k">this</span>.age}<span class="s"> տարեկան ես։`</span>;
+  }
+};
+
+user.<span class="f">introduce</span>();
+<span class="f">console</span>.<span class="f">log</span>(user.<span class="f">birthday</span>());
+user.<span class="f">introduce</span>();</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Ես Անի եմ, 14 տարեկան։</span>
+<span class="r">Շնորհավոր։ Հիմա 15 տարեկան ես։</span>
+<span class="r">Ես Անի եմ, 15 տարեկան։</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Կարևոր զգուշացում</span>
+      <p>Մեթոդների համար <strong>մի՛ օգտագործիր arrow ֆունկցիա</strong>։ Arrow-ի ներսում <code>this</code>-ը <em>չի</em> ցույց տալիս օբյեկտին։ Այս թեմային կվերադառնանք Դաս 22-ում՝ OOP-ի ժամանակ։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ինչ է լինում arrow-ով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> user = {
+  name: <span class="s">"Անի"</span>,
+  bad: () =&gt; <span class="f">console</span>.<span class="f">log</span>(<span class="k">this</span>.name),   <span class="c">// ❌</span>
+  good() { <span class="f">console</span>.<span class="f">log</span>(<span class="k">this</span>.name); }      <span class="c">// ✅</span>
+};
+
+user.<span class="f">bad</span>();
+user.<span class="f">good</span>();</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="m">undefined</span>
+<span class="r">Անի</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Անցնել օբյեկտով</h2>
+    <p>Օբյեկտի վրա <code>map</code> կամ <code>filter</code> չկա։ Բայց այն կարելի է վերածել զանգվածի։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>keys · values · entries</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> scores = { math: <span class="n">18</span>, physics: <span class="n">14</span>, history: <span class="n">20</span> };
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Object</span>.<span class="f">keys</span>(scores));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Object</span>.<span class="f">values</span>(scores));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Object</span>.<span class="f">entries</span>(scores));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">["math","physics","history"]</span>
+<span class="r">[18,14,20]</span>
+<span class="r">[["math",18],["physics",14],["history",20]]</span></pre>
+    </div>
+
+    <p>Իսկ երբ արդեն զանգված է — Դաս 6-ի բոլոր մեթոդները հասանելի են։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>գործնական օգտագործում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> scores = { math: <span class="n">18</span>, physics: <span class="n">14</span>, history: <span class="n">20</span> };
+
+<span class="c">// միջին գնահատականը</span>
+<span class="k">const</span> values = <span class="f">Object</span>.<span class="f">values</span>(scores);
+<span class="k">const</span> avg = values.<span class="f">reduce</span>((a, b) =&gt; a + b, <span class="n">0</span>) / values.length;
+<span class="f">console</span>.<span class="f">log</span>(avg.<span class="f">toFixed</span>(<span class="n">1</span>));
+
+<span class="c">// գեղեցիկ տպել</span>
+<span class="f">Object</span>.<span class="f">entries</span>(scores).<span class="f">forEach</span>(([subject, mark]) =&gt; {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">`</span>${subject}<span class="s">: </span>${mark}<span class="s">`</span>);
+});
+
+<span class="c">// քանի՞ առարկայից է 15-ից բարձր</span>
+<span class="f">console</span>.<span class="f">log</span>(values.<span class="f">filter</span>(m =&gt; m &gt; <span class="n">15</span>).length);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">17.3</span>
+<span class="r">math: 18</span>
+<span class="r">physics: 14</span>
+<span class="r">history: 20</span>
+<span class="r">2</span></pre>
+    </div>
+
+    <h3><code>for..in</code> — ուղիղ ձև</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>for..in</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> scores = { math: <span class="n">18</span>, physics: <span class="n">14</span> };
+
+<span class="k">for</span> (<span class="k">const</span> key <span class="k">in</span> scores) {
+  <span class="f">console</span>.<span class="f">log</span>(key, <span class="s">"→"</span>, scores[key]);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">math → 18</span>
+<span class="r">physics → 14</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Մի՛ շփոթիր</span>
+      <p><code>for..<strong>of</strong></code> — <strong>զանգվածների</strong> համար, տալիս է արժեքները։<br>
+      <code>for..<strong>in</strong></code> — <strong>օբյեկտների</strong> համար, տալիս է բանալիները։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Destructuring</h2>
+    <p>Երբ օբյեկտից պիտի հանես մի քանի հատկություն, ձանձրալի է ամեն անգամ գրել <code>user.</code>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հին ձև → նոր ձև</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> user = { name: <span class="s">"Անի"</span>, age: <span class="n">14</span>, city: <span class="s">"Երևան"</span> };
+
+<span class="c">// հին ձև</span>
+<span class="k">const</span> name1 = user.name;
+<span class="k">const</span> age1  = user.age;
+
+<span class="c">// destructuring — մեկ տողով</span>
+<span class="k">const</span> { name, age, city } = user;
+
+<span class="f">console</span>.<span class="f">log</span>(name, age, city);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Անի 14 Երևան</span></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>լրացուցիչ հնարավորություններ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> user = { name: <span class="s">"Անի"</span>, age: <span class="n">14</span> };
+
+<span class="c">// լռելյայն արժեք, եթե հատկությունը չկա</span>
+<span class="k">const</span> { name, city = <span class="s">"Անհայտ"</span> } = user;
+<span class="f">console</span>.<span class="f">log</span>(name, city);
+
+<span class="c">// վերանվանել</span>
+<span class="k">const</span> { name: userName, age: userAge } = user;
+<span class="f">console</span>.<span class="f">log</span>(userName, userAge);
+
+<span class="c">// զանգվածների destructuring — ըստ հերթականության</span>
+<span class="k">const</span> colors = [<span class="s">"կարմիր"</span>, <span class="s">"կանաչ"</span>, <span class="s">"կապույտ"</span>];
+<span class="k">const</span> [first, second] = colors;
+<span class="f">console</span>.<span class="f">log</span>(first, second);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Անի Անհայտ</span>
+<span class="r">Անի 14</span>
+<span class="r">կարմիր կանաչ</span></pre>
+    </div>
+
+    <h3>Ամենակարևոր կիրառությունը՝ ֆունկցիաներում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>պարամետրի destructuring</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> user = { name: <span class="s">"Անի"</span>, age: <span class="n">14</span>, city: <span class="s">"Երևան"</span> };
+
+<span class="c">// առանց destructuring</span>
+<span class="k">function</span> <span class="f">showUser1</span>(u) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">`</span>${u.name}<span class="s">, </span>${u.age}<span class="s">, </span>${u.city}<span class="s">`</span>);
+}
+
+<span class="c">// destructuring-ով — ավելի մաքուր</span>
+<span class="k">function</span> <span class="f">showUser2</span>({ name, age, city }) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">`</span>${name}<span class="s">, </span>${age}<span class="s">, </span>${city}<span class="s">`</span>);
+}
+
+<span class="f">showUser1</span>(user);
+<span class="f">showUser2</span>(user);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Անի, 14, Երևան</span>
+<span class="r">Անի, 14, Երևան</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Պատճենել օբյեկտ</h2>
+    <p>Նույն թակարդն է, ինչ զանգվածների դեպքում (Դաս 5)։ Օբյեկտները նույնպես պահվում են <strong>հասցեով</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>spread օբյեկտների համար</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> user = { name: <span class="s">"Անի"</span>, age: <span class="n">14</span> };
+
+<span class="c">// ❌ սա պատճեն չէ</span>
+<span class="k">const</span> bad = user;
+bad.age = <span class="n">99</span>;
+<span class="f">console</span>.<span class="f">log</span>(user.age);
+
+<span class="c">// ✅ իսկական պատճեն</span>
+<span class="k">const</span> copy = { ...user };
+copy.age = <span class="n">14</span>;
+<span class="f">console</span>.<span class="f">log</span>(user.age, copy.age);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">99</span>
+<span class="r">99 14</span></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>պատճենել և փոխել միանգամից</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> user = { name: <span class="s">"Անի"</span>, age: <span class="n">14</span>, city: <span class="s">"Երևան"</span> };
+
+<span class="c">// նոր օբյեկտ՝ փոխված տարիքով</span>
+<span class="k">const</span> updated = { ...user, age: <span class="n">15</span> };
+<span class="f">console</span>.<span class="f">log</span>(updated);
+
+<span class="c">// միացնել երկու օբյեկտ</span>
+<span class="k">const</span> settings = { theme: <span class="s">"dark"</span> };
+<span class="f">console</span>.<span class="f">log</span>({ ...user, ...settings });</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">{"name":"Անի","age":15,"city":"Երևան"}</span>
+<span class="r">{"name":"Անի","age":14,"city":"Երևան","theme":"dark"}</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Հերթականությունը կարևոր է</span>
+      <p><code>{ ...user, age: 15 }</code> — նոր արժեքը <strong>հետո</strong> է, ուստի հաղթում է։ Եթե գրեիր <code>{ age: 15, ...user }</code>, <code>user</code>-ի հին տարիքը կվերագրեր նորը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Օբյեկտների զանգված</h2>
+    <p>Ահա այն ձևը, որով իրական աշխարհում պահվում են բոլոր տվյալները՝ ապրանքներ, օգտագործողներ, հոդվածներ։ Այստեղ Դաս 6-ը և Դաս 7-ը միանում են։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>students.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> students = [
+  { id: <span class="n">1</span>, name: <span class="s">"Անի"</span>,    age: <span class="n">14</span>, mark: <span class="n">19</span>, city: <span class="s">"Երևան"</span>  },
+  { id: <span class="n">2</span>, name: <span class="s">"Դավիթ"</span>,  age: <span class="n">15</span>, mark: <span class="n">11</span>, city: <span class="s">"Գյումրի"</span> },
+  { id: <span class="n">3</span>, name: <span class="s">"Մարիամ"</span>, age: <span class="n">14</span>, mark: <span class="n">20</span>, city: <span class="s">"Երևան"</span>  },
+  { id: <span class="n">4</span>, name: <span class="s">"Արամ"</span>,   age: <span class="n">16</span>, mark: <span class="n">8</span>,  city: <span class="s">"Վանաձոր"</span> }
+];
+
+<span class="c">// բոլոր անունները</span>
+<span class="f">console</span>.<span class="f">log</span>(students.<span class="f">map</span>(s =&gt; s.name));
+
+<span class="c">// գերազանցիկները</span>
+<span class="f">console</span>.<span class="f">log</span>(students.<span class="f">filter</span>(s =&gt; s.mark &gt;= <span class="n">18</span>).<span class="f">map</span>(s =&gt; s.name));
+
+<span class="c">// գտնել ըստ id-ի</span>
+<span class="f">console</span>.<span class="f">log</span>(students.<span class="f">find</span>(s =&gt; s.id === <span class="n">3</span>).name);
+
+<span class="c">// միջին գնահատականը</span>
+<span class="k">const</span> avg = students.<span class="f">reduce</span>((sum, s) =&gt; sum + s.mark, <span class="n">0</span>) / students.length;
+<span class="f">console</span>.<span class="f">log</span>(avg.<span class="f">toFixed</span>(<span class="n">2</span>));
+
+<span class="c">// երևանցիները՝ գնահատականով նվազման կարգով</span>
+<span class="f">console</span>.<span class="f">log</span>(
+  students
+    .<span class="f">filter</span>(s =&gt; s.city === <span class="s">"Երևան"</span>)
+    .<span class="f">sort</span>((a, b) =&gt; b.mark - a.mark)
+    .<span class="f">map</span>(s =&gt; <span class="s">`</span>${s.name}<span class="s"> (</span>${s.mark}<span class="s">)`</span>)
+);
+
+<span class="c">// կա՞ անբավարար</span>
+<span class="f">console</span>.<span class="f">log</span>(students.<span class="f">some</span>(s =&gt; s.mark &lt; <span class="n">10</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">["Անի","Դավիթ","Մարիամ","Արամ"]</span>
+<span class="r">["Անի","Մարիամ"]</span>
+<span class="r">Մարիամ</span>
+<span class="r">14.50</span>
+<span class="r">["Մարիամ (20)","Անի (19)"]</span>
+<span class="g">true</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ուշադրություն</span>
+      <p>Կարծո՞ւմ ես բարդ է։ Իրականում սա ամբողջ Դաս 6-ն է՝ պարզապես <code>s</code>-ի փոխարեն <code>s.mark</code> ես գրում։ Տրամաբանությունը նույնն է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Խաղահրապարակ</h2>
+
+    <div class="pg">
+      <textarea id="pgCode" spellcheck="false">const user = {
+  name: "Անի",
+  age: 14,
+  address: { city: "Երևան", street: "Աբովյան" },
+  hobbies: ["շախմատ", "լող"],
+
+  introduce() {
+    return `Ես ${this.name} եմ, ${this.age} տարեկան, ${this.address.city}ից։`;
+  }
+};
+
+console.log(user.introduce());
+console.log(user.hobbies.join(" և "));
+console.log(user.email ?? "էլ. հասցե չկա");
+console.log(user.job?.title ?? "Աշխատանք չկա");
+
+// Destructuring
+const { name, age, address: { city } } = user;
+console.log(name, age, city);
+
+// Բանալիներ և արժեքներ
+console.log(Object.keys(user));
+
+// Պատճեն՝ փոփոխությամբ
+const older = { ...user, age: 15 };
+console.log(user.age, older.age);</textarea>
+      <div class="pg__actions">
+        <button class="run" id="runBtn">Կատարել</button>
+        <button class="clr" id="clrBtn">Մաքրել</button>
+      </div>
+<pre class="out" id="pgOut"><span class="m">Console</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ստեղծիր <code>book</code> օբյեկտ՝ վերնագիր, հեղինակ, տարեթիվ, էջերի քանակ, <code>isRead</code>։ Տպիր բոլորը template literal-ով։</li>
+      <li>Ավելացրու <code>genres</code> զանգված և <code>publisher</code> ներդրված օբյեկտ (անուն, քաղաք)։ Տպիր հրատարակչի քաղաքը։</li>
+      <li>Ավելացրու <code>getInfo()</code> մեթոդ, որը <code>this</code>-ով վերադարձնում է «[վերնագիր] — [հեղինակ], [տարեթիվ]»։</li>
+      <li>Ավելացրու <code>markAsRead()</code> մեթոդ, որը <code>isRead</code>-ը դարձնում է <code>true</code>։ Ստուգիր՝ տպելով նախքան և հետո։</li>
+      <li>Ստեղծիր օբյեկտ առանց <code>price</code> հատկության։ Տպիր <code>book.price ?? "Գինը նշված չէ"</code>։ Ապա փորձիր <code>book.publisher?.country</code>։</li>
+      <li>Destructuring-ով հանիր վերնագիրը և հեղինակին առանձին փոփոխականների։ Հեղինակին վերանվանիր <code>writer</code>։</li>
+      <li>Ստեղծիր գնահատականների օբյեկտ (5 առարկա)։ Տպիր՝ բանալիները, արժեքները, միջինը և ամենաբարձր առարկան։</li>
+      <li>Ստեղծիր 5 ապրանքի զանգված (անուն, գին, կատեգորիա, <code>inStock</code>)։ Գրիր ֆունկցիաներ՝ բոլոր առկա ապրանքները, ընդհանուր արժեքը, ամենաթանկը։</li>
+      <li>Նույն զանգվածով՝ մեկ շղթայով գտիր որոշակի կատեգորիայի առկա ապրանքները, դասավորիր գնով և վերադարձրու «անուն — գին֏» տողերի զանգված։</li>
+      <li>Գրիր <code>updateProduct(product, changes)</code> ֆունկցիա, որը վերադարձնում է <strong>նոր</strong> օբյեկտ՝ <code>{ ...product, ...changes }</code>։ Ապացուցիր, որ բնօրինակը չի փոխվել։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>const o = { key: value }</code></td><td>Ստեղծում է օբյեկտ</td></tr>
+      <tr><td><code>o.key</code></td><td>Կարդում է հատկությունը</td></tr>
+      <tr><td><code>o["key"]</code></td><td>Նույնը, երբ բանալին փոփոխականում է կամ բացատ ունի</td></tr>
+      <tr><td><code>o.newKey = x</code></td><td>Ավելացնում կամ փոխում է</td></tr>
+      <tr><td><code>delete o.key</code></td><td>Ջնջում է հատկությունը</td></tr>
+      <tr><td><code>o.a?.b</code></td><td>Ապահով դիմում — սխալ չի գցում</td></tr>
+      <tr><td><code>o.method()</code></td><td>Կանչում է մեթոդը</td></tr>
+      <tr><td><code>this.name</code></td><td>Մեթոդի ներսում՝ ինքը օբյեկտը</td></tr>
+      <tr><td><code>Object.keys(o)</code></td><td>Բանալիների զանգված</td></tr>
+      <tr><td><code>Object.values(o)</code></td><td>Արժեքների զանգված</td></tr>
+      <tr><td><code>Object.entries(o)</code></td><td>[բանալի, արժեք] զույգերի զանգված</td></tr>
+      <tr><td><code>for (const k in o)</code></td><td>Անցնում է բանալիներով</td></tr>
+      <tr><td><code>const { a, b } = o</code></td><td>Destructuring</td></tr>
+      <tr><td><code>const { a = 5 } = o</code></td><td>Լռելյայն արժեքով</td></tr>
+      <tr><td><code>{ ...o }</code></td><td>Իսկական պատճեն</td></tr>
+      <tr><td><code>{ ...o, age: 15 }</code></td><td>Պատճեն՝ փոփոխված հատկությամբ</td></tr>
+    </table>
+    </div>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Գիտե՞մ՝ ե՞րբ օգտագործել զանգված, ե՞րբ՝ օբյեկտ</li>
+      <li>Կարո՞ղ եմ բացատրել՝ ինչու <code>user.key</code>-ը և <code>user[key]</code>-ը տարբեր բաներ են</li>
+      <li>Հասկանո՞ւմ եմ, ինչու է <code>user.address.city</code>-ն սխալ գցում, երբ <code>address</code>-ը չկա</li>
+      <li>Կարո՞ղ եմ գրել մեթոդ <code>this</code>-ով</li>
+      <li>Կարո՞ղ եմ ֆիլտրել և դասավորել օբյեկտների զանգված</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Տողեր, թվեր, <code>Math</code> և <code>Date</code>։ Կավարտենք լեզվի հիմքերի բլոկը, հետո՝ ստուգողական և անցում DOM-ին։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 07 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

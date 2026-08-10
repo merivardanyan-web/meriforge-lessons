@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 10 — DOM · Փոփոխում և ստեղծում</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 10 · 2 ժամ</p>
+  <h1>DOM · Փոփոխում և ստեղծում</h1>
+  <p class="lede">Անցյալ դասին սովորեցինք <em>գտնել</em> էլեմենտները։ Այսօր սովորում ենք դրանք <strong>փոխել</strong> և ամենակարևորը՝ ստեղծել նորերը JS-ով։ Այստեղից սկսվում է իսկական վեբ ծրագրավորումը։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 06, 07, 09</span>
+    <span>Բլոկ 2 · DOM և իրադարձություններ</span>
+    <span>Տնային՝ 10 առաջադրանք</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li><code>textContent</code>, <code>innerHTML</code>, <code>innerText</code> — երեքի տարբերությունը</li>
+      <li>Ատրիբուտներ՝ <code>src</code>, <code>href</code>, <code>setAttribute</code></li>
+      <li><code>data-*</code> և <code>dataset</code></li>
+      <li><code>classList</code> — <code>add</code>, <code>remove</code>, <code>toggle</code>, <code>contains</code></li>
+      <li>Ուղիղ ոճեր և ինչո՞ւ դրանք վատ գաղափար են</li>
+      <li><code>createElement</code>, <code>append</code>, <code>remove</code></li>
+      <li>Զանգվածից քարտեր գեներացնել՝ <code>map</code> + <code>join</code></li>
+      <li>Ամբողջական render ֆունկցիա</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Տեքստի փոփոխում</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>textContent</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> title = document.<span class="f">querySelector</span>(<span class="s">"h1"</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(title.textContent);      <span class="c">// կարդալ</span>
+
+title.textContent = <span class="s">"Նոր վերնագիր"</span>;   <span class="c">// գրել</span>
+<span class="f">console</span>.<span class="f">log</span>(title.textContent);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Հին վերնագիր</span>
+<span class="r">Նոր վերնագիր</span></pre>
+    </div>
+
+    <h3>Երեք եղանակ, երեք վարքագիծ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>համեմատում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> box = document.<span class="f">querySelector</span>(<span class="s">".box"</span>);
+
+box.textContent = <span class="s">"&lt;b&gt;Հաստ&lt;/b&gt;"</span>;
+<span class="f">console</span>.<span class="f">log</span>(box.textContent);
+<span class="c">// էջում երևում է՝ &lt;b&gt;Հաստ&lt;/b&gt;  (թեգը որպես տեքստ)</span>
+
+box.innerHTML = <span class="s">"&lt;b&gt;Հաստ&lt;/b&gt;"</span>;
+<span class="f">console</span>.<span class="f">log</span>(box.textContent);
+<span class="c">// էջում երևում է՝ Հաստ  (իսկական հաստ տառերով)</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">&lt;b&gt;Հաստ&lt;/b&gt;</span>
+<span class="r">Հաստ</span></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հատկություն</th><th>HTML թեգերը</th><th>Ե՞րբ օգտագործել</th></tr>
+      <tr><td><code>textContent</code></td><td>տեքստ են՝ չեն մշակվում</td><td><strong>Լռելյայն ընտրություն</strong> ✅</td></tr>
+      <tr><td><code>innerHTML</code></td><td>մշակվում են որպես HTML</td><td>Երբ իսկապես HTML ես դնում</td></tr>
+      <tr><td><code>innerText</code></td><td>տեքստ, բայց հաշվի է առնում CSS-ը</td><td>Հազվադեպ, ավելի դանդաղ է</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Անվտանգության վտանգ</span>
+      <p><strong>Երբեք</strong> մի՛ դիր <em>օգտագործողի</em> մուտքագրածը <code>innerHTML</code>-ի մեջ։ Եթե ինչ-որ մեկը ֆորմայում գրի <code>&lt;script&gt;</code> թեգ, այն կաշխատի քո էջում։ Այս հարձակումը կոչվում է <strong>XSS</strong>։ Օգտագործողի տվյալների համար միշտ <code>textContent</code>։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>վտանգավոր vs ապահով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> userInput = <span class="s">"&lt;img src=x onerror='alert(1)'&gt;"</span>;
+
+box.innerHTML = userInput;      <span class="c">// ❌ կոդը կաշխատի</span>
+box.textContent = userInput;    <span class="c">// ✅ պարզապես կցուցադրվի որպես տեքստ</span></code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Ատրիբուտներ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ուղիղ հատկություններով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> img  = document.<span class="f">querySelector</span>(<span class="s">"img"</span>);
+<span class="k">const</span> link = document.<span class="f">querySelector</span>(<span class="s">"a"</span>);
+
+img.src = <span class="s">"images/new-photo.jpg"</span>;
+img.alt = <span class="s">"Նոր նկար"</span>;
+
+link.href = <span class="s">"https://example.com"</span>;
+link.target = <span class="s">"_blank"</span>;
+
+<span class="f">console</span>.<span class="f">log</span>(img.alt);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Նոր նկար</span></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ունիվերսալ մեթոդներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> input = document.<span class="f">querySelector</span>(<span class="s">"input"</span>);
+
+input.<span class="f">setAttribute</span>(<span class="s">"placeholder"</span>, <span class="s">"Մուտքագրեք անունը"</span>);
+input.<span class="f">setAttribute</span>(<span class="s">"maxlength"</span>, <span class="s">"20"</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(input.<span class="f">getAttribute</span>(<span class="s">"placeholder"</span>));
+<span class="f">console</span>.<span class="f">log</span>(input.<span class="f">hasAttribute</span>(<span class="s">"required"</span>));
+
+input.<span class="f">removeAttribute</span>(<span class="s">"maxlength"</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Մուտքագրեք անունը</span>
+<span class="e">false</span></pre>
+    </div>
+
+    <h3><code>data-*</code> — քո սեփական տվյալները</h3>
+    <p>HTML-ում կարող ես ավելացնել ցանկացած ատրիբուտ, եթե այն սկսվում է <code>data-</code>-ով։ Սա շատ հարմար է JS-ի համար տվյալ պահելու։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>dataset</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// HTML:</span>
+<span class="c">// &lt;button class="btn" data-id="42" data-price="8000"&gt;Գնել&lt;/button&gt;</span>
+
+<span class="k">const</span> btn = document.<span class="f">querySelector</span>(<span class="s">".btn"</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(btn.dataset.id);
+<span class="f">console</span>.<span class="f">log</span>(btn.dataset.price);
+<span class="f">console</span>.<span class="f">log</span>(<span class="k">typeof</span> btn.dataset.price);   <span class="c">// միշտ տող է</span>
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Number</span>(btn.dataset.price) * <span class="n">2</span>);
+
+btn.dataset.status = <span class="s">"added"</span>;          <span class="c">// ավելացնում է data-status="added"</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">42</span>
+<span class="r">8000</span>
+<span class="g">string</span>
+<span class="r">16000</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ուշադրություն անվանմանը</span>
+      <p>HTML-ում՝ <code>data-user-name</code> (գծիկներով)։ JS-ում՝ <code>dataset.userName</code> (camelCase)։ Բրաուզերն ինքն է փոխակերպում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>classList — գլխավոր գործիքը</h2>
+    <p>Սա այն կամուրջն է, որով JS-ը և CSS-ը միանում են։ Ոճերը գրում ես CSS-ում, իսկ JS-ով պարզապես <strong>դասեր ես ավելացնում ու հանում</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>չորս մեթոդ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> menu = document.<span class="f">querySelector</span>(<span class="s">".menu"</span>);
+
+menu.classList.<span class="f">add</span>(<span class="s">"active"</span>);
+menu.classList.<span class="f">add</span>(<span class="s">"visible"</span>, <span class="s">"animated"</span>);   <span class="c">// մի քանիսը միանգամից</span>
+
+menu.classList.<span class="f">remove</span>(<span class="s">"animated"</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(menu.classList.<span class="f">contains</span>(<span class="s">"active"</span>));
+<span class="f">console</span>.<span class="f">log</span>(menu.classList.<span class="f">contains</span>(<span class="s">"hidden"</span>));
+
+menu.classList.<span class="f">toggle</span>(<span class="s">"active"</span>);    <span class="c">// կար → հանում է</span>
+<span class="f">console</span>.<span class="f">log</span>(menu.classList.<span class="f">contains</span>(<span class="s">"active"</span>));
+
+menu.classList.<span class="f">toggle</span>(<span class="s">"active"</span>);    <span class="c">// չկար → ավելացնում է</span>
+<span class="f">console</span>.<span class="f">log</span>(menu.className);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="g">true</span>
+<span class="e">false</span>
+<span class="e">false</span>
+<span class="r">menu visible active</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">toggle — ամենաօգտագործվողը</span>
+      <p><em>«Եթե դասը կա — հանիր։ Եթե չկա — ավելացրու»</em>։ Բուրգեր մենյուն, մոդալ պատուհանը, ակորդեոնը, մուգ թեման — բոլորը մեկ <code>toggle</code>-ով են աշխատում։</p>
+    </div>
+
+    <h3>Ինչպես է սա աշխատում իրական կյանքում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>CSS-ը գրում է ոճը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* style.css */</span>
+.modal {
+  opacity: 0;
+  visibility: hidden;
+  transition: .3s;
+}
+
+.modal.<span class="k">is-open</span> {
+  opacity: 1;
+  visibility: visible;
+}</code></pre>
+<pre><code><span class="c">// main.js — JS-ը միայն դասն է փոխում</span>
+modal.classList.<span class="f">add</span>(<span class="s">"is-open"</span>);
+modal.classList.<span class="f">remove</span>(<span class="s">"is-open"</span>);</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ոսկե կանոն</span>
+      <p><strong>Ոճը՝ CSS-ում։ Վիճակը՝ JS-ում։</strong> JS-ը երբեք չպիտի իմանա, թե ինչ գույն է <code>.is-open</code>-ը։ Նա միայն ասում է՝ «այս էլեմենտը հիմա բաց վիճակում է»։ Վաղը դիզայները կփոխի գույնը — քո JS-ը չի փոխվի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Ուղիղ ոճեր</h2>
+    <p>Կարելի է նաև ուղիղ ոճ տալ։ Բայց զգուշությամբ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>style</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> box = document.<span class="f">querySelector</span>(<span class="s">".box"</span>);
+
+box.style.color = <span class="s">"red"</span>;
+box.style.backgroundColor = <span class="s">"#f5f5f5"</span>;   <span class="c">// background-color → backgroundColor</span>
+box.style.fontSize = <span class="s">"20px"</span>;              <span class="c">// միավորը պարտադիր է</span>
+box.style.display = <span class="s">"none"</span>;
+
+<span class="f">console</span>.<span class="f">log</span>(box.style.color);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">red</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երկու թակարդ</span>
+      <p><strong>1.</strong> CSS-ի գծիկները դառնում են camelCase՝ <code>background-color</code> → <code>backgroundColor</code>, <code>font-size</code> → <code>fontSize</code>։<br>
+      <strong>2.</strong> Միավորը մի՛ մոռացիր՝ <code>"20px"</code>, ոչ <code>20</code>։ Առանց միավորի ոչինչ չի աշխատի և սխալ էլ չի լինի։</p>
+    </div>
+
+    <p>Ե՞րբ է <code>style</code>-ը արդարացված։ Միայն այն դեպքում, երբ արժեքը <strong>հաշվարկվում է</strong> և նախապես հայտնի չէ․</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>արդարացված օգտագործում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> progress = document.<span class="f">querySelector</span>(<span class="s">".progress-bar"</span>);
+<span class="k">const</span> percent = <span class="n">67</span>;
+
+progress.style.width = <span class="s">`</span>${percent}<span class="s">%`</span>;   <span class="c">// ✅ դինամիկ արժեք</span>
+
+<span class="c">// Իսկ սա պիտի լիներ CSS դաս</span>
+<span class="c">// progress.style.backgroundColor = "green";  ❌</span>
+progress.classList.<span class="f">add</span>(<span class="s">"is-success"</span>);       <span class="c">// ✅</span></code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Նոր էլեմենտ ստեղծել</h2>
+    <p>Երեք քայլ՝ <strong>ստեղծել → լցնել → դնել էջում</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>createElement</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// 1. Ստեղծում ենք (դեռ էջում չէ)</span>
+<span class="k">const</span> card = document.<span class="f">createElement</span>(<span class="s">"div"</span>);
+
+<span class="c">// 2. Լցնում ենք</span>
+card.classList.<span class="f">add</span>(<span class="s">"col"</span>);
+card.textContent = <span class="s">"Նոր քարտ"</span>;
+card.dataset.id = <span class="s">"7"</span>;
+
+<span class="f">console</span>.<span class="f">log</span>(card.outerHTML);
+
+<span class="c">// 3. Դնում ենք էջում</span>
+<span class="k">const</span> row = document.<span class="f">querySelector</span>(<span class="s">".row"</span>);
+row.<span class="f">append</span>(card);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">&lt;div class="col" data-id="7"&gt;Նոր քարտ&lt;/div&gt;</span></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Մեթոդ</th><th>Ուր է դնում</th></tr>
+      <tr><td><code>parent.append(el)</code></td><td>Ծնողի ներսում՝ <strong>վերջում</strong></td></tr>
+      <tr><td><code>parent.prepend(el)</code></td><td>Ծնողի ներսում՝ <strong>սկզբում</strong></td></tr>
+      <tr><td><code>el.before(newEl)</code></td><td>Էլեմենտից <strong>առաջ</strong></td></tr>
+      <tr><td><code>el.after(newEl)</code></td><td>Էլեմենտից <strong>հետո</strong></td></tr>
+      <tr><td><code>el.remove()</code></td><td>Ջնջում է էլեմենտը</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ներդրված կառուցվածք</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Կառուցում ենք .col &gt; .wrapper &gt; h3 + span</span>
+<span class="k">const</span> col = document.<span class="f">createElement</span>(<span class="s">"div"</span>);
+col.className = <span class="s">"col"</span>;
+
+<span class="k">const</span> wrapper = document.<span class="f">createElement</span>(<span class="s">"div"</span>);
+wrapper.className = <span class="s">"wrapper"</span>;
+
+<span class="k">const</span> title = document.<span class="f">createElement</span>(<span class="s">"h3"</span>);
+title.textContent = <span class="s">"Մկնիկ"</span>;
+
+<span class="k">const</span> price = document.<span class="f">createElement</span>(<span class="s">"span"</span>);
+price.className = <span class="s">"price"</span>;
+price.textContent = <span class="s">"8000 ֏"</span>;
+
+wrapper.<span class="f">append</span>(title, price);   <span class="c">// մի քանիսը միանգամից</span>
+col.<span class="f">append</span>(wrapper);
+
+<span class="f">console</span>.<span class="f">log</span>(col.outerHTML);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">&lt;div class="col"&gt;&lt;div class="wrapper"&gt;&lt;h3&gt;Մկնիկ&lt;/h3&gt;&lt;span class="price"&gt;8000 ֏&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;</span></pre>
+    </div>
+
+    <p>Աշխատում է, բայց՝ 12 տող՝ մեկ քարտի համար։ Կա ավելի կարճ ձև։</p>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Render զանգվածից</h2>
+    <p>Ահա այս դասի գագաթնակետը։ Դաս 6-ի <code>map</code>-ը, Դաս 1-ի template literal-ը և DOM-ը միանում են մեկ օրինաչափության մեջ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>map + join + innerHTML</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> products = [
+  { id: <span class="n">1</span>, name: <span class="s">"Նոութբուք"</span>, price: <span class="n">450000</span> },
+  { id: <span class="n">2</span>, name: <span class="s">"Մկնիկ"</span>,     price: <span class="n">8000</span>   },
+  { id: <span class="n">3</span>, name: <span class="s">"Մոնիտոր"</span>,   price: <span class="n">120000</span> }
+];
+
+<span class="k">const</span> row = document.<span class="f">querySelector</span>(<span class="s">".row"</span>);
+
+row.innerHTML = products.<span class="f">map</span>(p =&gt; <span class="s">`
+  &lt;div class="col"&gt;
+    &lt;div class="wrapper"&gt;
+      &lt;h3 class="title"&gt;</span>${p.name}<span class="s">&lt;/h3&gt;
+      &lt;span class="price"&gt;</span>${p.price.<span class="f">toLocaleString</span>(<span class="s">"hy-AM"</span>)}<span class="s"> ֏&lt;/span&gt;
+      &lt;button class="btn" data-id="</span>${p.id}<span class="s">"&gt;Գնել&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+`</span>).<span class="f">join</span>(<span class="s">""</span>);</code></pre>
+    </div>
+
+    <p>Երեք տող՝ ցանկացած քանակի քարտի համար։ 3 ապրանք լինի, թե 300 — կոդը նույնն է։</p>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ .join("")</span>
+      <p><code>map</code>-ը վերադարձնում է <strong>զանգված</strong>։ Եթե զանգվածը ուղիղ դնես <code>innerHTML</code>-ի մեջ, տարրերի արանքում կհայտնվեն ստորակետեր։ <code>join("")</code>-ը դրանք միացնում է առանց բաժանարարի։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>մոռացված join</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> items = [<span class="s">"ա"</span>, <span class="s">"բ"</span>, <span class="s">"գ"</span>];
+
+<span class="f">console</span>.<span class="f">log</span>(items.<span class="f">map</span>(i =&gt; <span class="s">`&lt;li&gt;</span>${i}<span class="s">&lt;/li&gt;`</span>).<span class="f">join</span>(<span class="s">""</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">String</span>(items.<span class="f">map</span>(i =&gt; <span class="s">`&lt;li&gt;</span>${i}<span class="s">&lt;/li&gt;`</span>)));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">&lt;li&gt;ա&lt;/li&gt;&lt;li&gt;բ&lt;/li&gt;&lt;li&gt;գ&lt;/li&gt;</span>
+<span class="r">&lt;li&gt;ա&lt;/li&gt;,&lt;li&gt;բ&lt;/li&gt;,&lt;li&gt;գ&lt;/li&gt;</span>   <span class="m">← ստորակետներ</span></pre>
+    </div>
+
+    <h3><code>innerHTML +=</code> — մի՛ արա</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>վտանգավոր օրինաչափություն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ❌ վատ — ամեն կրկնության ամբողջ HTML-ը վերակառուցվում է</span>
+products.<span class="f">forEach</span>(p =&gt; {
+  row.innerHTML += <span class="s">`&lt;div class="col"&gt;</span>${p.name}<span class="s">&lt;/div&gt;`</span>;
+});
+
+<span class="c">// ✅ լավ — մեկ անգամ</span>
+row.innerHTML = products.<span class="f">map</span>(p =&gt; <span class="s">`&lt;div class="col"&gt;</span>${p.name}<span class="s">&lt;/div&gt;`</span>).<span class="f">join</span>(<span class="s">""</span>);
+
+<span class="c">// ✅ նաև լավ — ավելացնում է առանց վերակառուցելու</span>
+products.<span class="f">forEach</span>(p =&gt; {
+  row.<span class="f">insertAdjacentHTML</span>(<span class="s">"beforeend"</span>, <span class="s">`&lt;div class="col"&gt;</span>${p.name}<span class="s">&lt;/div&gt;`</span>);
+});</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ է += վատ</span>
+      <p>Ամեն <code>+=</code>-ի ժամանակ բրաուզերը <strong>ջնջում է</strong> ամբողջ պարունակությունը և կառուցում նորից։ Դանդաղ է, և ամենակարևորը՝ նախկին էլեմենտների վրա կախված իրադարձությունները (Դաս 11) <strong>կորչում են</strong>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Դասարանական աշխատանք</h2>
+    <p>Ամբողջական render ֆունկցիա՝ ֆիլտրով և վիճակագրությամբ։ Այն ամենը, ինչ սովորել ենք 10 դասում, մեկ ֆայլում։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.html</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">main</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">section</span> <span class="f">class</span>=<span class="s">"catalog"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="t">h2</span><span class="p">&gt;</span>Կատալոգ<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"stats"</span><span class="p">&gt;&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span> <span class="f">id</span>=<span class="s">"products"</span><span class="p">&gt;&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">main</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> products = [
+  { id: <span class="n">1</span>, name: <span class="s">"Նոութբուք"</span>, price: <span class="n">450000</span>, inStock: <span class="k">true</span>  },
+  { id: <span class="n">2</span>, name: <span class="s">"Մկնիկ"</span>,     price: <span class="n">8000</span>,   inStock: <span class="k">true</span>  },
+  { id: <span class="n">3</span>, name: <span class="s">"Ստեղնաշար"</span>, price: <span class="n">25000</span>,  inStock: <span class="k">false</span> },
+  { id: <span class="n">4</span>, name: <span class="s">"Մոնիտոր"</span>,   price: <span class="n">120000</span>, inStock: <span class="k">true</span>  }
+];
+
+<span class="k">const</span> container = document.<span class="f">querySelector</span>(<span class="s">"#products"</span>);
+<span class="k">const</span> stats     = document.<span class="f">querySelector</span>(<span class="s">".stats"</span>);
+
+<span class="c">// Մեկ քարտի HTML-ը</span>
+<span class="k">function</span> <span class="f">createCard</span>(product) {
+  <span class="k">const</span> { id, name, price, inStock } = product;   <span class="c">// Դաս 7</span>
+
+  <span class="k">return</span> <span class="s">`
+    &lt;div class="col"&gt;
+      &lt;div class="wrapper </span>${inStock ? <span class="s">""</span> : <span class="s">"is-disabled"</span>}<span class="s">"&gt;
+        &lt;h3 class="title"&gt;</span>${name}<span class="s">&lt;/h3&gt;
+        &lt;span class="price"&gt;</span>${price.<span class="f">toLocaleString</span>(<span class="s">"hy-AM"</span>)}<span class="s"> ֏&lt;/span&gt;
+        &lt;span class="badge"&gt;</span>${inStock ? <span class="s">"Առկա է"</span> : <span class="s">"Սպառված"</span>}<span class="s">&lt;/span&gt;
+        &lt;button class="btn" data-id="</span>${id}<span class="s">" </span>${inStock ? <span class="s">""</span> : <span class="s">"disabled"</span>}<span class="s">&gt;
+          Գնել
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  `</span>;
+}
+
+<span class="c">// Ամբողջ ցուցակի ցուցադրում</span>
+<span class="k">function</span> <span class="f">render</span>(list) {
+  <span class="k">if</span> (list.length === <span class="n">0</span>) {
+    container.innerHTML = <span class="s">`&lt;p class="empty"&gt;Ապրանք չգտնվեց։&lt;/p&gt;`</span>;
+    <span class="k">return</span>;
+  }
+
+  container.innerHTML = list.<span class="f">map</span>(<span class="f">createCard</span>).<span class="f">join</span>(<span class="s">""</span>);
+  <span class="f">updateStats</span>(list);
+}
+
+<span class="c">// Վիճակագրություն (Դաս 6)</span>
+<span class="k">function</span> <span class="f">updateStats</span>(list) {
+  <span class="k">const</span> available = list.<span class="f">filter</span>(p =&gt; p.inStock);
+  <span class="k">const</span> total = available.<span class="f">reduce</span>((sum, p) =&gt; sum + p.price, <span class="n">0</span>);
+
+  stats.textContent =
+    <span class="s">`</span>${list.length}<span class="s"> ապրանք · </span>${available.length}<span class="s"> առկա · </span>${total.<span class="f">toLocaleString</span>(<span class="s">"hy-AM"</span>)}<span class="s"> ֏`</span>;
+}
+
+<span class="c">// Գործարկում</span>
+<span class="f">render</span>(products);
+
+<span class="c">// Ֆիլտրված տարբերակներ — փորձիր Console-ում</span>
+<span class="c">// render(products.filter(p =&gt; p.inStock));</span>
+<span class="c">// render(products.filter(p =&gt; p.price &lt; 100000));</span>
+<span class="c">// render([...products].sort((a, b) =&gt; a.price - b.price));</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ուշադրություն կառուցվածքին</span>
+      <p><code>createCard</code>-ը միայն HTML է պատրաստում։ <code>render</code>-ը միայն էջ է դնում։ <code>updateStats</code>-ը միայն հաշվում է։ <strong>Մեկ ֆունկցիա = մեկ գործ</strong> (Դաս 4)։ Դաս 16-ում այս ֆայլը կբաժանենք մոդուլների։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Խաղահրապարակ</h2>
+    <p>Այստեղ էլեմենտներ ենք կառուցում հիշողության մեջ և տպում դրանց HTML-ը՝ առանց էջը փչացնելու։</p>
+
+    <div class="pg">
+      <textarea id="pgCode" spellcheck="false">const products = [
+  { id: 1, name: "Նոութբուք", price: 450000, inStock: true },
+  { id: 2, name: "Մկնիկ", price: 8000, inStock: false }
+];
+
+// 1. Քարտի HTML
+const createCard = p => `<div class="col"><div class="wrapper"><h3>${p.name}</h3><span>${p.price} ֏</span></div></div>`;
+
+console.log(products.map(createCard).join(""));
+
+// 2. createElement-ով
+const card = document.createElement("div");
+card.className = "col";
+card.dataset.id = "7";
+card.textContent = "Նոր քարտ";
+console.log(card.outerHTML);
+
+// 3. classList
+card.classList.add("active", "highlight");
+card.classList.toggle("active");
+console.log(card.className);
+console.log(card.classList.contains("highlight"));
+
+// 4. textContent vs innerHTML
+const box = document.createElement("p");
+box.textContent = "<b>Հաստ</b>";
+console.log("textContent:", box.outerHTML);
+box.innerHTML = "<b>Հաստ</b>";
+console.log("innerHTML:", box.outerHTML);</textarea>
+      <div class="pg__actions">
+        <button class="run" id="runBtn">Կատարել</button>
+        <button class="clr" id="clrBtn">Մաքրել</button>
+      </div>
+<pre class="out" id="pgOut"><span class="m">Console</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ստեղծիր էջ մեկ <code>h1</code>-ով և JS-ով փոխիր դրա տեքստը։ Ապա փորձիր նույնը <code>innerHTML</code>-ով՝ <code>&lt;em&gt;</code> թեգով ներսում։</li>
+      <li>Ստեղծիր <code>.box</code> դիվ։ JS-ով ավելացրու <code>.active</code> դասը, հետո հանիր, հետո <code>toggle</code> արա երկու անգամ։ Ամեն քայլից հետո տպիր <code>className</code>-ը։</li>
+      <li>CSS-ում գրիր <code>.hidden { display: none; }</code>։ JS-ով թաքցրու և ցույց տուր որևէ բլոկ՝ միայն <code>classList</code>-ով։</li>
+      <li>Ստեղծիր առաջընթացի գիծ (progress bar)։ JS-ով դինամիկ սահմանիր դրա լայնությունը՝ <code>style.width</code>-ով ըստ տոկոսի փոփոխականի։</li>
+      <li>Ստեղծիր <code>&lt;img&gt;</code> և JS-ով սահմանիր <code>src</code> և <code>alt</code>։ Ապա <code>setAttribute</code>-ով ավելացրու <code>title</code>։</li>
+      <li>Կոճակին ավելացրու <code>data-id</code> և <code>data-name</code>։ JS-ով կարդա դրանք <code>dataset</code>-ով և տպիր։</li>
+      <li>Ունես անունների զանգված։ <code>map</code> + <code>join</code> + <code>innerHTML</code>-ով գեներացրու <code>&lt;ul&gt;</code> ցուցակ։</li>
+      <li>Նույն զանգվածով՝ արա նույնը, բայց <code>createElement</code> և <code>append</code>-ով։ Համեմատիր՝ որ ձևն է քեզ ավելի հարմար և գրիր մեկնաբանության մեջ։</li>
+      <li>Վերցրու դասարանական <code>products</code> զանգվածը։ Render արա միայն 100 000-ից էժան ապրանքները, դասավորած գնով։</li>
+      <li>Ավելացրու <code>renderEmpty()</code> դեպքի մշակում․ եթե ֆիլտրից հետո ապրանք չմնա, ցույց տուր «Ապրանք չգտնվեց» հաղորդագրություն։ Ստուգիր՝ ֆիլտրելով 1 000 000-ից թանկերը։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>el.textContent = "x"</code></td><td>Փոխում է տեքստը (ապահով) ✅</td></tr>
+      <tr><td><code>el.innerHTML = "&lt;b&gt;x&lt;/b&gt;"</code></td><td>Դնում է HTML (զգույշ՝ XSS)</td></tr>
+      <tr><td><code>el.src</code> / <code>el.href</code></td><td>Ուղիղ ատրիբուտներ</td></tr>
+      <tr><td><code>el.setAttribute("a", "b")</code></td><td>Ցանկացած ատրիբուտ</td></tr>
+      <tr><td><code>el.dataset.id</code></td><td>Կարդում է <code>data-id</code>-ն (միշտ տող)</td></tr>
+      <tr><td><code>el.classList.add("x")</code></td><td>Ավելացնում է դաս</td></tr>
+      <tr><td><code>el.classList.remove("x")</code></td><td>Հանում է դաս</td></tr>
+      <tr><td><code>el.classList.toggle("x")</code></td><td>Կա → հանում, չկա → ավելացնում</td></tr>
+      <tr><td><code>el.classList.contains("x")</code></td><td><code>true</code> / <code>false</code></td></tr>
+      <tr><td><code>el.style.backgroundColor</code></td><td>Ուղիղ ոճ (camelCase, միավորով)</td></tr>
+      <tr><td><code>document.createElement("div")</code></td><td>Ստեղծում է նոր էլեմենտ</td></tr>
+      <tr><td><code>parent.append(el)</code></td><td>Դնում է ներսում՝ վերջում</td></tr>
+      <tr><td><code>parent.prepend(el)</code></td><td>Դնում է ներսում՝ սկզբում</td></tr>
+      <tr><td><code>el.remove()</code></td><td>Ջնջում է</td></tr>
+      <tr><td><code>el.insertAdjacentHTML("beforeend", html)</code></td><td>Ավելացնում է HTML՝ առանց վերակառուցելու</td></tr>
+      <tr><td><code>arr.map(fn).join("")</code></td><td>Զանգված → HTML տող</td></tr>
+    </table>
+    </div>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել՝ ինչու օգտագործողի տվյալները չեն դրվում <code>innerHTML</code>-ի մեջ</li>
+      <li>Հասկանո՞ւմ եմ, ինչու է <code>classList</code>-ը գերադասելի <code>style</code>-ից</li>
+      <li>Գիտե՞մ, ինչու է <code>innerHTML +=</code>-ը վատ</li>
+      <li>Կարո՞ղ եմ առանց նայելու գրել <code>map(...).join("")</code> render</li>
+      <li>Կարո՞ղ եմ կառուցել <code>.row &gt; .col &gt; .wrapper</code> կառուցվածք JS-ով</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Իրադարձություններ։ Այսօր քարտերը ցուցադրվում են, բայց կոճակները դեռ մեռած են։ Հաջորդ դասին սովորում ենք <code>addEventListener</code>-ը, և էջը վերջապես կսկսի արձագանքել՝ մենյու, մոդալ, ակորդեոն, թաբեր։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 10 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

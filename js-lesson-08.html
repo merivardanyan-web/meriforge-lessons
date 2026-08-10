@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 08 — Տողեր, թվեր, Math և Date</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 08 · 2 ժամ · Բլոկ 1-ի ավարտ</p>
+  <h1>Տողեր, թվեր, Math և Date</h1>
+  <p class="lede">Լեզվի հիմքերի վերջին դասն է։ Այսօր հավաքում ենք այն գործիքները, որոնք ամեն օր պետք կգան՝ տեքստի մշակում, թվերի ձևաչափում, պատահական թվեր և ամսաթվեր։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 01–07</span>
+    <span>Բլոկ 1-ի եզրափակիչ</span>
+    <span>Հաջորդ դասին՝ ստուգողական</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Տողի երկարությունը, տառերը, անփոփոխելիությունը</li>
+      <li>Տողերի մեթոդներ՝ որոնում, կտրում, փոխարինում, մաքրում</li>
+      <li>Թվերի փոխակերպում և ձևաչափում՝ <code>Number</code>, <code>parseInt</code>, <code>toFixed</code></li>
+      <li>Ինչո՞ւ <code>0.1 + 0.2 !== 0.3</code></li>
+      <li><code>Math</code> — կլորացում, արմատ, աստիճան</li>
+      <li>Պատահական թվեր <code>Math.random()</code>-ով</li>
+      <li><code>Date</code> — ամսաթվեր և ժամանակ</li>
+      <li>Երեք գործնական խնդիր՝ գաղտնաբառի ստուգում, տարիքի հաշվարկ, հետհաշվարկ</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Տողի հիմունքները</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երկարություն և տառեր</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> text = <span class="s">"JavaScript"</span>;
+
+<span class="f">console</span>.<span class="f">log</span>(text.length);
+<span class="f">console</span>.<span class="f">log</span>(text[<span class="n">0</span>]);
+<span class="f">console</span>.<span class="f">log</span>(text[<span class="n">4</span>]);
+<span class="f">console</span>.<span class="f">log</span>(text.<span class="f">at</span>(-<span class="n">1</span>));      <span class="c">// վերջին տառը</span>
+<span class="f">console</span>.<span class="f">log</span>(text[<span class="n">100</span>]);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">10</span>
+<span class="r">J</span>
+<span class="r">S</span>
+<span class="r">t</span>
+<span class="m">undefined</span></pre>
+    </div>
+
+    <p>Ինչպես զանգվածում՝ հաշվարկը սկսվում է <strong>0-ից</strong>։ Տողը կարելի է պատկերացնել որպես տառերի զանգված։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>տողերն անփոփոխ են</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">let</span> word = <span class="s">"կատու"</span>;
+
+word[<span class="n">0</span>] = <span class="s">"Կ"</span>;          <span class="c">// փորձում ենք փոխել առաջին տառը</span>
+<span class="f">console</span>.<span class="f">log</span>(word);       <span class="c">// ոչինչ չփոխվեց</span>
+
+word = <span class="s">"Կ"</span> + word.<span class="f">slice</span>(<span class="n">1</span>);  <span class="c">// ճիշտ ձևը՝ նոր տող ստեղծել</span>
+<span class="f">console</span>.<span class="f">log</span>(word);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">կատու</span>
+<span class="r">Կատու</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Կարևոր սկզբունք</span>
+      <p>Տողերի <strong>բոլոր</strong> մեթոդները վերադարձնում են <em>նոր տող</em>։ Բնօրինակը երբեք չի փոխվում։ Այսինքն՝ արդյունքը միշտ պիտի պահես․ <code>text = text.trim()</code>, ոչ պարզապես <code>text.trim()</code>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Տողերի մեթոդներ</h2>
+
+    <h3>Ռեգիստր և մաքրում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>toUpperCase · toLowerCase · trim</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> name = <span class="s">"  Անի Սարգսյան  "</span>;
+
+<span class="f">console</span>.<span class="f">log</span>(name.<span class="f">toUpperCase</span>());
+<span class="f">console</span>.<span class="f">log</span>(name.<span class="f">toLowerCase</span>());
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">`"</span>${name.<span class="f">trim</span>()}<span class="s">"`</span>);      <span class="c">// հանում է եզրերի բացատները</span>
+<span class="f">console</span>.<span class="f">log</span>(name.length, name.<span class="f">trim</span>().length);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">  ԱՆԻ ՍԱՐԳՍՅԱՆ  </span>
+<span class="r">  անի սարգսյան  </span>
+<span class="r">"Անի Սարգսյան"</span>
+<span class="r">17 13</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ոսկե կանոն ֆորմաների համար</span>
+      <p>Օգտագործողի մուտքագրածը <strong>միշտ</strong> մաքրիր՝ <code>input.trim()</code>։ Մարդիկ պատահաբար բացատ են դնում, և <code>"anna@mail.com "</code>-ը հավասար չէ <code>"anna@mail.com"</code>-ին։</p>
+    </div>
+
+    <h3>Որոնում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>includes · startsWith · endsWith · indexOf</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> email = <span class="s">"anna.hakobyan@gmail.com"</span>;
+
+<span class="f">console</span>.<span class="f">log</span>(email.<span class="f">includes</span>(<span class="s">"@"</span>));
+<span class="f">console</span>.<span class="f">log</span>(email.<span class="f">endsWith</span>(<span class="s">".com"</span>));
+<span class="f">console</span>.<span class="f">log</span>(email.<span class="f">startsWith</span>(<span class="s">"anna"</span>));
+<span class="f">console</span>.<span class="f">log</span>(email.<span class="f">indexOf</span>(<span class="s">"@"</span>));
+<span class="f">console</span>.<span class="f">log</span>(email.<span class="f">indexOf</span>(<span class="s">"yahoo"</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="g">true</span>
+<span class="g">true</span>
+<span class="g">true</span>
+<span class="r">13</span>
+<span class="e">-1</span></pre>
+    </div>
+
+    <h3>Կտրել և փոխարինել</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>slice · replace · replaceAll</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> email = <span class="s">"anna.hakobyan@gmail.com"</span>;
+
+<span class="c">// ամեն ինչ մինչև @</span>
+<span class="f">console</span>.<span class="f">log</span>(email.<span class="f">slice</span>(<span class="n">0</span>, email.<span class="f">indexOf</span>(<span class="s">"@"</span>)));
+
+<span class="c">// ամեն ինչ @-ից հետո</span>
+<span class="f">console</span>.<span class="f">log</span>(email.<span class="f">slice</span>(email.<span class="f">indexOf</span>(<span class="s">"@"</span>) + <span class="n">1</span>));
+
+<span class="k">const</span> text = <span class="s">"Ես սիրում եմ Java։ Java-ն լավն է։"</span>;
+<span class="f">console</span>.<span class="f">log</span>(text.<span class="f">replace</span>(<span class="s">"Java"</span>, <span class="s">"JavaScript"</span>));       <span class="c">// միայն առաջինը</span>
+<span class="f">console</span>.<span class="f">log</span>(text.<span class="f">replaceAll</span>(<span class="s">"Java"</span>, <span class="s">"JavaScript"</span>));    <span class="c">// բոլորը</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">anna.hakobyan</span>
+<span class="r">gmail.com</span>
+<span class="r">Ես սիրում եմ JavaScript։ Java-ն լավն է։</span>
+<span class="r">Ես սիրում եմ JavaScript։ JavaScript-ն լավն է։</span></pre>
+    </div>
+
+    <h3>Կրկնում և լրացում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>repeat · padStart · padEnd</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">console</span>.<span class="f">log</span>(<span class="s">"-"</span>.<span class="f">repeat</span>(<span class="n">20</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">"★"</span>.<span class="f">repeat</span>(<span class="n">4</span>));
+
+<span class="c">// ժամացույցի ձևաչափ</span>
+<span class="k">const</span> hours = <span class="n">9</span>;
+<span class="k">const</span> minutes = <span class="n">5</span>;
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">`</span>${<span class="f">String</span>(hours).<span class="f">padStart</span>(<span class="n">2</span>, <span class="s">"0"</span>)}<span class="s">:</span>${<span class="f">String</span>(minutes).<span class="f">padStart</span>(<span class="n">2</span>, <span class="s">"0"</span>)}<span class="s">`</span>);
+
+<span class="c">// պատվերի համար</span>
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">"7"</span>.<span class="f">padStart</span>(<span class="n">6</span>, <span class="s">"0"</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">--------------------</span>
+<span class="r">★★★★</span>
+<span class="r">09:05</span>
+<span class="r">000007</span></pre>
+    </div>
+
+    <h3>Օգտակար շղթա</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>առաջին տառը մեծատառ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> capitalize = str =&gt;
+  str.<span class="f">charAt</span>(<span class="n">0</span>).<span class="f">toUpperCase</span>() + str.<span class="f">slice</span>(<span class="n">1</span>).<span class="f">toLowerCase</span>();
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">capitalize</span>(<span class="s">"անի"</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">capitalize</span>(<span class="s">"ԴԱՎԻԹ"</span>));
+
+<span class="c">// բառը շրջել (Դաս 5-ի հնարքը)</span>
+<span class="k">const</span> reverse = str =&gt; str.<span class="f">split</span>(<span class="s">""</span>).<span class="f">reverse</span>().<span class="f">join</span>(<span class="s">""</span>);
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">reverse</span>(<span class="s">"JavaScript"</span>));
+
+<span class="c">// բառերի քանակը</span>
+<span class="k">const</span> sentence = <span class="s">"Ես սովորում եմ վեբ ծրագրավորում"</span>;
+<span class="f">console</span>.<span class="f">log</span>(sentence.<span class="f">split</span>(<span class="s">" "</span>).length);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Անի</span>
+<span class="r">Դավիթ</span>
+<span class="r">tpircSavaJ</span>
+<span class="r">5</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Թվեր</h2>
+
+    <h3>Տեքստից թիվ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Number · parseInt · parseFloat</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">console</span>.<span class="f">log</span>(<span class="f">Number</span>(<span class="s">"42"</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Number</span>(<span class="s">"3.14"</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Number</span>(<span class="s">"42px"</span>));        <span class="c">// չի կարողանում</span>
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">parseInt</span>(<span class="s">"42px"</span>));      <span class="c">// վերցնում է սկզբի թիվը</span>
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">parseInt</span>(<span class="s">"3.99"</span>));      <span class="c">// կտրում է կոտորակը</span>
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">parseFloat</span>(<span class="s">"3.99սմ"</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">parseInt</span>(<span class="s">"px42"</span>));      <span class="c">// սկզբում թիվ չկա</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">42</span>
+<span class="r">3.14</span>
+<span class="e">NaN</span>
+<span class="r">42</span>
+<span class="r">3</span>
+<span class="r">3.99</span>
+<span class="e">NaN</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">NaN</span>
+      <p><strong>Not a Number</strong> — «թիվ չէ»։ Ստացվում է, երբ թվաբանական գործողությունը ձախողվում է։ Ամենատարօրինակը՝ <code>NaN === NaN</code> տալիս է <code>false</code>։ Ստուգելու համար օգտագործիր <code>Number.isNaN(x)</code>։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ստուգումներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> input = <span class="f">Number</span>(<span class="s">"abc"</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(input === <span class="f">NaN</span>);          <span class="c">// երբեք չի աշխատում</span>
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Number</span>.<span class="f">isNaN</span>(input));      <span class="c">// ճիշտ ձևը</span>
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Number</span>.<span class="f">isInteger</span>(<span class="n">5</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Number</span>.<span class="f">isInteger</span>(<span class="n">5.5</span>));
+
+<span class="k">function</span> <span class="f">safeNumber</span>(value) {
+  <span class="k">const</span> n = <span class="f">Number</span>(value);
+  <span class="k">return</span> <span class="f">Number</span>.<span class="f">isNaN</span>(n) ? <span class="n">0</span> : n;
+}
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">safeNumber</span>(<span class="s">"abc"</span>), <span class="f">safeNumber</span>(<span class="s">"25"</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="e">false</span>
+<span class="g">true</span>
+<span class="g">true</span>
+<span class="e">false</span>
+<span class="r">0 25</span></pre>
+    </div>
+
+    <h3>Ձևաչափում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>toFixed · toLocaleString</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> price = <span class="n">1234.5678</span>;
+
+<span class="f">console</span>.<span class="f">log</span>(price.<span class="f">toFixed</span>(<span class="n">2</span>));
+<span class="f">console</span>.<span class="f">log</span>(price.<span class="f">toFixed</span>(<span class="n">0</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="k">typeof</span> price.<span class="f">toFixed</span>(<span class="n">2</span>));    <span class="c">// ուշադրություն՝ տող է</span>
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Number</span>(price.<span class="f">toFixed</span>(<span class="n">2</span>)));
+
+<span class="c">// հազարների բաժանարար</span>
+<span class="f">console</span>.<span class="f">log</span>((<span class="n">4500000</span>).<span class="f">toLocaleString</span>(<span class="s">"hy-AM"</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">1234.57</span>
+<span class="r">1235</span>
+<span class="g">string</span>
+<span class="r">1234.57</span>
+<span class="r">4 500 000</span></pre>
+    </div>
+
+    <h3>Ինչո՞ւ 0.1 + 0.2 ≠ 0.3</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հայտնի «սխալը»</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">console</span>.<span class="f">log</span>(<span class="n">0.1</span> + <span class="n">0.2</span>);
+<span class="f">console</span>.<span class="f">log</span>(<span class="n">0.1</span> + <span class="n">0.2</span> === <span class="n">0.3</span>);
+
+<span class="c">// լուծումը</span>
+<span class="f">console</span>.<span class="f">log</span>((<span class="n">0.1</span> + <span class="n">0.2</span>).<span class="f">toFixed</span>(<span class="n">2</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Number</span>((<span class="n">0.1</span> + <span class="n">0.2</span>).<span class="f">toFixed</span>(<span class="n">2</span>)) === <span class="n">0.3</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">0.30000000000000004</span>
+<span class="e">false</span>
+<span class="r">0.30</span>
+<span class="g">true</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ է այդպես</span>
+      <p>Համակարգիչը թվերը պահում է երկուական համակարգում։ <code>0.1</code>-ը երկուականում անվերջ կոտորակ է — ինչպես <code>1/3 = 0.333...</code> տասական համակարգում։ Փոքր անճշտություն միշտ մնում է։ <strong>Փողի հետ աշխատելիս միշտ օգտագործիր <code>toFixed(2)</code></strong>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Math</h2>
+    <p><code>Math</code>-ը պատրաստի գործիքների հավաքածու է։ Այն ֆունկցիա չէ — չես կարող գրել <code>Math()</code>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>կլորացում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">console</span>.<span class="f">log</span>(<span class="f">Math</span>.<span class="f">round</span>(<span class="n">4.5</span>));    <span class="c">// սովորական կլորացում</span>
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Math</span>.<span class="f">round</span>(<span class="n">4.4</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Math</span>.<span class="f">floor</span>(<span class="n">4.9</span>));    <span class="c">// միշտ ներքև</span>
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Math</span>.<span class="f">ceil</span>(<span class="n">4.1</span>));     <span class="c">// միշտ վերև</span>
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Math</span>.<span class="f">trunc</span>(<span class="n">4.9</span>));    <span class="c">// պարզապես կտրում է</span>
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Math</span>.<span class="f">abs</span>(-<span class="n">7</span>));      <span class="c">// մոդուլ</span>
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Math</span>.<span class="f">pow</span>(<span class="n">2</span>, <span class="n">10</span>));   <span class="c">// նույնը՝ 2 ** 10</span>
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Math</span>.<span class="f">sqrt</span>(<span class="n">144</span>));    <span class="c">// քառակուսի արմատ</span>
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Math</span>.<span class="f">max</span>(<span class="n">3</span>, <span class="n">9</span>, <span class="n">1</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Math</span>.PI.<span class="f">toFixed</span>(<span class="n">4</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">5</span>
+<span class="r">4</span>
+<span class="r">4</span>
+<span class="r">5</span>
+<span class="r">4</span>
+<span class="r">7</span>
+<span class="r">1024</span>
+<span class="r">12</span>
+<span class="r">9</span>
+<span class="r">3.1416</span></pre>
+    </div>
+
+    <h3>Պատահական թվեր</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Math.random()</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">console</span>.<span class="f">log</span>(<span class="f">Math</span>.<span class="f">random</span>());    <span class="c">// 0-ից 1 (1-ը չի մտնում)</span>
+
+<span class="c">// Քայլ առ քայլ՝ 1-ից 6 (զառ)</span>
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Math</span>.<span class="f">random</span>() * <span class="n">6</span>);           <span class="c">// 0 – 5.999</span>
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Math</span>.<span class="f">floor</span>(<span class="f">Math</span>.<span class="f">random</span>() * <span class="n">6</span>)); <span class="c">// 0 – 5</span>
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Math</span>.<span class="f">floor</span>(<span class="f">Math</span>.<span class="f">random</span>() * <span class="n">6</span>) + <span class="n">1</span>); <span class="c">// 1 – 6</span></code></pre>
+<pre class="out"><span class="m">Console  (ամեն անգամ տարբեր)</span>
+<span class="r">0.7382914...</span>
+<span class="r">4.429748...</span>
+<span class="r">4</span>
+<span class="r">5</span></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>համընդհանուր ֆունկցիա</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">getRandom</span>(min, max) {
+  <span class="k">return</span> <span class="f">Math</span>.<span class="f">floor</span>(<span class="f">Math</span>.<span class="f">random</span>() * (max - min + <span class="n">1</span>)) + min;
+}
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">getRandom</span>(<span class="n">1</span>, <span class="n">6</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">getRandom</span>(<span class="n">10</span>, <span class="n">99</span>));
+
+<span class="c">// պատահական էլեմենտ զանգվածից</span>
+<span class="k">const</span> colors = [<span class="s">"կարմիր"</span>, <span class="s">"կանաչ"</span>, <span class="s">"կապույտ"</span>, <span class="s">"դեղին"</span>];
+<span class="k">const</span> random = colors[<span class="f">getRandom</span>(<span class="n">0</span>, colors.length - <span class="n">1</span>)];
+<span class="f">console</span>.<span class="f">log</span>(random);</code></pre>
+<pre class="out"><span class="m">Console  (ամեն անգամ տարբեր)</span>
+<span class="r">3</span>
+<span class="r">57</span>
+<span class="r">կանաչ</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Հիշիր այս ֆունկցիան</span>
+      <p><code>getRandom(min, max)</code>-ը կպետք գա շատ հաճախ՝ խաղերում, պատահական գույների, պատահական քվոտների համար։ Պահիր քո <code>utils.js</code>-ում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Date — ամսաթվեր</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ստեղծել ամսաթիվ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> now = <span class="k">new</span> <span class="f">Date</span>();              <span class="c">// հենց հիմա</span>
+<span class="k">const</span> birthday = <span class="k">new</span> <span class="f">Date</span>(<span class="s">"2010-05-17"</span>);
+<span class="k">const</span> exact = <span class="k">new</span> <span class="f">Date</span>(<span class="n">2026</span>, <span class="n">0</span>, <span class="n">15</span>);   <span class="c">// 15 հունվարի 2026</span>
+
+<span class="f">console</span>.<span class="f">log</span>(now.<span class="f">getFullYear</span>());
+<span class="f">console</span>.<span class="f">log</span>(exact.<span class="f">getMonth</span>());
+<span class="f">console</span>.<span class="f">log</span>(exact.<span class="f">getDate</span>());
+<span class="f">console</span>.<span class="f">log</span>(exact.<span class="f">getDay</span>());</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">2026</span>
+<span class="r">0</span>
+<span class="r">15</span>
+<span class="r">4</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երկու մեծ թակարդ</span>
+      <p><strong>1.</strong> Ամիսները հաշվվում են <strong>0-ից</strong>։ Հունվար = 0, դեկտեմբեր = 11։ Ուստի ցուցադրելիս գրիր <code>getMonth() + 1</code>։<br>
+      <strong>2.</strong> <code>getDay()</code>-ը շաբաթվա օրն է (կիրակի = 0), իսկ <code>getDate()</code>-ը՝ ամսվա օրը։ Անունները նման են, իմաստը՝ տարբեր։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>բոլոր get մեթոդները</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> d = <span class="k">new</span> <span class="f">Date</span>(<span class="n">2026</span>, <span class="n">7</span>, <span class="n">9</span>, <span class="n">14</span>, <span class="n">30</span>, <span class="n">45</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(d.<span class="f">getFullYear</span>());
+<span class="f">console</span>.<span class="f">log</span>(d.<span class="f">getMonth</span>() + <span class="n">1</span>);
+<span class="f">console</span>.<span class="f">log</span>(d.<span class="f">getDate</span>());
+<span class="f">console</span>.<span class="f">log</span>(d.<span class="f">getHours</span>());
+<span class="f">console</span>.<span class="f">log</span>(d.<span class="f">getMinutes</span>());
+<span class="f">console</span>.<span class="f">log</span>(d.<span class="f">getSeconds</span>());
+<span class="f">console</span>.<span class="f">log</span>(d.<span class="f">getTime</span>());   <span class="c">// միլիվայրկյաններ 1970-ից</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">2026</span>
+<span class="r">8</span>
+<span class="r">9</span>
+<span class="r">14</span>
+<span class="r">30</span>
+<span class="r">45</span>
+<span class="r">1786998645000</span></pre>
+    </div>
+
+    <h3>Գեղեցիկ ձևաչափում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ձեռքով և ավտոմատ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> d = <span class="k">new</span> <span class="f">Date</span>(<span class="n">2026</span>, <span class="n">7</span>, <span class="n">9</span>, <span class="n">14</span>, <span class="n">5</span>);
+
+<span class="k">const</span> pad = n =&gt; <span class="f">String</span>(n).<span class="f">padStart</span>(<span class="n">2</span>, <span class="s">"0"</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">`</span>${<span class="f">pad</span>(d.<span class="f">getDate</span>())}<span class="s">.</span>${<span class="f">pad</span>(d.<span class="f">getMonth</span>() + <span class="n">1</span>)}<span class="s">.</span>${d.<span class="f">getFullYear</span>()}<span class="s">`</span>);
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">`</span>${<span class="f">pad</span>(d.<span class="f">getHours</span>())}<span class="s">:</span>${<span class="f">pad</span>(d.<span class="f">getMinutes</span>())}<span class="s">`</span>);
+
+<span class="c">// ավտոմատ, հայերեն</span>
+<span class="f">console</span>.<span class="f">log</span>(d.<span class="f">toLocaleDateString</span>(<span class="s">"hy-AM"</span>));
+<span class="f">console</span>.<span class="f">log</span>(d.<span class="f">toLocaleDateString</span>(<span class="s">"hy-AM"</span>, {
+  day: <span class="s">"numeric"</span>, month: <span class="s">"long"</span>, year: <span class="s">"numeric"</span>
+}));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">09.08.2026</span>
+<span class="r">14:05</span>
+<span class="r">09.08.2026</span>
+<span class="r">9 օգոստոսի, 2026 թ.</span></pre>
+    </div>
+
+    <h3>Ամսաթվերի տարբերություն</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>քանի՞ օր է մնացել</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> newYear = <span class="k">new</span> <span class="f">Date</span>(<span class="n">2027</span>, <span class="n">0</span>, <span class="n">1</span>);
+<span class="k">const</span> today   = <span class="k">new</span> <span class="f">Date</span>(<span class="n">2026</span>, <span class="n">7</span>, <span class="n">9</span>);
+
+<span class="k">const</span> diffMs = newYear - today;         <span class="c">// տարբերությունը միլիվայրկյաններով</span>
+<span class="k">const</span> days = <span class="f">Math</span>.<span class="f">ceil</span>(diffMs / (<span class="n">1000</span> * <span class="n">60</span> * <span class="n">60</span> * <span class="n">24</span>));
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">`Նոր տարվան մնաց </span>${days}<span class="s"> օր։`</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Նոր տարվան մնաց 145 օր։</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Հնարքը</span>
+      <p>Երբ երկու <code>Date</code> հանում ես իրարից, JS-ը դրանք ինքնաբերաբար վերածում է թվերի (միլիվայրկյան)։ Հետո բաժանում ես <code>1000 × 60 × 60 × 24</code>-ի, որ ստանաս օրեր։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Դասարանական աշխատանք</h2>
+
+    <h3>Ա — Գաղտնաբառի ստուգում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>password.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">checkPassword</span>(password) {
+  <span class="k">const</span> errors = [];
+
+  <span class="k">if</span> (password.length &lt; <span class="n">8</span>) {
+    errors.<span class="f">push</span>(<span class="s">"Առնվազն 8 նիշ"</span>);
+  }
+  <span class="k">if</span> (password === password.<span class="f">toLowerCase</span>()) {
+    errors.<span class="f">push</span>(<span class="s">"Առնվազն մեկ մեծատառ"</span>);
+  }
+  <span class="k">if</span> (!<span class="s">"0123456789"</span>.<span class="f">split</span>(<span class="s">""</span>).<span class="f">some</span>(d =&gt; password.<span class="f">includes</span>(d))) {
+    errors.<span class="f">push</span>(<span class="s">"Առնվազն մեկ թիվ"</span>);
+  }
+  <span class="k">if</span> (password.<span class="f">includes</span>(<span class="s">" "</span>)) {
+    errors.<span class="f">push</span>(<span class="s">"Բացատներ չեն թույլատրվում"</span>);
+  }
+
+  <span class="k">if</span> (errors.length === <span class="n">0</span>) {
+    <span class="k">return</span> <span class="s">"✓ Գաղտնաբառը հուսալի է"</span>;
+  }
+  <span class="k">return</span> <span class="s">"✗ Խնդիրներ՝ "</span> + errors.<span class="f">join</span>(<span class="s">", "</span>);
+}
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">checkPassword</span>(<span class="s">"abc"</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">checkPassword</span>(<span class="s">"password123"</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">checkPassword</span>(<span class="s">"MyPass2026"</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">✗ Խնդիրներ՝ Առնվազն 8 նիշ, Առնվազն մեկ մեծատառ, Առնվազն մեկ թիվ</span>
+<span class="r">✗ Խնդիրներ՝ Առնվազն մեկ մեծատառ</span>
+<span class="r">✓ Գաղտնաբառը հուսալի է</span></pre>
+    </div>
+
+    <h3>Բ — Տարիքի հաշվիչ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>age.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">getAge</span>(birthDateString) {
+  <span class="k">const</span> birth = <span class="k">new</span> <span class="f">Date</span>(birthDateString);
+  <span class="k">const</span> today = <span class="k">new</span> <span class="f">Date</span>();
+
+  <span class="k">let</span> age = today.<span class="f">getFullYear</span>() - birth.<span class="f">getFullYear</span>();
+
+  <span class="c">// եթե ծննդյան օրը դեռ չի եկել այս տարի — հանում ենք 1</span>
+  <span class="k">const</span> monthDiff = today.<span class="f">getMonth</span>() - birth.<span class="f">getMonth</span>();
+  <span class="k">if</span> (monthDiff &lt; <span class="n">0</span> || (monthDiff === <span class="n">0</span> &amp;&amp; today.<span class="f">getDate</span>() &lt; birth.<span class="f">getDate</span>())) {
+    age--;
+  }
+
+  <span class="k">return</span> age;
+}
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">getAge</span>(<span class="s">"2010-05-17"</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">getAge</span>(<span class="s">"2010-12-25"</span>));   <span class="c">// ծննդյան օրը դեռ չի եկել</span></code></pre>
+<pre class="out"><span class="m">Console  (2026 թ. օգոստոսի 9-ի դրությամբ)</span>
+<span class="r">16</span>
+<span class="r">15</span></pre>
+    </div>
+
+    <h3>Գ — Հետհաշվարկ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>countdown.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">countdown</span>(targetDate) {
+  <span class="k">const</span> target = <span class="k">new</span> <span class="f">Date</span>(targetDate);
+  <span class="k">const</span> now = <span class="k">new</span> <span class="f">Date</span>();
+  <span class="k">let</span> diff = target - now;
+
+  <span class="k">if</span> (diff &lt;= <span class="n">0</span>) {
+    <span class="k">return</span> <span class="s">"Ժամանակն սպառվել է։"</span>;
+  }
+
+  <span class="k">const</span> days    = <span class="f">Math</span>.<span class="f">floor</span>(diff / (<span class="n">1000</span> * <span class="n">60</span> * <span class="n">60</span> * <span class="n">24</span>));
+  <span class="k">const</span> hours   = <span class="f">Math</span>.<span class="f">floor</span>(diff / (<span class="n">1000</span> * <span class="n">60</span> * <span class="n">60</span>)) % <span class="n">24</span>;
+  <span class="k">const</span> minutes = <span class="f">Math</span>.<span class="f">floor</span>(diff / (<span class="n">1000</span> * <span class="n">60</span>)) % <span class="n">60</span>;
+
+  <span class="k">return</span> <span class="s">`</span>${days}<span class="s"> օր, </span>${hours}<span class="s"> ժամ, </span>${minutes}<span class="s"> րոպե`</span>;
+}
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">countdown</span>(<span class="s">"2027-01-01"</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">countdown</span>(<span class="s">"2020-01-01"</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">144 օր, 9 ժամ, 27 րոպե</span>
+<span class="r">Ժամանակն սպառվել է։</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Կամուրջ դեպի Դաս 14</span>
+      <p><code>%</code>-ը այստեղ շատ խելացի է աշխատում․ <code>Math.floor(diff / ժամ) % 24</code> տալիս է «ժամերը՝ բացի ամբողջ օրերից»։ Դաս 14-ում այս ֆունկցիան կկապենք <code>setInterval</code>-ի հետ, և հետհաշվարկը կսկսի կենդանի աշխատել էջում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Խաղահրապարակ</h2>
+
+    <div class="pg">
+      <textarea id="pgCode" spellcheck="false">const name = "  անի սարգսյան  ";
+
+const clean = name.trim();
+console.log(`"${clean}"`, clean.length);
+
+const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1);
+console.log(clean.split(" ").map(capitalize).join(" "));
+
+// Թվեր
+console.log(Number("42px"), parseInt("42px"));
+console.log((1234.5678).toFixed(2));
+console.log(0.1 + 0.2, (0.1 + 0.2).toFixed(2));
+
+// Math
+console.log(Math.floor(4.9), Math.ceil(4.1), Math.round(4.5));
+
+function getRandom(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+console.log("Զառ՝", getRandom(1, 6));
+
+// Date
+const d = new Date();
+const pad = n => String(n).padStart(2, "0");
+console.log(`${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}`);
+console.log(`${pad(d.getHours())}:${pad(d.getMinutes())}`);</textarea>
+      <div class="pg__actions">
+        <button class="run" id="runBtn">Կատարել</button>
+        <button class="clr" id="clrBtn">Մաքրել</button>
+      </div>
+<pre class="out" id="pgOut"><span class="m">Console</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li><code>capitalize(str)</code> — առաջին տառը մեծատառ, մնացածը փոքրատառ։ Ապա <code>capitalizeWords(str)</code> — ամեն բառի համար։</li>
+      <li><code>countVowels(str)</code> — քանի՞ ձայնավոր կա բառում (ա, ե, է, ը, ի, ո, ու, օ)։</li>
+      <li><code>isPalindrome(str)</code> — բառը նույնն է կարդացվում երկու կողմից (անտեսիր բացատներն ու ռեգիստրը)։</li>
+      <li><code>maskEmail(email)</code> — <code>"anna@mail.com"</code> → <code>"a***@mail.com"</code>։</li>
+      <li><code>formatPrice(n)</code> — 4500000 → <code>"4 500 000 ֏"</code>։ Օգտագործիր <code>toLocaleString</code>։</li>
+      <li>Օգտագործողից վերցրու երկու թիվ <code>prompt</code>-ով։ Ստուգիր <code>Number.isNaN</code>-ով, և եթե սխալ է — տպիր «Սխալ մուտք»։</li>
+      <li><code>getRandomColor()</code> — վերադարձնում է պատահական hex գույն (<code>"#a3f2c1"</code>)։ Հուշում՝ <code>"0123456789abcdef"</code> և ցիկլ 6 անգամ։</li>
+      <li>Նմանակիր զառախաղ․ 1000 անգամ նետիր զառը և հաշվիր՝ քանի՞ անգամ ընկավ 6։ Արդյունքը պիտի մոտ լինի 166-ի։</li>
+      <li><code>getDaysUntil(dateString)</code> — քանի՞ օր է մնացել մինչև տրված ամսաթիվը։ Անցյալ ամսաթվի դեպքում՝ «Այդ օրն արդեն անցել է»։</li>
+      <li><code>formatDateTime(date)</code> — վերադարձնում է <code>"09.08.2026, 14:05"</code>։ Օգտագործիր <code>padStart</code>։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Հիշելու թերթիկ</h2>
+
+    <h3>Տողեր</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Մեթոդ</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>str.length</code></td><td>Նիշերի քանակը</td></tr>
+      <tr><td><code>str[0]</code> / <code>str.at(-1)</code></td><td>Առաջին / վերջին տառը</td></tr>
+      <tr><td><code>str.trim()</code></td><td>Հանում է եզրերի բացատները</td></tr>
+      <tr><td><code>str.toUpperCase()</code></td><td>Մեծատառ</td></tr>
+      <tr><td><code>str.includes(x)</code></td><td>Պարունակո՞ւմ է</td></tr>
+      <tr><td><code>str.startsWith(x)</code></td><td>Սկսվո՞ւմ է դրանով</td></tr>
+      <tr><td><code>str.indexOf(x)</code></td><td>Դիրքը կամ <code>-1</code></td></tr>
+      <tr><td><code>str.slice(a, b)</code></td><td>Կտրում է կտոր</td></tr>
+      <tr><td><code>str.replaceAll(a, b)</code></td><td>Փոխարինում է բոլորը</td></tr>
+      <tr><td><code>str.repeat(n)</code></td><td>Կրկնում է</td></tr>
+      <tr><td><code>str.padStart(n, "0")</code></td><td>Լրացնում է ձախից</td></tr>
+      <tr><td><code>str.split(",")</code></td><td>Տող → զանգված</td></tr>
+    </table>
+    </div>
+
+    <h3>Թվեր և Math</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>Number("42")</code></td><td>Տող → թիվ (խիստ)</td></tr>
+      <tr><td><code>parseInt("42px")</code></td><td>Վերցնում է սկզբի ամբողջ թիվը</td></tr>
+      <tr><td><code>n.toFixed(2)</code></td><td>2 նիշ ստորակետից հետո (տող է)</td></tr>
+      <tr><td><code>Number.isNaN(x)</code></td><td>Ստուգում է NaN-ը</td></tr>
+      <tr><td><code>Math.round / floor / ceil</code></td><td>Կլորացում</td></tr>
+      <tr><td><code>Math.abs(-7)</code></td><td>Մոդուլ</td></tr>
+      <tr><td><code>Math.sqrt(x)</code></td><td>Քառակուսի արմատ</td></tr>
+      <tr><td><code>Math.random()</code></td><td>Պատահական 0–1</td></tr>
+      <tr><td><code>Math.max(...arr)</code></td><td>Ամենամեծը</td></tr>
+    </table>
+    </div>
+
+    <h3>Date</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է վերադարձնում</th></tr>
+      <tr><td><code>new Date()</code></td><td>Հենց հիմա</td></tr>
+      <tr><td><code>new Date("2026-08-09")</code></td><td>Կոնկրետ ամսաթիվ</td></tr>
+      <tr><td><code>getFullYear()</code></td><td>Տարին</td></tr>
+      <tr><td><code>getMonth()</code></td><td>Ամիսը ⚠️ <strong>0–11</strong></td></tr>
+      <tr><td><code>getDate()</code></td><td>Ամսվա օրը (1–31)</td></tr>
+      <tr><td><code>getDay()</code></td><td>Շաբաթվա օրը (0 = կիրակի)</td></tr>
+      <tr><td><code>getHours()</code> / <code>getMinutes()</code></td><td>Ժամ / րոպե</td></tr>
+      <tr><td><code>getTime()</code></td><td>Միլիվայրկյաններ 1970-ից</td></tr>
+      <tr><td><code>toLocaleDateString("hy-AM")</code></td><td>Տեղային ձևաչափ</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Հաջորդ դասին՝ ստուգողական</span>
+      <p>Բլոկ 1-ն ավարտվեց։ Վերանայիր Դաս 1–8-ի հիշելու թերթիկները։ Ստուգողականը կընդգրկի՝ տիպեր, պայմաններ, ցիկլեր, ֆունկցիաներ, զանգվածներ, օբյեկտներ և այսօրվա մեթոդները։ Հետո սկսում ենք <strong>DOM</strong>-ը՝ էջը կենդանացնելը։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 08 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 11 — Կառուցվածք և Flexbox I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 11 · 2 ժամ</p>
+  <h1>Կառուցվածք և Flexbox I</h1>
+  <p class="lede">Կրկնում ենք կմախքը գործնականում և վերջապես բացում ենք այն <code>display: flex</code> տողը, որն անցյալ դասին ընդունեցինք որպես տրված։ Այսօր՝ առանցքներ և հավասարեցում։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 10</span>
+    <span>Բլոկ 1 · Կառուցվածք</span>
+    <span>Դասարանում՝ header</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Կմախքի կրկնում գործնականում</li>
+      <li>Ի՞նչ է անում <code>display: flex</code></li>
+      <li>Երկու առանցք</li>
+      <li><code>justify-content</code> — բաշխում գլխավոր առանցքով</li>
+      <li><code>align-items</code> — հավասարեցում խաչաձև առանցքով</li>
+      <li><code>flex-direction</code> — առանցքների փոխարկում</li>
+      <li>Կիրառում՝ header և քարտի ներսի կառուցվածք</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Կրկնում</h2>
+    <p>Նախքան նոր բան սովորելը՝ վերականգնենք անցյալ դասը։ Փորձիր պատասխանել առանց նայելու։</p>
+
+    <div class="tree">main &gt; section &gt; .row &gt; .col &gt; .wrapper</div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հարց</th><th>Պատասխան</th></tr>
+      <tr><td>Որտե՞ղ է ֆոնը</td><td><code>section</code> (շերտի) և <code>.wrapper</code> (քարտի)</td></tr>
+      <tr><td>Որտե՞ղ են պատերը</td><td><code>.row { padding: 0 50px }</code></td></tr>
+      <tr><td>Որտե՞ղ են բացակները</td><td><code>.col { padding: 10px }</code></td></tr>
+      <tr><td>Որտե՞ղ է լայնությունը</td><td><code>.col</code>՝ <code>.w-*</code> դասով</td></tr>
+      <tr><td>Ի՞նչ չի կարելի <code>.col</code>-ի վրա</td><td>Ֆոն, եզրագիծ, ստվեր</td></tr>
+      <tr><td>Ի՞նչ չի կարելի <code>.wrapper</code>-ի վրա</td><td>Լայնություն, <code>margin</code></td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Արագ վարժություն</span>
+      <p>Բացիր դատարկ ֆայլ և գրիր կմախքը՝ <code>section</code> երկու <code>.row</code>-ով, առաջինում մեկ <code>w-100</code>, երկրորդում՝ երեք <code>w-33</code>։ Ամեն սյան ներսում <code>.wrapper</code>։<br><br>
+      Երբ սա դառնա ավտոմատ շարժում, հետագա դասերը շատ ավելի հեշտ կլինեն։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Ի՞նչ է անում display: flex</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>մեկ տող, մեծ ազդեցություն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.row</span> {
+    <span class="f">display</span>: <span class="s">flex</span>;
+}</code></pre>
+    </div>
+
+    <div class="tree">ԱՌԱՆՑ flex-ի                    flex-ով
+┌──────────────┐              ┌────┐┌────┐┌────┐
+│  .col 1      │              │col1││col2││col3│
+└──────────────┘              └────┘└────┘└────┘
+┌──────────────┐              կողք կողքի
+│  .col 2      │              հավասար բարձրության
+└──────────────┘              առանց 4px բացակների
+┌──────────────┐
+│  .col 3      │
+└──────────────┘</div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ինչ է փոխվում</th><th>Բացատրություն</th></tr>
+      <tr><td>Երեխաները դառնում են կողք կողքի</td><td>Անկախ նրանից՝ <code>div</code> են, թե <code>span</code></td></tr>
+      <tr><td>Բացակներ չկան</td><td>HTML-ի տողադարձերն անտեսվում են ⭐</td></tr>
+      <tr><td>Երեխաները հավասար բարձրության են</td><td>Լռելյայն ձգվում են ամենաբարձրի չափ</td></tr>
+      <tr><td>Margin collapse չկա</td><td>Դաս 8-ի խնդիրն անհետանում է</td></tr>
+      <tr><td><code>display</code>-ը երեխաներում անտեսվում է</td><td>Բոլորը դառնում են flex տարրեր</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Կարևոր տերմիններ</span>
+      <p><strong>Flex-կոնտեյներ</strong> — էլեմենտը, որի վրա գրված է <code>display: flex</code>։ Մեր դեպքում՝ <code>.row</code>-ը։<br>
+      <strong>Flex-տարրեր</strong> — նրա <strong>ուղիղ</strong> երեխաները։ Մեր դեպքում՝ <code>.col</code>-երը։<br><br>
+      Միայն ուղիղ երեխաները։ <code>.wrapper</code>-ը արդեն flex-տարր չէ — այն թոռ է։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Դաս 9-ի բոլոր երեք խնդիրը լուծվեց</span>
+      <p><strong>1.</strong> 4px բացակները — չկան։<br>
+      <strong>2.</strong> <code>vertical-align: top</code> — պետք չէ։<br>
+      <strong>3.</strong> Հավասար բարձրություն — լռելյայն է։<br><br>
+      Երեք սյուն <code>33.3333%</code>-ով հիմա տեղավորվում են ուղիղ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Երկու առանցք</h2>
+    <p>Flexbox-ի ամբողջ տրամաբանությունը կառուցված է երկու առանցքի վրա։ Հասկանալով դրանք՝ հասկանում ես ամեն ինչ։</p>
+
+    <div class="tree">flex-direction: row  (լռելյայն)
+
+   ────────────── գլխավոր առանցք ──────────────►
+   ┌──────┐  ┌──────┐  ┌──────┐        │
+   │      │  │      │  │      │        │ խաչաձև
+   │  1   │  │  2   │  │  3   │        │ առանցք
+   │      │  │      │  │      │        │
+   └──────┘  └──────┘  └──────┘        ▼
+
+   justify-content  →  գլխավոր առանցքով (հորիզոնական)
+   align-items      →  խաչաձև առանցքով (ուղղահայաց)</div>
+
+    <div class="warn note">
+      <span class="tag">Ամենակարևոր բանը հիշելու</span>
+      <p><code>justify-content</code> և <code>align-items</code> — սրանք <strong>«հորիզոնական» և «ուղղահայաց» չեն</strong>։<br><br>
+      Դրանք են՝ <em>«գլխավոր առանցքով»</em> և <em>«խաչաձև առանցքով»</em>։ Իսկ առանցքները փոխվում են տեղերով, երբ փոխես <code>flex-direction</code>-ը։<br><br>
+      Սա այն տեղն է, որտեղ շատերը շփոթվում են։ Հիշիր առանցքներով, ոչ ուղղություններով։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>justify-content</h2>
+    <p>Բաշխում է տարրերը <strong>գլխավոր առանցքով</strong>։ Աշխատում է միայն այն դեպքում, երբ ազատ տեղ կա։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հինգ արժեք</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.row</span> { <span class="f">justify-content</span>: <span class="s">flex-start</span>; }    <span class="c">/* լռելյայն */</span>
+<span class="k">.row</span> { <span class="f">justify-content</span>: <span class="s">center</span>; }
+<span class="k">.row</span> { <span class="f">justify-content</span>: <span class="s">flex-end</span>; }
+<span class="k">.row</span> { <span class="f">justify-content</span>: <span class="s">space-between</span>; }
+<span class="k">.row</span> { <span class="f">justify-content</span>: <span class="s">space-around</span>; }</code></pre>
+    </div>
+
+    <div class="tree">flex-start      [1][2][3]                 
+center                [1][2][3]           
+flex-end                    [1][2][3]     
+space-between   [1]      [2]      [3]     
+space-around      [1]    [2]    [3]       </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Արժեք</th><th>Ե՞րբ օգտագործել</th></tr>
+      <tr><td><code>flex-start</code></td><td>Լռելյայն — ձախից</td></tr>
+      <tr><td><code>center</code></td><td>Կենտրոնացված կոճակ, պատկերակներ</td></tr>
+      <tr><td><code>flex-end</code></td><td>Կոճակներ մոդալի ներքևում</td></tr>
+      <tr><td><strong><code>space-between</code></strong></td><td>Լոգո ձախում, մենյու աջում ⭐</td></tr>
+      <tr><td><code>space-around</code></td><td>Հազվադեպ</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">space-between — ամենաօգտագործվողը</span>
+      <p>Առաջին տարրը կպչում է ձախին, վերջինը՝ աջին, մնացածը բաշխվում է հավասար։<br><br>
+      Header, քարտի ներքևի տողը (գին և կոճակ), աղյուսակի վերնագիր — ամենուր <code>space-between</code>։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ մեր .row-ի վրա այն սովորաբար չկա</span>
+      <p>Երբ սյուները ունեն <code>.w-*</code> դասեր և միասին կազմում են 100%, ազատ տեղ չի մնում — <code>justify-content</code>-ը ոչինչ չի փոխի։<br><br>
+      Այն օգտագործում ենք այնտեղ, որտեղ լայնությունները ֆիքսված չեն՝ header-ում, քարտի ներսում, կոճակների խմբում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>align-items</h2>
+    <p>Հավասարեցնում է տարրերը <strong>խաչաձև առանցքով</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>չորս արժեք</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.row</span> { <span class="f">align-items</span>: <span class="s">stretch</span>; }      <span class="c">/* լռելյայն */</span>
+<span class="k">.row</span> { <span class="f">align-items</span>: <span class="s">flex-start</span>; }
+<span class="k">.row</span> { <span class="f">align-items</span>: <span class="s">center</span>; }
+<span class="k">.row</span> { <span class="f">align-items</span>: <span class="s">flex-end</span>; }</code></pre>
+    </div>
+
+    <div class="tree">stretch (լռելյայն)      flex-start           center
+┌────┐┌────┐┌────┐      ┌────┐┌────┐┌────┐    ┌────┐┌────┐┌────┐
+│    ││    ││    │      │  1 ││  2 ││  3 │    │    ││  2 ││    │
+│  1 ││  2 ││  3 │      └────┘└────┘└────┘    │  1 │└────┘│  3 │
+│    ││    ││    │      տարբեր բարձրություն   │    │      │    │
+└────┘└────┘└────┘      վերևից հավասարեցված   └────┘      └────┘</div>
+
+    <div class="tip note">
+      <span class="tag">stretch-ը մեր բարեկամն է</span>
+      <p>Լռելյայն <code>stretch</code>-ի շնորհիվ են բոլոր <code>.col</code>-երը հավասար բարձրության։ Իսկ <code>.wrapper { height: 100% }</code>-ը (Դաս 10) այդ բարձրությունը փոխանցում է սպիտակ քարտին։<br><br>
+      Երկուսը միասին տալիս են հավասար քարտեր՝ անկախ տեքստի երկարությունից։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ամենահաճախ պետք եկող համադրություն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Ուղղահայաց կենտրոնացում — երբեմնի ամենադժվար խնդիրը */</span>
+<span class="k">.center-box</span> {
+    <span class="f">display</span>: <span class="s">flex</span>;
+    <span class="f">justify-content</span>: <span class="s">center</span>;   <span class="c">/* հորիզոնական */</span>
+    <span class="f">align-items</span>: <span class="s">center</span>;       <span class="c">/* ուղղահայաց */</span>
+    <span class="f">min-height</span>: <span class="n">400px</span>;
+}</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Պատմական մանրուք</span>
+      <p>Մինչև Flexbox-ը ուղղահայաց կենտրոնացումը CSS-ի ամենահայտնի գլխացավն էր։ Կային տասնյակ հնարքներ՝ բացասական <code>margin</code>-ներով, <code>table-cell</code>-ով, <code>transform</code>-ով։<br><br>
+      Հիմա՝ երկու տող։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>flex-direction</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>առանցքները փոխվում են տեղերով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.box</span> { <span class="f">flex-direction</span>: <span class="s">row</span>; }             <span class="c">/* լռելյայն */</span>
+<span class="k">.box</span> { <span class="f">flex-direction</span>: <span class="s">column</span>; }
+<span class="k">.box</span> { <span class="f">flex-direction</span>: <span class="s">row-reverse</span>; }
+<span class="k">.box</span> { <span class="f">flex-direction</span>: <span class="s">column-reverse</span>; }</code></pre>
+    </div>
+
+    <div class="tree">row                          column
+
+  գլխավոր ────►              գլխավոր
+ ┌───┐┌───┐┌───┐                │
+ │ 1 ││ 2 ││ 3 │                ▼
+ └───┘└───┘└───┘             ┌──────┐
+       │                     │  1   │
+       ▼ խաչաձև              └──────┘
+                             ┌──────┐   ────► խաչաձև
+                             │  2   │
+                             └──────┘</div>
+
+    <div class="warn note">
+      <span class="tag">Ահա թե ինչու չենք ասում «հորիզոնական»</span>
+      <p><code>column</code>-ի դեպքում․<br>
+      <code>justify-content</code> → դառնում է <strong>ուղղահայաց</strong><br>
+      <code>align-items</code> → դառնում է <strong>հորիզոնական</strong><br><br>
+      Հատկությունների անունները նույնն են, ազդեցությունը՝ շրջված։ Դրա համար է կարևոր մտածել առանցքներով։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>գործնական օրինակ՝ քարտի ներսը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.wrapper</span> {
+    <span class="f">display</span>: <span class="s">flex</span>;
+    <span class="f">flex-direction</span>: <span class="s">column</span>;
+    <span class="f">height</span>: <span class="n">100%</span>;
+}
+
+<span class="k">.card__bottom</span> {
+    <span class="f">margin-top</span>: <span class="s">auto</span>;    <span class="c">/* հրում է ներքև ⭐ */</span>
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">margin-top: auto — շատ օգտակար հնարք</span>
+      <p>Երեք քարտ տարբեր երկարության տեքստերով։ Ուզում ես, որ կոճակները լինեն <strong>նույն մակարդակին</strong>՝ քարտի ամենաներքևում։<br><br>
+      <code>flex-direction: column</code> + <code>margin-top: auto</code> ներքևի բլոկի վրա — և այն «կպչում» է ներքևին՝ անկախ վերևի տեքստի երկարությունից։<br><br>
+      Առանց դրա կոճակները կլինեն տարբեր բարձրություններում և քարտերը կթվան անփույթ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>global.css-ի ավելացումը</h2>
+    <p>Ամեն անգամ <code>display: flex</code> գրելու փոխարեն՝ ստեղծում ենք օգնական դասեր։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>css/global.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ---------- Flex օգնականներ ---------- */</span>
+<span class="k">.flex</span>        { <span class="f">display</span>: <span class="s">flex</span>; }
+<span class="k">.flex-column</span> { <span class="f">flex-direction</span>: <span class="s">column</span>; }
+
+<span class="k">.justify-start</span>   { <span class="f">justify-content</span>: <span class="s">start</span>; }
+<span class="k">.justify-center</span>  { <span class="f">justify-content</span>: <span class="s">center</span>; }
+<span class="k">.justify-end</span>     { <span class="f">justify-content</span>: <span class="s">end</span>; }
+<span class="k">.justify-between</span> { <span class="f">justify-content</span>: <span class="s">space-between</span>; }
+<span class="k">.justify-around</span>  { <span class="f">justify-content</span>: <span class="s">space-around</span>; }
+
+<span class="k">.align-start</span>  { <span class="f">align-items</span>: <span class="s">start</span>; }
+<span class="k">.align-center</span> { <span class="f">align-items</span>: <span class="s">center</span>; }
+<span class="k">.align-end</span>    { <span class="f">align-items</span>: <span class="s">end</span>; }</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>օգտագործում HTML-ում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row align-center"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-50"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-50"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- .wrapper-ի ներսում --&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"flex justify-between align-center"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">span</span><span class="p">&gt;</span>450 000 ֏<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span> <span class="f">class</span>=<span class="s">"btn"</span><span class="p">&gt;</span>Գնել<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Երկու մակարդակի flex</span>
+      <p>Նկատեցի՞ր — <code>.row</code>-ը flex է, և <code>.wrapper</code>-ի ներսի բլոկը նույնպես։ Դա նորմալ է և շատ տարածված։<br><br>
+      Flex-կոնտեյները կարող է լինել ուրիշ flex-կոնտեյների տարրը։ Ամեն մեկն ունի իր առանցքները և իր կանոնները։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Խաղահրապարակ</h2>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="css">CSS</button>
+        <button class="live__tab" data-pane="html">HTML</button>
+      </div>
+      <textarea class="live__code" data-pane="css">* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: system-ui, sans-serif;
+    padding: 16px;
+    background: #f5f5f5;
+    line-height: 1.5;
+}
+
+h3 { margin: 18px 0 6px; font-size: 14px; color: #555; }
+
+.demo {
+    display: flex;
+    background: #ddd;
+    min-height: 90px;
+    margin-bottom: 8px;
+    padding: 8px;
+}
+
+.demo div {
+    background: #003459;
+    color: white;
+    padding: 10px 14px;
+}
+
+/* ===== Փոխիր այս արժեքները ===== */
+.d1 { justify-content: flex-start; }
+.d2 { justify-content: center; }
+.d3 { justify-content: space-between; }
+.d4 { align-items: center; }
+.d5 { align-items: flex-end; }
+
+/* Ուղղահայաց + հորիզոնական կենտրոն */
+.d6 {
+    justify-content: center;
+    align-items: center;
+    min-height: 120px;
+}
+
+/* ===== column + margin-top: auto ===== */
+.cards { display: flex; }
+
+.card-col { width: 33.3333%; padding: 8px; }
+
+.card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: white;
+    border-radius: 10px;
+    padding: 14px;
+}
+
+.card p { margin-bottom: 10px; }
+
+.card .bottom {
+    margin-top: auto;          /* ← հրում է ներքև */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.btn {
+    background: #003459;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+}</textarea>
+      <textarea class="live__code is-hidden" data-pane="html">&lt;h3&gt;justify-content: flex-start&lt;/h3&gt;
+&lt;div class="demo d1"&gt;&lt;div&gt;1&lt;/div&gt;&lt;div&gt;2&lt;/div&gt;&lt;div&gt;3&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3&gt;justify-content: center&lt;/h3&gt;
+&lt;div class="demo d2"&gt;&lt;div&gt;1&lt;/div&gt;&lt;div&gt;2&lt;/div&gt;&lt;div&gt;3&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3&gt;justify-content: space-between&lt;/h3&gt;
+&lt;div class="demo d3"&gt;&lt;div&gt;1&lt;/div&gt;&lt;div&gt;2&lt;/div&gt;&lt;div&gt;3&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3&gt;align-items: center&lt;/h3&gt;
+&lt;div class="demo d4"&gt;&lt;div&gt;1&lt;/div&gt;&lt;div&gt;2&lt;br&gt;երկու տող&lt;/div&gt;&lt;div&gt;3&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3&gt;align-items: flex-end&lt;/h3&gt;
+&lt;div class="demo d5"&gt;&lt;div&gt;1&lt;/div&gt;&lt;div&gt;2&lt;br&gt;երկու տող&lt;/div&gt;&lt;div&gt;3&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3&gt;Կատարյալ կենտրոն&lt;/h3&gt;
+&lt;div class="demo d6"&gt;&lt;div&gt;կենտրոնում&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3&gt;Քարտեր՝ կոճակները նույն մակարդակին&lt;/h3&gt;
+&lt;div class="cards"&gt;
+    &lt;div class="card-col"&gt;
+        &lt;div class="card"&gt;
+            &lt;h4&gt;Առաջին&lt;/h4&gt;
+            &lt;p&gt;Կարճ տեքստ&lt;/p&gt;
+            &lt;div class="bottom"&gt;
+                &lt;span&gt;8 000 ֏&lt;/span&gt;
+                &lt;a href="#" class="btn"&gt;Գնել&lt;/a&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="card-col"&gt;
+        &lt;div class="card"&gt;
+            &lt;h4&gt;Երկրորդ&lt;/h4&gt;
+            &lt;p&gt;Այս քարտն ունի շատ ավելի երկար նկարագրություն,
+            որը զբաղեցնում է մի քանի տող և մեծացնում քարտի բարձրությունը&lt;/p&gt;
+            &lt;div class="bottom"&gt;
+                &lt;span&gt;12 000 ֏&lt;/span&gt;
+                &lt;a href="#" class="btn"&gt;Գնել&lt;/a&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="card-col"&gt;
+        &lt;div class="card"&gt;
+            &lt;h4&gt;Երրորդ&lt;/h4&gt;
+            &lt;p&gt;Միջին&lt;/p&gt;
+            &lt;div class="bottom"&gt;
+                &lt;span&gt;5 000 ֏&lt;/span&gt;
+                &lt;a href="#" class="btn"&gt;Գնել&lt;/a&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</textarea>
+      <div class="live__actions">
+        <span>Փոխիր արժեքները և տես արդյունքը</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Փորձիր</span>
+      <p><strong>1.</strong> <code>.d3</code>-ը փոխիր <code>space-around</code>-ի։<br>
+      <strong>2.</strong> Ջնջիր <code>.card .bottom { margin-top: auto }</code>-ը — կոճակները կցրվե՞ն։<br>
+      <strong>3.</strong> Ջնջիր <code>.card { height: 100% }</code>-ը։<br>
+      <strong>4.</strong> Ավելացրու <code>.cards { flex-direction: column }</code>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Դասարանական · header</h2>
+    <p>Կառուցում ենք էջի վերնամասը՝ լոգո ձախում, մենյու աջում։ Դասական <code>space-between</code>-ի կիրառություն։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">header</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row align-center justify-between"</span><span class="p">&gt;</span>
+
+        <span class="c">&lt;!-- Լոգո --&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"index.html"</span> <span class="f">class</span>=<span class="s">"logo"</span><span class="p">&gt;</span>ՏեխնոՄարկետ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="c">&lt;!-- Մենյու --&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">nav</span> <span class="f">aria-label</span>=<span class="s">"Գլխավոր մենյու"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">ul</span> <span class="f">class</span>=<span class="s">"flex align-center menu"</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span><span class="p">&gt;</span>Գլխավոր<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span><span class="p">&gt;</span>Ապրանքներ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span><span class="p">&gt;</span>Մեր մասին<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span> <span class="f">class</span>=<span class="s">"btn"</span><span class="p">&gt;</span>Զամբյուղ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+                <span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">nav</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">header</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>css/main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="t">header</span> {
+    <span class="f">background</span>: <span class="s">white</span>;
+    <span class="f">box-shadow</span>: <span class="n">0</span> <span class="n">1px</span> <span class="n">4px</span> <span class="s">rgba</span>(<span class="n">0</span>,<span class="n">0</span>,<span class="n">0</span>,<span class="n">.08</span>);
+}
+
+<span class="t">header</span> <span class="k">.row</span> {
+    <span class="f">padding-top</span>: <span class="n">12px</span>;
+    <span class="f">padding-bottom</span>: <span class="n">12px</span>;
+}
+
+<span class="k">.logo</span> {
+    <span class="f">font-size</span>: <span class="n">1.5rem</span>;
+    <span class="f">font-weight</span>: <span class="n">700</span>;
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--secondary</span>);
+}
+
+<span class="k">.menu</span> <span class="t">a</span> {
+    <span class="f">padding</span>: <span class="n">12px</span> <span class="n">16px</span>;
+    <span class="f">border-radius</span>: <span class="n">6px</span>;
+}
+
+<span class="k">.menu</span> <span class="t">a</span>:<span class="k">hover</span>,
+<span class="k">.menu</span> <span class="t">a</span>:<span class="k">focus-visible</span> {
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--bg</span>);
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ուշադրություն՝ .col-ը առանց .w-*</span>
+      <p>Այստեղ սյուներին լայնություն չենք տվել։ Դա դիտավորյալ է․ <code>space-between</code>-ը աշխատում է <strong>միայն</strong> այն դեպքում, երբ ազատ տեղ կա։<br><br>
+      Եթե երկուսին տայիր <code>w-50</code>, դրանք կլրացնեին ամբողջ լայնությունը, և բաշխելու բան չէր մնա։ Լոգոն կմնար ձախում, մենյուն՝ իր սյան ձախ եզրին — կենտրոնում։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ստուգիր ստեղնաշարով</span>
+      <p><kbd>Tab</kbd>-ով անցիր մենյուով։ Ամեն հղում պիտի ստանա տեսանելի ֆոն։ Հերթականությունը՝ ձախից աջ, ինչպես տեսողականորեն։<br><br>
+      Ուշադրություն դարձրու․ եթե երբևէ օգտագործես <code>row-reverse</code>, տեսողական հերթականությունը կփոխվի, բայց <kbd>Tab</kbd>-ի հերթականությունը կմնա HTML-ի պես։ Դա շփոթեցնում է օգտագործողին — խուսափիր <code>reverse</code>-ից նավիգացիայում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ավելացրու <code>global.css</code>-ում բոլոր flex օգնական դասերը։</li>
+      <li>Ցուցադրիր <code>justify-content</code>-ի հինգ արժեքը՝ հինգ առանձին բլոկով։</li>
+      <li>Ցուցադրիր <code>align-items</code>-ի չորս արժեքը՝ տարբեր բարձրության երեխաներով։</li>
+      <li>Կենտրոնացրու բլոկը երկու առանցքով էլ (<code>min-height: 400px</code>)։</li>
+      <li>Ցուցադրիր <code>flex-direction: column</code>-ի ազդեցությունը՝ նույն <code>justify-content: center</code>-ով։ Բացատրիր, ինչու արդյունքը փոխվեց։</li>
+      <li>Կառուցիր header՝ դասարանական օրինակի պես։ Ավելացրու <code>:hover</code> և <code>:focus-visible</code>։</li>
+      <li>Կառուցիր երեք քարտ, որտեղ կոճակները նույն մակարդակին են՝ <code>flex-direction: column</code> + <code>margin-top: auto</code>։ Տեքստերը պիտի լինեն շատ տարբեր երկարության։</li>
+      <li>Ջնջիր <code>margin-top: auto</code>-ն և ուղարկիր երկու սքրինշոթ՝ առաջ և հետո։</li>
+      <li>Կառուցիր footer՝ երեք սյուն, ներսում ուղղահայաց ցուցակներ (<code>flex-column</code>)։</li>
+      <li>Վերցրու Դաս 10-ի «Մեր թիմը» բաժինը և ավելացրու երկրորդ <code>.row</code>՝ վերնագրով ձախում և «Բոլորը» հղումով աջում (<code>justify-between</code>)։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հատկություն</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>display: flex</code></td><td>Երեխաները՝ կողք կողքի</td></tr>
+      <tr><td><code>flex-direction: row</code></td><td>Լռելյայն — հորիզոնական</td></tr>
+      <tr><td><code>flex-direction: column</code></td><td>Ուղղահայաց, առանցքները փոխվում են ⭐</td></tr>
+      <tr><td><code>justify-content</code></td><td>Բաշխում <strong>գլխավոր</strong> առանցքով</td></tr>
+      <tr><td><code>align-items</code></td><td>Հավասարեցում <strong>խաչաձև</strong> առանցքով</td></tr>
+      <tr><td><code>space-between</code></td><td>Առաջինը ձախ, վերջինը աջ ⭐</td></tr>
+      <tr><td><code>align-items: stretch</code></td><td>Լռելյայն — հավասար բարձրություն</td></tr>
+      <tr><td><code>margin-top: auto</code></td><td>Հրում է ներքև (column-ում) ⭐</td></tr>
+    </table>
+    </div>
+
+    <h3>Կատարյալ կենտրոն</h3>
+    <div class="tree">display: flex;
+justify-content: center;
+align-items: center;</div>
+
+    <h3>Ի՞նչ ավելացավ global.css-ում այսօր</h3>
+    <div class="tree">✓ .flex, .flex-column
+✓ .justify-start / center / end / between / around
+✓ .align-start / center / end</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Կմախքը պահպանված է՝ <code>.row &gt; .col &gt; .wrapper</code></li>
+      <li><code>space-between</code>-ի դեպքում սյուներն ունեն ազատ տեղ</li>
+      <li>Քարտերի կոճակները նույն մակարդակին են</li>
+      <li>Ֆոկուսը տեսանելի է <kbd>Tab</kbd>-ով անցնելիս</li>
+      <li>Չկա <code>row-reverse</code> նավիգացիայում</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել գլխավոր և խաչաձև առանցքները</li>
+      <li>Գիտե՞մ, ինչու <code>justify-content</code>-ը երբեմն ոչինչ չի փոխում</li>
+      <li>Հասկանո՞ւմ եմ, ինչ է լինում <code>column</code>-ի դեպքում</li>
+      <li>Կարո՞ղ եմ բացատրել <code>margin-top: auto</code> հնարքը</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Flexbox II՝ <code>flex-grow</code>, <code>flex-shrink</code>, <code>flex-basis</code> և <code>gap</code>։ Կհասկանանք, ինչպես են սյուները բաշխում ազատ տեղը, և ինչու է <code>gap</code>-ը երբեմն ավելի լավ, քան <code>.col</code>-ի <code>padding</code>-ը։ Կրկին կկառուցենք նոր բաժին։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 11 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

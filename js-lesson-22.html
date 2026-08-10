@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 22 — OOP JavaScript-ում</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 22 · 2 ժամ</p>
+  <h1>OOP JavaScript-ում</h1>
+  <p class="lede">Օբյեկտները գիտենք Դաս 7-ից։ Այսօր սովորում ենք դրանք արտադրել կաղապարով, ժառանգել և պաշտպանել։ Սա նաև կամուրջն է դեպի PHP-ի բլոկը, որտեղ OOP-ն կլինի ամեն ինչի հիմքը։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 04, 07</span>
+    <span>Բլոկ 3 · Ժամանակակից JS</span>
+    <span>Կամուրջ PHP-ի բլոկին</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ինչո՞ւ է պետք OOP-ն</li>
+      <li><code>this</code> — չորս դեպք և <code>bind</code></li>
+      <li><code>class</code> և <code>constructor</code></li>
+      <li>Մեթոդներ, <code>get</code> և <code>set</code></li>
+      <li><code>static</code> — դասի մեթոդներ</li>
+      <li><code>#private</code> — փակ դաշտեր</li>
+      <li>Ժառանգում՝ <code>extends</code> և <code>super</code></li>
+      <li>Զամբյուղը՝ որպես դաս</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչո՞ւ է պետք OOP-ն</h2>
+    <p>Դաս 7-ում օբյեկտ ստեղծելը հեշտ էր։ Բայց երբ նույնատիպ օբյեկտները շատանում են, սկսվում է կրկնությունը։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ կրկնություն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> user1 = {
+  name: <span class="s">"Անի"</span>, age: <span class="n">14</span>,
+  <span class="f">greet</span>() { <span class="k">return</span> <span class="s">`Բարև, ես </span>${<span class="k">this</span>.name}<span class="s"> եմ`</span>; }
+};
+
+<span class="k">const</span> user2 = {
+  name: <span class="s">"Դավիթ"</span>, age: <span class="n">15</span>,
+  <span class="f">greet</span>() { <span class="k">return</span> <span class="s">`Բարև, ես </span>${<span class="k">this</span>.name}<span class="s"> եմ`</span>; }
+};
+
+<span class="k">const</span> user3 = { ... };   <span class="c">// և այսպես 100 անգամ</span></code></pre>
+    </div>
+
+    <p><code>greet</code> ֆունկցիան կրկնվում է ամեն օբյեկտում։ Եթե վաղը ուզես փոխել ողջույնի տեքստը՝ պիտի ուղղես 100 տեղում։ Հիշիր Դաս 4-ի DRY սկզբունքը։</p>
+
+    <div class="note">
+      <span class="tag">Դասը կաղապար է</span>
+      <p><strong>Class</strong> — չերտեզ։ <strong>Object</strong> — ըստ չերտեզի կառուցված տուն։ Մեկ չերտեզով կարելի է կառուցել հազար տուն, և բոլորն էլ կունենան նույն կառուցվածքը, բայց տարբեր հասցեներ ու գույներ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>this — խորը</h2>
+    <p>Դաս 7-ում ասացինք՝ <code>this</code>-ը այն օբյեկտն է, որի կողքին կետն է։ Դա ճիշտ է, բայց ոչ ամբողջը։ Ահա չորս դեպք։</p>
+
+    <h3>1. Մեթոդում — ամեն ինչ պարզ է</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>✅</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> user = {
+  name: <span class="s">"Անի"</span>,
+  <span class="f">greet</span>() { <span class="f">console</span>.<span class="f">log</span>(<span class="k">this</span>.name); }
+};
+
+user.<span class="f">greet</span>();</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Անի</span></pre>
+    </div>
+
+    <h3>2. Ֆունկցիան «պոկվում է» օբյեկտից</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ ամենահաճախ սխալը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> user = {
+  name: <span class="s">"Անի"</span>,
+  <span class="f">greet</span>() { <span class="f">console</span>.<span class="f">log</span>(<span class="k">this</span>.name); }
+};
+
+<span class="k">const</span> greetFn = user.greet;   <span class="c">// պոկեցինք ֆունկցիան</span>
+<span class="f">greetFn</span>();</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="m">undefined</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Կանոն</span>
+      <p><code>this</code>-ը որոշվում է <strong>ոչ թե այնտեղ, որտեղ ֆունկցիան գրված է</strong>, այլ այնտեղ, <strong>որտեղ այն կանչվում է</strong>։ <code>greetFn()</code>-ը կանչվեց առանց օբյեկտի — ուստի <code>this</code>-ը կորավ։</p>
+    </div>
+
+    <h3>3. Իրադարձության մշակիչում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>նույն թակարդը՝ իրական կյանքում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> counter = {
+  count: <span class="n">0</span>,
+  <span class="f">increment</span>() {
+    <span class="k">this</span>.count++;
+    <span class="f">console</span>.<span class="f">log</span>(<span class="k">this</span>.count);
+  }
+};
+
+btn.<span class="f">addEventListener</span>(<span class="s">"click"</span>, counter.increment);   <span class="c">// ❌</span>
+<span class="c">// this-ը կլինի կոճակը, ոչ counter-ը</span>
+
+btn.<span class="f">addEventListener</span>(<span class="s">"click"</span>, () =&gt; counter.<span class="f">increment</span>());   <span class="c">// ✅</span>
+btn.<span class="f">addEventListener</span>(<span class="s">"click"</span>, counter.increment.<span class="f">bind</span>(counter));   <span class="c">// ✅</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">bind</span>
+      <p><code>fn.bind(obj)</code> վերադարձնում է <strong>նոր ֆունկցիա</strong>, որի <code>this</code>-ը ընդմիշտ ամրացված է <code>obj</code>-ին։ Կան նաև <code>call</code> և <code>apply</code>՝ դրանք անմիջապես կանչում են ֆունկցիան՝ նշված <code>this</code>-ով։</p>
+    </div>
+
+    <h3>4. Arrow ֆունկցիա — չունի սեփական this</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երբ arrow-ը փրկում է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> timer = {
+  seconds: <span class="n">0</span>,
+
+  <span class="f">startBad</span>() {
+    <span class="f">setInterval</span>(<span class="k">function</span>() {
+      <span class="k">this</span>.seconds++;              <span class="c">// ❌ this-ը այստեղ ուրիշ է</span>
+      <span class="f">console</span>.<span class="f">log</span>(<span class="k">this</span>.seconds);
+    }, <span class="n">1000</span>);
+  },
+
+  <span class="f">startGood</span>() {
+    <span class="f">setInterval</span>(() =&gt; {
+      <span class="k">this</span>.seconds++;              <span class="c">// ✅ arrow-ը վերցնում է դրսի this-ը</span>
+      <span class="f">console</span>.<span class="f">log</span>(<span class="k">this</span>.seconds);
+    }, <span class="n">1000</span>);
+  }
+};</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ոսկե կանոն</span>
+      <p><strong>Մեթոդ օբյեկտում</strong> → սովորական ֆունկցիա (Դաս 7-ի զգուշացումը)։<br>
+      <strong>Callback մեթոդի ներսում</strong> → arrow ֆունկցիա։<br><br>
+      Arrow-ը սեփական <code>this</code> չունի — այն վերցնում է շրջապատող կոդից։ Հենց դրա համար է այն երբեմն ճիշտ, երբեմն՝ սխալ ընտրություն։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>class</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>առաջին դասը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="f">User</span> {
+  <span class="c">// Կանչվում է ամեն անգամ, երբ new է գրվում</span>
+  <span class="f">constructor</span>(name, age) {
+    <span class="k">this</span>.name = name;
+    <span class="k">this</span>.age = age;
+  }
+
+  <span class="c">// Մեթոդ — գրվում է ՄԵԿ անգամ, ընդհանուր է բոլորի համար</span>
+  <span class="f">greet</span>() {
+    <span class="k">return</span> <span class="s">`Բարև, ես </span>${<span class="k">this</span>.name}<span class="s"> եմ, </span>${<span class="k">this</span>.age}<span class="s"> տարեկան`</span>;
+  }
+
+  <span class="f">birthday</span>() {
+    <span class="k">this</span>.age++;
+    <span class="k">return</span> <span class="k">this</span>.age;
+  }
+}
+
+<span class="k">const</span> ani = <span class="k">new</span> <span class="f">User</span>(<span class="s">"Անի"</span>, <span class="n">14</span>);
+<span class="k">const</span> davit = <span class="k">new</span> <span class="f">User</span>(<span class="s">"Դավիթ"</span>, <span class="n">15</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(ani.<span class="f">greet</span>());
+<span class="f">console</span>.<span class="f">log</span>(davit.<span class="f">greet</span>());
+<span class="f">console</span>.<span class="f">log</span>(ani.<span class="f">birthday</span>());
+<span class="f">console</span>.<span class="f">log</span>(davit.name, ani.name);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Բարև, ես Անի եմ, 14 տարեկան</span>
+<span class="r">Բարև, ես Դավիթ եմ, 15 տարեկան</span>
+<span class="r">15</span>
+<span class="r">Դավիթ Անի</span></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Տերմին</th><th>Նշանակություն</th></tr>
+      <tr><td><strong>Class</strong></td><td>Կաղապար, չերտեզ</td></tr>
+      <tr><td><strong>Instance</strong></td><td>Կաղապարով ստեղծված օբյեկտ</td></tr>
+      <tr><td><code>new</code></td><td>Ստեղծում է նոր օրինակ</td></tr>
+      <tr><td><code>constructor</code></td><td>Ինքնաբերաբար կանչվում է <code>new</code>-ի ժամանակ</td></tr>
+      <tr><td><strong>Property</strong></td><td>Օբյեկտի տվյալ (<code>this.name</code>)</td></tr>
+      <tr><td><strong>Method</strong></td><td>Օբյեկտի ֆունկցիա</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">new-ը մի՛ մոռացիր</span>
+      <p>Առանց <code>new</code>-ի՝ <code>const u = User("Անի", 14)</code> → սխալ։ Դասերը կարելի է կանչել <strong>միայն</strong> <code>new</code>-ով։ Անվանման սովորույթ՝ դասերը գրում ենք <strong>մեծատառով</strong>՝ <code>User</code>, <code>Cart</code>, <code>Product</code>։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>լռելյայն արժեքներ և վալիդացիա</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="f">Product</span> {
+  <span class="f">constructor</span>(name, price, qty = <span class="n">1</span>) {
+    <span class="k">if</span> (!name) <span class="k">throw</span> <span class="k">new</span> <span class="f">Error</span>(<span class="s">"Անունը պարտադիր է"</span>);
+    <span class="k">if</span> (price &lt; <span class="n">0</span>) <span class="k">throw</span> <span class="k">new</span> <span class="f">Error</span>(<span class="s">"Գինը չի կարող բացասական լինել"</span>);
+
+    <span class="k">this</span>.name = name;
+    <span class="k">this</span>.price = price;
+    <span class="k">this</span>.qty = qty;
+  }
+
+  <span class="f">getSubtotal</span>() {
+    <span class="k">return</span> <span class="k">this</span>.price * <span class="k">this</span>.qty;
+  }
+}
+
+<span class="k">const</span> p = <span class="k">new</span> <span class="f">Product</span>(<span class="s">"Մկնիկ"</span>, <span class="n">8000</span>, <span class="n">3</span>);
+<span class="f">console</span>.<span class="f">log</span>(p.<span class="f">getSubtotal</span>());</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">24000</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>get և set</h2>
+    <p>Երբեմն ուզում ես, որ հատկությունը <em>հաշվարկվի</em>, բայց օգտագործվի ինչպես սովորական դաշտ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>getter</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="f">Product</span> {
+  <span class="f">constructor</span>(name, price, qty) {
+    <span class="k">this</span>.name = name;
+    <span class="k">this</span>.price = price;
+    <span class="k">this</span>.qty = qty;
+  }
+
+  <span class="k">get</span> <span class="f">subtotal</span>() {
+    <span class="k">return</span> <span class="k">this</span>.price * <span class="k">this</span>.qty;
+  }
+
+  <span class="k">get</span> <span class="f">formatted</span>() {
+    <span class="k">return</span> <span class="k">this</span>.subtotal.<span class="f">toLocaleString</span>(<span class="s">"hy-AM"</span>) + <span class="s">" ֏"</span>;
+  }
+}
+
+<span class="k">const</span> p = <span class="k">new</span> <span class="f">Product</span>(<span class="s">"Մոնիտոր"</span>, <span class="n">120000</span>, <span class="n">2</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(p.subtotal);      <span class="c">// առանց փակագծերի</span>
+<span class="f">console</span>.<span class="f">log</span>(p.formatted);
+
+p.qty = <span class="n">3</span>;
+<span class="f">console</span>.<span class="f">log</span>(p.formatted);     <span class="c">// ինքնաբերաբար վերահաշվարկվեց</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">240000</span>
+<span class="r">240 000 ֏</span>
+<span class="r">360 000 ֏</span></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>setter — վերահսկվող գրառում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="f">Product</span> {
+  <span class="f">constructor</span>(name, price) {
+    <span class="k">this</span>.name = name;
+    <span class="k">this</span>._price = price;      <span class="c">// _ նշանակում է «ներքին»</span>
+  }
+
+  <span class="k">get</span> <span class="f">price</span>() {
+    <span class="k">return</span> <span class="k">this</span>._price;
+  }
+
+  <span class="k">set</span> <span class="f">price</span>(value) {
+    <span class="k">if</span> (value &lt; <span class="n">0</span>) {
+      <span class="k">throw</span> <span class="k">new</span> <span class="f">Error</span>(<span class="s">"Գինը չի կարող բացասական լինել"</span>);
+    }
+    <span class="k">this</span>._price = value;
+  }
+}
+
+<span class="k">const</span> p = <span class="k">new</span> <span class="f">Product</span>(<span class="s">"Մկնիկ"</span>, <span class="n">8000</span>);
+
+p.price = <span class="n">9000</span>;
+<span class="f">console</span>.<span class="f">log</span>(p.price);
+
+p.price = -<span class="n">100</span>;   <span class="c">// սխալ կգցի</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">9000</span>
+<span class="e">Uncaught Error: Գինը չի կարող բացասական լինել</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>static և #private</h2>
+
+    <h3>static — պատկանում է դասին, ոչ օրինակին</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>static</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="f">Product</span> {
+  <span class="k">static</span> currency = <span class="s">"֏"</span>;
+  <span class="k">static</span> count = <span class="n">0</span>;
+
+  <span class="f">constructor</span>(name, price) {
+    <span class="k">this</span>.name = name;
+    <span class="k">this</span>.price = price;
+    <span class="f">Product</span>.count++;
+  }
+
+  <span class="c">// Օգնական ֆունկցիա, որին օբյեկտ պետք չէ</span>
+  <span class="k">static</span> <span class="f">format</span>(n) {
+    <span class="k">return</span> n.<span class="f">toLocaleString</span>(<span class="s">"hy-AM"</span>) + <span class="s">" "</span> + <span class="f">Product</span>.currency;
+  }
+
+  <span class="c">// Այլընտրանքային ձև՝ օբյեկտ ստեղծելու</span>
+  <span class="k">static</span> <span class="f">fromJSON</span>(json) {
+    <span class="k">const</span> { name, price } = <span class="f">JSON</span>.<span class="f">parse</span>(json);
+    <span class="k">return</span> <span class="k">new</span> <span class="f">Product</span>(name, price);
+  }
+}
+
+<span class="k">new</span> <span class="f">Product</span>(<span class="s">"Մկնիկ"</span>, <span class="n">8000</span>);
+<span class="k">new</span> <span class="f">Product</span>(<span class="s">"Մոնիտոր"</span>, <span class="n">120000</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Product</span>.count);
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Product</span>.<span class="f">format</span>(<span class="n">450000</span>));
+
+<span class="k">const</span> p = <span class="f">Product</span>.<span class="f">fromJSON</span>(<span class="s">'{"name":"Ստեղնաշար","price":25000}'</span>);
+<span class="f">console</span>.<span class="f">log</span>(p.name);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">2</span>
+<span class="r">450 000 ֏</span>
+<span class="r">Ստեղնաշար</span></pre>
+    </div>
+
+    <h3>#private — իսկապես փակ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>վանդակագիծը՝ պաշտպանություն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="f">BankAccount</span> {
+  #balance = <span class="n">0</span>;              <span class="c">// փակ դաշտ</span>
+
+  <span class="f">constructor</span>(owner) {
+    <span class="k">this</span>.owner = owner;
+  }
+
+  <span class="f">deposit</span>(amount) {
+    <span class="k">if</span> (amount &lt;= <span class="n">0</span>) <span class="k">throw</span> <span class="k">new</span> <span class="f">Error</span>(<span class="s">"Գումարը պիտի դրական լինի"</span>);
+    <span class="k">this</span>.#balance += amount;
+    <span class="k">return</span> <span class="k">this</span>.#balance;
+  }
+
+  <span class="f">withdraw</span>(amount) {
+    <span class="k">if</span> (amount &gt; <span class="k">this</span>.#balance) <span class="k">throw</span> <span class="k">new</span> <span class="f">Error</span>(<span class="s">"Բավարար միջոց չկա"</span>);
+    <span class="k">this</span>.#balance -= amount;
+    <span class="k">return</span> <span class="k">this</span>.#balance;
+  }
+
+  <span class="k">get</span> <span class="f">balance</span>() {
+    <span class="k">return</span> <span class="k">this</span>.#balance;
+  }
+}
+
+<span class="k">const</span> acc = <span class="k">new</span> <span class="f">BankAccount</span>(<span class="s">"Անի"</span>);
+
+acc.<span class="f">deposit</span>(<span class="n">50000</span>);
+<span class="f">console</span>.<span class="f">log</span>(acc.balance);
+
+acc.#balance = <span class="n">1000000</span>;   <span class="c">// փորձում ենք խաբել</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">50000</span>
+<span class="e">SyntaxError: Private field '#balance' must be declared in an enclosing class</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինկապսուլյացիա</span>
+      <p>Սա OOP-ի հիմնական սկզբունքներից է՝ <strong>ներքին վիճակը թաքցնել, դրսին տալ միայն վերահսկվող մուտք</strong>։ Հաշվեկշիռը կարելի է <em>կարդալ</em> (<code>get balance</code>), բայց փոխել՝ միայն <code>deposit</code>-ով և <code>withdraw</code>-ով, որոնք ստուգումներ ունեն։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ուշադրություն</span>
+      <p><code>_price</code>-ը (ընդգծումով) միայն <em>սովորույթ</em> է՝ «խնդրում եմ չդիպչել»։ <code>#price</code>-ը իսկական պաշտպանություն է՝ լեզուն ինքն է արգելում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Ժառանգում</h2>
+    <p>Երբ մի քանի դաս ունեն ընդհանուր մաս, այն հանում ենք <strong>ծնող դաս</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>extends և super</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="f">Product</span> {
+  <span class="f">constructor</span>(name, price) {
+    <span class="k">this</span>.name = name;
+    <span class="k">this</span>.price = price;
+  }
+
+  <span class="f">describe</span>() {
+    <span class="k">return</span> <span class="s">`</span>${<span class="k">this</span>.name}<span class="s"> — </span>${<span class="k">this</span>.price}<span class="s"> ֏`</span>;
+  }
+
+  <span class="k">get</span> <span class="f">shippingCost</span>() {
+    <span class="k">return</span> <span class="n">1000</span>;
+  }
+}
+
+<span class="k">class</span> <span class="f">DigitalProduct</span> <span class="k">extends</span> <span class="f">Product</span> {
+  <span class="f">constructor</span>(name, price, fileSize) {
+    <span class="k">super</span>(name, price);        <span class="c">// ՊԱՐՏԱԴԻՐ, առաջին տողում</span>
+    <span class="k">this</span>.fileSize = fileSize;
+  }
+
+  <span class="c">// Վերագրում ենք ծնողի մեթոդը</span>
+  <span class="f">describe</span>() {
+    <span class="k">return</span> <span class="k">super</span>.<span class="f">describe</span>() + <span class="s">` (</span>${<span class="k">this</span>.fileSize}<span class="s"> ՄԲ)`</span>;
+  }
+
+  <span class="k">get</span> <span class="f">shippingCost</span>() {
+    <span class="k">return</span> <span class="n">0</span>;                 <span class="c">// թվային ապրանքի առաքում չկա</span>
+  }
+}
+
+<span class="k">const</span> mouse = <span class="k">new</span> <span class="f">Product</span>(<span class="s">"Մկնիկ"</span>, <span class="n">8000</span>);
+<span class="k">const</span> ebook = <span class="k">new</span> <span class="f">DigitalProduct</span>(<span class="s">"Էլ. գիրք"</span>, <span class="n">3000</span>, <span class="n">15</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(mouse.<span class="f">describe</span>(), mouse.shippingCost);
+<span class="f">console</span>.<span class="f">log</span>(ebook.<span class="f">describe</span>(), ebook.shippingCost);
+<span class="f">console</span>.<span class="f">log</span>(ebook <span class="k">instanceof</span> <span class="f">Product</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Մկնիկ — 8000 ֏ 1000</span>
+<span class="r">Էլ. գիրք — 3000 ֏ (15 ՄԲ) 0</span>
+<span class="g">true</span></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Բառ</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>extends</code></td><td>Ժառանգում է ծնող դասից</td></tr>
+      <tr><td><code>super(...)</code></td><td>Կանչում է ծնողի կոնստրուկտորը</td></tr>
+      <tr><td><code>super.method()</code></td><td>Կանչում է ծնողի մեթոդը</td></tr>
+      <tr><td><code>instanceof</code></td><td>Ստուգում է՝ այս դասի՞ց է</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">super()-ը պարտադիր է</span>
+      <p>Եթե ժառանգորդ դասն ունի <code>constructor</code>, ապա <code>super()</code>-ը պիտի կանչվի <strong>մինչև</strong> <code>this</code>-ին դիպչելը։ Հակառակ դեպքում՝ <code>ReferenceError</code>։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Չչարաշահել</span>
+      <p>Ժառանգումը հզոր է, բայց խորը շղթաները (A → B → C → D) դժվար են հասկանալի։ Ժամանակակից մոտեցումը՝ <strong>կոմպոզիցիա ժառանգման փոխարեն</strong>՝ ֆունկցիոնալությունը հավաքել առանձին կտորներից։ Ժառանգումն օգտագործիր, երբ իսկապես «X-ը Y-ի տեսակ է»։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Դասարանական · Զամբյուղը որպես դաս</h2>
+    <p>Վերցնում ենք Դաս 16-ի զամբյուղը և վերածում դասի։ Համեմատիր՝ ինչ է փոխվում։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/Cart.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">import</span> { save, load } <span class="k">from</span> <span class="s">"./storage.js"</span>;
+
+<span class="k">export</span> <span class="k">class</span> <span class="f">Cart</span> {
+  #items = [];                    <span class="c">// փակ — դրսից ոչ ոք չի դիպչի</span>
+  #storageKey;
+  #products;
+
+  <span class="f">constructor</span>(products, storageKey = <span class="s">"cart"</span>) {
+    <span class="k">this</span>.#products = products;
+    <span class="k">this</span>.#storageKey = storageKey;
+    <span class="k">this</span>.#items = <span class="f">load</span>(storageKey, []);
+  }
+
+  <span class="c">// ---------- Կարդալու համար ----------</span>
+  <span class="k">get</span> <span class="f">items</span>() {
+    <span class="k">return</span> <span class="k">this</span>.#items
+      .<span class="f">map</span>(item =&gt; {
+        <span class="k">const</span> product = <span class="k">this</span>.#products.<span class="f">find</span>(p =&gt; p.id === item.id);
+        <span class="k">if</span> (!product) <span class="k">return</span> <span class="k">null</span>;
+        <span class="k">return</span> { ...product, qty: item.qty, subtotal: product.price * item.qty };
+      })
+      .<span class="f">filter</span>(<span class="f">Boolean</span>);
+  }
+
+  <span class="k">get</span> <span class="f">total</span>() {
+    <span class="k">return</span> <span class="k">this</span>.items.<span class="f">reduce</span>((sum, i) =&gt; sum + i.subtotal, <span class="n">0</span>);
+  }
+
+  <span class="k">get</span> <span class="f">count</span>() {
+    <span class="k">return</span> <span class="k">this</span>.#items.<span class="f">reduce</span>((sum, i) =&gt; sum + i.qty, <span class="n">0</span>);
+  }
+
+  <span class="k">get</span> <span class="f">isEmpty</span>() {
+    <span class="k">return</span> <span class="k">this</span>.#items.length === <span class="n">0</span>;
+  }
+
+  <span class="c">// ---------- Փոփոխելու համար ----------</span>
+  <span class="f">add</span>(id) {
+    <span class="k">const</span> existing = <span class="k">this</span>.#items.<span class="f">find</span>(i =&gt; i.id === id);
+
+    <span class="k">if</span> (existing) {
+      existing.qty++;
+    } <span class="k">else</span> {
+      <span class="k">this</span>.#items.<span class="f">push</span>({ id, qty: <span class="n">1</span> });
+    }
+
+    <span class="k">this</span>.#save();
+    <span class="k">return</span> <span class="k">this</span>;                 <span class="c">// թույլ է տալիս շղթա գրել</span>
+  }
+
+  <span class="f">remove</span>(id) {
+    <span class="k">this</span>.#items = <span class="k">this</span>.#items.<span class="f">filter</span>(i =&gt; i.id !== id);
+    <span class="k">this</span>.#save();
+    <span class="k">return</span> <span class="k">this</span>;
+  }
+
+  <span class="f">changeQty</span>(id, delta) {
+    <span class="k">const</span> item = <span class="k">this</span>.#items.<span class="f">find</span>(i =&gt; i.id === id);
+    <span class="k">if</span> (!item) <span class="k">return</span> <span class="k">this</span>;
+
+    item.qty += delta;
+    <span class="k">if</span> (item.qty &lt;= <span class="n">0</span>) <span class="k">return</span> <span class="k">this</span>.<span class="f">remove</span>(id);
+
+    <span class="k">this</span>.#save();
+    <span class="k">return</span> <span class="k">this</span>;
+  }
+
+  <span class="f">clear</span>() {
+    <span class="k">this</span>.#items = [];
+    <span class="k">this</span>.#save();
+    <span class="k">return</span> <span class="k">this</span>;
+  }
+
+  <span class="c">// ---------- Ներքին ----------</span>
+  #save() {
+    <span class="f">save</span>(<span class="k">this</span>.#storageKey, <span class="k">this</span>.#items);
+  }
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>օգտագործում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">import</span> { PRODUCTS } <span class="k">from</span> <span class="s">"./data.js"</span>;
+<span class="k">import</span> { Cart } <span class="k">from</span> <span class="s">"./Cart.js"</span>;
+
+<span class="k">const</span> cart = <span class="k">new</span> <span class="f">Cart</span>(PRODUCTS, <span class="s">"catalog:cart"</span>);
+
+cart.<span class="f">add</span>(<span class="n">2</span>).<span class="f">add</span>(<span class="n">2</span>).<span class="f">add</span>(<span class="n">4</span>);       <span class="c">// շղթա — շնորհիվ return this-ի</span>
+
+<span class="f">console</span>.<span class="f">log</span>(cart.count);
+<span class="f">console</span>.<span class="f">log</span>(cart.total);
+<span class="f">console</span>.<span class="f">log</span>(cart.items.<span class="f">map</span>(i =&gt; <span class="s">`</span>${i.name}<span class="s"> ×</span>${i.qty}<span class="s">`</span>));
+<span class="f">console</span>.<span class="f">log</span>(cart.isEmpty);
+
+<span class="c">// Դրսից #items-ին դիպչել հնարավոր չէ</span>
+<span class="c">// cart.#items = [];   ← սխալ</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">3</span>
+<span class="r">136000</span>
+<span class="r">["Անլար մկնիկ ×2", "Մոնիտոր 27 ×1"]</span>
+<span class="e">false</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ի՞նչ շահեցինք</span>
+      <p><strong>1.</strong> Պահպանումը ավտոմատ է — <code>#save()</code>-ը կանչվում է ամեն փոփոխությունից։ Մոռանալ անհնար է։<br>
+      <strong>2.</strong> <code>#items</code>-ը պաշտպանված է — ոչ ոք չի կարող փչացնել այն դրսից։<br>
+      <strong>3.</strong> Կարող ես ստեղծել <em>երկու</em> զամբյուղ (օր.՝ «զամբյուղ» և «հավանածներ»)՝ նույն դասով, տարբեր բանալիներով։<br>
+      <strong>4.</strong> Ամբողջ տրամաբանությունը մեկ ֆայլում է և հեշտ փորձարկելի։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երկու զամբյուղ՝ նույն դասով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> cart     = <span class="k">new</span> <span class="f">Cart</span>(PRODUCTS, <span class="s">"catalog:cart"</span>);
+<span class="k">const</span> wishlist = <span class="k">new</span> <span class="f">Cart</span>(PRODUCTS, <span class="s">"catalog:wishlist"</span>);
+
+cart.<span class="f">add</span>(<span class="n">1</span>);
+wishlist.<span class="f">add</span>(<span class="n">4</span>).<span class="f">add</span>(<span class="n">6</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(cart.count, wishlist.count);   <span class="c">// իրար չեն խանգարում</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">1 2</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Խաղահրապարակ</h2>
+
+    <div class="pg">
+      <textarea id="pgCode" spellcheck="false">class Product {
+  static currency = "֏";
+  static count = 0;
+
+  constructor(name, price, qty = 1) {
+    if (price < 0) throw new Error("Գինը չի կարող բացասական լինել");
+    this.name = name;
+    this.price = price;
+    this.qty = qty;
+    Product.count++;
+  }
+
+  get subtotal() { return this.price * this.qty; }
+  get formatted() { return this.subtotal.toLocaleString("hy-AM") + " " + Product.currency; }
+
+  describe() { return `${this.name} ×${this.qty} = ${this.formatted}`; }
+}
+
+class DigitalProduct extends Product {
+  constructor(name, price, qty, fileSize) {
+    super(name, price, qty);
+    this.fileSize = fileSize;
+  }
+  describe() { return super.describe() + ` [${this.fileSize} ՄԲ]`; }
+  get shippingCost() { return 0; }
+}
+
+const items = [
+  new Product("Մկնիկ", 8000, 3),
+  new Product("Մոնիտոր", 120000, 1),
+  new DigitalProduct("Էլ. գիրք", 3000, 2, 15)
+];
+
+items.forEach(i => console.log(i.describe()));
+console.log("Ընդամենը:", items.reduce((s, i) => s + i.subtotal, 0));
+console.log("Ստեղծված օբյեկտներ:", Product.count);
+console.log("Թվային է:", items[2] instanceof DigitalProduct, items[0] instanceof DigitalProduct);
+console.log("Բոլորն էլ Product են:", items.every(i => i instanceof Product));
+
+// this-ի թակարդը
+console.log("--- this ---");
+const p = items[0];
+console.log(p.describe());
+
+const fn = p.describe;
+try { console.log(fn()); } catch (e) { console.log("Սխալ:", e.message); }
+
+const bound = p.describe.bind(p);
+console.log(bound());
+
+// Ինկապսուլյացիա
+class Counter {
+  #value = 0;
+  increment() { this.#value++; return this; }
+  get value() { return this.#value; }
+}
+
+const c = new Counter();
+c.increment().increment().increment();
+console.log("Հաշվիչ:", c.value);
+console.log("Դրսից երևո՞ւմ է #value:", Object.keys(c));</textarea>
+      <div class="pg__actions">
+        <button class="run" id="runBtn">Կատարել</button>
+        <button class="clr" id="clrBtn">Մաքրել</button>
+      </div>
+<pre class="out" id="pgOut"><span class="m">Console</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ստեղծիր <code>User</code> դաս՝ <code>name</code>, <code>email</code>, <code>age</code> և <code>greet()</code> մեթոդով։ Ստեղծիր 3 օրինակ։</li>
+      <li>Ավելացրու <code>get isAdult()</code>, որը վերադարձնում է <code>true</code>, եթե տարիքը 18-ից մեծ է։</li>
+      <li>Ավելացրու <code>set email(value)</code>՝ վալիդացիայով (Դաս 13-ի regex-ով)։ Սխալի դեպքում՝ <code>throw</code>։</li>
+      <li>Ցուցադրիր <code>this</code>-ի կորուստը․ պոկիր մեթոդը օբյեկտից և կանչիր։ Ուղղիր <code>bind</code>-ով։</li>
+      <li>Ստեղծիր <code>Rectangle</code> դաս՝ <code>area</code> և <code>perimeter</code> getter-ներով։ Ապա <code>Square extends Rectangle</code>։</li>
+      <li>Ստեղծիր <code>BankAccount</code> դաս <code>#balance</code>-ով, <code>deposit</code>, <code>withdraw</code> և <code>get balance</code> մեթոդներով։ Ստուգիր բոլոր սխալ դեպքերը։</li>
+      <li>Ավելացրու <code>static</code> հաշվիչ՝ քանի՞ հաշիվ է ստեղծվել։</li>
+      <li>Ստեղծիր <code>Timer</code> դաս՝ <code>start()</code>, <code>stop()</code>, <code>reset()</code> մեթոդներով։ Օգտագործիր arrow ֆունկցիա <code>setInterval</code>-ի ներսում և բացատրիր ինչու։</li>
+      <li>Վերածիր Դաս 16-ի զամբյուղը <code>Cart</code> դասի՝ դասարանական օրինակի պես։ Ստուգիր, որ ամեն ինչ աշխատում է։</li>
+      <li>Ստեղծիր երկրորդ օրինակ՝ <code>wishlist</code>, նույն <code>Cart</code> դասով, բայց տարբեր բանալիով։ Համոզվիր, որ դրանք իրար չեն խանգարում։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>class User { }</code></td><td>Հայտարարում է դաս</td></tr>
+      <tr><td><code>constructor(a, b) { }</code></td><td>Կանչվում է <code>new</code>-ի ժամանակ</td></tr>
+      <tr><td><code>new User("Անի", 14)</code></td><td>Ստեղծում է օրինակ</td></tr>
+      <tr><td><code>this.name = name</code></td><td>Օբյեկտի հատկություն</td></tr>
+      <tr><td><code>method() { }</code></td><td>Մեթոդ — ընդհանուր բոլորի համար</td></tr>
+      <tr><td><code>get value() { }</code></td><td>Հաշվարկվող հատկություն (առանց <code>()</code>)</td></tr>
+      <tr><td><code>set value(v) { }</code></td><td>Վերահսկվող գրառում</td></tr>
+      <tr><td><code>static x = 1</code></td><td>Պատկանում է դասին, ոչ օրինակին</td></tr>
+      <tr><td><code>#field = 0</code></td><td>Փակ դաշտ — դրսից անհասանելի</td></tr>
+      <tr><td><code>extends Parent</code></td><td>Ժառանգում</td></tr>
+      <tr><td><code>super(...)</code></td><td>Ծնողի կոնստրուկտորը</td></tr>
+      <tr><td><code>super.method()</code></td><td>Ծնողի մեթոդը</td></tr>
+      <tr><td><code>x instanceof User</code></td><td>Ստուգում է տիպը</td></tr>
+      <tr><td><code>fn.bind(obj)</code></td><td>Ամրացնում է <code>this</code>-ը</td></tr>
+      <tr><td><code>return this</code></td><td>Թույլ է տալիս մեթոդների շղթա</td></tr>
+    </table>
+    </div>
+
+    <h3>this-ի կանոնները</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ինչպես է կանչվում</th><th>Ի՞նչ է <code>this</code>-ը</th></tr>
+      <tr><td><code>obj.method()</code></td><td><code>obj</code></td></tr>
+      <tr><td><code>fn()</code> — առանձին</td><td><code>undefined</code> (strict ռեժիմում)</td></tr>
+      <tr><td>Իրադարձության մշակիչում</td><td>Էլեմենտը</td></tr>
+      <tr><td>Arrow ֆունկցիայում</td><td>Դրսի <code>this</code>-ը</td></tr>
+      <tr><td><code>fn.bind(obj)</code></td><td><code>obj</code>՝ ընդմիշտ</td></tr>
+    </table>
+    </div>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչու է <code>this</code>-ը կորչում մեթոդը պոկելիս</li>
+      <li>Գիտե՞մ, ե՞րբ օգտագործել arrow, ե՞րբ՝ սովորական ֆունկցիա</li>
+      <li>Հասկանո՞ւմ եմ <code>get</code>-ի և սովորական մեթոդի տարբերությունը</li>
+      <li>Կարո՞ղ եմ բացատրել, ինչու է <code>#private</code>-ը լավ</li>
+      <li>Գիտե՞մ, ինչու է <code>super()</code>-ը պարտադիր</li>
+    </ul>
+
+    <div class="note">
+      <span class="tag">Կամուրջ PHP-ի բլոկին</span>
+      <p>Այս ամենը գրեթե անփոփոխ կկրկնվի PHP-ում՝ <code>class</code>, <code>new</code>, <code>extends</code>, կոնստրուկտոր, փակ դաշտեր։ Տարբերությունը հիմնականում շարահյուսության մեջ է․ PHP-ում <code>this</code>-ի փոխարեն <code>$this</code>, <code>#private</code>-ի փոխարեն՝ <code>private</code> բառը։ <strong>Գաղափարները նույնն են։</strong> Իսկ MVC-ն ու Laravel-ը ամբողջովին կառուցված են դասերի վրա։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Առաջադեմ հասկացություններ՝ փակույթներ (closures), <code>try/catch/throw</code> խորությամբ, սեփական սխալների դասեր, <code>Set</code> և <code>Map</code>։ Վերջապես կհասկանանք, ինչպես է աշխատում Դաս 16-ի <code>debounce</code>-ը։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 22 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

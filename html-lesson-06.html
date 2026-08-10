@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 6 — CSS-ի սկիզբը</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 6 · 2 ժամ · CSS-ի սկիզբ</p>
+  <h1>Սելեկտորներ և կասկադ</h1>
+  <p class="lede">Կմախքը պատրաստ է — ժամանակն է հագցնելու։ Այսօր սովորում ենք ընտրել էլեմենտները, հասկանում ենք ինչու է երբեմն ոճը «չաշխատում», և ստեղծում ենք <code>global.css</code>-ը, որը կուղեկցի քեզ բոլոր նախագծերում։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 01–05</span>
+    <span>Բլոկ 1 · CSS հիմունքներ</span>
+    <span>Ծնվում է global.css-ը</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>CSS կանոնի կառուցվածքը</li>
+      <li>Միացման երեք ձևը և ինչու ընտրում ենք մեկը</li>
+      <li>Սելեկտորներ՝ թեգ, <code>class</code>, <code>id</code></li>
+      <li>Համակցված սելեկտորներ</li>
+      <li>Կասկադ — ինչու է ոճը «չաշխատում»</li>
+      <li>Սպեցիֆիկություն և դրա հաշվարկը</li>
+      <li>Ժառանգում</li>
+      <li><code>global.css</code>-ի ստեղծումը</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>CSS կանոն</h2>
+
+    <div class="tree">սելեկտոր
+   │
+   ▼
+  h1 {
+      color: red;        ←  հատկություն: արժեք;
+      font-size: 32px;   ←  հայտարարություն
+  }
+  │                  │
+  └──── բլոկ ────────┘</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>շարահյուսություն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Մեկնաբանություն CSS-ում */</span>
+
+<span class="t">h1</span> {
+    <span class="f">color</span>: <span class="s">red</span>;
+    <span class="f">font-size</span>: <span class="n">32px</span>;
+    <span class="f">text-align</span>: <span class="s">center</span>;
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երեք սովորական սխալ</span>
+      <p><strong>1.</strong> Մոռացած կետ-ստորակետ։ Առանց <code>;</code>-ի հաջորդ հայտարարությունը կանտեսվի։<br>
+      <strong>2.</strong> Չփակված ձևավոր փակագիծ։ Հետո <em>ամբողջ</em> ֆայլը դադարում է աշխատել։<br>
+      <strong>3.</strong> Երկու կետի փոխարեն հավասարման նշան։ CSS-ում <code>color: red</code>, ոչ <code>color = red</code>։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">CSS-ը սխալի մասին չի ասում</span>
+      <p>Ի տարբերություն JavaScript-ի, CSS-ը սխալ չի գցում։ Այն պարզապես <strong>լուռ անտեսում</strong> է այն, ինչ չի հասկանում։ Ուստի եթե ոճը չի կիրառվում — առաջին բանը, որ պիտի ստուգես, շարահյուսությունն է վերևի տողերում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Միացման երեք ձև</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>1. inline — ուղիղ թեգում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">h1</span> <span class="f">style</span>=<span class="s">"color: red; font-size: 32px;"</span><span class="p">&gt;</span>Վերնագիր<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>2. internal — head-ում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">style</span><span class="p">&gt;</span>
+        h1 { color: red; }
+    <span class="p">&lt;/</span><span class="t">style</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">head</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>3. external — առանձին ֆայլ ✅</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"stylesheet"</span> <span class="f">href</span>=<span class="s">"css/global.css"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"stylesheet"</span> <span class="f">href</span>=<span class="s">"css/main.css"</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">head</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ձև</th><th>Առավելություն</th><th>Թերություն</th></tr>
+      <tr><td>inline</td><td>Արագ փորձարկում</td><td>Չի վերաօգտագործվում, դժվար է փոխել, ամենաուժեղն է կասկադում</td></tr>
+      <tr><td>internal</td><td>Մեկ ֆայլում ամեն ինչ</td><td>Աշխատում է միայն այս էջում</td></tr>
+      <tr><td><strong>external</strong></td><td>Մեկ ֆայլ՝ բոլոր էջերի համար, քեշավորվում է</td><td>—</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Մենք միշտ օգտագործում ենք external</span>
+      <p>Երկու ֆայլ՝ <code>global.css</code> և <code>main.css</code>։ Հերթականությունը կարևոր է․ <code>global.css</code>-ը միշտ առաջինն է, որովհետև <code>main.css</code>-ը կարող է վերագրել նրա կանոնները։ Ինչու՝ կհասկանանք 06-րդ բաժնում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Հիմնական սելեկտորներ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երեք տեսակ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Ըստ թեգի — բոլոր h1-երը */</span>
+<span class="t">h1</span> { <span class="f">color</span>: <span class="s">navy</span>; }
+
+<span class="c">/* Ըստ դասի — կետով */</span>
+<span class="k">.title</span> { <span class="f">color</span>: <span class="s">navy</span>; }
+
+<span class="c">/* Ըստ id-ի — վանդակագծով */</span>
+<span class="k">#hero</span> { <span class="f">background</span>: <span class="s">gray</span>; }
+
+<span class="c">/* Բոլորը */</span>
+<span class="k">*</span> { <span class="f">margin</span>: <span class="n">0</span>; }</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML-ում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">h1</span> <span class="f">class</span>=<span class="s">"title"</span><span class="p">&gt;</span>Վերնագիր<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Մի քանի դաս՝ բացատով --&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-25 text-center"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">section</span> <span class="f">id</span>=<span class="s">"hero"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th></th><th><code>class</code></th><th><code>id</code></th></tr>
+      <tr><td>Քանի՞ էլեմենտի վրա</td><td>Քանի ուզես</td><td>Ուղիղ մեկ էջում</td></tr>
+      <tr><td>Մեկ էլեմենտին քանի՞սը</td><td>Քանի ուզես</td><td>Մեկը</td></tr>
+      <tr><td>CSS-ում</td><td><code>.name</code></td><td><code>#name</code></td></tr>
+      <tr><td>Ե՞րբ օգտագործել</td><td><strong>Գրեթե միշտ</strong></td><td>Բաժիններ, խարիսխներ</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ոճավորման համար օգտագործիր դասեր</span>
+      <p><code>id</code>-ն ունի շատ բարձր սպեցիֆիկություն, և հետո դժվար է վերագրել այն։ Բացի այդ, <code>id</code>-ն մեկն է — չես կարող կրկնել ոճը։<br><br>
+      <strong>Բացառություն՝</strong> բաժինների <code>id</code>-երը, որոնք արդեն կան նավիգացիայի համար։ Դրանք հարմար է օգտագործել բաժնային ոճերի համար՝ <code>#products .wrapper { ... }</code>։</p>
+    </div>
+
+    <h3>Դասերի անվանում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ vs ✅</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ❌ Անունը՝ ըստ տեսքի */</span>
+<span class="k">.red-text</span> { <span class="f">color</span>: <span class="s">red</span>; }
+<span class="k">.big</span> { <span class="f">font-size</span>: <span class="n">40px</span>; }
+
+<span class="c">/* ✅ Անունը՝ ըստ դերի */</span>
+<span class="k">.error</span> { <span class="f">color</span>: <span class="s">red</span>; }
+<span class="k">.title-2</span> { <span class="f">font-size</span>: <span class="n">40px</span>; }</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ</span>
+      <p>Վաղը դիզայներն ասի՝ «սխալները թող կապույտ լինեն»։ <code>.red-text { color: blue }</code> — կոդն այլևս ստում է։ Իսկ <code>.error { color: blue }</code>-ը շարունակում է իմաստ ունենալ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Համակցված սելեկտորներ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հինգ կարևոր համակցություն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* 1. Ներսում — բոլոր p-երը article-ի ներսում, ցանկացած խորության */</span>
+<span class="t">article</span> <span class="t">p</span> { <span class="f">color</span>: <span class="s">gray</span>; }
+
+<span class="c">/* 2. Ուղիղ երեխա — միայն առաջին մակարդակը */</span>
+<span class="k">.row</span> &gt; <span class="k">.col</span> { <span class="f">padding</span>: <span class="n">10px</span>; }
+
+<span class="c">/* 3. Երկու դաս միաժամանակ — առանց բացատի */</span>
+<span class="k">.btn.btn-light</span> { <span class="f">background</span>: <span class="s">lightblue</span>; }
+
+<span class="c">/* 4. Խմբավորում — ստորակետով */</span>
+<span class="t">h1</span>, <span class="t">h2</span>, <span class="t">h3</span> { <span class="f">font-weight</span>: <span class="n">700</span>; }
+
+<span class="c">/* 5. Թեգ + դաս */</span>
+<span class="t">a</span><span class="k">.btn</span> { <span class="f">text-decoration</span>: <span class="s">none</span>; }</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Բացատը ամեն ինչ փոխում է</span>
+      <p><code>.btn.btn-light</code> — էլեմենտ, որն ունի <strong>երկու դասն էլ</strong>։<br>
+      <code>.btn .btn-light</code> — <code>.btn-light</code>, որը գտնվում է <code>.btn</code>-ի <strong>ներսում</strong>։<br><br>
+      Մեկ բացատ, բոլորովին այլ իմաստ։ Սա հաճախ հանդիպող սխալ է։</p>
+    </div>
+
+    <h3>Ատրիբուտով սելեկտորներ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հատկապես օգտակար ֆորմաներում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="t">input</span>[<span class="f">type</span>=<span class="s">"text"</span>] { <span class="f">border</span>: <span class="n">1px</span> <span class="s">solid gray</span>; }
+<span class="t">input</span>[<span class="f">required</span>] { <span class="f">border-color</span>: <span class="s">navy</span>; }
+<span class="t">a</span>[<span class="f">target</span>=<span class="s">"_blank"</span>] { <span class="f">color</span>: <span class="s">green</span>; }</code></pre>
+    </div>
+
+    <h3>Կեղծ-դասեր</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>վիճակներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.btn</span>:<span class="k">hover</span>         { <span class="f">background</span>: <span class="s">navy</span>; }
+<span class="t">input</span>:<span class="k">focus</span>       { <span class="f">border-color</span>: <span class="s">navy</span>; }
+<span class="t">a</span>:<span class="k">visited</span>         { <span class="f">color</span>: <span class="s">purple</span>; }
+<span class="t">button</span>:<span class="k">disabled</span>   { <span class="f">opacity</span>: <span class="n">.5</span>; }
+
+<span class="t">li</span>:<span class="k">first-child</span>    { <span class="f">font-weight</span>: <span class="n">700</span>; }
+<span class="t">li</span>:<span class="k">last-child</span>     { <span class="f">border</span>: <span class="s">none</span>; }
+<span class="t">tr</span>:<span class="k">nth-child</span>(even) { <span class="f">background</span>: <span class="s">#f5f5f5</span>; }</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">:focus-visible</span>
+      <p><code>:focus</code>-ն աշխատում է և՛ մկնիկով, և՛ ստեղնաշարով։ <code>:focus-visible</code>-ը՝ միայն ստեղնաշարով։ Դա թույլ է տալիս ցույց տալ ֆոկուսի շրջանակը այնտեղ, որտեղ այն իսկապես պետք է։ Կօգտագործենք <code>global.css</code>-ում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Կասկադ</h2>
+    <p><strong>CSS</strong> = <em>Cascading Style Sheets</em>։ «Կասկադ» նշանակում է՝ կանոնները հոսում են վերևից ներքև, և երբ մի քանիսը վերաբերում են նույն էլեմենտին, պիտի որոշվի՝ որն է հաղթում։</p>
+
+    <div class="tree">Երեք հարց՝ հերթականությամբ
+
+1. Կա՞ !important                     →  հաղթում է
+       ↓ ոչ
+2. Ո՞ր սելեկտորն է ավելի սպեցիֆիկ      →  հաղթում է
+       ↓ հավասար են
+3. Ո՞րն է գրված ավելի ուշ              →  հաղթում է</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հերթականությունը՝ երբ սպեցիֆիկությունը հավասար է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.title</span> { <span class="f">color</span>: <span class="s">red</span>; }
+<span class="k">.title</span> { <span class="f">color</span>: <span class="s">blue</span>; }   <span class="c">/* ← սա հաղթում է */</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ահա թե ինչու է հերթականությունը կարևոր</span>
+      <p><code>global.css</code>-ը միացնում ենք <strong>առաջինը</strong>, <code>main.css</code>-ը՝ երկրորդը։ Դրա շնորհիվ նախագծի ոճերը կարող են վերագրել գլոբալները՝ առանց սպեցիֆիկության հետ պայքարելու։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Սպեցիֆիկություն</h2>
+    <p>Ամեն սելեկտոր ունի «կշիռ»։ Հաշվում ենք երեք թվով։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ինչ</th><th>Կշիռ</th></tr>
+      <tr><td><code>id</code> (<code>#hero</code>)</td><td><strong>1-0-0</strong></td></tr>
+      <tr><td>դաս (<code>.btn</code>), ատրիբուտ (<code>[type]</code>), կեղծ-դաս (<code>:hover</code>)</td><td><strong>0-1-0</strong></td></tr>
+      <tr><td>թեգ (<code>div</code>), կեղծ-էլեմենտ (<code>::before</code>)</td><td><strong>0-0-1</strong></td></tr>
+      <tr><td><code>*</code></td><td>0-0-0</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>օրինակներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="t">p</span>                      <span class="c">/* 0-0-1 */</span>
+<span class="k">.text</span>                  <span class="c">/* 0-1-0 */</span>
+<span class="t">p</span><span class="k">.text</span>                 <span class="c">/* 0-1-1 */</span>
+<span class="k">.card</span> <span class="k">.text</span>            <span class="c">/* 0-2-0 */</span>
+<span class="k">#hero</span> <span class="t">p</span>               <span class="c">/* 1-0-1 */</span>
+<span class="k">#hero</span> <span class="k">.card</span> <span class="t">p</span><span class="k">.text</span>    <span class="c">/* 1-2-1 */</span></code></pre>
+    </div>
+
+    <p>Համեմատում ենք ձախից աջ․ նախ առաջին թիվը, հետո երկրորդը, հետո երրորդը։ <strong>Մեկ <code>id</code>-ն ուժեղ է հազար դասից։</strong></p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>դասական շփոթություն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* main.css-ում գրեցի սա, բայց չաշխատեց */</span>
+<span class="k">.card</span> { <span class="f">background</span>: <span class="s">white</span>; }
+
+<span class="c">/* որովհետև ինչ-որ տեղ կա սա */</span>
+<span class="k">#products</span> <span class="k">.card</span> { <span class="f">background</span>: <span class="s">gray</span>; }
+<span class="c">/*    1-1-0    ուժեղ է քան   0-1-0   */</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">!important — վերջին միջոց</span>
+      <p><code>color: red !important;</code> հաղթում է ամեն ինչին։ Բայց երբ դու օգտագործես այն, հաջորդ անգամ վերագրելու համար պետք կլինի ևս մեկ <code>!important</code>։ Եվ այդպես՝ մինչև ամբողջ ֆայլը լցվի դրանցով։<br><br>
+      <strong>Կանոն՝</strong> եթե ուզում ես գրել <code>!important</code>, նախ ստուգիր՝ արդյո՞ք սելեկտորը կարող ես ավելի սպեցիֆիկ դարձնել։ 99% դեպքերում կարող ես։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">DevTools-ը ամեն ինչ ցույց է տալիս</span>
+      <p>Աջ սեղմում էլեմենտի վրա → <em>Inspect</em> → աջ վահանակում <strong>Styles</strong>։ Այնտեղ երևում են բոլոր կանոնները, որոնք վերաբերում են էլեմենտին, և <s>վրայից գծված</s> են այն ոճերը, որոնք պարտվել են։ Սա CSS-ի հիմնական դեբագի գործիքն է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Ժառանգում</h2>
+    <p>Որոշ հատկություններ ինքնաբերաբար փոխանցվում են ծնողից երեխաներին։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ժառանգվում է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="t">body</span> {
+    <span class="f">font-family</span>: <span class="s">"Noto Sans Armenian", sans-serif</span>;
+    <span class="f">color</span>: <span class="s">#1a1a1a</span>;
+    <span class="f">line-height</span>: <span class="n">1.5</span>;
+}
+
+<span class="c">/* Ամբողջ էջը ստանում է այս ոճերը */</span></code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ժառանգվում է</th><th>Չի ժառանգվում</th></tr>
+      <tr><td><code>color</code></td><td><code>margin</code>, <code>padding</code></td></tr>
+      <tr><td><code>font-family</code>, <code>font-size</code></td><td><code>border</code></td></tr>
+      <tr><td><code>font-weight</code>, <code>font-style</code></td><td><code>background</code></td></tr>
+      <tr><td><code>line-height</code></td><td><code>width</code>, <code>height</code></td></tr>
+      <tr><td><code>text-align</code></td><td><code>display</code></td></tr>
+      <tr><td><code>letter-spacing</code></td><td><code>position</code></td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Տրամաբանությունը պարզ է</span>
+      <p>Ժառանգվում է այն, ինչ <strong>տեքստի</strong> մասին է։ Չի ժառանգվում այն, ինչ <strong>տուփի</strong> մասին է։ Պատկերացրու՝ եթե <code>border</code>-ը ժառանգվեր, մեկ շրջանակ դնելով բոլոր ներսի էլեմենտները շրջանակված կլինեին։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>inherit — ստիպել ժառանգել</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Հղումները լռելյայն ունեն իրենց կապույտ գույնը */</span>
+<span class="t">a</span> {
+    <span class="f">color</span>: <span class="k">inherit</span>;   <span class="c">/* վերցնում է ծնողի գույնը */</span>
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Հենց սա կլինի global.css-ում</span>
+      <p><code>a { color: inherit }</code> — շատ հարմար է։ Հղումն ընդունում է իր շրջապատի գույնը, և դու ինքդ ես որոշում, թե որտեղ ինչ գույն լինի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>global.css-ի ծնունդը</h2>
+    <p>Ամեն բրաուզեր ունի իր լռելյայն ոճերը՝ <code>h1</code>-ի չափը, պարբերությունների բացակները, ցուցակների կետերը։ Եվ դրանք <strong>փոքր-ինչ տարբեր են</strong> ամեն բրաուզերում։</p>
+
+    <p>Ուստի առաջին բանը, որ անում ենք — զրոյացնում ենք դրանք։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>css/global.css — առաջին տարբերակը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ---------- Reset ---------- */</span>
+<span class="k">*</span> {
+    <span class="f">margin</span>: <span class="n">0</span>;
+    <span class="f">padding</span>: <span class="n">0</span>;
+    <span class="f">box-sizing</span>: <span class="s">border-box</span>;
+}
+
+<span class="c">/* ---------- Հղումներ ---------- */</span>
+<span class="t">a</span> {
+    <span class="f">display</span>: <span class="s">inline-block</span>;
+    <span class="f">color</span>: <span class="k">inherit</span>;
+    <span class="f">text-decoration</span>: <span class="s">none</span>;
+    <span class="f">white-space</span>: <span class="s">nowrap</span>;
+}
+
+<span class="c">/* ---------- Ցուցակներ ---------- */</span>
+<span class="t">ul</span>, <span class="t">ol</span> {
+    <span class="f">list-style</span>: <span class="s">none</span>;
+}
+
+<span class="c">/* ---------- Տեքստ ---------- */</span>
+<span class="k">.text-center</span> { <span class="f">text-align</span>: <span class="s">center</span>; }
+<span class="k">.text-left</span>   { <span class="f">text-align</span>: <span class="s">left</span>; }
+<span class="k">.text-right</span>  { <span class="f">text-align</span>: <span class="s">right</span>; }
+
+<span class="c">/* ---------- Հասանելիություն ---------- */</span>
+<span class="k">.skip-link</span> {
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">left</span>: -<span class="n">9999px</span>;
+}
+
+<span class="k">.skip-link</span>:<span class="k">focus</span> {
+    <span class="f">left</span>: <span class="n">10px</span>;
+    <span class="f">top</span>: <span class="n">10px</span>;
+    <span class="f">background</span>: <span class="s">white</span>;
+    <span class="f">padding</span>: <span class="n">10px</span>;
+    <span class="f">z-index</span>: <span class="n">100</span>;
+}
+
+<span class="k">.visually-hidden</span> {
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">width</span>: <span class="n">1px</span>;
+    <span class="f">height</span>: <span class="n">1px</span>;
+    <span class="f">overflow</span>: <span class="s">hidden</span>;
+    <span class="f">clip-path</span>: <span class="s">inset</span>(<span class="n">50%</span>);
+    <span class="f">white-space</span>: <span class="s">nowrap</span>;
+}</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Կանոն</th><th>Ինչու</th></tr>
+      <tr><td><code>margin: 0; padding: 0</code></td><td>Հանում է բրաուզերի լռելյայն բացակները — մենք ինքներս ենք որոշում</td></tr>
+      <tr><td><code>box-sizing: border-box</code></td><td>Փոխում է չափերի հաշվարկը։ Մանրամասն՝ 8-րդ դասին</td></tr>
+      <tr><td><code>a { color: inherit }</code></td><td>Հղումը վերցնում է շրջապատի գույնը</td></tr>
+      <tr><td><code>text-decoration: none</code></td><td>Հանում է ընդգծումը</td></tr>
+      <tr><td><code>display: inline-block</code></td><td>Թույլ է տալիս հղումին տալ <code>padding</code> և չափեր</td></tr>
+      <tr><td><code>list-style: none</code></td><td>Հանում է կետերը — մենյուների համար պետք չեն</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ուշադրություն՝ ցուցակների կետերը</span>
+      <p><code>list-style: none</code>-ը հանում է կետերը <strong>բոլոր</strong> ցուցակներից։ Դա հարմար է մենյուների համար, բայց հոդվածի ներսում ցուցակը կմնա առանց նշանների։<br><br>
+      Այդ դեպքում պարզապես վերադարձնում ես դրանք <code>main.css</code>-ում՝ <code>article ul { list-style: disc; padding-left: 20px; }</code>։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Այս ֆայլը կաճի</span>
+      <p>Ամեն դասին <code>global.css</code>-ը կստանա նոր տողեր՝ Flexbox-ի օգնականներ, լայնությունների դասեր, ֆորմայի տարրերի ոճեր։ Դասընթացի վերջում այն կլինի քո սեփական մինի-ֆրեյմվորքը, որը կվերցնես ամեն նոր նախագծի մեջ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Խաղահրապարակ</h2>
+    <p>Փորձարկիր սելեկտորները և սպեցիֆիկությունը։ Փոխիր CSS-ը և տես, թե որն է հաղթում։</p>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="css">CSS</button>
+        <button class="live__tab" data-pane="html">HTML</button>
+      </div>
+      <textarea class="live__code" data-pane="css">/* Փորձարկում 1 — հերթականություն */
+.title { color: red; }
+.title { color: blue; }
+
+/* Փորձարկում 2 — սպեցիֆիկություն */
+p { color: gray; }              /* 0-0-1 */
+.desc { color: green; }         /* 0-1-0 */
+#box .desc { color: orange; }   /* 1-1-0 ← հաղթում է */
+
+/* Փորձարկում 3 — բացատի իմաստը */
+.btn.primary { background: navy; color: white; }
+/* Փորձիր ավելացնել բացատ՝ .btn .primary */
+
+/* Փորձարկում 4 — ժառանգում */
+#box {
+    font-family: Georgia, serif;
+    color: purple;
+    border: 2px solid #999;
+    padding: 15px;
+}
+
+/* Փորձարկում 5 — կեղծ-դասեր */
+li:first-child { font-weight: 700; }
+li:last-child { color: crimson; }
+li:nth-child(even) { background: #f0f0f0; }
+
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid;
+    text-decoration: none;
+}
+
+.btn:hover { transform: scale(1.05); }</textarea>
+      <textarea class="live__code is-hidden" data-pane="html">&lt;h1 class="title"&gt;Ո՞ր գույնն է վերնագիրը&lt;/h1&gt;
+
+&lt;div id="box"&gt;
+    &lt;p&gt;Սովորական պարբերություն։&lt;/p&gt;
+    &lt;p class="desc"&gt;Պարբերություն desc դասով։&lt;/p&gt;
+
+    &lt;ul&gt;
+        &lt;li&gt;Առաջին տարրը&lt;/li&gt;
+        &lt;li&gt;Երկրորդ տարրը&lt;/li&gt;
+        &lt;li&gt;Երրորդ տարրը&lt;/li&gt;
+        &lt;li&gt;Չորրորդ տարրը&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;a href="#" class="btn primary"&gt;Կոճակ&lt;/a&gt;
+&lt;/div&gt;</textarea>
+      <div class="live__actions">
+        <span>CSS-ը բացված է առաջինը</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Փորձիր</span>
+      <p><strong>1.</strong> Փոխիր տեղերով <code>.title</code>-ի երկու կանոնները։<br>
+      <strong>2.</strong> Ջնջիր <code>#box</code>-ը երրորդ կանոնից — ի՞նչ գույն կդառնա։<br>
+      <strong>3.</strong> Ավելացրու բացատ <code>.btn.primary</code>-ի մեջ։<br>
+      <strong>4.</strong> Ավելացրու <code>ul { list-style: none }</code> և տես տարբերությունը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Դասարանական</h2>
+    <p>Ստեղծում ենք նախագծի CSS կառուցվածքը՝ մեկընդմիշտ։</p>
+
+    <div class="tree">my-project/
+├── index.html
+├── css/
+│   ├── global.css      ← այսօր լրացնում ենք
+│   └── main.css        ← այսօր սկսում ենք
+└── images/</div>
+
+    <ol>
+      <li>Ստեղծիր երկու CSS ֆայլը</li>
+      <li>Միացրու դրանք <code>head</code>-ում՝ <strong>ճիշտ հերթականությամբ</strong></li>
+      <li><code>global.css</code>-ում գրիր 08-րդ բաժնի ամբողջ կոդը</li>
+      <li>Բացիր Դաս 5-ի էջը և տես, թե ինչ փոխվեց</li>
+      <li><code>main.css</code>-ում ավելացրու ներքևի կոդը</li>
+      <li>Փորձարկիր DevTools-ով՝ գտիր, թե որ կանոններն են պարտվում</li>
+    </ol>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>css/main.css — առաջին տողերը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="t">body</span> {
+    <span class="f">font-family</span>: <span class="s">"Segoe UI", system-ui, sans-serif</span>;
+    <span class="f">color</span>: <span class="s">#1a1a1a</span>;
+    <span class="f">background-color</span>: <span class="s">#f5f5f5</span>;
+    <span class="f">line-height</span>: <span class="n">1.5</span>;
+}
+
+<span class="c">/* Վերնագրերի սանդղակ — կլրացնենք 13-րդ դասին */</span>
+<span class="t">h1</span>, <span class="k">.title-1</span> { <span class="f">font-size</span>: <span class="n">60px</span>; <span class="f">font-weight</span>: <span class="n">700</span>; }
+<span class="t">h2</span>, <span class="k">.title-2</span> { <span class="f">font-size</span>: <span class="n">40px</span>; <span class="f">font-weight</span>: <span class="n">700</span>; }
+<span class="t">h3</span>, <span class="k">.title-3</span> { <span class="f">font-size</span>: <span class="n">30px</span>; <span class="f">font-weight</span>: <span class="n">700</span>; }
+<span class="t">h4</span>, <span class="k">.title-4</span> { <span class="f">font-size</span>: <span class="n">20px</span>; <span class="f">font-weight</span>: <span class="n">700</span>; }
+
+<span class="c">/* Հոդվածի ներսում ցուցակները վերադարձնում ենք */</span>
+<span class="t">article</span> <span class="t">ul</span> {
+    <span class="f">list-style</span>: <span class="s">disc</span>;
+    <span class="f">padding-left</span>: <span class="n">20px</span>;
+}</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ h1 և .title-1 միասին</span>
+      <p>Երբեմն տեքստը պիտի ունենա <code>h1</code>-ի <em>տեսքը</em>, բայց <code>h1</code> չլինի իմաստով (հիշիր Դաս 2-ի կանոնը՝ էջում մեկ <code>h1</code>)։ Այդ դեպքում գրում ես <code>&lt;div class="title-1"&gt;</code>։<br><br>
+      Այսպես <strong>իմաստը և տեսքը բաժանվում են</strong> — HTML-ը պատասխանում է իմաստի համար, CSS-ը՝ տեսքի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ստեղծիր <code>global.css</code> և <code>main.css</code>։ Միացրու ճիշտ հերթականությամբ։</li>
+      <li>Փորձիր փոխել հերթականությունը՝ <code>main.css</code>-ը առաջինը։ Նկարագրիր՝ ինչ կոտրվեց։ Վերականգնիր։</li>
+      <li>Գրիր հինգ կանոն թեգային սելեկտորով, հինգը՝ դասով, երկուսը՝ <code>id</code>-ով։</li>
+      <li>Օգտագործիր բոլոր հինգ համակցությունները 04-րդ բաժնից։</li>
+      <li>Ստեղծիր երկու կանոն, որոնք հակասում են իրար։ Կանխագուշակիր՝ որը կհաղթի, հետո ստուգիր DevTools-ով։</li>
+      <li>Հաշվիր սպեցիֆիկությունը՝ <code>.card p</code>, <code>#hero .btn</code>, <code>ul li a.link</code>, <code>input[type="text"]:focus</code>։ Ստուգիր DevTools-ով։</li>
+      <li>Ցուցադրիր ժառանգումը․ <code>body</code>-ին տուր <code>color</code> և <code>font-family</code>, և ցույց տուր, որ դրանք հասնում են ներսի էլեմենտներին։ Հետո ցույց տուր, որ <code>border</code>-ը չի ժառանգվում։</li>
+      <li>Ավելացրու <code>:hover</code> և <code>:focus-visible</code> վիճակներ կոճակներին ու հղումներին։ Ստուգիր <kbd>Tab</kbd>-ով։</li>
+      <li>Օգտագործիր <code>:nth-child(even)</code> աղյուսակի տողերի համար (Դաս 3-ի աղյուսակը)։</li>
+      <li>Վերցրու Դաս 5-ի սեմանտիկ էջը և ոճավորիր այն՝ գույներ, տառաչափեր, hover վիճակներ։ Ոչ մի <code>!important</code>։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 12 ============ -->
+  <section id="s12">
+    <h2><span class="num">12</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սելեկտոր</th><th>Ինչ է ընտրում</th></tr>
+      <tr><td><code>h1</code></td><td>Բոլոր <code>h1</code>-երը</td></tr>
+      <tr><td><code>.btn</code></td><td>Բոլորը <code>btn</code> դասով</td></tr>
+      <tr><td><code>#hero</code></td><td><code>id="hero"</code>-ով էլեմենտը</td></tr>
+      <tr><td><code>*</code></td><td>Ամեն ինչ</td></tr>
+      <tr><td><code>.card p</code></td><td><code>p</code>-երը <code>.card</code>-ի ներսում</td></tr>
+      <tr><td><code>.row &gt; .col</code></td><td>Ուղիղ երեխաներ ⭐</td></tr>
+      <tr><td><code>.btn.active</code></td><td>Երկու դասն էլ ունեցողը</td></tr>
+      <tr><td><code>h1, h2</code></td><td>Խմբավորում</td></tr>
+      <tr><td><code>input[type="text"]</code></td><td>Ըստ ատրիբուտի</td></tr>
+      <tr><td><code>:hover</code>, <code>:focus-visible</code></td><td>Վիճակներ</td></tr>
+      <tr><td><code>:first-child</code>, <code>:nth-child(even)</code></td><td>Ըստ դիրքի</td></tr>
+    </table>
+    </div>
+
+    <h3>Կասկադի կանոնները</h3>
+    <ol>
+      <li><code>!important</code> — խուսափիր</li>
+      <li>Սպեցիֆիկություն՝ <code>id</code> &gt; դաս &gt; թեգ</li>
+      <li>Հերթականություն՝ վերջինը հաղթում է</li>
+    </ol>
+
+    <h3>Ի՞նչ ավելացավ global.css-ում այսօր</h3>
+    <div class="tree">✓ Reset՝ * { margin, padding, box-sizing }
+✓ a { display, color: inherit, text-decoration, white-space }
+✓ ul, ol { list-style: none }
+✓ .text-center / .text-left / .text-right
+✓ .skip-link
+✓ .visually-hidden</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>CSS-ը միացված է <code>link</code>-ով, ոչ <code>style</code> ատրիբուտով</li>
+      <li><code>global.css</code>-ը միացված է <code>main.css</code>-ից առաջ</li>
+      <li>Դասերի անունները ըստ դերի են, ոչ տեսքի</li>
+      <li>Ոչ մի <code>!important</code></li>
+      <li>Ոճավորումը դասերով է, ոչ <code>id</code>-երով</li>
+      <li>Հղումներն ու կոճակներն ունեն <code>:hover</code> և <code>:focus-visible</code></li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչու ոճը երբեմն «չի աշխատում»</li>
+      <li>Գիտե՞մ տարբերությունը <code>.a.b</code>-ի և <code>.a .b</code>-ի միջև</li>
+      <li>Կարո՞ղ եմ հաշվել սպեցիֆիկությունը</li>
+      <li>Գիտե՞մ, ինչու ենք <code>global.css</code>-ը միացնում առաջինը</li>
+      <li>Հասկանո՞ւմ եմ, ինչ է ժառանգվում և ինչ՝ ոչ</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Գույն, տեքստ, տառատեսակներ։ Գունային ձևաչափեր, Google Fonts, միավորներ (<code>px</code>, <code>rem</code>, <code>%</code>), և <strong>կոնտրաստի հարաբերակցությունը</strong> — ինչպես ստուգել, որ տեքստն ընթեռնելի է։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 06 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 16 — Նախագիծ · Օր 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 16 · 2 ժամ · Նախագիծ, օր 2</p>
+  <h1>Զամբյուղ, ռեֆակտորինգ, դեբագ</h1>
+  <p class="lede">Կատալոգը պատրաստ է։ Այսօր ավելացնում ենք զամբյուղ, սովորում ենք կոդը կարգի բերել և վերջապես ծանոթանում ենք ծրագրավորողի ամենակարևոր գործիքին՝ դեբագերին։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 15-ի աշխատող կատալոգ</span>
+    <span>Բլոկ 2-ի եզրափակիչ</span>
+    <span>Օր 2-ից 2</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Այսօրվա պլանը</h2>
+    <ul class="goals">
+      <li>Զամբյուղի վիճակի ճիշտ մոդելը</li>
+      <li>Ավելացում, քանակի փոփոխում, ջնջում</li>
+      <li>Պահպանում <code>localStorage</code>-ում</li>
+      <li>Զամբյուղի մոդալ պատուհան</li>
+      <li>Կոդի ռեֆակտորինգ և ֆայլերի բաժանում</li>
+      <li>DevTools՝ breakpoint, watch, call stack</li>
+      <li>Կոդի վերանայման ստուգաթերթ</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Զամբյուղի մոդելը</h2>
+    <p>Առաջին հարցը՝ <em>ի՞նչ ենք պահում զամբյուղում</em>։ Երկու մոտեցում կա, և ընտրությունը կարևոր է։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ վատ մոտեցում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> cart = [
+  { id: <span class="n">2</span>, name: <span class="s">"Անլար մկնիկ"</span>, price: <span class="n">8000</span>, category: <span class="s">"accessory"</span>, qty: <span class="n">2</span> },
+  { id: <span class="n">4</span>, name: <span class="s">"Մոնիտոր 27"</span>,  price: <span class="n">120000</span>, category: <span class="s">"monitor"</span>, qty: <span class="n">1</span> }
+];</code></pre>
+    </div>
+
+    <p>Ի՞նչն է վատ։ Տվյալները <strong>կրկնվում են</strong>։ Եթե վաղը մկնիկի գինը փոխես <code>data.js</code>-ում, զամբյուղում կմնա հին գինը։ Իսկ եթե ապրանքը ջնջես — զամբյուղում կմնա գոյություն չունեցող ապրանք։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>✅ ճիշտ մոտեցում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">let</span> cart = [
+  { id: <span class="n">2</span>, qty: <span class="n">2</span> },
+  { id: <span class="n">4</span>, qty: <span class="n">1</span> }
+];</code></pre>
+    </div>
+
+    <p>Պահում ենք միայն այն, ինչ <strong>իսկապես պատկանում է զամբյուղին</strong>՝ ի՞նչ և քանի՞ հատ։ Մնացած տեղեկությունը վերցնում ենք <code>PRODUCTS</code>-ից՝ ամեն անգամ թարմ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/cart.js — տվյալները միացնելը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Զամբյուղի տողերը՝ ամբողջական տեղեկությամբ</span>
+<span class="k">function</span> <span class="f">getCartItems</span>() {
+  <span class="k">return</span> cart
+    .<span class="f">map</span>(item =&gt; {
+      <span class="k">const</span> product = PRODUCTS.<span class="f">find</span>(p =&gt; p.id === item.id);
+      <span class="k">if</span> (!product) <span class="k">return</span> <span class="k">null</span>;              <span class="c">// ապրանքը ջնջվել է</span>
+
+      <span class="k">return</span> {
+        ...product,                            <span class="c">// Դաս 7</span>
+        qty: item.qty,
+        subtotal: product.price * item.qty
+      };
+    })
+    .<span class="f">filter</span>(<span class="f">Boolean</span>);                          <span class="c">// հանում է null-երը</span>
+}
+
+<span class="k">function</span> <span class="f">getCartTotal</span>() {
+  <span class="k">return</span> <span class="f">getCartItems</span>().<span class="f">reduce</span>((sum, i) =&gt; sum + i.subtotal, <span class="n">0</span>);
+}
+
+<span class="k">function</span> <span class="f">getCartCount</span>() {
+  <span class="k">return</span> cart.<span class="f">reduce</span>((sum, i) =&gt; sum + i.qty, <span class="n">0</span>);
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">filter(Boolean)</span>
+      <p>Հնարք։ <code>Boolean</code>-ը ֆունկցիա է, որը վերադարձնում է <code>true</code> truthy արժեքների համար (Դաս 2)։ Ուստի <code>filter(Boolean)</code>-ը հանում է բոլոր <code>null</code>, <code>undefined</code>, <code>0</code>, <code>""</code> արժեքները։ Կարճ և ընթեռնելի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Զամբյուղի գործողությունները</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/cart.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> CART_KEY = <span class="s">"catalog:cart"</span>;
+
+<span class="k">let</span> cart = <span class="f">load</span>(CART_KEY, []);          <span class="c">// Դաս 14</span>
+
+<span class="k">function</span> <span class="f">addToCart</span>(id) {
+  <span class="k">const</span> existing = cart.<span class="f">find</span>(i =&gt; i.id === id);
+
+  <span class="k">if</span> (existing) {
+    existing.qty++;
+  } <span class="k">else</span> {
+    cart.<span class="f">push</span>({ id, qty: <span class="n">1</span> });
+  }
+
+  <span class="f">renderCart</span>();
+}
+
+<span class="k">function</span> <span class="f">removeFromCart</span>(id) {
+  cart = cart.<span class="f">filter</span>(i =&gt; i.id !== id);
+  <span class="f">renderCart</span>();
+}
+
+<span class="k">function</span> <span class="f">changeQty</span>(id, delta) {
+  <span class="k">const</span> item = cart.<span class="f">find</span>(i =&gt; i.id === id);
+  <span class="k">if</span> (!item) <span class="k">return</span>;
+
+  item.qty += delta;
+
+  <span class="k">if</span> (item.qty &lt;= <span class="n">0</span>) {
+    <span class="f">removeFromCart</span>(id);      <span class="c">// այն ինքն է կանչում renderCart-ը</span>
+    <span class="k">return</span>;
+  }
+
+  <span class="f">renderCart</span>();
+}
+
+<span class="k">function</span> <span class="f">clearCart</span>() {
+  <span class="k">if</span> (cart.length === <span class="n">0</span>) <span class="k">return</span>;
+  <span class="k">if</span> (!<span class="f">confirm</span>(<span class="s">"Դատարկե՞լ զամբյուղը"</span>)) <span class="k">return</span>;
+
+  cart = [];
+  <span class="f">renderCart</span>();
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ուշադրություն</span>
+      <p><code>cart = cart.filter(...)</code> գրելու համար <code>cart</code>-ը պիտի լինի <code>let</code>, ոչ <code>const</code>։ <code>filter</code>-ը վերադարձնում է <strong>նոր</strong> զանգված (Դաս 6), ուստի պիտի վերագրենք։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգակետ 1 · Render և պահպանում</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML — զամբյուղի մոդալ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- Վերնագրում --&gt;</span>
+<span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"cart-btn"</span><span class="p">&gt;</span>
+  Զամբյուղ <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"cart-count"</span><span class="p">&gt;</span>0<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Մոդալ --&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"modal"</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"modal__box"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"modal__close"</span><span class="p">&gt;</span>✕<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">h2</span><span class="p">&gt;</span>Զամբյուղ<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"cart-list"</span><span class="p">&gt;&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"cart-total"</span><span class="p">&gt;&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"btn"</span> <span class="f">data-action</span>=<span class="s">"clear"</span><span class="p">&gt;</span>Դատարկել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/cart.js — renderCart</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> cartList  = document.<span class="f">querySelector</span>(<span class="s">".cart-list"</span>);
+<span class="k">const</span> cartTotal = document.<span class="f">querySelector</span>(<span class="s">".cart-total"</span>);
+<span class="k">const</span> cartCount = document.<span class="f">querySelector</span>(<span class="s">".cart-count"</span>);
+
+<span class="k">function</span> <span class="f">createCartRow</span>({ id, name, price, qty, subtotal }) {
+  <span class="k">return</span> <span class="s">`
+    &lt;div class="cart-row" data-id="</span>${id}<span class="s">"&gt;
+      &lt;span class="cart-row__name"&gt;</span>${name}<span class="s">&lt;/span&gt;
+      &lt;span class="cart-row__price"&gt;</span>${<span class="f">formatPrice</span>(price)}<span class="s">&lt;/span&gt;
+
+      &lt;div class="qty"&gt;
+        &lt;button data-action="minus"&gt;−&lt;/button&gt;
+        &lt;span&gt;</span>${qty}<span class="s">&lt;/span&gt;
+        &lt;button data-action="plus"&gt;+&lt;/button&gt;
+      &lt;/div&gt;
+
+      &lt;span class="cart-row__subtotal"&gt;</span>${<span class="f">formatPrice</span>(subtotal)}<span class="s">&lt;/span&gt;
+      &lt;button data-action="remove"&gt;✕&lt;/button&gt;
+    &lt;/div&gt;
+  `</span>;
+}
+
+<span class="k">function</span> <span class="f">renderCart</span>() {
+  <span class="k">const</span> items = <span class="f">getCartItems</span>();
+
+  cartList.innerHTML = items.length === <span class="n">0</span>
+    ? <span class="s">`&lt;p class="empty"&gt;Զամբյուղը դատարկ է։&lt;/p&gt;`</span>
+    : items.<span class="f">map</span>(<span class="f">createCartRow</span>).<span class="f">join</span>(<span class="s">""</span>);
+
+  cartTotal.textContent = <span class="s">`Ընդամենը՝ </span>${<span class="f">formatPrice</span>(<span class="f">getCartTotal</span>())}<span class="s">`</span>;
+
+  <span class="k">const</span> count = <span class="f">getCartCount</span>();
+  cartCount.textContent = count;
+  cartCount.classList.<span class="f">toggle</span>(<span class="s">"is-empty"</span>, count === <span class="n">0</span>);   <span class="c">// Դաս 14</span>
+
+  <span class="f">save</span>(CART_KEY, cart);          <span class="c">// ← ամբողջ պահպանումը՝ մեկ տող</span>
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Կրկին նույն սկզբունքը</span>
+      <p>Ինչպես Դաս 14-ի to-do-ում՝ պահպանումը <strong>մեկ տող է render-ի ներսում</strong>։ Ամեն գործողություն կանչում է <code>renderCart()</code>, ուստի ոչինչ չի կարող կորչել։ Կարիք չկա ամեն ֆունկցիայում հիշել <code>save</code>-ի մասին։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Ստուգակետ 2 · Իրադարձություններ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/cart.js — մշակիչներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> modal   = document.<span class="f">querySelector</span>(<span class="s">".modal"</span>);
+<span class="k">const</span> cartBtn = document.<span class="f">querySelector</span>(<span class="s">".cart-btn"</span>);
+
+<span class="c">// ---------- Մոդալի բացում/փակում (Դաս 11) ----------</span>
+<span class="k">const</span> openCart  = () =&gt; modal.classList.<span class="f">add</span>(<span class="s">"is-open"</span>);
+<span class="k">const</span> closeCart = () =&gt; modal.classList.<span class="f">remove</span>(<span class="s">"is-open"</span>);
+
+cartBtn.<span class="f">addEventListener</span>(<span class="s">"click"</span>, openCart);
+
+modal.<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+  <span class="k">if</span> (e.target === modal) <span class="f">closeCart</span>();          <span class="c">// ֆոնին սեղմեցին</span>
+  <span class="k">if</span> (e.target.<span class="f">closest</span>(<span class="s">".modal__close"</span>)) <span class="f">closeCart</span>();
+});
+
+document.<span class="f">addEventListener</span>(<span class="s">"keydown"</span>, (e) =&gt; {
+  <span class="k">if</span> (e.key === <span class="s">"Escape"</span>) <span class="f">closeCart</span>();
+});
+
+<span class="c">// ---------- Զամբյուղի ներսի գործողությունները (Դաս 12) ----------</span>
+modal.<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+  <span class="k">const</span> btn = e.target.<span class="f">closest</span>(<span class="s">"[data-action]"</span>);
+  <span class="k">if</span> (!btn) <span class="k">return</span>;
+
+  <span class="k">if</span> (btn.dataset.action === <span class="s">"clear"</span>) {
+    <span class="f">clearCart</span>();
+    <span class="k">return</span>;
+  }
+
+  <span class="k">const</span> row = btn.<span class="f">closest</span>(<span class="s">".cart-row"</span>);
+  <span class="k">if</span> (!row) <span class="k">return</span>;
+
+  <span class="k">const</span> id = <span class="f">Number</span>(row.dataset.id);
+
+  <span class="k">switch</span> (btn.dataset.action) {
+    <span class="k">case</span> <span class="s">"plus"</span>:   <span class="f">changeQty</span>(id, <span class="n">1</span>);  <span class="k">break</span>;
+    <span class="k">case</span> <span class="s">"minus"</span>:  <span class="f">changeQty</span>(id, -<span class="n">1</span>); <span class="k">break</span>;
+    <span class="k">case</span> <span class="s">"remove"</span>: <span class="f">removeFromCart</span>(id); <span class="k">break</span>;
+  }
+});
+
+<span class="c">// ---------- Կատալոգի «Ավելացնել» կոճակը ----------</span>
+<span class="c">// main.js-ի արդեն գոյություն ունեցող մշակիչում փոխարինում ենք console.log-ը</span>
+<span class="k">if</span> (btn.dataset.action === <span class="s">"add"</span>) {
+  <span class="f">addToCart</span>(<span class="f">Number</span>(btn.dataset.id));
+  <span class="f">showToast</span>(<span class="s">"Ավելացվեց զամբյուղում"</span>);     <span class="c">// Դաս 14</span>
+}
+
+<span class="c">// ---------- Գործարկում ----------</span>
+<span class="f">renderCart</span>();   <span class="c">// վերականգնում է պահված զամբյուղը</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ուշադրություն</span>
+      <p><code>modal</code>-ի վրա երկու listener կա՝ մեկը փակելու, մյուսը՝ գործողությունների։ Դա նորմալ է — <code>addEventListener</code>-ը թույլ է տալիս քանի ուզես (Դաս 11)։ Կարելի էր նաև միավորել մեկում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Ստուգակետ 3 · Փորձարկում</h2>
+    <ul class="goals">
+      <li>«Ավելացնել» սեղմելիս հաշվիչը մեծանում է</li>
+      <li>Նույն ապրանքը կրկին ավելացնելիս քանակը դառնում է 2, նոր տող չի ավելանում</li>
+      <li>Զամբյուղի կոճակը բացում է մոդալը</li>
+      <li>Մոդալը փակվում է խաչիկով, ֆոնին սեղմելով և Escape-ով</li>
+      <li>Ներսի բովանդակությանը սեղմելիս մոդալը <strong>չի</strong> փակվում</li>
+      <li>«+» և «−» փոխում են քանակը և ենթագումարը</li>
+      <li>Քանակը 0 դառնալիս տողը ջնջվում է</li>
+      <li>«✕»-ը ջնջում է տողը</li>
+      <li>Ընդհանուր գումարը ճիշտ է հաշվվում</li>
+      <li>«Դատարկել»-ը հարցնում է հաստատում</li>
+      <li>Դատարկ զամբյուղում երևում է հաղորդագրություն</li>
+      <li><strong>Էջը թարմացնելուց հետո զամբյուղը մնում է տեղում</strong></li>
+      <li>Ֆիլտրերը փոխելիս զամբյուղը չի կորչում</li>
+      <li>Սպառված ապրանքի կոճակը չի աշխատում</li>
+    </ul>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Ռեֆակտորինգ</h2>
+    <p><strong>Ռեֆակտորինգ</strong> — կոդի կառուցվածքի բարելավում՝ <em>առանց</em> վարքագիծը փոխելու։ Ծրագիրն աշխատում է նույնը, բայց կոդն ավելի հեշտ է կարդալ և փոխել։</p>
+
+    <h3>1. Ֆայլերի բաժանում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>վերջնական կառուցվածք</div><button class="copy">Պատճենել</button></div>
+<pre><code>catalog/
+├── index.html
+├── css/
+│   └── style.css
+└── js/
+    ├── data.js       ← PRODUCTS, CATEGORIES
+    ├── storage.js    ← save, load
+    ├── utils.js      ← formatPrice, debounce, showToast
+    ├── catalog.js    ← state, getVisibleProducts, createCard, render
+    ├── cart.js       ← cart, addToCart, renderCart ...
+    └── main.js       ← միայն մշակիչներ և գործարկում</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ֆայլերի բաժանման կանոն</span>
+      <p>Ֆայլը պիտի ունենա <strong>մեկ պատասխանատվություն</strong>։ Եթե չես կարողանում ֆայլի անվանումը տալ մեկ բառով — ուրեմն այն շատ բան է անում։</p>
+    </div>
+
+    <h3>2. Կրկնվող կոդի հեռացում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>debounce-ը՝ ֆունկցիա</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ❌ Դաս 15-ում debounce-ը գրված էր ուղիղ մշակիչում</span>
+<span class="k">let</span> searchTimer;
+searchInput.<span class="f">addEventListener</span>(<span class="s">"input"</span>, () =&gt; {
+  <span class="f">clearTimeout</span>(searchTimer);
+  searchTimer = <span class="f">setTimeout</span>(() =&gt; { ... }, <span class="n">300</span>);
+});
+
+<span class="c">// ✅ js/utils.js — վերաօգտագործելի ֆունկցիա</span>
+<span class="k">function</span> <span class="f">debounce</span>(fn, delay = <span class="n">300</span>) {
+  <span class="k">let</span> timer;
+
+  <span class="k">return</span> <span class="k">function</span> (...args) {
+    <span class="f">clearTimeout</span>(timer);
+    timer = <span class="f">setTimeout</span>(() =&gt; <span class="f">fn</span>(...args), delay);
+  };
+}
+
+<span class="c">// Օգտագործում</span>
+searchInput.<span class="f">addEventListener</span>(<span class="s">"input"</span>, <span class="f">debounce</span>(() =&gt; {
+  state.search = searchInput.value.<span class="f">trim</span>();
+  <span class="f">render</span>();
+}, <span class="n">300</span>));</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ի՞նչ է կատարվում այստեղ</span>
+      <p><code>debounce</code>-ը ֆունկցիա է, որը <strong>վերադարձնում է ուրիշ ֆունկցիա</strong>։ Առաջին անգամ ես տեսնում այսպիսի բան։ Դաս 23-ում կհասկանանք ամբողջությամբ (փակույթներ, closures)։ Հիմա բավական է իմանալ՝ այն աշխատում է։</p>
+    </div>
+
+    <h3>3. Կախարդական թվերի հեռացում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>անուն տուր ամեն բանի</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ❌</span>
+<span class="k">if</span> (window.scrollY &gt; <span class="n">400</span>) { ... }
+<span class="f">setTimeout</span>(fn, <span class="n">300</span>);
+
+<span class="c">// ✅</span>
+<span class="k">const</span> SCROLL_THRESHOLD = <span class="n">400</span>;
+<span class="k">const</span> SEARCH_DELAY = <span class="n">300</span>;
+
+<span class="k">if</span> (window.scrollY &gt; SCROLL_THRESHOLD) { ... }
+<span class="f">setTimeout</span>(fn, SEARCH_DELAY);</code></pre>
+    </div>
+
+    <h3>4. Ինքնաստուգման ցուցակ</h3>
+    <ul class="goals">
+      <li>Ամեն ֆունկցիա անում է <strong>մեկ</strong> գործ</li>
+      <li>Ֆունկցիաների անունները սկսվում են բայով՝ <code>getCartTotal</code>, <code>renderCart</code></li>
+      <li>Չկա կրկնվող կոդ (եթե երեք անգամ գրել ես նույնը — հանիր ֆունկցիա)</li>
+      <li>Չկան կախարդական թվեր</li>
+      <li>Չկան <code>var</code>-եր, միայն <code>const</code> և <code>let</code></li>
+      <li>Չկան մոռացված <code>console.log</code>-եր</li>
+      <li>Օգտագործողի տվյալները չեն դրվում <code>innerHTML</code>-ի մեջ առանց մտածելու</li>
+      <li>Ամեն մշակիչ փոխում է վիճակը և կանչում render, ոչ ուղիղ DOM</li>
+    </ul>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Դեբագ · DevTools</h2>
+    <p><code>console.log</code>-ը լավ է, բայց կա շատ ավելի հզոր գործիք։</p>
+
+    <h3>Breakpoint — կանգնեցնել ծրագիրը</h3>
+    <ol>
+      <li>DevTools → ներդիր <strong>Sources</strong></li>
+      <li>Ձախից գտիր քո <code>main.js</code>-ը</li>
+      <li>Սեղմիր տողի <strong>համարին</strong> — կհայտնվի կապույտ նշան</li>
+      <li>Կատարիր գործողությունը էջում — ծրագիրը կկանգնի հենց այդ տողում</li>
+    </ol>
+
+    <p>Կանգնած վիճակում կարող ես տեսնել <strong>բոլոր փոփոխականների արժեքները</strong> այդ պահին։ Դա շատ ավելի արագ է, քան տասը <code>console.log</code> գրելը։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Կոճակ</th><th>Ինչ է անում</th></tr>
+      <tr><td><strong>Resume</strong> (▶)</td><td>Շարունակել մինչև հաջորդ breakpoint</td></tr>
+      <tr><td><strong>Step over</strong> (↷)</td><td>Հաջորդ տող՝ առանց ֆունկցիա մտնելու</td></tr>
+      <tr><td><strong>Step into</strong> (↓)</td><td>Մտնել ֆունկցիայի ներս</td></tr>
+      <tr><td><strong>Step out</strong> (↑)</td><td>Դուրս գալ ֆունկցիայից</td></tr>
+    </table>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Վահանակ</th><th>Ինչ է ցույց տալիս</th></tr>
+      <tr><td><strong>Scope</strong></td><td>Բոլոր փոփոխականները՝ լոկալ և գլոբալ (Դաս 4)</td></tr>
+      <tr><td><strong>Watch</strong></td><td>Քո ընտրած արտահայտությունները՝ օր. <code>state.category</code></td></tr>
+      <tr><td><strong>Call Stack</strong></td><td>Ո՞ր ֆունկցիան ում կանչեց մինչև այստեղ հասնելը</td></tr>
+      <tr><td><strong>Breakpoints</strong></td><td>Բոլոր դրված կանգառները</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>debugger — breakpoint կոդից</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">addToCart</span>(id) {
+  <span class="k">debugger</span>;      <span class="c">// ծրագիրը կկանգնի այստեղ, երբ DevTools-ը բաց է</span>
+
+  <span class="k">const</span> existing = cart.<span class="f">find</span>(i =&gt; i.id === id);
+  ...
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Մի՛ մոռացիր հանել</span>
+      <p><code>debugger</code>-ը վերջնական տարբերակում թողնելը՝ նույնն է, ինչ մոռացված <code>console.log</code>, միայն ավելի վատ։ Այցելուի բրաուզերում այն ոչինչ չի անի, բայց դա անփութության նշան է։</p>
+    </div>
+
+    <h3>Console-ի օգտակար մեթոդներ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ոչ միայն log</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">console</span>.<span class="f">table</span>(PRODUCTS);              <span class="c">// աղյուսակ — շատ հարմար</span>
+<span class="f">console</span>.<span class="f">table</span>(<span class="f">getCartItems</span>());
+
+<span class="f">console</span>.<span class="f">group</span>(<span class="s">"Ֆիլտրում"</span>);
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">"state:"</span>, state);
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">"արդյունք:"</span>, <span class="f">getVisibleProducts</span>().length);
+<span class="f">console</span>.<span class="f">groupEnd</span>();
+
+<span class="f">console</span>.<span class="f">warn</span>(<span class="s">"Ուշադրություն"</span>);
+<span class="f">console</span>.<span class="f">error</span>(<span class="s">"Սխալ"</span>);
+
+<span class="f">console</span>.<span class="f">time</span>(<span class="s">"render"</span>);
+<span class="f">render</span>();
+<span class="f">console</span>.<span class="f">timeEnd</span>(<span class="s">"render"</span>);       <span class="c">// render: 3.2ms</span></code></pre>
+    </div>
+
+    <h3>Դեբագի ալգորիթմ</h3>
+    <ol>
+      <li><strong>Կարդա սխալը։</strong> Ի՞նչ տեսակ է, ո՞ր ֆայլում, ո՞ր տողում։</li>
+      <li><strong>Բացիր այդ տողը։</strong> Հաճախ պատասխանն արդեն այնտեղ է։</li>
+      <li><strong>Ստուգիր՝ ինչ կա փոփոխականների մեջ</strong> այդ պահին։</li>
+      <li><strong>Նեղացրու շրջանակը։</strong> Դիր breakpoint ավելի վաղ և գնա քայլ առ քայլ։</li>
+      <li><strong>Հարցրու՝ ի՞նչ ես ենթադրում։</strong> Սխալները ապրում են այնտեղ, որտեղ քո ենթադրությունը սխալ է։</li>
+    </ol>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հաճախ հանդիպող սխալ</th><th>Սովորական պատճառը</th></tr>
+      <tr><td><code>Cannot read properties of null</code></td><td><code>querySelector</code>-ը չգտավ (սելեկտոր կամ <code>defer</code>)</td></tr>
+      <tr><td><code>Cannot read properties of undefined</code></td><td>Օբյեկտում այդ դաշտը չկա (Դաս 7՝ <code>?.</code>)</td></tr>
+      <tr><td><code>x is not a function</code></td><td>Անվան սխալ կամ <code>NodeList</code>-ի վրա <code>map</code></td></tr>
+      <tr><td><code>x is not defined</code></td><td>Ֆայլերի հերթականություն կամ տառասխալ</td></tr>
+      <tr><td>Ոչ մի սխալ, բայց չի աշխատում</td><td>Listener-ը կորավ <code>innerHTML</code>-ից հետո (Դաս 12)</td></tr>
+      <tr><td>Համեմատությունը միշտ <code>false</code></td><td><code>dataset</code>-ը տող է, պիտի <code>Number()</code></td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Խաղահրապարակ · զամբյուղի տրամաբանությունը</h2>
+
+    <div class="pg">
+      <textarea id="pgCode" spellcheck="false">const PRODUCTS = [
+  { id: 1, name: "Նոութբուք", price: 450000 },
+  { id: 2, name: "Մկնիկ", price: 8000 },
+  { id: 4, name: "Մոնիտոր", price: 120000 }
+];
+
+let cart = [];
+
+function getCartItems() {
+  return cart
+    .map(item => {
+      const product = PRODUCTS.find(p => p.id === item.id);
+      if (!product) return null;
+      return { ...product, qty: item.qty, subtotal: product.price * item.qty };
+    })
+    .filter(Boolean);
+}
+
+const getCartTotal = () => getCartItems().reduce((s, i) => s + i.subtotal, 0);
+const getCartCount = () => cart.reduce((s, i) => s + i.qty, 0);
+
+function addToCart(id) {
+  const existing = cart.find(i => i.id === id);
+  if (existing) existing.qty++;
+  else cart.push({ id, qty: 1 });
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(i => i.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+}
+
+const show = () => {
+  console.log(getCartItems().map(i => `${i.name} ×${i.qty} = ${i.subtotal}`));
+  console.log("Ընդամենը:", getCartTotal(), "| Հատ:", getCartCount());
+};
+
+addToCart(2);
+addToCart(2);
+addToCart(4);
+show();
+
+changeQty(2, 1);
+show();
+
+changeQty(4, -1);
+show();
+
+// Ջնջված ապրանք զամբյուղում
+cart.push({ id: 99, qty: 3 });
+console.log("--- id 99 գոյություն չունի ---");
+show();</textarea>
+      <div class="pg__actions">
+        <button class="run" id="runBtn">Կատարել</button>
+        <button class="clr" id="clrBtn">Մաքրել</button>
+      </div>
+<pre class="out" id="pgOut"><span class="m">Console</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Նախագծի հանձնում</h2>
+    <p>Սա Բլոկ 2-ի եզրափակիչ աշխատանքն է։ Հաջորդ դասին ներկայացնում ես այն և բացատրում քո կոդը։</p>
+
+    <h3>Պարտադիր</h3>
+    <ol class="hw">
+      <li>Աշխատող կատալոգ՝ ֆիլտր, որոնում, տեսակավորում, «միայն առկա»</li>
+      <li>Աշխատող զամբյուղ՝ ավելացում, քանակ, ջնջում, դատարկում</li>
+      <li>Զամբյուղը պահպանվում է էջը թարմացնելուց հետո</li>
+      <li>Զամբյուղի մոդալ՝ երեք եղանակով փակվող</li>
+      <li>Դատարկ վիճակների մշակում՝ և՛ կատալոգում, և՛ զամբյուղում</li>
+      <li>Կոդը բաժանված է առնվազն 4 ֆայլի</li>
+      <li>Ոչ մի <code>var</code>, ոչ մի մոռացված <code>console.log</code>, ոչ մի կախարդական թիվ</li>
+    </ol>
+
+    <h3>Լրացուցիչ (ընտրովի)</h3>
+    <ol class="hw">
+      <li>Ֆիլտրերի վիճակի պահպանում <code>localStorage</code>-ում</li>
+      <li>«Հավանածներ» ցուցակ՝ սրտիկի կոճակով, առանձին պահոցում</li>
+      <li>Ապրանքի մանրամասների մոդալ</li>
+      <li>Toast ծանուցումներ բոլոր գործողությունների համար</li>
+      <li>Զեղչ՝ 200 000-ից բարձր պատվերի դեպքում 10%</li>
+    </ol>
+
+    <div class="note">
+      <span class="tag">Ներկայացման ժամանակ պատրաստ եղիր բացատրելու</span>
+      <p>Ինչո՞ւ ես զամբյուղում պահում միայն <code>id</code> և <code>qty</code>։<br>
+      Ինչո՞ւ է <code>getVisibleProducts</code>-ը սկսվում <code>[...PRODUCTS]</code>-ով։<br>
+      Ինչո՞ւ են քարտերի կոճակների մշակիչները դելեգացված։<br>
+      Որտե՞ղ է կանչվում <code>save</code>-ը և ինչո՞ւ հենց այնտեղ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Բլոկ 2-ի ամփոփում</h2>
+    <p>Ութ դասում անցանք ճանապարհ Console-ից մինչև իսկական վեբ հավելված։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դաս</th><th>Հիմնական գաղափարը</th></tr>
+      <tr><td>09</td><td>DOM-ը ծառ է, սելեկտորները նույնն են, ինչ CSS-ում</td></tr>
+      <tr><td>10</td><td>Ոճը՝ CSS-ում, վիճակը՝ JS-ում։ Render = <code>map().join("")</code></td></tr>
+      <tr><td>11</td><td>Callback-ը դառնում է իրադարձության մշակիչ</td></tr>
+      <tr><td>12</td><td>Դելեգացիա և մեկ ճշմարտության աղբյուր</td></tr>
+      <tr><td>13</td><td>Օգտագործողի տվյալները միշտ ստուգվում են</td></tr>
+      <tr><td>14</td><td>Պահպանում և ժամանակ. առաջին հանդիպումը ասինխրոնության հետ</td></tr>
+      <tr><td>15–16</td><td>Ամեն ինչ միասին՝ իրական նախագծում</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p><strong>Git</strong>։ Մեկ դաս, բայց շատ կարևոր՝ տարբերակների կառավարում, commit, branch, GitHub։ Եվ վերջում քո կատալոգը կհրապարակենք ինտերնետում GitHub Pages-ով՝ իսկական հասցեով, որը կարող ես ցույց տալ բոլորին։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 16 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 14 — Բրաուզերի API-ներ և պահպանում</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 14 · 2 ժամ</p>
+  <h1>Բրաուզերի API-ներ և պահպանում</h1>
+  <p class="lede">Մինչ այժմ էջը թարմացնելիս ամեն ինչ կորչում էր։ Այսօր սովորում ենք տվյալները պահել բրաուզերում, ժամանակի հետ աշխատել և արձագանքել սքրոլին։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 07, 08, 12</span>
+    <span>Բլոկ 2 · DOM և իրադարձություններ</span>
+    <span>Տնային՝ 10 առաջադրանք</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li><code>localStorage</code> — տվյալները մնում են էջը փակելուց հետո</li>
+      <li><code>JSON.stringify</code> և <code>JSON.parse</code></li>
+      <li><code>sessionStorage</code> — տարբերությունը</li>
+      <li><code>setTimeout</code> — հետաձգված կատարում</li>
+      <li><code>setInterval</code> — կրկնվող կատարում</li>
+      <li>Կենդանի ժամացույց և հետհաշվարկ</li>
+      <li>Սքրոլ՝ կպչուն վերնագիր և «վեր» կոճակ</li>
+      <li>To-do ցուցակ, որը ոչինչ չի մոռանում</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>localStorage</h2>
+    <p>Բրաուզերի փոքրիկ պահոց՝ քո կայքի համար։ Տվյալները մնում են այնտեղ <strong>անժամկետ</strong>՝ էջը փակելուց, համակարգիչը վերագործարկելուց հետո էլ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>չորս մեթոդ</div><button class="copy">Պատճենել</button></div>
+<pre><code>localStorage.<span class="f">setItem</span>(<span class="s">"theme"</span>, <span class="s">"dark"</span>);      <span class="c">// գրել</span>
+localStorage.<span class="f">setItem</span>(<span class="s">"userName"</span>, <span class="s">"Անի"</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(localStorage.<span class="f">getItem</span>(<span class="s">"theme"</span>));      <span class="c">// կարդալ</span>
+<span class="f">console</span>.<span class="f">log</span>(localStorage.<span class="f">getItem</span>(<span class="s">"chka"</span>));       <span class="c">// չկա → null</span>
+
+localStorage.<span class="f">removeItem</span>(<span class="s">"userName"</span>);            <span class="c">// ջնջել մեկը</span>
+<span class="c">// localStorage.clear();                       // ջնջել ամեն ինչ</span>
+
+<span class="f">console</span>.<span class="f">log</span>(localStorage.length);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">dark</span>
+<span class="m">null</span>
+<span class="r">1</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Որտե՞ղ տեսնել</span>
+      <p>DevTools → ներդիր <strong>Application</strong> → ձախից <strong>Local Storage</strong>։ Այնտեղ երևում է ամեն ինչ, և կարելի է ձեռքով ջնջել։ Շատ օգտակար է սխալներ որոնելիս։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երեք սահմանափակում</span>
+      <p><strong>1.</strong> Պահում է <strong>միայն տողեր</strong>։<br>
+      <strong>2.</strong> Ծավալը՝ մոտ 5 ՄԲ։<br>
+      <strong>3.</strong> Առանձին է ամեն դոմենի համար։ Քո կայքի տվյալները ուրիշ կայքը չի տեսնի։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>թակարդը՝ ամեն ինչ դառնում է տող</div><button class="copy">Պատճենել</button></div>
+<pre><code>localStorage.<span class="f">setItem</span>(<span class="s">"age"</span>, <span class="n">25</span>);
+localStorage.<span class="f">setItem</span>(<span class="s">"isAdmin"</span>, <span class="k">true</span>);
+localStorage.<span class="f">setItem</span>(<span class="s">"colors"</span>, [<span class="s">"կարմիր"</span>, <span class="s">"կանաչ"</span>]);
+localStorage.<span class="f">setItem</span>(<span class="s">"user"</span>, { name: <span class="s">"Անի"</span> });
+
+<span class="f">console</span>.<span class="f">log</span>(localStorage.<span class="f">getItem</span>(<span class="s">"age"</span>), <span class="k">typeof</span> localStorage.<span class="f">getItem</span>(<span class="s">"age"</span>));
+<span class="f">console</span>.<span class="f">log</span>(localStorage.<span class="f">getItem</span>(<span class="s">"isAdmin"</span>) === <span class="k">true</span>);
+<span class="f">console</span>.<span class="f">log</span>(localStorage.<span class="f">getItem</span>(<span class="s">"colors"</span>));
+<span class="f">console</span>.<span class="f">log</span>(localStorage.<span class="f">getItem</span>(<span class="s">"user"</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">25 string</span>
+<span class="e">false</span>   <span class="m">← "true" տողն է, ոչ boolean</span>
+<span class="r">կարմիր,կանաչ</span>
+<span class="e">[object Object]</span>   <span class="m">← օբյեկտը կորավ</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>JSON — օբյեկտները տողի վերածելը</h2>
+    <p><strong>JSON</strong> = <em>JavaScript Object Notation</em>։ Ձևաչափ, որով ցանկացած օբյեկտ կամ զանգված կարելի է գրել որպես տեքստ և հետո վերականգնել։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>stringify և parse</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> user = { name: <span class="s">"Անի"</span>, age: <span class="n">14</span>, hobbies: [<span class="s">"շախմատ"</span>, <span class="s">"լող"</span>] };
+
+<span class="c">// Օբյեկտ → տող</span>
+<span class="k">const</span> text = <span class="f">JSON</span>.<span class="f">stringify</span>(user);
+<span class="f">console</span>.<span class="f">log</span>(text);
+<span class="f">console</span>.<span class="f">log</span>(<span class="k">typeof</span> text);
+
+<span class="c">// Տող → օբյեկտ</span>
+<span class="k">const</span> back = <span class="f">JSON</span>.<span class="f">parse</span>(text);
+<span class="f">console</span>.<span class="f">log</span>(back.name);
+<span class="f">console</span>.<span class="f">log</span>(back.hobbies[<span class="n">0</span>]);
+<span class="f">console</span>.<span class="f">log</span>(<span class="k">typeof</span> back);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">{"name":"Անի","age":14,"hobbies":["շախմատ","լող"]}</span>
+<span class="g">string</span>
+<span class="r">Անի</span>
+<span class="r">շախմատ</span>
+<span class="g">object</span></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ճիշտ պահպանում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> todos = [
+  { id: <span class="n">1</span>, text: <span class="s">"Տնային"</span>, done: <span class="k">false</span> },
+  { id: <span class="n">2</span>, text: <span class="s">"Հաց"</span>,    done: <span class="k">true</span>  }
+];
+
+<span class="c">// Պահել</span>
+localStorage.<span class="f">setItem</span>(<span class="s">"todos"</span>, <span class="f">JSON</span>.<span class="f">stringify</span>(todos));
+
+<span class="c">// Կարդալ</span>
+<span class="k">const</span> saved = <span class="f">JSON</span>.<span class="f">parse</span>(localStorage.<span class="f">getItem</span>(<span class="s">"todos"</span>));
+<span class="f">console</span>.<span class="f">log</span>(saved.length);
+<span class="f">console</span>.<span class="f">log</span>(saved[<span class="n">0</span>].text);
+<span class="f">console</span>.<span class="f">log</span>(saved.<span class="f">filter</span>(t =&gt; t.done).length);   <span class="c">// Դաս 6-ը աշխատում է</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">2</span>
+<span class="r">Տնային</span>
+<span class="r">1</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երկու վտանգ</span>
+      <p><strong>1.</strong> Եթե բանալին չկա, <code>getItem</code>-ը վերադարձնում է <code>null</code>, իսկ <code>JSON.parse(null)</code>-ը՝ <code>null</code>։ Հետո <code>null.filter(...)</code> → սխալ։<br>
+      <strong>2.</strong> Եթե պահոցում փչացած տեքստ է, <code>JSON.parse</code>-ը <strong>սխալ է գցում</strong> և ամբողջ սկրիպտը կանգնում է։</p>
+    </div>
+
+    <h3>Ապահով ֆունկցիաներ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>storage.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">save</span>(key, value) {
+  <span class="k">try</span> {
+    localStorage.<span class="f">setItem</span>(key, <span class="f">JSON</span>.<span class="f">stringify</span>(value));
+  } <span class="k">catch</span> (error) {
+    <span class="f">console</span>.<span class="f">warn</span>(<span class="s">"Չհաջողվեց պահել՝"</span>, error);
+  }
+}
+
+<span class="k">function</span> <span class="f">load</span>(key, fallback = <span class="k">null</span>) {
+  <span class="k">try</span> {
+    <span class="k">const</span> raw = localStorage.<span class="f">getItem</span>(key);
+    <span class="k">return</span> raw === <span class="k">null</span> ? fallback : <span class="f">JSON</span>.<span class="f">parse</span>(raw);
+  } <span class="k">catch</span> (error) {
+    <span class="f">console</span>.<span class="f">warn</span>(<span class="s">"Փչացած տվյալ՝"</span>, error);
+    <span class="k">return</span> fallback;
+  }
+}
+
+<span class="c">// Օգտագործում</span>
+<span class="f">save</span>(<span class="s">"todos"</span>, [{ id: <span class="n">1</span>, text: <span class="s">"Տնային"</span> }]);
+
+<span class="k">const</span> todos = <span class="f">load</span>(<span class="s">"todos"</span>, []);       <span class="c">// չկա → դատարկ զանգված</span>
+<span class="k">const</span> theme = <span class="f">load</span>(<span class="s">"theme"</span>, <span class="s">"light"</span>);  <span class="c">// չկա → light</span>
+
+<span class="f">console</span>.<span class="f">log</span>(todos.length, theme);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">1 light</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">try / catch</span>
+      <p>Առաջին անգամ ենք հանդիպում։ Իմաստը՝ <em>«փորձիր կատարել <code>try</code>-ի կոդը։ Եթե սխալ լինի — մի՛ կանգնիր, այլ անցիր <code>catch</code>-ին»</em>։ Մանրամասն կսովորենք Դաս 23-ում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>sessionStorage</h2>
+    <p>Ճիշտ նույն մեթոդներն են, բայց տվյալները ջնջվում են ներդիրը փակելիս։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th></th><th><code>localStorage</code></th><th><code>sessionStorage</code></th></tr>
+      <tr><td>Կյանքի տևողություն</td><td>անժամկետ</td><td>մինչև ներդիրի փակումը</td></tr>
+      <tr><td>Ընդհանո՞ւր է ներդիրների միջև</td><td>այո</td><td>ոչ</td></tr>
+      <tr><td>Ե՞րբ օգտագործել</td><td>թեմա, զամբյուղ, կարգավորումներ</td><td>ֆորմայի սևագիր, մեկանգամյա տվյալ</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երբեք մի՛ պահիր</span>
+      <p>Գաղտնաբառեր, քարտի տվյալներ, մուտքի տոկեններ։ <code>localStorage</code>-ը հասանելի է ցանկացած JS կոդի էջում — ներառյալ վնասակարին։ Այն նախատեսված է <strong>հարմարավետության</strong>, ոչ անվտանգության համար։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>setTimeout — հետաձգված կատարում</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>setTimeout</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">console</span>.<span class="f">log</span>(<span class="s">"1. Սկիզբ"</span>);
+
+<span class="f">setTimeout</span>(() =&gt; {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"3. Անցավ 2 վայրկյան"</span>);
+}, <span class="n">2000</span>);            <span class="c">// միլիվայրկյաններ</span>
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">"2. Վերջ"</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">1. Սկիզբ</span>
+<span class="r">2. Վերջ</span>
+<span class="m">(2 վայրկյան անց)</span>
+<span class="r">3. Անցավ 2 վայրկյան</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Շատ կարևոր դիտարկում</span>
+      <p>«2. Վերջ»-ը տպվեց <strong>մինչև</strong> «3»-ը։ JS-ը չսպասեց 2 վայրկյան — նա շարունակեց աշխատել։ Սա կոչվում է <strong>ասինխրոն</strong> կատարում։ Դաս 19-ում այս թեման կդառնա կենտրոնական։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>չեղարկել</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> timerId = <span class="f">setTimeout</span>(() =&gt; {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Սա երբեք չի տպվի"</span>);
+}, <span class="n">3000</span>);
+
+<span class="f">clearTimeout</span>(timerId);
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">"Չեղարկվեց"</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Չեղարկվեց</span></pre>
+    </div>
+
+    <h3>Գործնական օրինակ՝ ծանուցում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>toast.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> toast = document.<span class="f">querySelector</span>(<span class="s">".toast"</span>);
+
+<span class="k">function</span> <span class="f">showToast</span>(message) {
+  toast.textContent = message;
+  toast.classList.<span class="f">add</span>(<span class="s">"is-visible"</span>);
+
+  <span class="f">setTimeout</span>(() =&gt; {
+    toast.classList.<span class="f">remove</span>(<span class="s">"is-visible"</span>);
+  }, <span class="n">3000</span>);
+}
+
+<span class="f">showToast</span>(<span class="s">"Ապրանքն ավելացվեց զամբյուղում"</span>);</code></pre>
+    </div>
+
+    <h3>Debounce — սպասել, մինչև մարդը դադարի գրել</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>օգտակար հնարք</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> input = document.<span class="f">querySelector</span>(<span class="s">".search"</span>);
+<span class="k">let</span> timerId;
+
+input.<span class="f">addEventListener</span>(<span class="s">"input"</span>, () =&gt; {
+  <span class="f">clearTimeout</span>(timerId);          <span class="c">// չեղարկում ենք նախորդ սպասումը</span>
+
+  timerId = <span class="f">setTimeout</span>(() =&gt; {
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Որոնում ենք՝"</span>, input.value);
+  }, <span class="n">500</span>);
+});</code></pre>
+<pre class="out"><span class="m">Console  (գրեցինք "նոութ" արագ)</span>
+<span class="r">Որոնում ենք՝ նոութ</span>   <span class="m">← ընդամենը մեկ անգամ, ոչ 5</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ է սա կարևոր</span>
+      <p>Առանց debounce-ի ամեն նիշի համար կուղարկվեր առանձին հարցում սերվերին։ 5 տառ = 5 հարցում։ Debounce-ով՝ մեկ։ Դաս 21-ում սա կկիրառենք իսկական API-ի հետ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>setInterval — կրկնվող կատարում</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>կենդանի ժամացույց</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> clock = document.<span class="f">querySelector</span>(<span class="s">".clock"</span>);
+<span class="k">const</span> pad = n =&gt; <span class="f">String</span>(n).<span class="f">padStart</span>(<span class="n">2</span>, <span class="s">"0"</span>);    <span class="c">// Դաս 8</span>
+
+<span class="k">function</span> <span class="f">updateClock</span>() {
+  <span class="k">const</span> now = <span class="k">new</span> <span class="f">Date</span>();
+  clock.textContent =
+    <span class="s">`</span>${<span class="f">pad</span>(now.<span class="f">getHours</span>())}<span class="s">:</span>${<span class="f">pad</span>(now.<span class="f">getMinutes</span>())}<span class="s">:</span>${<span class="f">pad</span>(now.<span class="f">getSeconds</span>())}<span class="s">`</span>;
+}
+
+<span class="f">updateClock</span>();                    <span class="c">// անմիջապես, առանց սպասելու</span>
+<span class="f">setInterval</span>(updateClock, <span class="n">1000</span>);   <span class="c">// հետո ամեն վայրկյան</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Հաճախ մոռացվում է</span>
+      <p><code>setInterval</code>-ը առաջին անգամ աշխատում է <strong>ինտերվալից հետո</strong>, ոչ անմիջապես։ Ուստի ֆունկցիան կանչիր նաև ձեռքով՝ որ առաջին վայրկյանին էջը դատարկ չլինի։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հետհաշվարկ — Դաս 8-ը կենդանանում է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> el = document.<span class="f">querySelector</span>(<span class="s">".countdown"</span>);
+<span class="k">const</span> target = <span class="k">new</span> <span class="f">Date</span>(<span class="s">"2027-01-01"</span>);
+
+<span class="k">function</span> <span class="f">tick</span>() {
+  <span class="k">const</span> diff = target - <span class="k">new</span> <span class="f">Date</span>();
+
+  <span class="k">if</span> (diff &lt;= <span class="n">0</span>) {
+    el.textContent = <span class="s">"Շնորհավոր Նոր տարի։"</span>;
+    <span class="f">clearInterval</span>(intervalId);      <span class="c">// կանգնեցնում ենք</span>
+    <span class="k">return</span>;
+  }
+
+  <span class="k">const</span> days    = <span class="f">Math</span>.<span class="f">floor</span>(diff / <span class="n">86400000</span>);
+  <span class="k">const</span> hours   = <span class="f">Math</span>.<span class="f">floor</span>(diff / <span class="n">3600000</span>) % <span class="n">24</span>;
+  <span class="k">const</span> minutes = <span class="f">Math</span>.<span class="f">floor</span>(diff / <span class="n">60000</span>) % <span class="n">60</span>;
+  <span class="k">const</span> seconds = <span class="f">Math</span>.<span class="f">floor</span>(diff / <span class="n">1000</span>) % <span class="n">60</span>;
+
+  el.textContent = <span class="s">`</span>${days}<span class="s">օր </span>${hours}<span class="s">ժ </span>${minutes}<span class="s">ր </span>${seconds}<span class="s">վ`</span>;
+}
+
+<span class="f">tick</span>();
+<span class="k">const</span> intervalId = <span class="f">setInterval</span>(tick, <span class="n">1000</span>);</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Միշտ մաքրիր</span>
+      <p>Չկանգնեցված <code>setInterval</code>-ը շարունակում է աշխատել անվերջ՝ ուտելով ռեսուրսներ։ Երբ այն այլևս պետք չէ (հետհաշվարկն ավարտվեց, մոդալը փակվեց) — <code>clearInterval</code>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Սքրոլ և պատուհան</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հիմնական հատկություններ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">console</span>.<span class="f">log</span>(window.scrollY);       <span class="c">// քանի պիքսել ենք սքրոլ արել</span>
+<span class="f">console</span>.<span class="f">log</span>(window.innerHeight);   <span class="c">// տեսանելի մասի բարձրությունը</span>
+<span class="f">console</span>.<span class="f">log</span>(window.innerWidth);    <span class="c">// լայնությունը</span>
+<span class="f">console</span>.<span class="f">log</span>(document.body.scrollHeight);  <span class="c">// ամբողջ էջի բարձրությունը</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">420</span>
+<span class="r">890</span>
+<span class="r">1440</span>
+<span class="r">5200</span></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>կպչուն վերնագիր և «վեր» կոճակ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> header = document.<span class="f">querySelector</span>(<span class="s">".header"</span>);
+<span class="k">const</span> upBtn  = document.<span class="f">querySelector</span>(<span class="s">".up"</span>);
+
+window.<span class="f">addEventListener</span>(<span class="s">"scroll"</span>, () =&gt; {
+  header.classList.<span class="f">toggle</span>(<span class="s">"is-fixed"</span>, window.scrollY &gt; <span class="n">100</span>);
+  upBtn.classList.<span class="f">toggle</span>(<span class="s">"is-visible"</span>, window.scrollY &gt; <span class="n">400</span>);
+});
+
+upBtn.<span class="f">addEventListener</span>(<span class="s">"click"</span>, () =&gt; {
+  window.<span class="f">scrollTo</span>({ top: <span class="n">0</span>, behavior: <span class="s">"smooth"</span> });
+});</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">toggle-ի երկրորդ արգումենտը</span>
+      <p><code>classList.toggle("x", պայման)</code> — երբ պայմանը <code>true</code> է, ավելացնում է դասը, երբ <code>false</code> — հանում։ Շատ ավելի կարճ է, քան <code>if / else</code>-ը։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>scrollIntoView</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> section = document.<span class="f">querySelector</span>(<span class="s">"#contacts"</span>);
+
+section.<span class="f">scrollIntoView</span>({ behavior: <span class="s">"smooth"</span>, block: <span class="s">"start"</span> });</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">scroll-ը շատ հաճախ է աշխատում</span>
+      <p>Սքրոլի ժամանակ մշակիչը կանչվում է <strong>վայրկյանում տասնյակ անգամ</strong>։ Ներսում ծանր հաշվարկներ մի՛ արա — էջը կսկսի «կակազել»։ Դաս abandonment-ից խուսափելու համար պահիր այն թեթև՝ միայն <code>classList</code>։</p>
+    </div>
+
+    <h3>Այլ օգտակար օբյեկտներ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>location · navigator</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">console</span>.<span class="f">log</span>(location.href);       <span class="c">// ամբողջ հասցեն</span>
+<span class="f">console</span>.<span class="f">log</span>(location.hostname);   <span class="c">// դոմենը</span>
+<span class="f">console</span>.<span class="f">log</span>(location.pathname);   <span class="c">// ուղին</span>
+<span class="f">console</span>.<span class="f">log</span>(location.search);     <span class="c">// ?query=...</span>
+
+<span class="c">// location.reload();              // թարմացնել էջը</span>
+<span class="c">// location.href = "/about.html";  // անցնել ուրիշ էջ</span>
+
+<span class="f">console</span>.<span class="f">log</span>(navigator.language);
+<span class="f">console</span>.<span class="f">log</span>(navigator.onLine);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">https://mysite.am/products.html?id=5</span>
+<span class="r">mysite.am</span>
+<span class="r">/products.html</span>
+<span class="r">?id=5</span>
+<span class="r">hy-AM</span>
+<span class="g">true</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Դասարանական · To-do, որ ոչինչ չի մոռանում</h2>
+    <p>Վերցնում ենք Դաս 12-ի to-do-ն և ավելացնում պահպանում։ Ուշադրություն դարձրու՝ որքան <strong>քիչ</strong> փոփոխություն է պետք։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>storage.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> STORAGE_KEY = <span class="s">"todos"</span>;
+
+<span class="k">function</span> <span class="f">save</span>(key, value) {
+  <span class="k">try</span> {
+    localStorage.<span class="f">setItem</span>(key, <span class="f">JSON</span>.<span class="f">stringify</span>(value));
+  } <span class="k">catch</span> (e) {
+    <span class="f">console</span>.<span class="f">warn</span>(<span class="s">"Չհաջողվեց պահել"</span>, e);
+  }
+}
+
+<span class="k">function</span> <span class="f">load</span>(key, fallback = <span class="k">null</span>) {
+  <span class="k">try</span> {
+    <span class="k">const</span> raw = localStorage.<span class="f">getItem</span>(key);
+    <span class="k">return</span> raw === <span class="k">null</span> ? fallback : <span class="f">JSON</span>.<span class="f">parse</span>(raw);
+  } <span class="k">catch</span> (e) {
+    <span class="k">return</span> fallback;
+  }
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.js — փոփոխությունները</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ★ 1. Բեռնում ենք սկզբում</span>
+<span class="k">let</span> todos = <span class="f">load</span>(STORAGE_KEY, []);
+
+<span class="k">const</span> form  = document.<span class="f">querySelector</span>(<span class="s">".todo__form"</span>);
+<span class="k">const</span> input = document.<span class="f">querySelector</span>(<span class="s">".todo__input"</span>);
+<span class="k">const</span> list  = document.<span class="f">querySelector</span>(<span class="s">".todo__list"</span>);
+<span class="k">const</span> stats = document.<span class="f">querySelector</span>(<span class="s">".todo__stats"</span>);
+
+<span class="k">function</span> <span class="f">createItem</span>({ id, text, done }) {
+  <span class="k">return</span> <span class="s">`
+    &lt;li class="todo__item </span>${done ? <span class="s">"is-done"</span> : <span class="s">""</span>}<span class="s">" data-id="</span>${id}<span class="s">"&gt;
+      &lt;input type="checkbox" data-action="toggle" </span>${done ? <span class="s">"checked"</span> : <span class="s">""</span>}<span class="s">&gt;
+      &lt;span class="todo__text"&gt;</span>${text}<span class="s">&lt;/span&gt;
+      &lt;button data-action="edit"&gt;✎&lt;/button&gt;
+      &lt;button data-action="delete"&gt;✕&lt;/button&gt;
+    &lt;/li&gt;
+  `</span>;
+}
+
+<span class="c">// ★ 2. render-ը նաև պահպանում է</span>
+<span class="k">function</span> <span class="f">render</span>() {
+  list.innerHTML = todos.length === <span class="n">0</span>
+    ? <span class="s">`&lt;li class="todo__empty"&gt;Ցուցակը դատարկ է։&lt;/li&gt;`</span>
+    : todos.<span class="f">map</span>(<span class="f">createItem</span>).<span class="f">join</span>(<span class="s">""</span>);
+
+  <span class="k">const</span> done = todos.<span class="f">filter</span>(t =&gt; t.done).length;
+  stats.textContent = <span class="s">`</span>${done}<span class="s"> / </span>${todos.length}<span class="s"> կատարված`</span>;
+
+  <span class="f">save</span>(STORAGE_KEY, todos);     <span class="c">// ← ամբողջ նոր տողը սա է</span>
+}
+
+<span class="c">// Մնացած ամեն ինչ նույնն է, ինչ Դաս 12-ում</span>
+<span class="k">function</span> <span class="f">addTodo</span>(text) {
+  todos.<span class="f">push</span>({ id: <span class="f">Date</span>.<span class="f">now</span>(), text, done: <span class="k">false</span> });
+  <span class="f">render</span>();
+}
+
+<span class="k">function</span> <span class="f">deleteTodo</span>(id) {
+  todos = todos.<span class="f">filter</span>(t =&gt; t.id !== id);
+  <span class="f">render</span>();
+}
+
+<span class="k">function</span> <span class="f">toggleTodo</span>(id) {
+  <span class="k">const</span> todo = todos.<span class="f">find</span>(t =&gt; t.id === id);
+  <span class="k">if</span> (todo) todo.done = !todo.done;
+  <span class="f">render</span>();
+}
+
+form.<span class="f">addEventListener</span>(<span class="s">"submit"</span>, (e) =&gt; {
+  e.<span class="f">preventDefault</span>();
+  <span class="k">const</span> text = input.value.<span class="f">trim</span>();
+  <span class="k">if</span> (!text) <span class="k">return</span>;
+  <span class="f">addTodo</span>(text);
+  input.value = <span class="s">""</span>;
+  input.<span class="f">focus</span>();
+});
+
+list.<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+  <span class="k">const</span> btn = e.target.<span class="f">closest</span>(<span class="s">"[data-action]"</span>);
+  <span class="k">if</span> (!btn) <span class="k">return</span>;
+
+  <span class="k">const</span> id = <span class="f">Number</span>(btn.<span class="f">closest</span>(<span class="s">".todo__item"</span>).dataset.id);
+
+  <span class="k">switch</span> (btn.dataset.action) {
+    <span class="k">case</span> <span class="s">"toggle"</span>: <span class="f">toggleTodo</span>(id); <span class="k">break</span>;
+    <span class="k">case</span> <span class="s">"delete"</span>: <span class="f">deleteTodo</span>(id); <span class="k">break</span>;
+  }
+});
+
+<span class="f">render</span>();</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ահա ճարտարապետության ուժը</span>
+      <p>Ամբողջ պահպանումը՝ <strong>մեկ տող</strong> <code>render()</code>-ի ներսում։ Ինչո՞ւ։ Որովհետև Դաս 12-ում ընդունեցինք կանոնը՝ <em>ամեն փոփոխությունից հետո կանչվում է <code>render()</code></em>։ Ուստի բավական էր պահպանումը դնել այնտեղ։<br><br>
+      Երբ ճարտարապետությունը ճիշտ է, նոր հնարավորությունն ավելացվում է մեկ տողով։ Երբ սխալ է՝ պիտի փոխեիր 10 տեղ։</p>
+    </div>
+
+    <h3>Բոնուս՝ թեմայի պահպանում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>theme.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> themeBtn = document.<span class="f">querySelector</span>(<span class="s">".theme-toggle"</span>);
+
+<span class="c">// Վերականգնում ենք բեռնման ժամանակ</span>
+<span class="k">const</span> savedTheme = localStorage.<span class="f">getItem</span>(<span class="s">"theme"</span>) ?? <span class="s">"light"</span>;
+document.documentElement.<span class="f">setAttribute</span>(<span class="s">"data-theme"</span>, savedTheme);
+
+themeBtn.<span class="f">addEventListener</span>(<span class="s">"click"</span>, () =&gt; {
+  <span class="k">const</span> current = document.documentElement.<span class="f">getAttribute</span>(<span class="s">"data-theme"</span>);
+  <span class="k">const</span> next = current === <span class="s">"dark"</span> ? <span class="s">"light"</span> : <span class="s">"dark"</span>;
+
+  document.documentElement.<span class="f">setAttribute</span>(<span class="s">"data-theme"</span>, next);
+  localStorage.<span class="f">setItem</span>(<span class="s">"theme"</span>, next);
+});</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ծանո՞թ է</span>
+      <p>Հենց այս կոդն է աշխատում այս դասի էջում՝ վերևի աջ անկյան կոճակի հետևում։ Բաց արա <code>lesson.js</code>-ը և համեմատիր։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Խաղահրապարակ</h2>
+    <p>Այստեղ աշխատում է իսկական <code>localStorage</code>։ Վերջում մաքրում ենք փորձնական բանալիները։ <em>Նշում․ <code>setTimeout</code>-ի արդյունքը այս պատուհանում չի երևա — այն փորձիր բրաուզերի Console-ում։</em></p>
+
+    <div class="pg">
+      <textarea id="pgCode" spellcheck="false">// JSON
+const user = { name: "Անի", age: 14, hobbies: ["շախմատ", "լող"] };
+const text = JSON.stringify(user);
+console.log(text);
+console.log(typeof text);
+
+const back = JSON.parse(text);
+console.log(back.hobbies[1]);
+
+// Ապահով ֆունկցիաներ
+function save(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); }
+  catch (e) { console.warn("Չհաջողվեց", e); }
+}
+function load(key, fallback = null) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw === null ? fallback : JSON.parse(raw);
+  } catch (e) { return fallback; }
+}
+
+// Իսկական պահպանում
+save("demo:todos", [
+  { id: 1, text: "Տնային", done: false },
+  { id: 2, text: "Հաց", done: true }
+]);
+
+const todos = load("demo:todos", []);
+console.log("Բեռնվեց՝", todos.length, "գործ");
+console.log("Կատարված՝", todos.filter(t => t.done).length);
+
+// Չկա → fallback
+console.log(load("demo:chka", "լռելյայն արժեք"));
+
+// Թակարդը
+localStorage.setItem("demo:bool", true);
+console.log(localStorage.getItem("demo:bool") === true);
+console.log(localStorage.getItem("demo:bool") === "true");
+
+// Մաքրում
+["demo:todos", "demo:bool"].forEach(k => localStorage.removeItem(k));
+console.log("Մաքրվեց");</textarea>
+      <div class="pg__actions">
+        <button class="run" id="runBtn">Կատարել</button>
+        <button class="clr" id="clrBtn">Մաքրել</button>
+      </div>
+<pre class="out" id="pgOut"><span class="m">Console</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Դաշտ և կոճակ։ Սեղմելիս անունը պահպանիր <code>localStorage</code>-ում։ Էջը թարմացնելիս ցույց տուր «Բարև, [անուն]»։</li>
+      <li>Ավելացրու «Մոռանալ» կոճակ, որը ջնջում է պահված անունը։</li>
+      <li>Հաշվիչ, որի արժեքը պահպանվում է էջը թարմացնելուց հետո։</li>
+      <li>Մուգ/բաց թեմայի փոխարկիչ՝ ընտրության պահպանմամբ։</li>
+      <li>Գրիր <code>save(key, value)</code> և <code>load(key, fallback)</code> ֆունկցիաները <code>try/catch</code>-ով։ Ստուգիր օբյեկտով, զանգվածով և չգոյություն ունեցող բանալիով։</li>
+      <li>Կենդանի ժամացույց էջում՝ <code>ժժ:րր:վվ</code> ձևաչափով, <code>padStart</code>-ով։</li>
+      <li>Հետհաշվարկ մինչև քո ընտրած ամսաթիվը՝ օր, ժամ, րոպե, վայրկյան։ Հասնելիս՝ կանգնեցրու <code>clearInterval</code>-ով։</li>
+      <li>Ծանուցում (toast), որը հայտնվում է կոճակի սեղմումից և ինքնաբերաբար անհետանում 3 վայրկյան հետո։</li>
+      <li>«Վեր» կոճակ, որը հայտնվում է 400px սքրոլից հետո և սահուն վերադարձնում վեր։</li>
+      <li>Վերցրու Դաս 12–13-ի to-do-ն։ Ավելացրու՝ (ա) պահպանում <code>localStorage</code>-ում, (բ) որոնման դաշտ debounce-ով, (գ) «Ջնջել բոլորը» կոճակ <code>confirm</code>-ով։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>localStorage.setItem(k, v)</code></td><td>Պահում է (միայն տող)</td></tr>
+      <tr><td><code>localStorage.getItem(k)</code></td><td>Կարդում է կամ <code>null</code></td></tr>
+      <tr><td><code>localStorage.removeItem(k)</code></td><td>Ջնջում է մեկը</td></tr>
+      <tr><td><code>localStorage.clear()</code></td><td>Ջնջում է ամեն ինչ</td></tr>
+      <tr><td><code>sessionStorage</code></td><td>Նույնը, բայց մինչև ներդիրի փակումը</td></tr>
+      <tr><td><code>JSON.stringify(obj)</code></td><td>Օբյեկտ → տող</td></tr>
+      <tr><td><code>JSON.parse(str)</code></td><td>Տող → օբյեկտ</td></tr>
+      <tr><td><code>setTimeout(fn, ms)</code></td><td>Կատարել մեկ անգամ, հետաձգված</td></tr>
+      <tr><td><code>clearTimeout(id)</code></td><td>Չեղարկել</td></tr>
+      <tr><td><code>setInterval(fn, ms)</code></td><td>Կրկնել անվերջ</td></tr>
+      <tr><td><code>clearInterval(id)</code></td><td>Կանգնեցնել</td></tr>
+      <tr><td><code>window.scrollY</code></td><td>Սքրոլի դիրքը</td></tr>
+      <tr><td><code>window.scrollTo({top:0, behavior:"smooth"})</code></td><td>Սահուն վեր</td></tr>
+      <tr><td><code>el.scrollIntoView({behavior:"smooth"})</code></td><td>Սահուն դեպի էլեմենտ</td></tr>
+      <tr><td><code>classList.toggle("x", cond)</code></td><td>Ավելացնում կամ հանում ըստ պայմանի</td></tr>
+      <tr><td><code>location.href</code></td><td>Ընթացիկ հասցեն</td></tr>
+    </table>
+    </div>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Գիտե՞մ, ինչու է <code>JSON.stringify</code>-ը պարտադիր օբյեկտների համար</li>
+      <li>Կարո՞ղ եմ բացատրել, ինչու <code>getItem("x") === true</code>-ն միշտ <code>false</code> է</li>
+      <li>Հասկանո՞ւմ եմ, ինչու է «2. Վերջ»-ը տպվում «3»-ից առաջ</li>
+      <li>Գիտե՞մ, ինչու պիտի <code>setInterval</code>-ի ֆունկցիան կանչել նաև ձեռքով</li>
+      <li>Կարո՞ղ եմ գրել debounce առանց նայելու</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասերին</span>
+      <p>Դաս 15–16՝ մեծ նախագիծ։ Երկու դասով կկառուցենք ամբողջական ապրանքների կատալոգ՝ ֆիլտրերով, տեսակավորմամբ, որոնմամբ և զամբյուղով, որը պահպանվում է։ Ամեն ինչ, ինչ սովորեցինք 14 դասում՝ մեկ նախագծում։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 14 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

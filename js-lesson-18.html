@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 18 — ES մոդուլներ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 18 · 2 ժամ · Բլոկ 3-ի սկիզբ</p>
+  <h1>ES մոդուլներ</h1>
+  <p class="lede">Դաս 16-ում կոդը բաժանեցինք 6 ֆայլի, բայց դրանք դեռ մեկ մեծ գլոբալ տարածք են։ Այսօր դրանք դառնում են իսկական մոդուլներ՝ իրենց սահմաններով և հստակ կապերով։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 04, 15–16</span>
+    <span>Բլոկ 3 · Ժամանակակից JS</span>
+    <span>Պահանջվում է Live Server</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ինչո՞ւ են վտանգավոր գլոբալ փոփոխականները</li>
+      <li><code>type="module"</code> և ինչ է այն փոխում</li>
+      <li><code>export</code> և <code>import</code></li>
+      <li>Անվանական և լռելյայն արտահանում</li>
+      <li>Վերանվանում՝ <code>as</code></li>
+      <li>Ինչո՞ւ է պետք Live Server</li>
+      <li>Կատալոգի վերակառուցում մոդուլներով</li>
+      <li>Ի՞նչ են bundler-ները</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Խնդիրը</h2>
+    <p>Դաս 16-ում մեր ֆայլերը միացված էին այսպես․</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հին ձև</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">script</span> <span class="f">src</span>=<span class="s">"js/data.js"</span> <span class="k">defer</span><span class="p">&gt;&lt;/</span><span class="t">script</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">script</span> <span class="f">src</span>=<span class="s">"js/storage.js"</span> <span class="k">defer</span><span class="p">&gt;&lt;/</span><span class="t">script</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">script</span> <span class="f">src</span>=<span class="s">"js/utils.js"</span> <span class="k">defer</span><span class="p">&gt;&lt;/</span><span class="t">script</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">script</span> <span class="f">src</span>=<span class="s">"js/catalog.js"</span> <span class="k">defer</span><span class="p">&gt;&lt;/</span><span class="t">script</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">script</span> <span class="f">src</span>=<span class="s">"js/cart.js"</span> <span class="k">defer</span><span class="p">&gt;&lt;/</span><span class="t">script</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">script</span> <span class="f">src</span>=<span class="s">"js/main.js"</span> <span class="k">defer</span><span class="p">&gt;&lt;/</span><span class="t">script</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <p>Աշխատում է, բայց ունի չորս լուրջ խնդիր։</p>
+
+    <h3>1. Ամեն ինչ գլոբալ է</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>անուններ, որոնք բախվում են</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// catalog.js</span>
+<span class="k">function</span> <span class="f">render</span>() { ... }
+
+<span class="c">// cart.js</span>
+<span class="k">function</span> <span class="f">render</span>() { ... }   <span class="c">// ← լուռ վերագրում է առաջինը</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="m">(ոչ մի սխալ — պարզապես կատալոգը դադարում է վերագծվել)</span></pre>
+    </div>
+
+    <p>Ամենավատ տեսակի սխալն է․ Git-ը ոչինչ չի ասում, բրաուզերը՝ նույնպես, իսկ ծրագիրը սխալ է աշխատում։</p>
+
+    <h3>2. Հերթականությունը փխրուն է</h3>
+    <p>Եթե <code>main.js</code>-ը վեր տեղափոխես — ամեն ինչ կփչանա։ Իսկ 20 ֆայլի դեպքում ճիշտ հերթականությունը պահելը դառնում է մղձավանջ։</p>
+
+    <h3>3. Կապերն անտեսանելի են</h3>
+    <p>Բացիր <code>cart.js</code>-ը։ Այն օգտագործում է <code>PRODUCTS</code>, <code>save</code>, <code>formatPrice</code>։ Բայց որտեղի՞ց են դրանք գալիս։ Պիտի փնտրես բոլոր ֆայլերում։</p>
+
+    <h3>4. Ամեն ինչ բաց է</h3>
+    <p>Չես կարող ասել՝ «այս ֆունկցիան ներքին է, դրսից չդիպչեք»։ Ամեն ինչ հասանելի է ամենուրից։</p>
+
+    <div class="note">
+      <span class="tag">Մոդուլները լուծում են բոլոր չորսը</span>
+      <p>Ամեն ֆայլ ունի <strong>իր տարածքը</strong>։ Դրսին տալիս է միայն այն, ինչ ինքն է որոշում։ Կապերը գրված են ֆայլի սկզբում։ Հերթականությունը Git-ը... ներողություն, բրաուզերն ինքն է հասկանում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>type="module"</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>նոր ձև — ՄԵԿ script</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">script</span> <span class="f">type</span>=<span class="s">"module"</span> <span class="f">src</span>=<span class="s">"js/main.js"</span><span class="p">&gt;&lt;/</span><span class="t">script</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <p>Ընդամենը մեկ տող։ Մնացած ֆայլերը <code>main.js</code>-ը ինքն է բերելու <code>import</code>-ով։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ինչ է փոխվում</th><th>Սովորական script</th><th><code>type="module"</code></th></tr>
+      <tr><td>Փոփոխականների տարածք</td><td>գլոբալ</td><td>ֆայլի ներսում</td></tr>
+      <tr><td><code>defer</code></td><td>պիտի գրես</td><td>միշտ միացած է</td></tr>
+      <tr><td>Strict ռեժիմ</td><td>ոչ</td><td>միշտ միացած է</td></tr>
+      <tr><td>Կատարման քանակ</td><td>ամեն միացումից</td><td>մեկ անգամ, նույնիսկ եթե 10 տեղից import անես</td></tr>
+      <tr><td><code>file://</code>-ով բացելը</td><td>աշխատում է</td><td><strong>չի աշխատում</strong> ⚠️</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Կարևոր՝ Live Server</span>
+      <p>Մոդուլները չեն աշխատում, երբ HTML-ը բացում ես ուղիղ ֆայլից (<code>file:///C:/...</code>)։ Բրաուզերն արգելում է անվտանգության պատճառներով։<br><br>
+      <strong>Լուծում՝</strong> VS Code → Extensions → տեղադրիր <strong>Live Server</strong> → աջ սեղմում <code>index.html</code>-ի վրա → <em>Open with Live Server</em>։ Կբացվի <code>http://127.0.0.1:5500</code> հասցեով, և ամեն ինչ կաշխատի։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ինչ սխալ կտեսնես առանց սերվերի</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Բացել ենք file:// հասցեով</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="e">Access to script at 'file:///C:/catalog/js/data.js' from origin 'null'</span>
+<span class="e">has been blocked by CORS policy</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>export և import</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/utils.js — արտահանում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Տարբերակ 1 — ուղիղ հայտարարման ժամանակ</span>
+<span class="k">export</span> <span class="k">const</span> formatPrice = n =&gt; n.<span class="f">toLocaleString</span>(<span class="s">"hy-AM"</span>) + <span class="s">" ֏"</span>;
+
+<span class="k">export</span> <span class="k">function</span> <span class="f">debounce</span>(fn, delay = <span class="n">300</span>) {
+  <span class="k">let</span> timer;
+  <span class="k">return</span> (...args) =&gt; {
+    <span class="f">clearTimeout</span>(timer);
+    timer = <span class="f">setTimeout</span>(() =&gt; <span class="f">fn</span>(...args), delay);
+  };
+}
+
+<span class="c">// Ներքին ֆունկցիա — ՉԻ արտահանվում, դրսից անհասանելի է</span>
+<span class="k">function</span> <span class="f">pad</span>(n) {
+  <span class="k">return</span> <span class="f">String</span>(n).<span class="f">padStart</span>(<span class="n">2</span>, <span class="s">"0"</span>);
+}
+
+<span class="k">export</span> <span class="k">function</span> <span class="f">formatTime</span>(date) {
+  <span class="k">return</span> <span class="s">`</span>${<span class="f">pad</span>(date.<span class="f">getHours</span>())}<span class="s">:</span>${<span class="f">pad</span>(date.<span class="f">getMinutes</span>())}<span class="s">`</span>;
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/main.js — ներմուծում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">import</span> { formatPrice, debounce } <span class="k">from</span> <span class="s">"./utils.js"</span>;
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">formatPrice</span>(<span class="n">450000</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="k">typeof</span> pad);   <span class="c">// արտահանված չէ</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">450 000 ֏</span>
+<span class="e">Uncaught ReferenceError: pad is not defined</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երեք պարտադիր մանրուք</span>
+      <p><strong>1.</strong> Ուղին սկսվում է <code>./</code>-ով կամ <code>../</code>-ով։ Պարզապես <code>"utils.js"</code> չի աշխատի։<br>
+      <strong>2.</strong> <code>.js</code> ընդլայնումը <strong>պարտադիր է</strong>։ (React-ում կտեսնես առանց դրա — այնտեղ bundler-ն է լրացնում։)<br>
+      <strong>3.</strong> Անունները ձևավոր փակագծերում պիտի <strong>ճշգրիտ համընկնեն</strong>։</p>
+    </div>
+
+    <h3>Երկրորդ ձև — մեկ տեղում ցուցակով</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>export ֆայլի վերջում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> formatPrice = n =&gt; n.<span class="f">toLocaleString</span>(<span class="s">"hy-AM"</span>) + <span class="s">" ֏"</span>;
+<span class="k">function</span> <span class="f">debounce</span>(fn, delay) { ... }
+<span class="k">function</span> <span class="f">pad</span>(n) { ... }
+
+<span class="c">// Ֆայլի վերջում — միանգամից երևում է, ինչ է տալիս մոդուլը</span>
+<span class="k">export</span> { formatPrice, debounce };</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ո՞ր ձևն ընտրել</span>
+      <p>Երկուսն էլ ճիշտ են։ Առաջինը՝ ավելի կարճ։ Երկրորդը՝ ավելի հստակ, երբ ֆայլը մեծ է։ Կարևորը՝ նախագծում մեկ ոճ պահել։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>default export</h2>
+    <p>Երբ ֆայլն ունի <strong>մեկ գլխավոր</strong> բան։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/data.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> PRODUCTS = [ ... ];
+
+<span class="k">export</span> <span class="k">default</span> PRODUCTS;</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ներմուծում՝ առանց փակագծերի</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">import</span> PRODUCTS <span class="k">from</span> <span class="s">"./data.js"</span>;
+
+<span class="c">// Անունը կարող ես ընտրել ցանկացած — սա նույնպես աշխատում է</span>
+<span class="k">import</span> items <span class="k">from</span> <span class="s">"./data.js"</span>;</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th></th><th>Անվանական (named)</th><th>Լռելյայն (default)</th></tr>
+      <tr><td>Քանակը ֆայլում</td><td>քանի ուզես</td><td>ամենաշատը մեկ</td></tr>
+      <tr><td>Արտահանում</td><td><code>export const x</code></td><td><code>export default x</code></td></tr>
+      <tr><td>Ներմուծում</td><td><code>import { x } from</code></td><td><code>import x from</code></td></tr>
+      <tr><td>Անունը</td><td>պիտի համընկնի</td><td>ցանկացած</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երկուսը միասին</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// data.js</span>
+<span class="k">export</span> <span class="k">const</span> CATEGORIES = { ... };
+<span class="k">export</span> <span class="k">default</span> PRODUCTS;
+
+<span class="c">// main.js</span>
+<span class="k">import</span> PRODUCTS, { CATEGORIES } <span class="k">from</span> <span class="s">"./data.js"</span>;</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Խորհուրդ</span>
+      <p>Շատ թիմեր նախընտրում են <strong>միայն անվանական</strong> արտահանումներ։ Պատճառը՝ default-ի դեպքում ամեն ֆայլում կարող են տարբեր անուն տալ նույն բանին, և կոդում որոնելը դժվարանում է։ Մեր նախագծում կօգտագործենք հիմնականում անվանական։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Վերանվանում և խմբավորում</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>as</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Երբ անունը բախվում է կամ շատ երկար է</span>
+<span class="k">import</span> { render <span class="k">as</span> renderCatalog } <span class="k">from</span> <span class="s">"./catalog.js"</span>;
+<span class="k">import</span> { render <span class="k">as</span> renderCart }    <span class="k">from</span> <span class="s">"./cart.js"</span>;
+
+<span class="f">renderCatalog</span>();
+<span class="f">renderCart</span>();</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>* as — ամեն ինչ մեկ օբյեկտում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">import</span> * <span class="k">as</span> utils <span class="k">from</span> <span class="s">"./utils.js"</span>;
+
+<span class="f">console</span>.<span class="f">log</span>(utils.<span class="f">formatPrice</span>(<span class="n">8000</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Object</span>.<span class="f">keys</span>(utils));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">8 000 ֏</span>
+<span class="r">["debounce","formatPrice","formatTime"]</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Չարաշահել պետք չէ</span>
+      <p><code>* as</code>-ը հարմար է, բայց թաքցնում է՝ ինչն ես իրականում օգտագործում։ Բացի այդ, bundler-ը չի կարողանա հեռացնել չօգտագործվող կոդը։ Օգտագործիր հստակ անուններ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Կատալոգի վերակառուցում</h2>
+    <p>Հիմա վերցնում ենք Դաս 16-ի նախագիծը և դարձնում մոդուլային։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.html</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">head</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"stylesheet"</span> <span class="f">href</span>=<span class="s">"css/style.css"</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">script</span> <span class="f">type</span>=<span class="s">"module"</span> <span class="f">src</span>=<span class="s">"js/main.js"</span><span class="p">&gt;&lt;/</span><span class="t">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">head</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/data.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">export</span> <span class="k">const</span> PRODUCTS = [
+  { id: <span class="n">1</span>, name: <span class="s">"Նոութբուք Pro 14"</span>, price: <span class="n">450000</span>, category: <span class="s">"laptop"</span>, rating: <span class="n">4.8</span>, inStock: <span class="k">true</span> },
+  ...
+];
+
+<span class="k">export</span> <span class="k">const</span> CATEGORIES = {
+  all: <span class="s">"Բոլորը"</span>, laptop: <span class="s">"Նոութբուքեր"</span>, monitor: <span class="s">"Մոնիտորներ"</span>, accessory: <span class="s">"Աքսեսուարներ"</span>
+};</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/storage.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">export</span> <span class="k">function</span> <span class="f">save</span>(key, value) {
+  <span class="k">try</span> {
+    localStorage.<span class="f">setItem</span>(key, <span class="f">JSON</span>.<span class="f">stringify</span>(value));
+  } <span class="k">catch</span> (e) {
+    <span class="f">console</span>.<span class="f">warn</span>(<span class="s">"Չհաջողվեց պահել"</span>, e);
+  }
+}
+
+<span class="k">export</span> <span class="k">function</span> <span class="f">load</span>(key, fallback = <span class="k">null</span>) {
+  <span class="k">try</span> {
+    <span class="k">const</span> raw = localStorage.<span class="f">getItem</span>(key);
+    <span class="k">return</span> raw === <span class="k">null</span> ? fallback : <span class="f">JSON</span>.<span class="f">parse</span>(raw);
+  } <span class="k">catch</span> (e) {
+    <span class="k">return</span> fallback;
+  }
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/catalog.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">import</span> { PRODUCTS } <span class="k">from</span> <span class="s">"./data.js"</span>;
+<span class="k">import</span> { formatPrice } <span class="k">from</span> <span class="s">"./utils.js"</span>;
+
+<span class="c">// Վիճակը արտահանում ենք, որ main.js-ը կարողանա փոխել</span>
+<span class="k">export</span> <span class="k">const</span> state = {
+  category: <span class="s">"all"</span>, search: <span class="s">""</span>, sort: <span class="s">"default"</span>, onlyStock: <span class="k">false</span>
+};
+
+<span class="k">const</span> container = document.<span class="f">querySelector</span>(<span class="s">"#products"</span>);
+<span class="k">const</span> statsEl   = document.<span class="f">querySelector</span>(<span class="s">".stats"</span>);
+
+<span class="c">// Ներքին — չենք արտահանում</span>
+<span class="k">function</span> <span class="f">getVisibleProducts</span>() {
+  <span class="k">let</span> result = [...PRODUCTS];
+  ...
+  <span class="k">return</span> result;
+}
+
+<span class="k">function</span> <span class="f">createCard</span>(product) { ... }
+
+<span class="c">// Դրսին տալիս ենք միայն մեկ ֆունկցիա</span>
+<span class="k">export</span> <span class="k">function</span> <span class="f">renderCatalog</span>() {
+  <span class="k">const</span> visible = <span class="f">getVisibleProducts</span>();
+  ...
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/cart.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">import</span> { PRODUCTS } <span class="k">from</span> <span class="s">"./data.js"</span>;
+<span class="k">import</span> { save, load } <span class="k">from</span> <span class="s">"./storage.js"</span>;
+<span class="k">import</span> { formatPrice } <span class="k">from</span> <span class="s">"./utils.js"</span>;
+
+<span class="k">const</span> CART_KEY = <span class="s">"catalog:cart"</span>;
+<span class="k">let</span> cart = <span class="f">load</span>(CART_KEY, []);
+
+<span class="c">// Ներքին օգնականներ</span>
+<span class="k">function</span> <span class="f">getCartItems</span>() { ... }
+<span class="k">function</span> <span class="f">getCartTotal</span>() { ... }
+
+<span class="c">// Հրապարակային API</span>
+<span class="k">export</span> <span class="k">function</span> <span class="f">addToCart</span>(id) { ... }
+<span class="k">export</span> <span class="k">function</span> <span class="f">renderCart</span>() { ... }
+<span class="k">export</span> <span class="k">function</span> <span class="f">initCart</span>() { ... }   <span class="c">// մշակիչների կախում</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/main.js — միայն կապակցում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">import</span> { state, renderCatalog } <span class="k">from</span> <span class="s">"./catalog.js"</span>;
+<span class="k">import</span> { addToCart, renderCart, initCart } <span class="k">from</span> <span class="s">"./cart.js"</span>;
+<span class="k">import</span> { debounce } <span class="k">from</span> <span class="s">"./utils.js"</span>;
+
+<span class="k">const</span> filtersBox  = document.<span class="f">querySelector</span>(<span class="s">".filters"</span>);
+<span class="k">const</span> searchInput = document.<span class="f">querySelector</span>(<span class="s">".search"</span>);
+<span class="k">const</span> sortSelect  = document.<span class="f">querySelector</span>(<span class="s">".sort"</span>);
+<span class="k">const</span> container   = document.<span class="f">querySelector</span>(<span class="s">"#products"</span>);
+
+filtersBox.<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+  <span class="k">const</span> btn = e.target.<span class="f">closest</span>(<span class="s">".filter"</span>);
+  <span class="k">if</span> (!btn) <span class="k">return</span>;
+
+  state.category = btn.dataset.category;
+  filtersBox.<span class="f">querySelectorAll</span>(<span class="s">".filter"</span>)
+    .<span class="f">forEach</span>(f =&gt; f.classList.<span class="f">toggle</span>(<span class="s">"is-active"</span>, f === btn));
+
+  <span class="f">renderCatalog</span>();
+});
+
+searchInput.<span class="f">addEventListener</span>(<span class="s">"input"</span>, <span class="f">debounce</span>(() =&gt; {
+  state.search = searchInput.value.<span class="f">trim</span>();
+  <span class="f">renderCatalog</span>();
+}, <span class="n">300</span>));
+
+sortSelect.<span class="f">addEventListener</span>(<span class="s">"change"</span>, () =&gt; {
+  state.sort = sortSelect.value;
+  <span class="f">renderCatalog</span>();
+});
+
+container.<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+  <span class="k">const</span> btn = e.target.<span class="f">closest</span>(<span class="s">'[data-action="add"]'</span>);
+  <span class="k">if</span> (!btn) <span class="k">return</span>;
+  <span class="f">addToCart</span>(<span class="f">Number</span>(btn.dataset.id));
+});
+
+<span class="c">// Գործարկում</span>
+<span class="f">initCart</span>();
+<span class="f">renderCatalog</span>();
+<span class="f">renderCart</span>();</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ուշադրություն կապերին</span>
+      <p>Հիմա <code>cart.js</code>-ը բացելիս առաջին երեք տողից <strong>անմիջապես երևում է</strong>՝ ինչից է կախված։ Իսկ <code>getCartTotal</code>-ը արտահանված չէ — ուրեմն ոչ ոք դրսից չի կարող դիպչել դրան, և կարող ես ազատ փոխել։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>կախվածությունների գրաֆ</div><button class="copy">Պատճենել</button></div>
+<pre><code>          main.js
+         /       \
+   catalog.js   cart.js
+        \    \   /   |
+         \    \ /    |
+      data.js  utils.js  storage.js</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Շրջանաձև կախվածություն</span>
+      <p>Եթե <code>catalog.js</code>-ը import անի <code>cart.js</code>-ից, իսկ <code>cart.js</code>-ը՝ <code>catalog.js</code>-ից — կստացվի օղակ, և կհայտնվեն տարօրինակ <code>undefined</code>-ներ։<br><br>
+      <strong>Կանոն՝</strong> սլաքները միշտ պիտի գնան մեկ ուղղությամբ՝ վերևից ներքև։ Եթե երկու մոդուլ իրար պետք են — ուրեմն ընդհանուր մասը պիտի հանել երրորդ ֆայլ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Դինամիկ import</h2>
+    <p>Սովորական <code>import</code>-ը գրվում է ֆայլի սկզբում և կատարվում միշտ։ Բայց երբեմն մոդուլը պետք է <em>միայն որոշ դեպքերում</em>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>import() — ֆունկցիա է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> chartBtn = document.<span class="f">querySelector</span>(<span class="s">".show-chart"</span>);
+
+chartBtn.<span class="f">addEventListener</span>(<span class="s">"click"</span>, <span class="k">async</span> () =&gt; {
+  <span class="k">const</span> { drawChart } = <span class="k">await</span> <span class="k">import</span>(<span class="s">"./chart.js"</span>);
+  <span class="f">drawChart</span>();
+});</code></pre>
+    </div>
+
+    <p>Ծանր <code>chart.js</code>-ը ներբեռնվում է <strong>միայն</strong> այն ժամանակ, երբ օգտագործողն իսկապես սեղմում է կոճակին։ Էջն ավելի արագ է բացվում։</p>
+
+    <div class="note">
+      <span class="tag">async / await</span>
+      <p>Այս բառերը դեռ չենք սովորել — դրանք Դաս 20-ի թեման են։ Հիմա բավական է իմանալ, որ <code>import()</code>-ը վերադարձնում է խոստում (Promise), որովհետև ֆայլի ներբեռնումը ժամանակ է պահանջում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Bundler-ների մասին</h2>
+    <p>Մեր նախագիծն ունի 6 մոդուլ։ Բրաուզերը դրանք ներբեռնում է առանձին՝ 6 հարցում։ Իսկ իրական նախագծերում մոդուլները հարյուրավոր են։</p>
+
+    <p><strong>Bundler</strong> — ծրագիր, որը բոլոր մոդուլները հավաքում է մեկ (կամ մի քանի) օպտիմիզացված ֆայլում։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ինչ է անում</th><th>Ինչու է պետք</th></tr>
+      <tr><td>Միավորում է ֆայլերը</td><td>Քիչ հարցում = արագ բեռնում</td></tr>
+      <tr><td>Հեռացնում է չօգտագործվող կոդը</td><td>Ավելի փոքր ծավալ</td></tr>
+      <tr><td>Սեղմում է (minify)</td><td>Ավելի փոքր ծավալ</td></tr>
+      <tr><td>Աջակցում է հին բրաուզերներին</td><td>Ավելի շատ օգտագործող</td></tr>
+      <tr><td>Ավտոմատ թարմացնում է էջը</td><td>Հարմար մշակում</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Vite — ամենատարածվածը այսօր</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">npm</span> create vite@latest my-project
+<span class="f">cd</span> my-project
+<span class="f">npm</span> install
+<span class="f">npm</span> run dev</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Հիմա պետք չէ</span>
+      <p>Մեր դասընթացում bundler չենք օգտագործի — Live Server-ը բավական է, և կոդն ավելի թափանցիկ է։ Բայց երբ սկսես React կամ Vue, առաջին հրամանդ հենց սա կլինի։ Կարևորն այն է, որ <strong>մոդուլների գաղափարը նույնն է</strong>. bundler-ը միայն օպտիմիզացնում է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Խաղահրապարակ · ինչ են լուծում մոդուլները</h2>
+    <p>Խաղահրապարակում <code>import</code> գրել չենք կարող (դա պահանջում է առանձին ֆայլեր), բայց կարող ենք տեսնել <strong>խնդիրը</strong>, որը մոդուլները լուծում են։</p>
+
+    <div class="pg">
+      <textarea id="pgCode" spellcheck="false">// ===== ԽՆԴԻՐԸ՝ գլոբալ տարածք =====
+function render() { return "կատալոգի render"; }
+console.log(render());
+
+// Ուրիշ «ֆայլ» գրում է նույն անունը
+function render() { return "զամբյուղի render"; }
+console.log(render());
+
+console.log("--- առաջինը կորավ, առանց սխալի ---");
+
+// ===== ԼՈՒԾՈՒՄ 1՝ անվանատարածք օբյեկտով =====
+const Catalog = {
+  render() { return "կատալոգի render"; },
+  getVisible() { return "ֆիլտրված ցուցակ"; }
+};
+
+const Cart = {
+  render() { return "զամբյուղի render"; },
+  getTotal() { return 578000; }
+};
+
+console.log(Catalog.render());
+console.log(Cart.render());
+console.log(Cart.getTotal());
+
+// ===== ԼՈՒԾՈՒՄ 2՝ փակ տարածք (այսպես էին անում մինչև մոդուլները) =====
+const Utils = (function () {
+  // Ներքին — դրսից անհասանելի
+  function pad(n) { return String(n).padStart(2, "0"); }
+
+  // Հրապարակային
+  function formatPrice(n) { return n.toLocaleString("hy-AM") + " ֏"; }
+  function formatTime(h, m) { return `${pad(h)}:${pad(m)}`; }
+
+  return { formatPrice, formatTime };
+})();
+
+console.log(Utils.formatPrice(450000));
+console.log(Utils.formatTime(9, 5));
+console.log("pad-ը հասանելի՞ է դրսից:", Utils.pad);
+
+// Մոդուլները նույն բանն են անում, բայց լեզվի մակարդակով
+</textarea>
+      <div class="pg__actions">
+        <button class="run" id="runBtn">Կատարել</button>
+        <button class="clr" id="clrBtn">Մաքրել</button>
+      </div>
+<pre class="out" id="pgOut"><span class="m">Console</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ի՞նչ էր վերջին օրինակը</span>
+      <p>Դա հին ձևն է՝ «module pattern»։ Ֆունկցիան կանչվում է անմիջապես և վերադարձնում է միայն այն, ինչ ուզում ես տալ։ Ինչպե՞ս է <code>pad</code>-ը կենդանի մնում ֆունկցիայի ավարտից հետո — կիմանաս Դաս 23-ում՝ փակույթների ժամանակ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Տեղադրիր Live Server-ը VS Code-ում և բացիր քո կատալոգը դրանով։ Համոզվիր, որ հասցեն սկսվում է <code>http://</code>-ով։</li>
+      <li>Ստեղծիր երկու ֆայլ՝ <code>math.js</code> (արտահանում է <code>add</code>, <code>multiply</code>) և <code>main.js</code>։ Ստուգիր, որ import-ը աշխատում է։</li>
+      <li>Ավելացրու <code>math.js</code>-ում ներքին ֆունկցիա, որը <strong>չես</strong> արտահանում։ Փորձիր դիմել դրան <code>main.js</code>-ից և գրիր՝ ինչ սխալ ստացար։</li>
+      <li>Դիտավորյալ գրիր <code>import { add } from "math.js"</code> (առանց <code>./</code>)։ Գրիր՝ ինչ սխալ ստացար։ Հետո ուղղիր։</li>
+      <li>Փորձիր <code>export default</code>։ Ներմուծիր այն երկու տարբեր անուններով երկու ֆայլում։</li>
+      <li>Վերակառուցիր քո կատալոգը մոդուլներով՝ <code>data.js</code>, <code>storage.js</code>, <code>utils.js</code>, <code>catalog.js</code>, <code>cart.js</code>, <code>main.js</code>։</li>
+      <li>Համոզվիր, որ ամեն մոդուլ արտահանում է <strong>միայն այն</strong>, ինչ իսկապես պետք է դրսում։ Ներքին օգնականները թողիր առանց <code>export</code>-ի։</li>
+      <li>Նկարիր (թղթի վրա կամ ֆայլում) քո նախագծի կախվածությունների գրաֆը։ Համոզվիր, որ օղակ չկա։</li>
+      <li>Ավելացրու նոր մոդուլ՝ <code>wishlist.js</code>, հավանածների ցուցակի համար՝ իր <code>localStorage</code> բանալիով։</li>
+      <li>Commit արա և push արա GitHub։ Ստուգիր, որ GitHub Pages-ի վրա էլ ամեն ինչ աշխատում է (Pages-ը սերվեր է, ուստի մոդուլները պիտի աշխատեն)։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>&lt;script type="module" src="..."&gt;</code></td><td>Միացնում է մուտքի ֆայլը</td></tr>
+      <tr><td><code>export const x = 1;</code></td><td>Անվանական արտահանում</td></tr>
+      <tr><td><code>export function f() {}</code></td><td>Նույնը՝ ֆունկցիայի համար</td></tr>
+      <tr><td><code>export { a, b };</code></td><td>Ցուցակով, ֆայլի վերջում</td></tr>
+      <tr><td><code>export default x;</code></td><td>Լռելյայն, մեկը ֆայլում</td></tr>
+      <tr><td><code>import { a, b } from "./f.js"</code></td><td>Անվանական ներմուծում</td></tr>
+      <tr><td><code>import x from "./f.js"</code></td><td>Լռելյայն ներմուծում</td></tr>
+      <tr><td><code>import x, { a } from "./f.js"</code></td><td>Երկուսը միասին</td></tr>
+      <tr><td><code>import { a as b } from ...</code></td><td>Վերանվանում</td></tr>
+      <tr><td><code>import * as ns from ...</code></td><td>Ամեն ինչ մեկ օբյեկտում</td></tr>
+      <tr><td><code>await import("./f.js")</code></td><td>Դինամիկ, ըստ պահանջի</td></tr>
+    </table>
+    </div>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Պատճառը</th></tr>
+      <tr><td><code>blocked by CORS policy</code></td><td>Բացել ես <code>file://</code>-ով → պետք է Live Server</td></tr>
+      <tr><td><code>Failed to resolve module specifier</code></td><td>Ուղին առանց <code>./</code>-ի</td></tr>
+      <tr><td><code>404 Not Found</code></td><td>Բացակայում է <code>.js</code> ընդլայնումը</td></tr>
+      <tr><td><code>x is not exported</code></td><td>Անունը սխալ է կամ <code>export</code>-ը մոռացված</td></tr>
+      <tr><td><code>Cannot use import outside a module</code></td><td>Մոռացել ես <code>type="module"</code></td></tr>
+      <tr><td>Անհասկանալի <code>undefined</code>-ներ</td><td>Շրջանաձև կախվածություն</td></tr>
+    </table>
+    </div>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչու են գլոբալ փոփոխականները վտանգավոր</li>
+      <li>Գիտե՞մ տարբերությունը անվանական և լռելյայն արտահանման միջև</li>
+      <li>Հասկանո՞ւմ եմ, ինչու է պետք Live Server</li>
+      <li>Կարո՞ղ եմ որոշել՝ ինչ արտահանել և ինչ թողնել ներքին</li>
+      <li>Գիտե՞մ, ինչ է շրջանաձև կախվածությունը</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Ասինխրոն JavaScript։ Դաս 14-ում տեսանք, որ <code>setTimeout</code>-ը «սպասում է կողքից»։ Հաջորդ դասին կհասկանանք՝ ինչպես է դա աշխատում, և կսովորենք Promise-ները՝ նախապատրաստվելով սերվերի հետ խոսելուն։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 18 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

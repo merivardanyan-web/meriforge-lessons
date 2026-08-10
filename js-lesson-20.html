@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 20 — fetch և async/await</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 20 · 2 ժամ</p>
+  <h1>fetch և async/await</h1>
+  <p class="lede">Մինչ այժմ տվյալները գրում էինք ձեռքով <code>data.js</code>-ում։ Այսօր առաջին անգամ խոսում ենք իսկական սերվերի հետ և բերում իրական տվյալներ ինտերնետից։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 19</span>
+    <span>Բլոկ 3 · Ժամանակակից JS</span>
+    <span>Պահանջվում է ինտերնետ</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ի՞նչ է API-ն և ինչպես է աշխատում HTTP-ն</li>
+      <li>Կարգավիճակի կոդեր՝ 200, 404, 500</li>
+      <li><code>fetch</code> — առաջին հարցումը</li>
+      <li><code>response.ok</code> — կարևոր թակարդ</li>
+      <li><code>async</code> և <code>await</code></li>
+      <li><code>try / catch / finally</code></li>
+      <li>Բեռնման և սխալի վիճակներ ինտերֆեյսում</li>
+      <li>POST հարցում</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ի՞նչ է API-ն</h2>
+    <p><strong>API</strong> — հասցե, որին կարող ես հարցում ուղարկել և ստանալ տվյալներ։ Ինչպես ռեստորանի մատուցող․ դու չես մտնում խոհանոց, այլ պատվիրում ես, և քեզ բերում են։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հարցում և պատասխան</div><button class="copy">Պատճենել</button></div>
+<pre><code>  Բրաուզեր                        Սերվեր
+     │                               │
+     │  GET /users/1                 │
+     │ ─────────────────────────────►│
+     │                               │  (փնտրում է տվյալների բազայում)
+     │  200 OK                       │
+     │  {"id":1,"name":"Անի"}        │
+     │ ◄─────────────────────────────│
+     │                               │</code></pre>
+    </div>
+
+    <h3>HTTP մեթոդներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Մեթոդ</th><th>Ինչի համար</th><th>Օրինակ</th></tr>
+      <tr><td><code>GET</code></td><td>Ստանալ տվյալներ</td><td>Ապրանքների ցուցակ</td></tr>
+      <tr><td><code>POST</code></td><td>Ստեղծել նոր</td><td>Գրանցվել, պատվեր տալ</td></tr>
+      <tr><td><code>PUT</code> / <code>PATCH</code></td><td>Փոփոխել</td><td>Խմբագրել պրոֆիլը</td></tr>
+      <tr><td><code>DELETE</code></td><td>Ջնջել</td><td>Հեռացնել մեկնաբանությունը</td></tr>
+    </table>
+    </div>
+
+    <h3>Կարգավիճակի կոդեր</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Կոդ</th><th>Նշանակություն</th></tr>
+      <tr><td><code>200</code></td><td>Ամեն ինչ կարգին է</td></tr>
+      <tr><td><code>201</code></td><td>Ստեղծվեց (POST-ից հետո)</td></tr>
+      <tr><td><code>400</code></td><td>Սխալ հարցում — քո կողմից</td></tr>
+      <tr><td><code>401</code></td><td>Չես մուտք գործել</td></tr>
+      <tr><td><code>403</code></td><td>Իրավունք չունես</td></tr>
+      <tr><td><code>404</code></td><td>Չգտնվեց</td></tr>
+      <tr><td><code>500</code></td><td>Սերվերի սխալ — նրանց կողմից</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Հեշտ հիշելու ձև</span>
+      <p><strong>2xx</strong> — հաջողվեց։ <strong>4xx</strong> — <em>դու</em> սխալ արեցիր։ <strong>5xx</strong> — <em>սերվերն</em> է սխալ արել։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Առաջին fetch</h2>
+    <p>Կաշխատենք <code>jsonplaceholder.typicode.com</code>-ի հետ՝ անվճար փորձնական API, որը ստեղծված է հենց սովորելու համար։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>fetch՝ .then ձևով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">fetch</span>(<span class="s">"https://jsonplaceholder.typicode.com/users"</span>)
+  .<span class="f">then</span>(response =&gt; response.<span class="f">json</span>())
+  .<span class="f">then</span>(users =&gt; {
+    <span class="f">console</span>.<span class="f">log</span>(users.length);
+    <span class="f">console</span>.<span class="f">log</span>(users[<span class="n">0</span>].name);
+    <span class="f">console</span>.<span class="f">log</span>(users.<span class="f">map</span>(u =&gt; u.email));
+  })
+  .<span class="f">catch</span>(error =&gt; <span class="f">console</span>.<span class="f">error</span>(<span class="s">"Ցանցի սխալ՝"</span>, error));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">10</span>
+<span class="r">Leanne Graham</span>
+<span class="r">["Sincere@april.biz", "Shanna@melissa.tv", ...]</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ երկու .then</span>
+      <p><strong>Առաջինը</strong>՝ պատասխանը հասավ, բայց դա դեռ «ծրար» է՝ կարգավիճակով և վերնագրերով։<br>
+      <strong>Երկրորդը</strong>՝ <code>response.json()</code>-ը կարդում է ծրարի պարունակությունը և վերածում JS օբյեկտի։ Այն նույնպես ժամանակ է պահանջում, ուստի նույնպես խոստում է վերադարձնում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ի՞նչ կա response-ի մեջ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">fetch</span>(<span class="s">"https://jsonplaceholder.typicode.com/users/1"</span>)
+  .<span class="f">then</span>(response =&gt; {
+    <span class="f">console</span>.<span class="f">log</span>(response.status);
+    <span class="f">console</span>.<span class="f">log</span>(response.ok);
+    <span class="f">console</span>.<span class="f">log</span>(response.url);
+    <span class="k">return</span> response.<span class="f">json</span>();
+  })
+  .<span class="f">then</span>(user =&gt; <span class="f">console</span>.<span class="f">log</span>(user.name));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">200</span>
+<span class="g">true</span>
+<span class="r">https://jsonplaceholder.typicode.com/users/1</span>
+<span class="r">Leanne Graham</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Կարևոր թակարդ · response.ok</h2>
+    <p>Սա այն բանն է, որի վրա սայթաքում են գրեթե բոլորը։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>404-ը ՉԻ ընկնում catch-ի մեջ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">fetch</span>(<span class="s">"https://jsonplaceholder.typicode.com/users/9999"</span>)
+  .<span class="f">then</span>(response =&gt; response.<span class="f">json</span>())
+  .<span class="f">then</span>(user =&gt; <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Ստացվեց՝"</span>, user.name))
+  .<span class="f">catch</span>(error =&gt; <span class="f">console</span>.<span class="f">error</span>(<span class="s">"Սխալ՝"</span>, error));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Ստացվեց՝ undefined</span>   <span class="m">← catch-ը չաշխատեց</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ</span>
+      <p><code>fetch</code>-ի համար <strong>404-ը հաջողություն է</strong>։ Նրա տեսանկյունից՝ հարցումը գնաց, պատասխանը եկավ, ամեն ինչ լավ է։ Թե ինչ գրված է պատասխանում — նրա գործը չէ։<br><br>
+      <code>catch</code>-ը աշխատում է <strong>միայն</strong>, երբ պատասխան ընդհանրապես չկա՝ ինտերնետ չկա, դոմենը գոյություն չունի, CORS-ը արգելեց։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>✅ ճիշտ ձև</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">fetch</span>(<span class="s">"https://jsonplaceholder.typicode.com/users/9999"</span>)
+  .<span class="f">then</span>(response =&gt; {
+    <span class="k">if</span> (!response.ok) {
+      <span class="k">throw</span> <span class="k">new</span> <span class="f">Error</span>(<span class="s">`Սերվերը վերադարձրեց </span>${response.status}<span class="s">`</span>);
+    }
+    <span class="k">return</span> response.<span class="f">json</span>();
+  })
+  .<span class="f">then</span>(user =&gt; <span class="f">console</span>.<span class="f">log</span>(user.name))
+  .<span class="f">catch</span>(error =&gt; <span class="f">console</span>.<span class="f">error</span>(error.message));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="e">Սերվերը վերադարձրեց 404</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">throw</span>
+      <p>Նոր բառ։ <code>throw</code>-ը «նետում է» սխալ, և ամբողջ շղթան անմիջապես ցատկում է <code>catch</code>։ Մանրամասն՝ Դաս 23-ում։ <strong>Կանոն՝</strong> ամեն <code>fetch</code>-ից հետո ստուգիր <code>response.ok</code>-ը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>async / await</h2>
+    <p>Խոստումների շղթան արդեն շատ ավելի լավ է callback դժոխքից։ Բայց կա ավելի լավը՝ գրել ասինխրոն կոդ այնպես, <strong>ասես այն սինխրոն լիներ</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>նույն կոդը՝ երկու ձևով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// .then ձևով</span>
+<span class="k">function</span> <span class="f">getUsers</span>() {
+  <span class="k">return</span> <span class="f">fetch</span>(<span class="s">"https://jsonplaceholder.typicode.com/users"</span>)
+    .<span class="f">then</span>(response =&gt; response.<span class="f">json</span>())
+    .<span class="f">then</span>(users =&gt; users.<span class="f">map</span>(u =&gt; u.name));
+}
+
+<span class="c">// async/await ձևով — նույն բանը</span>
+<span class="k">async</span> <span class="k">function</span> <span class="f">getUsers</span>() {
+  <span class="k">const</span> response = <span class="k">await</span> <span class="f">fetch</span>(<span class="s">"https://jsonplaceholder.typicode.com/users"</span>);
+  <span class="k">const</span> users = <span class="k">await</span> response.<span class="f">json</span>();
+  <span class="k">return</span> users.<span class="f">map</span>(u =&gt; u.name);
+}</code></pre>
+    </div>
+
+    <p>Երկրորդ տարբերակը կարդացվում է վերևից ներքև՝ ինչպես սովորական կոդ։ Ոչ մի ներդրում, ոչ մի callback։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Բառ</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>async</code></td><td>Նշում է ֆունկցիան որպես ասինխրոն։ Այն <strong>միշտ</strong> վերադարձնում է Promise</td></tr>
+      <tr><td><code>await</code></td><td>«Սպասիր այս խոստումին և տուր արդյունքը»։ Աշխատում է միայն <code>async</code> ֆունկցիայի ներսում</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Կարևոր՝ await-ը էջը չի սառեցնում</span>
+      <p><code>await</code>-ը կանգնեցնում է <strong>միայն այս ֆունկցիան</strong>։ Մնացած ամեն ինչ շարունակում է աշխատել՝ կոճակները, անիմացիաները, մյուս ֆունկցիաները։ Event loop-ը (Դաս 19) շարունակում է իր գործը։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ապացույց</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">async</span> <span class="k">function</span> <span class="f">load</span>() {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"2. Հարցում ուղարկվեց"</span>);
+  <span class="k">const</span> r = <span class="k">await</span> <span class="f">fetch</span>(<span class="s">"https://jsonplaceholder.typicode.com/users"</span>);
+  <span class="k">const</span> users = <span class="k">await</span> r.<span class="f">json</span>();
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"4. Ստացվեց"</span>, users.length);
+}
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">"1. Սկիզբ"</span>);
+<span class="f">load</span>();
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">"3. Ծրագիրը շարունակում է"</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">1. Սկիզբ</span>
+<span class="r">2. Հարցում ուղարկվեց</span>
+<span class="r">3. Ծրագիրը շարունակում է</span>
+<span class="m">(մոտ 300 մլվրկ անց)</span>
+<span class="r">4. Ստացվեց 10</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Arrow ֆունկցիաների հետ</span>
+      <p><code>const load = async () =&gt; { ... };</code> — <code>async</code>-ը դրվում է սլաքից առաջ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>try / catch / finally</h2>
+    <p><code>async/await</code>-ի դեպքում <code>.catch()</code>-ի փոխարեն օգտագործում ենք <code>try/catch</code> — նույն ձևը, ինչ սովորական սինխրոն կոդում։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ամբողջական օրինակ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">async</span> <span class="k">function</span> <span class="f">getUser</span>(id) {
+  <span class="k">try</span> {
+    <span class="k">const</span> response = <span class="k">await</span> <span class="f">fetch</span>(<span class="s">`https://jsonplaceholder.typicode.com/users/</span>${id}<span class="s">`</span>);
+
+    <span class="k">if</span> (!response.ok) {
+      <span class="k">throw</span> <span class="k">new</span> <span class="f">Error</span>(<span class="s">`Կարգավիճակ </span>${response.status}<span class="s">`</span>);
+    }
+
+    <span class="k">const</span> user = <span class="k">await</span> response.<span class="f">json</span>();
+    <span class="k">return</span> user;
+
+  } <span class="k">catch</span> (error) {
+    <span class="f">console</span>.<span class="f">error</span>(<span class="s">"Չհաջողվեց բեռնել՝"</span>, error.message);
+    <span class="k">return</span> <span class="k">null</span>;
+
+  } <span class="k">finally</span> {
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Հարցումն ավարտվեց"</span>);
+  }
+}
+
+<span class="k">const</span> user = <span class="k">await</span> <span class="f">getUser</span>(<span class="n">1</span>);
+<span class="f">console</span>.<span class="f">log</span>(user?.name ?? <span class="s">"Օգտագործող չկա"</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Հարցումն ավարտվեց</span>
+<span class="r">Leanne Graham</span></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Բլոկ</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>try</code></td><td>Կոդը, որը կարող է սխալ գցել</td></tr>
+      <tr><td><code>catch (error)</code></td><td>Աշխատում է, եթե սխալ եղավ</td></tr>
+      <tr><td><code>finally</code></td><td>Աշխատում է միշտ — և՛ սխալի, և՛ հաջողության դեպքում</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչ սխալներ է բռնում catch-ը</span>
+      <p>Ցանցի խնդիրները, <code>throw</code>-ով նետվածները, JSON-ի փչացած տվյալները, և ցանկացած այլ սխալ <code>try</code>-ի ներսում։ Մեկ բլոկ՝ ամեն ինչի համար։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Երեք վիճակ ինտերֆեյսում</h2>
+    <p>Ամեն ասինխրոն գործողություն ունի երեք վիճակ, և բոլորն էլ պիտի ցուցադրվեն օգտագործողին։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>վիճակների սխեմա</div><button class="copy">Պատճենել</button></div>
+<pre><code>  Սեղմեց կոճակը
+       │
+       ▼
+  ⏳ Բեռնվում է...        ← ցուցիչ, կոճակը disabled
+       │
+       ├──── ✅ Հաջողվեց ──► ցուցադրում ենք տվյալները
+       │
+       └──── ❌ Ձախողվեց ──► հաղորդագրություն + «Կրկին փորձել»</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"load-btn"</span><span class="p">&gt;</span>Բեռնել օգտագործողներին<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"status"</span><span class="p">&gt;&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span> <span class="f">id</span>=<span class="s">"users"</span><span class="p">&gt;&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/main.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> API = <span class="s">"https://jsonplaceholder.typicode.com"</span>;
+
+<span class="k">const</span> loadBtn   = document.<span class="f">querySelector</span>(<span class="s">".load-btn"</span>);
+<span class="k">const</span> statusEl  = document.<span class="f">querySelector</span>(<span class="s">".status"</span>);
+<span class="k">const</span> container = document.<span class="f">querySelector</span>(<span class="s">"#users"</span>);
+
+<span class="c">// --- Վիճակների ցուցադրում ---</span>
+<span class="k">function</span> <span class="f">showLoading</span>() {
+  loadBtn.disabled = <span class="k">true</span>;
+  statusEl.textContent = <span class="s">"Բեռնվում է..."</span>;
+  container.innerHTML = <span class="s">""</span>;
+}
+
+<span class="k">function</span> <span class="f">showError</span>(message) {
+  statusEl.textContent = <span class="s">""</span>;
+  container.innerHTML = <span class="s">`
+    &lt;div class="col"&gt;
+      &lt;div class="wrapper error"&gt;
+        &lt;p&gt;</span>${message}<span class="s">&lt;/p&gt;
+        &lt;button class="load-btn"&gt;Կրկին փորձել&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  `</span>;
+}
+
+<span class="k">function</span> <span class="f">renderUsers</span>(users) {
+  statusEl.textContent = <span class="s">`Բեռնվեց </span>${users.length}<span class="s"> օգտագործող`</span>;
+
+  container.innerHTML = users.<span class="f">map</span>(u =&gt; <span class="s">`
+    &lt;div class="col"&gt;
+      &lt;div class="wrapper"&gt;
+        &lt;h3&gt;</span>${u.name}<span class="s">&lt;/h3&gt;
+        &lt;p&gt;</span>${u.email}<span class="s">&lt;/p&gt;
+        &lt;p&gt;</span>${u.company.name}<span class="s">&lt;/p&gt;
+        &lt;p&gt;</span>${u.address.city}<span class="s">&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  `</span>).<span class="f">join</span>(<span class="s">""</span>);
+}
+
+<span class="c">// --- Բեռնում ---</span>
+<span class="k">async</span> <span class="k">function</span> <span class="f">loadUsers</span>() {
+  <span class="f">showLoading</span>();
+
+  <span class="k">try</span> {
+    <span class="k">const</span> response = <span class="k">await</span> <span class="f">fetch</span>(<span class="s">`</span>${API}<span class="s">/users`</span>);
+
+    <span class="k">if</span> (!response.ok) {
+      <span class="k">throw</span> <span class="k">new</span> <span class="f">Error</span>(<span class="s">`Սերվերի սխալ (</span>${response.status}<span class="s">)`</span>);
+    }
+
+    <span class="k">const</span> users = <span class="k">await</span> response.<span class="f">json</span>();
+
+    <span class="k">if</span> (users.length === <span class="n">0</span>) {
+      <span class="f">showError</span>(<span class="s">"Տվյալներ չկան"</span>);
+      <span class="k">return</span>;
+    }
+
+    <span class="f">renderUsers</span>(users);
+
+  } <span class="k">catch</span> (error) {
+    <span class="f">showError</span>(<span class="s">"Չհաջողվեց բեռնել։ Ստուգեք ինտերնետը։"</span>);
+    <span class="f">console</span>.<span class="f">error</span>(error);
+
+  } <span class="k">finally</span> {
+    loadBtn.disabled = <span class="k">false</span>;
+  }
+}
+
+<span class="c">// Դելեգացիա — որ «Կրկին փորձել»-ն էլ աշխատի (Դաս 12)</span>
+document.<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+  <span class="k">if</span> (e.target.<span class="f">closest</span>(<span class="s">".load-btn"</span>)) <span class="f">loadUsers</span>();
+});</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ դելեգացիա</span>
+      <p>Որովհետև «Կրկին փորձել» կոճակը ստեղծվում է <code>innerHTML</code>-ով <em>հետո</em>։ Ուղիղ listener-ը դրա վրա չէր աշխատի (Դաս 12)։ Ահա թե ինչպես են դասերը միանում իրար։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչպես ստուգել սխալի վիճակը</span>
+      <p>DevTools → ներդիր <strong>Network</strong> → վերևից ընտրիր <strong>Offline</strong>։ Հիմա սեղմիր կոճակը և տես՝ ճի՞շտ է աշխատում սխալի մշակումը։ Այս ստուգումը շատերը մոռանում են։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>POST և այլ մեթոդներ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>POST — տվյալ ուղարկել</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">async</span> <span class="k">function</span> <span class="f">createPost</span>(title, body) {
+  <span class="k">const</span> response = <span class="k">await</span> <span class="f">fetch</span>(<span class="s">`</span>${API}<span class="s">/posts`</span>, {
+    method: <span class="s">"POST"</span>,
+    headers: {
+      <span class="s">"Content-Type"</span>: <span class="s">"application/json"</span>
+    },
+    body: <span class="f">JSON</span>.<span class="f">stringify</span>({ title, body, userId: <span class="n">1</span> })
+  });
+
+  <span class="k">if</span> (!response.ok) {
+    <span class="k">throw</span> <span class="k">new</span> <span class="f">Error</span>(<span class="s">`Կարգավիճակ </span>${response.status}<span class="s">`</span>);
+  }
+
+  <span class="k">return</span> response.<span class="f">json</span>();
+}
+
+<span class="k">const</span> created = <span class="k">await</span> <span class="f">createPost</span>(<span class="s">"Իմ գրառումը"</span>, <span class="s">"Տեքստը"</span>);
+<span class="f">console</span>.<span class="f">log</span>(created);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">{"title":"Իմ գրառումը","body":"Տեքստը","userId":1,"id":101}</span></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դաշտ</th><th>Ինչի համար</th></tr>
+      <tr><td><code>method</code></td><td>GET (լռելյայն), POST, PUT, PATCH, DELETE</td></tr>
+      <tr><td><code>headers</code></td><td>Լրացուցիչ տեղեկություն սերվերին</td></tr>
+      <tr><td><code>body</code></td><td>Ուղարկվող տվյալները — <strong>միշտ տող</strong></td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երկու պարտադիր բան POST-ի համար</span>
+      <p><strong>1.</strong> <code>body</code>-ն պիտի լինի <strong>տող</strong> → <code>JSON.stringify(...)</code> (Դաս 14)։<br>
+      <strong>2.</strong> <code>Content-Type: application/json</code> վերնագիրը՝ որ սերվերը հասկանա, թե ինչ ես ուղարկել։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>DELETE և PUT</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Ջնջել</span>
+<span class="k">await</span> <span class="f">fetch</span>(<span class="s">`</span>${API}<span class="s">/posts/1`</span>, { method: <span class="s">"DELETE"</span> });
+
+<span class="c">// Փոփոխել</span>
+<span class="k">await</span> <span class="f">fetch</span>(<span class="s">`</span>${API}<span class="s">/posts/1`</span>, {
+  method: <span class="s">"PUT"</span>,
+  headers: { <span class="s">"Content-Type"</span>: <span class="s">"application/json"</span> },
+  body: <span class="f">JSON</span>.<span class="f">stringify</span>({ id: <span class="n">1</span>, title: <span class="s">"Նոր վերնագիր"</span>, userId: <span class="n">1</span> })
+});</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">jsonplaceholder-ի մասին</span>
+      <p>Այն <em>ձևացնում է</em>, թե պահպանում է տվյալները։ <code>POST</code>-ից հետո կստանաս <code>id: 101</code>, բայց իրականում ոչինչ չի պահվել։ Դա նորմալ է — API-ն ստեղծված է հենց սովորելու համար։ Իրական պահպանումը կսովորենք PHP-ի բլոկում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Խաղահրապարակ</h2>
+
+    <div class="warn note">
+      <span class="tag">Ինչպես Դաս 19-ում</span>
+      <p>Ասինխրոն արդյունքները այս պատուհանում չեն երևա։ Այստեղ փորձարկում ենք <strong>տրամաբանությունը</strong>՝ կարգավիճակների մշակումը և տվյալների ձևափոխումը։ Իսկական <code>fetch</code>-ը փորձիր <code>F12</code>-ի Console-ում։</p>
+    </div>
+
+    <div class="pg">
+      <textarea id="pgCode" spellcheck="false">// Կարգավիճակների մշակում
+function describeStatus(status) {
+  if (status >= 200 && status < 300) return "✅ Հաջողվեց";
+  if (status === 401) return "🔒 Մուտք գործեք";
+  if (status === 404) return "🔍 Չգտնվեց";
+  if (status >= 400 && status < 500) return "⚠️ Սխալ հարցում";
+  if (status >= 500) return "💥 Սերվերի սխալ";
+  return "❓ Անհայտ";
+}
+
+[200, 201, 401, 404, 418, 500].forEach(s =>
+  console.log(s, "→", describeStatus(s))
+);
+
+// Նմանակած պատասխան
+const fakeResponse = { ok: false, status: 404 };
+
+function handle(response) {
+  if (!response.ok) {
+    throw new Error(`Սերվերը վերադարձրեց ${response.status}`);
+  }
+  return "տվյալները";
+}
+
+try {
+  console.log(handle(fakeResponse));
+} catch (e) {
+  console.log("Բռնվեց:", e.message);
+}
+
+try {
+  console.log(handle({ ok: true, status: 200 }));
+} catch (e) {
+  console.log("Բռնվեց:", e.message);
+}
+
+// Իրական պատասխանի ձևափոխում (այսպիսի տվյալ է գալիս API-ից)
+const users = [
+  { id: 1, name: "Leanne Graham", email: "sincere@april.biz",
+    address: { city: "Gwenborough" }, company: { name: "Romaguera-Crona" } },
+  { id: 2, name: "Ervin Howell", email: "shanna@melissa.tv",
+    address: { city: "Wisokyburgh" }, company: { name: "Deckow-Crist" } }
+];
+
+console.log("--- ձևափոխում ---");
+console.log(users.map(u => `${u.name} (${u.address.city})`));
+console.log(users.map(u => u.company.name));
+
+// URL կառուցում
+const API = "https://jsonplaceholder.typicode.com";
+const buildUrl = (path, params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  return query ? `${API}${path}?${query}` : `${API}${path}`;
+};
+
+console.log(buildUrl("/users"));
+console.log(buildUrl("/posts", { userId: 1, _limit: 5 }));</textarea>
+      <div class="pg__actions">
+        <button class="run" id="runBtn">Կատարել</button>
+        <button class="clr" id="clrBtn">Մաքրել</button>
+      </div>
+<pre class="out" id="pgOut"><span class="m">Console</span></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>սա փորձիր F12-ի Console-ում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> r = <span class="k">await</span> <span class="f">fetch</span>(<span class="s">"https://jsonplaceholder.typicode.com/users"</span>);
+<span class="f">console</span>.<span class="f">log</span>(r.status, r.ok);
+
+<span class="k">const</span> users = <span class="k">await</span> r.<span class="f">json</span>();
+<span class="f">console</span>.<span class="f">table</span>(users.<span class="f">map</span>(u =&gt; ({ name: u.name, city: u.address.city })));</code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <p>API՝ <code>https://jsonplaceholder.typicode.com</code>։ Հասանելի ուղիներ՝ <code>/users</code>, <code>/posts</code>, <code>/comments</code>, <code>/todos</code>, <code>/albums</code>։</p>
+    <ol class="hw">
+      <li>Բեռնիր <code>/users</code>-ը և տպիր բոլոր անունները Console-ում։ Օգտագործիր <code>.then</code> ձևը։</li>
+      <li>Կրկնիր նույնը <code>async/await</code>-ով։ Համեմատիր՝ որն է ավելի ընթեռնելի։</li>
+      <li>Փորձիր բեռնել <code>/users/9999</code>։ Ավելացրու <code>response.ok</code>-ի ստուգում և ցույց տուր ճիշտ սխալ։</li>
+      <li>Ցուցադրիր օգտագործողներին քարտերով՝ քո <code>.row / .col / .wrapper</code> կառուցվածքով։ Ամեն քարտում՝ անուն, էլ. հասցե, քաղաք, ընկերություն։</li>
+      <li>Ավելացրու երեք վիճակ՝ բեռնում, հաջողություն, սխալ։ Կոճակը բեռնման ընթացքում պիտի լինի <code>disabled</code>։</li>
+      <li>Ստուգիր սխալի վիճակը՝ DevTools → Network → Offline։ Համոզվիր, որ «Կրկին փորձել» կոճակն աշխատում է։</li>
+      <li>Բեռնիր <code>/posts</code>-ը և ցուցադրիր միայն առաջին 10-ը։ Ավելացրու որոնում վերնագրով (Դաս 14-ի debounce-ով)։</li>
+      <li>Ամեն օգտագործողի քարտին ավելացրու «Գրառումները» կոճակ, որը բեռնում է <code>/posts?userId=X</code> և ցուցադրում մոդալում (Դաս 11)։</li>
+      <li>Օգտագործիր <code>Promise.all</code>՝ միաժամանակ բեռնելու <code>/users</code> և <code>/posts</code>։ Ցուցադրիր՝ ամեն օգտագործողի կողքին քանի՞ գրառում ունի։</li>
+      <li>Ֆորմա նոր գրառման համար (վերնագիր + տեքստ)։ Ուղարկիր <code>POST</code>-ով, ցուցադրիր պատասխանը և ավելացրու ցուցակի սկզբում։ Օգտագործիր Դաս 13-ի վալիդացիան։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>fetch(url)</code></td><td>GET հարցում, վերադարձնում է Promise</td></tr>
+      <tr><td><code>response.ok</code></td><td><code>true</code>, եթե կարգավիճակը 200–299 է ⭐</td></tr>
+      <tr><td><code>response.status</code></td><td>Կոդը թվով</td></tr>
+      <tr><td><code>await response.json()</code></td><td>Պատասխանը → JS օբյեկտ</td></tr>
+      <tr><td><code>await response.text()</code></td><td>Պատասխանը → տող</td></tr>
+      <tr><td><code>async function f() {}</code></td><td>Ասինխրոն ֆունկցիա</td></tr>
+      <tr><td><code>await promise</code></td><td>Սպասել և վերցնել արդյունքը</td></tr>
+      <tr><td><code>try / catch / finally</code></td><td>Սխալների մշակում</td></tr>
+      <tr><td><code>throw new Error("...")</code></td><td>Նետել սեփական սխալ</td></tr>
+      <tr><td><code>method: "POST"</code></td><td>Հարցման տեսակը</td></tr>
+      <tr><td><code>body: JSON.stringify(obj)</code></td><td>Ուղարկվող տվյալները</td></tr>
+      <tr><td><code>headers: {"Content-Type": "application/json"}</code></td><td>Ձևաչափի նշում</td></tr>
+    </table>
+    </div>
+
+    <h3>Ամեն fetch-ի ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Ցուցադրվո՞ւմ է բեռնման վիճակը</li>
+      <li>Ստուգվո՞ւմ է <code>response.ok</code>-ը</li>
+      <li>Կա՞ <code>try / catch</code></li>
+      <li>Ցուցադրվո՞ւմ է հասկանալի սխալի հաղորդագրություն</li>
+      <li>Կա՞ «Կրկին փորձել» հնարավորություն</li>
+      <li>Մշակվա՞ծ է դատարկ արդյունքի դեպքը</li>
+      <li>Կոճակը կրկնակի սեղմումից պաշտպանվա՞ծ է</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Գիտե՞մ, ինչու 404-ը չի ընկնում <code>catch</code>-ի մեջ</li>
+      <li>Կարո՞ղ եմ բացատրել, ինչու են երկու <code>.then</code> պետք</li>
+      <li>Հասկանո՞ւմ եմ, որ <code>await</code>-ը էջը չի սառեցնում</li>
+      <li>Կարո՞ղ եմ գրել POST հարցում առանց նայելու</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>API-ների հետ խորը աշխատանք՝ հարցման պարամետրեր, էջավորում, որոնում debounce-ով, <code>AbortController</code> (հին հարցումների չեղարկում) և CORS-ի բացատրություն։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 20 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>
