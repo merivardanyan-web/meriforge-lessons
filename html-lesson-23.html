@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 23 — Նախագիծ · օր 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 23 · 2 ժամ · Նախագիծ, օր 2 / 2</p>
+  <h1>Ադապտիվություն, հղկում, հրապարակում</h1>
+  <p class="lede">Երեկ էջն աշխատում էր համակարգչում։ Այսօր այն պիտի աշխատի ամենուր՝ 320px-ից մինչև 1920px, մկնիկով և ստեղնաշարով։ Եվ վերջում՝ հրապարակում ինտերնետում։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 22</span>
+    <span>Բլոկ 1 · Նախագիծ</span>
+    <span>Աուդիտ և deploy</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Օրվա պլան</h2>
+    <ul class="goals">
+      <li>Ադապտիվության բլոկը</li>
+      <li>Բուրգեր-մենյու</li>
+      <li>Մանրամասների հղկում</li>
+      <li>Հասանելիության աուդիտ</li>
+      <li>Օպտիմիզացիա և Lighthouse</li>
+      <li>Հրապարակում GitHub Pages-ում</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ադապտիվության բլոկը</h2>
+    <p>Դաս 14-ի կանոնը՝ միշտ <code>main.css</code>-ի <strong>վերջում</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css — բաժին 10</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ============ 10. ԱԴԱՊՏԻՎՈՒԹՅՈՒՆ ============ */</span>
+
+<span class="c">/* ---------- Պլանշետ ---------- */</span>
+<span class="k">@media</span> (<span class="f">max-width</span>: <span class="n">992px</span>) {
+    <span class="k">:root</span> { <span class="f">--wall</span>: <span class="n">40px</span>; }
+
+    <span class="t">section</span> { <span class="f">padding</span>: <span class="n">48px</span> <span class="n">0</span>; }
+    <span class="k">#hero</span>  { <span class="f">padding</span>: <span class="n">56px</span> <span class="n">0</span>; }
+}
+
+<span class="c">/* ---------- Հեռախոս ---------- */</span>
+<span class="k">@media</span> (<span class="f">max-width</span>: <span class="n">768px</span>) {
+    <span class="k">:root</span> { <span class="f">--wall</span>: <span class="n">20px</span>; }
+
+    <span class="t">section</span> { <span class="f">padding</span>: <span class="n">36px</span> <span class="n">0</span>; }
+    <span class="k">#hero</span>  { <span class="f">padding</span>: <span class="n">40px</span> <span class="n">0</span>; }
+
+    <span class="c">/* Բուրգերը հայտնվում է */</span>
+    <span class="k">.burger</span> { <span class="f">display</span>: <span class="s">flex</span>; }
+
+    <span class="c">/* Hero-ի կոճակները՝ ամբողջ լայնությամբ */</span>
+    <span class="k">#hero</span> <span class="k">.btn</span> { <span class="f">width</span>: <span class="n">100%</span>; }
+
+    <span class="c">/* CTA-ի ֆորմա՝ ուղղահայաց */</span>
+    <span class="k">#cta</span> <span class="t">form</span> { <span class="f">flex-direction</span>: <span class="s">column</span>; <span class="f">align-items</span>: <span class="s">stretch</span>; }
+    <span class="k">#cta</span> <span class="k">.btn</span>   { <span class="f">width</span>: <span class="n">100%</span>; }
+
+    <span class="c">/* Footer-ի ներքևի տողը՝ կենտրոնով */</span>
+    <span class="k">.footer__bottom</span> { <span class="f">justify-content</span>: <span class="s">center</span>; <span class="f">text-align</span>: <span class="s">center</span>; }
+}
+
+<span class="c">/* ---------- Փոքր հեռախոս ---------- */</span>
+<span class="k">@media</span> (<span class="f">max-width</span>: <span class="n">400px</span>) {
+    <span class="k">.card__footer</span> {
+        <span class="f">flex-direction</span>: <span class="s">column</span>;
+        <span class="f">align-items</span>: <span class="s">stretch</span>;
+    }
+    <span class="k">.card__footer</span> <span class="k">.btn</span> { <span class="f">width</span>: <span class="n">100%</span>; }
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ուշադրություն՝ որքան քիչ է գրված</span>
+      <p>Վերնագրերը չկան, որովհետև դրանք <code>clamp()</code>-ով են (Դաս 22)։<br>
+      Ապրանքների ցանցը չկա, որովհետև այն <code>.grid-auto</code> է (Դաս 20)։<br>
+      Պատերը՝ մեկ փոփոխական (Դաս 19)։<br><br>
+      Երբ հիմքը ճիշտ է կառուցված, ադապտիվության բլոկը կարճ է։ Եթե այն 200 տող է — ինչ-որ բան սխալ է հիմքում։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">400px breakpoint — ինչու</span>
+      <p>Քարտի ներսում գինը և կոճակը <code>space-between</code>-ով են։ Շատ նեղ էկրանին կոճակի տեքստը կսեղմվի երկու տողի։<br><br>
+      Սա breakpoint-ի ընտրության ճիշտ ձևն է (Դաս 14)՝ ոչ թե «այս սարքի համար», այլ <strong>«այստեղ է կոտրվում»</strong>։ Նեղացրու դանդաղ և գտիր այդ կետը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Բուրգեր-մենյու</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML — header-ի ներսում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">header</span> <span class="f">class</span>=<span class="s">"header"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"checkbox"</span> <span class="f">id</span>=<span class="s">"nav"</span> <span class="f">class</span>=<span class="s">"nav-toggle"</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row align-center justify-between"</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span> <span class="f">class</span>=<span class="s">"logo"</span><span class="p">&gt;</span>ՏեխնոՄարկետ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"nav"</span> <span class="f">class</span>=<span class="s">"burger"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">span</span><span class="p">&gt;&lt;/</span><span class="t">span</span><span class="p">&gt;&lt;</span><span class="t">span</span><span class="p">&gt;&lt;/</span><span class="t">span</span><span class="p">&gt;&lt;</span><span class="t">span</span><span class="p">&gt;&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"visually-hidden"</span><span class="p">&gt;</span>Մենյու<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">nav</span> <span class="f">aria-label</span>=<span class="s">"Գլխավոր մենյու"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">ul</span> <span class="f">class</span>=<span class="s">"menu flex align-center gap-10"</span><span class="p">&gt;</span> ... <span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">nav</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">header</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Checkbox-ի տեղը կարևոր է</span>
+      <p><code>~</code> սելեկտորը հասնում է միայն <strong>հետագա եղբայրներին</strong> (Դաս 18)։<br><br>
+      Ուստի <code>&lt;input&gt;</code>-ը պիտի լինի <code>.row</code>-ից <strong>առաջ</strong>, ոչ դրա ներսում։ Հակառակ դեպքում <code>.nav-toggle:checked ~ .row .menu</code>-ն չի աշխատի, և ժամ կկորցնես՝ չհասկանալով ինչու։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.nav-toggle</span> { <span class="f">position</span>: <span class="s">absolute</span>; <span class="f">opacity</span>: <span class="n">0</span>; <span class="f">pointer-events</span>: <span class="s">none</span>; }
+
+<span class="k">.burger</span> {
+    <span class="f">display</span>: <span class="s">none</span>;
+    <span class="f">width</span>: <span class="n">44px</span>;
+    <span class="f">height</span>: <span class="n">44px</span>;
+    <span class="f">flex-direction</span>: <span class="s">column</span>;
+    <span class="f">justify-content</span>: <span class="s">center</span>;
+    <span class="f">align-items</span>: <span class="s">center</span>;
+    <span class="f">gap</span>: <span class="n">5px</span>;
+    <span class="f">cursor</span>: <span class="s">pointer</span>;
+    <span class="f">border-radius</span>: <span class="s">var</span>(<span class="f">--radius-sm</span>);
+}
+
+<span class="k">.burger</span> <span class="t">span</span>:<span class="k">not</span>(<span class="k">.visually-hidden</span>) {
+    <span class="f">display</span>: <span class="s">block</span>;
+    <span class="f">width</span>: <span class="n">24px</span>;
+    <span class="f">height</span>: <span class="n">2px</span>;
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--text</span>);
+    <span class="f">transition</span>: <span class="s">transform</span> <span class="s">var</span>(<span class="f">--transition</span>), <span class="f">opacity</span> <span class="s">var</span>(<span class="f">--transition</span>);
+}
+
+<span class="k">.nav-toggle</span>:<span class="k">focus-visible</span> ~ <span class="k">.row</span> <span class="k">.burger</span> {
+    <span class="f">outline</span>: <span class="n">2px</span> <span class="s">solid</span> <span class="s">var</span>(<span class="f">--accent</span>);
+    <span class="f">outline-offset</span>: <span class="n">2px</span>;
+}
+
+<span class="k">@media</span> (<span class="f">max-width</span>: <span class="n">768px</span>) {
+
+    <span class="k">.burger</span> { <span class="f">display</span>: <span class="s">flex</span>; }
+
+    <span class="k">.menu</span> {
+        <span class="f">position</span>: <span class="s">fixed</span>;
+        <span class="f">top</span>: <span class="n">61px</span>;             <span class="c">/* header-ի բարձրությունը */</span>
+        <span class="f">left</span>: <span class="n">0</span>;
+        <span class="f">right</span>: <span class="n">0</span>;
+        <span class="f">bottom</span>: <span class="n">0</span>;
+        <span class="f">z-index</span>: <span class="n">90</span>;
+
+        <span class="f">flex-direction</span>: <span class="s">column</span>;
+        <span class="f">align-items</span>: <span class="s">stretch</span>;
+        <span class="f">gap</span>: <span class="n">0</span>;
+
+        <span class="f">background</span>: <span class="s">var</span>(<span class="f">--surface</span>);
+        <span class="f">padding</span>: <span class="n">16px</span>;
+        <span class="f">overflow-y</span>: <span class="s">auto</span>;
+
+        <span class="f">transform</span>: <span class="s">translateX</span>(<span class="n">100%</span>);
+        <span class="f">transition</span>: <span class="s">transform</span> <span class="n">.25s</span> <span class="s">ease</span>;
+    }
+
+    <span class="k">.nav-toggle</span>:<span class="k">checked</span> ~ <span class="k">.row</span> <span class="k">.menu</span> { <span class="f">transform</span>: <span class="s">translateX</span>(<span class="n">0</span>); }
+
+    <span class="k">.nav-toggle</span>:<span class="k">checked</span> ~ <span class="k">.row</span> <span class="k">.burger</span> <span class="t">span</span>:<span class="k">nth-child</span>(<span class="n">1</span>) { <span class="f">transform</span>: <span class="s">translateY</span>(<span class="n">7px</span>) <span class="s">rotate</span>(<span class="n">45deg</span>); }
+    <span class="k">.nav-toggle</span>:<span class="k">checked</span> ~ <span class="k">.row</span> <span class="k">.burger</span> <span class="t">span</span>:<span class="k">nth-child</span>(<span class="n">2</span>) { <span class="f">opacity</span>: <span class="n">0</span>; }
+    <span class="k">.nav-toggle</span>:<span class="k">checked</span> ~ <span class="k">.row</span> <span class="k">.burger</span> <span class="t">span</span>:<span class="k">nth-child</span>(<span class="n">3</span>) { <span class="f">transform</span>: <span class="s">translateY</span>(-<span class="n">7px</span>) <span class="s">rotate</span>(-<span class="n">45deg</span>); }
+
+    <span class="k">.menu</span> <span class="t">a</span> {
+        <span class="f">display</span>: <span class="s">block</span>;
+        <span class="f">padding</span>: <span class="n">14px</span> <span class="n">12px</span>;
+        <span class="f">border-bottom</span>: <span class="n">1px</span> <span class="s">solid</span> <span class="s">var</span>(<span class="f">--border</span>);
+    }
+
+    <span class="k">.menu</span> <span class="k">.btn</span> { <span class="f">margin-top</span>: <span class="n">14px</span>; <span class="f">text-align</span>: <span class="s">center</span>; }
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Այս մենյուն թերի է — և դա գիտենք</span>
+      <p>Դաս 18-ից՝ CSS-տարբերակը <strong>չի փակվում</strong> հղումին սեղմելուց հետո, <kbd>Esc</kbd>-ով կամ դրսում սեղմելիս։ Նաև <code>aria-expanded</code>-ը չի թարմացվում։<br><br>
+      Այսօր դա ընդունելի է — մենք CSS բլոկում ենք։ <strong>JS բլոկի Դաս 11-ում</strong> այս ֆայլը կվերցնենք և կվերաշարադրենք մենյուն ճիշտ։<br><br>
+      Գրիր դա <code>README</code>-ում որպես հայտնի սահմանափակում։ Իրական աշխատանքում հայտնի թերությունը փաստագրելը պրոֆեսիոնալիզմի նշան է, ոչ թույլության։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգում բոլոր չափերով</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Լայնություն</th><th>Ի՞նչ ստուգել</th></tr>
+      <tr><td><strong>320px</strong></td><td>Ամենափոքրը։ Հորիզոնական սքրոլ չկա՞</td></tr>
+      <tr><td><strong>375px</strong></td><td>Բուրգերն աշխատո՞ւմ է, կոճակները սեղմելի՞ են</td></tr>
+      <tr><td><strong>576px</strong></td><td>Ցանցը 1 սյուն է դառնում</td></tr>
+      <tr><td><strong>768px</strong></td><td>Անցում բուրգերի ↔ մենյուի</td></tr>
+      <tr><td><strong>992px</strong></td><td>Պատերը փոխվում են</td></tr>
+      <tr><td><strong>1440px</strong></td><td>Սովորական նոութբուք</td></tr>
+      <tr><td><strong>1920px</strong></td><td>Տեքստը շատ չի՞ ձգվում</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Դանդաղ քաշելու մեթոդը</span>
+      <p>DevTools → <em>Responsive</em> ռեժիմ → բռնիր աջ եզրը և քաշիր <strong>դանդաղ</strong> 1920-ից 320։<br><br>
+      Նայիր ոչ թե breakpoint-ներին, այլ <strong>դրանց միջև</strong>։ Հենց այնտեղ են թաքնվում խնդիրները՝ 700px-ում վերնագիրը կոտրվում է տարօրինակ, 850px-ում քարտերի միջև բացակը շատ մեծ է թվում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հորիզոնական սքրոլի որս — Դաս 14</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Console-ում</span>
+<span class="t">document</span>.<span class="f">querySelectorAll</span>(<span class="s">'*'</span>).<span class="f">forEach</span>(<span class="n">e</span> =&gt; {
+    <span class="k">if</span> (<span class="n">e</span>.<span class="f">offsetWidth</span> &gt; <span class="t">document</span>.<span class="f">body</span>.<span class="f">offsetWidth</span>) <span class="t">console</span>.<span class="f">log</span>(<span class="n">e</span>);
+});</code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Հղկում</h2>
+    <p>Այն մանրուքները, որոնք տարբերում են «աշխատում է»-ը «պատրաստ է»-ից։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>վեց ուղղում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* 1. Խարիսխները չեն մտնում header-ի տակ — Դաս 15 */</span>
+<span class="k">html</span> {
+    <span class="f">scroll-behavior</span>: <span class="s">smooth</span>;
+    <span class="f">scroll-padding-top</span>: <span class="n">80px</span>;
+}
+
+<span class="c">/* 2. Երկար հայերեն բառերը չեն դուրս գալիս — Դաս 9 */</span>
+<span class="t">body</span> { <span class="f">overflow-wrap</span>: <span class="s">break-word</span>; }
+
+<span class="c">/* 3. Ընտրված տեքստի գույնը */</span>
+<span class="k">::selection</span> {
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--accent</span>);
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--on-dark</span>);
+}
+
+<span class="c">/* 4. Տեքստի օպտիմալ լայնություն hero-ում — Դաս 7 */</span>
+<span class="k">#hero</span> <span class="t">h1</span> { <span class="f">max-width</span>: <span class="n">18ch</span>; }
+<span class="k">#hero</span> <span class="k">.hero__lead</span> { <span class="f">max-width</span>: <span class="n">50ch</span>; }
+
+<span class="c">/* 5. Քարտի ամբողջ մակերեսը՝ սեղմելի */</span>
+<span class="k">.card__title</span> <span class="t">a</span>::<span class="k">after</span> {
+    <span class="f">content</span>: <span class="s">""</span>;
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">inset</span>: <span class="n">0</span>;
+    <span class="f">z-index</span>: <span class="n">1</span>;
+}
+
+<span class="c">/* 6. Անիմացիաների հարգանք — Դաս 21 */</span>
+<span class="k">@media</span> (<span class="f">prefers-reduced-motion</span>: <span class="s">reduce</span>) {
+    <span class="k">*</span>, <span class="k">*</span>::<span class="k">before</span>, <span class="k">*</span>::<span class="k">after</span> {
+        <span class="f">animation-duration</span>: <span class="n">.01ms</span> <span class="k">!important</span>;
+        <span class="f">transition-duration</span>: <span class="n">.01ms</span> <span class="k">!important</span>;
+        <span class="f">scroll-behavior</span>: <span class="s">auto</span> <span class="k">!important</span>;
+    }
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Հինգերորդի մասին առանձին</span>
+      <p><code>::after</code>-ը <code>inset: 0</code>-ով քարտի հղումի վրա դարձնում է <strong>ամբողջ քարտը</strong> սեղմելի՝ առանց ամեն ինչը <code>&lt;a&gt;</code>-ի մեջ փաթեթավորելու։<br><br>
+      Առավելությունը՝ էկրանընթերցիչը կարդում է միայն վերնագիրը որպես հղում, ոչ ամբողջ քարտի բովանդակությունը։ Իսկ մկնիկով սեղմելի է ամենուր։<br><br>
+      Պայման՝ <code>.card</code>-ը պիտի ունենա <code>position: relative</code> (արդեն ունի), իսկ «Գնել» կոճակին պիտի տաս <code>position: relative; z-index: 2</code>, որ այն մնա սեղմելի։</p>
+    </div>
+
+    <h3>Տառասխալների որս</h3>
+    <div class="warn note">
+      <span class="tag">Կարդա բարձրաձայն</span>
+      <p>Անցիր էջով և կարդա <strong>ամեն տեքստ բարձրաձայն</strong>։ Այդպես գտնում ես․<br>
+      · Կրկնվող բառեր՝ «անվճար անվճար առաքում»<br>
+      · Անավարտ նախադասություններ<br>
+      · Մնացած <code>lorem ipsum</code><br>
+      · Սխալ գներ և թվեր<br><br>
+      Աչքով կարդալիս ուղեղը լրացնում է բացերը։ Բարձրաձայն կարդալիս՝ ոչ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Հասանելիության աուդիտ</h2>
+
+    <h3>Ձեռքով ստուգում — 10 րոպե</h3>
+    <ol>
+      <li>Ձեռքդ վերցրու մկնիկից</li>
+      <li><kbd>Tab</kbd> — առաջինը պիտի հայտնվի skip link-ը</li>
+      <li>Անցիր ամբողջ էջով միայն <kbd>Tab</kbd>-ով</li>
+      <li>Ամեն պահի պիտի <strong>տեսնես</strong>, թե որտեղ ես</li>
+      <li>Հերթականությունը պիտի համընկնի տեսողականին</li>
+      <li><kbd>Enter</kbd>-ով բացիր բուրգերը</li>
+      <li>Հասիր footer և վերադարձիր <kbd>Shift</kbd>+<kbd>Tab</kbd>-ով</li>
+    </ol>
+
+    <div class="warn note">
+      <span class="tag">Ֆոկուսի թակարդ բուրգերում</span>
+      <p>Երբ մենյուն փակ է, դրա հղումները <code>translateX(100%)</code>-ով դուրս են էկրանից — <strong>բայց դեռ ֆոկուսվում են</strong>։<br><br>
+      Արդյունքում <kbd>Tab</kbd>-ով նավարկողը «կորչում է» անտեսանելի հղումների մեջ։<br><br>
+      Ժամանակավոր լուծում CSS-ով՝<br>
+      <code>@media (max-width: 768px) {<br>
+      &nbsp;&nbsp;.menu { visibility: hidden; }<br>
+      &nbsp;&nbsp;.nav-toggle:checked ~ .row .menu { visibility: visible; }<br>
+      }</code><br><br>
+      <code>visibility: hidden</code>-ը հանում է էլեմենտները <kbd>Tab</kbd>-ի հերթից և միևնույն ժամանակ անիմացվում է (Դաս 18)։</p>
+    </div>
+
+    <h3>Ավտոմատ ստուգում</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գործիք</th><th>Ի՞նչ է գտնում</th></tr>
+      <tr><td><strong>Lighthouse</strong> (DevTools)</td><td>Ընդհանուր գնահատական 4 կատեգորիայով</td></tr>
+      <tr><td><strong>WAVE</strong> (ընդլայնում)</td><td>Կոնտրաստ, <code>alt</code>, վերնագրերի կառուցվածք</td></tr>
+      <tr><td><strong>validator.w3.org</strong></td><td>HTML շարահյուսության սխալներ</td></tr>
+      <tr><td>DevTools → Elements → Accessibility</td><td>Ինչպես է էկրանընթերցիչը տեսնում էլեմենտը</td></tr>
+    </table>
+    </div>
+
+    <h3>Ամբողջական ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Կա <code>lang="hy"</code></li>
+      <li>Կա մեկ <code>h1</code></li>
+      <li>Վերնագրերը չեն ցատկում (h2 → h4 ❌)</li>
+      <li>Բոլոր նկարներն ունեն <code>alt</code></li>
+      <li>Դեկորատիվ նկարներն ունեն <code>alt=""</code></li>
+      <li>Ֆորմայի բոլոր դաշտերն ունեն <code>label</code></li>
+      <li>Պատկերակ-կոճակներն ունեն <code>aria-label</code></li>
+      <li>Բոլոր <code>nav</code>-երն ունեն <code>aria-label</code></li>
+      <li>Ֆոկուսը տեսանելի է ամենուր</li>
+      <li>Կոնտրաստը ≥ 4.5:1</li>
+      <li>Սեղմելի տարածքները ≥ 44×44px</li>
+      <li>Կա <code>prefers-reduced-motion</code></li>
+      <li>Կա skip link</li>
+    </ul>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Օպտիմիզացիա</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Քայլ</th><th>Ինչպես</th></tr>
+      <tr><td>Նկարները սեղմել</td><td>squoosh.app → WebP, որակը 80</td></tr>
+      <tr><td>Չափերը ճշտել</td><td>Ցուցադրման չափը × 2, ոչ ավելի</td></tr>
+      <tr><td><code>loading="lazy"</code></td><td>Առաջին էկրանից ցածր բոլորին</td></tr>
+      <tr><td><code>width</code>/<code>height</code></td><td>Ամեն նկարի — էջը չի ցատկում</td></tr>
+      <tr><td>Տառատեսակի հաստություններ</td><td>Միայն 400 և 700</td></tr>
+      <tr><td><code>display=swap</code></td><td>Տեքստը երևում է անմիջապես</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Lighthouse-ի գործարկում</span>
+      <p>DevTools → <strong>Lighthouse</strong> ներդիր → <em>Mobile</em> → <em>Analyze page load</em>։<br><br>
+      Կարևոր՝ գործարկիր <strong>Incognito</strong> ռեժիմում։ Ընդլայնումները խեղաթյուրում են արդյունքը։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Կատեգորիա</th><th>Նպատակ</th></tr>
+      <tr><td>Performance</td><td>90+</td></tr>
+      <tr><td><strong>Accessibility</strong></td><td><strong>100</strong> — այս մեկը պարտադիր</td></tr>
+      <tr><td>Best Practices</td><td>95+</td></tr>
+      <tr><td>SEO</td><td>100</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Accessibility 100 — իրատեսակա՞ն է</span>
+      <p>Այո։ Ստատիկ էջի համար 100-ը սովորական արդյունք է, եթե հետևել ես դասերի կանոններին։<br><br>
+      Բայց ուշադրություն՝ Lighthouse-ը ստուգում է միայն այն, ինչ կարելի է ավտոմատացնել։ 100 միավորը <strong>չի նշանակում</strong>, որ էջը հասանելի է — այն նշանակում է, որ ակնհայտ սխալներ չկան։<br><br>
+      Ձեռքով <kbd>Tab</kbd>-ի ստուգումը մնում է անփոխարինելի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Հրապարակում</h2>
+    <p>Էջը պիտի հասանելի լինի ինտերնետում, ոչ միայն քո համակարգչում։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>GitHub Pages — 7 քայլ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># 1. Git-ի սկզբնավորում</span>
+git init
+git add .
+git commit -m <span class="s">"ՏեխնոՄարկետ landing page"</span>
+
+<span class="c"># 2. GitHub-ում ստեղծիր նոր repository (առանց README-ի)</span>
+
+<span class="c"># 3. Կապիր և ուղարկիր</span>
+git remote add origin https://github.com/username/technomarket.git
+git branch -M main
+git push -u origin main
+
+<span class="c"># 4. GitHub → Settings → Pages
+#    Source: Deploy from a branch
+#    Branch: main / (root) → Save
+
+# 5. 1-2 րոպե սպասիր
+
+# 6. Հասցեն՝
+#    https://username.github.io/technomarket/
+
+# 7. Բացիր հեռախոսում և ստուգիր</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երեք սխալ, որ ամեն մեկն անում է առաջին անգամ</span>
+      <p><strong>1. Ֆայլի անունը</strong> — գլխավոր էջը պիտի լինի ուղիղ <code>index.html</code>, փոքրատառ։ <code>Index.html</code>-ը չի աշխատի։<br><br>
+      <strong>2. Ուղիների ռեգիստրը</strong> — Windows-ում <code>images/Laptop.jpg</code> և <code>images/laptop.jpg</code> նույնն են։ GitHub-ի սերվերում՝ <strong>ոչ</strong>։ Տեղում ամեն ինչ աշխատում է, հրապարակելուց հետո նկարները անհետանում են։<br><br>
+      <strong>3. Բացարձակ ուղիներ</strong> — <code>/images/laptop.jpg</code>-ը (առաջին շեղագծով) կփնտրի կայքի արմատում, ոչ քո թղթապանակում։ Օգտագործիր <code>images/laptop.jpg</code>։ Դա Դաս 2-ի կանոնն է, և հենց այստեղ է այն վրեժ լուծում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>README.md</div><button class="copy">Պատճենել</button></div>
+<pre><code># ՏեխնոՄարկետ
+
+Landing page — HTML/CSS բլոկի վերջնական նախագիծ։
+
+**Դեմո՝** https://username.github.io/technomarket/
+
+## Տեխնոլոգիաներ
+- Սեմանտիկ HTML5
+- CSS՝ փոփոխականներ, Flexbox, Grid
+- Ադապտիվ՝ 320px–1920px
+- Առանց գրադարանների
+
+## Կառուցվածք
+- `css/global.css` — վարքագիծ և utility-դասեր
+- `css/main.css` — այս նախագծի արժեքները
+- Դասավորության համակարգ՝ `main &gt; section &gt; .row &gt; .col &gt; .wrapper`
+
+## Հայտնի սահմանափակումներ
+- Բուրգեր-մենյուն իրականացված է CSS-ով (checkbox)։
+  Չի փակվում Esc-ով և հղումին սեղմելուց հետո։
+  Կուղղվի JS բլոկում։
+
+## Lighthouse
+Performance 94 · Accessibility 100 · Best Practices 100 · SEO 100</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">README-ն կարևոր է</span>
+      <p>Սա առաջին բանն է, որ տեսնում է գործատուն կամ հաճախորդը։ Լավ <code>README</code>-ը ցույց է տալիս, որ դու <strong>հասկանում ես</strong>, ինչ ես արել — ոչ միայն արել ես։<br><br>
+      Հատկապես «Հայտնի սահմանափակումներ» բաժինը։ Այն ասում է․ «ես գիտեմ, որ սա թերի է, և գիտեմ՝ ինչու»։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Վերջնական ընդունում</h2>
+    <p>Անցիր ամբողջ ցուցակով։ Ամեն «ոչ»-ը՝ առաջադրանք։</p>
+
+    <h3>Տեսք</h3>
+    <ul class="goals">
+      <li>Համապատասխանում է մակետին</li>
+      <li>Բոլոր հեռավորությունները սանդղակի վրա են</li>
+      <li>Տառաչափերը 5-ից քիչ են</li>
+      <li>Կլորացումները հետևողական են</li>
+      <li>Ստվերները մեկ սանդղակից են</li>
+    </ul>
+
+    <h3>Ադապտիվություն</h3>
+    <ul class="goals">
+      <li>Աշխատում է 320px-ից 1920px</li>
+      <li>Չկա հորիզոնական սքրոլ</li>
+      <li>Բուրգերն աշխատում է</li>
+      <li>Ցանցերը ճիշտ են վերակառուցվում</li>
+      <li>Կոճակները հեռախոսում հարմար են</li>
+    </ul>
+
+    <h3>Կոդ</h3>
+    <ul class="goals">
+      <li><code>:root</code>-ից դուրս HEX չկա</li>
+      <li>Կմախքը հետևողական է</li>
+      <li>Չկա <code>!important</code> (բացի reduced-motion-ից)</li>
+      <li>Չկա inline <code>style</code> (բացի փոփոխականների)</li>
+      <li>HTML-ը վալիդ է</li>
+      <li>Դասերի անունները հասկանալի են</li>
+    </ul>
+
+    <h3>Հասանելիություն</h3>
+    <ul class="goals">
+      <li>Ամբողջ էջն անցնելի է <kbd>Tab</kbd>-ով</li>
+      <li>Ֆոկուսը տեսանելի է</li>
+      <li>Կոնտրաստները ≥ 4.5:1</li>
+      <li>Lighthouse Accessibility = 100</li>
+    </ul>
+
+    <h3>Հրապարակում</h3>
+    <ul class="goals">
+      <li>Կոդը GitHub-ում է</li>
+      <li>Էջը հասանելի է հղումով</li>
+      <li>Բոլոր նկարները բեռնվում են</li>
+      <li>Ստուգված է իրական հեռախոսում</li>
+      <li>Կա <code>README</code></li>
+    </ul>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ավելացրու ադապտիվության բլոկը <code>main.css</code>-ի վերջում։</li>
+      <li>Իրականացրու բուրգեր-մենյուն։ Ստուգիր <kbd>Tab</kbd>-ով և <kbd>Space</kbd>-ով։</li>
+      <li>Ուղղիր ֆոկուսի թակարդը՝ <code>visibility</code>-ով։ Ցույց տուր՝ առաջ և հետո։</li>
+      <li>Անցիր 7 լայնությամբ և ուղարկիր 7 սքրինշոթ։</li>
+      <li>Քաշիր պատուհանը դանդաղ 1920-ից 320 և գրիր ամեն խնդիր, որ գտար breakpoint-ների <em>միջև</em>։</li>
+      <li>Ավելացրու վեց հղկման ուղղումը։</li>
+      <li>Կարդա ամբողջ էջը բարձրաձայն։ Ուղղիր բոլոր տառասխալները։</li>
+      <li>Գործարկիր Lighthouse-ը Incognito-ում։ Ուղարկիր սքրինշոթ։ Ուղղիր ամեն ինչ, ինչ 90-ից ցածր է։</li>
+      <li>Հրապարակիր GitHub Pages-ում։ Բացիր հեռախոսում։</li>
+      <li>Գրիր <code>README</code>՝ ներառյալ «Հայտնի սահմանափակումներ» բաժինը։ Ուղարկիր հղումը։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Ամփոփում</h2>
+
+    <div class="tree">Երկու օրում կառուցեցինք՝
+
+  6 բաժին
+  ~250 տող HTML
+  ~400 տող CSS
+  0 գրադարան
+  0 տող JavaScript
+
+  Ադապտիվ 320–1920px
+  Հասանելի ստեղնաշարով
+  Հրապարակված ինտերնետում</div>
+
+    <div class="tip note">
+      <span class="tag">Ի՞նչ ես իսկապես սովորել</span>
+      <p>Ոչ թե «CSS հատկություններ»։ Դու սովորել ես․<br><br>
+      <strong>·</strong> Կարդալ մակետ և հանել դրանից համակարգ<br>
+      <strong>·</strong> Կառուցել CSS ճարտարապետություն, որը չի փլվում<br>
+      <strong>·</strong> Մտածել ոչ միայն մկնիկով նավարկողի մասին<br>
+      <strong>·</strong> Ստուգել սեփական աշխատանքը<br>
+      <strong>·</strong> Ազնվորեն փաստագրել սահմանափակումները<br><br>
+      Հատկությունները կմոռացվեն և կփոխվեն։ Այս հմտությունները՝ ոչ։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Բլոկի եզրափակիչը՝ ամբողջ 24 դասի ամփոփում, ինքնագնահատման համակարգ, հաճախակի սխալների վերլուծություն և կամուրջ JavaScript բլոկին։<br><br>
+      Կտեսնենք նաև, թե ինչ կփոխվի այս նույն էջում, երբ ավելացնենք JS՝ ֆիլտրեր, զամբյուղ, ճիշտ մենյու։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 23 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

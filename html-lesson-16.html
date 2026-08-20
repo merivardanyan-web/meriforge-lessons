@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 16 — Նկարներ և media</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 16 · 2 ժամ</p>
+  <h1>Նկարներ և media</h1>
+  <p class="lede">Հաճախորդը ուղարկեց 12 նկար՝ բոլորը տարբեր չափերի։ Դիզայնում դրանք բոլորը նույն ուղղանկյունում են։ Այսօր սովորում ենք, ինչպես դա անել՝ առանց ձգելու և դեֆորմացնելու։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 08, 14, 15</span>
+    <span>Բլոկ 1 · Կոմպոնենտներ</span>
+    <span>Օպտիմիզացիա և արագություն</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li><code>object-fit</code> — նկարը կադրում</li>
+      <li><code>aspect-ratio</code> — կայուն համամասնություն</li>
+      <li>Ֆոնային նկարներ</li>
+      <li>SVG — ե՞րբ և ինչո՞ւ</li>
+      <li><code>srcset</code> — ճիշտ չափը ճիշտ էկրանին</li>
+      <li><code>&lt;picture&gt;</code> — WebP և կադրավորում</li>
+      <li>Օպտիմիզացիա և <code>loading="lazy"</code></li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Խնդիրը</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երեք միամիտ լուծում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ❌ 1. Միայն լայնություն — բարձրությունները տարբեր են */</span>
+<span class="k">.card</span> <span class="t">img</span> { <span class="f">width</span>: <span class="n">100%</span>; }
+
+<span class="c">/* ❌ 2. Երկուսն էլ — նկարը ձգվում և դեֆորմացվում է */</span>
+<span class="k">.card</span> <span class="t">img</span> { <span class="f">width</span>: <span class="n">100%</span>; <span class="f">height</span>: <span class="n">200px</span>; }
+
+<span class="c">/* ❌ 3. Կտրում — նկարի կենտրոնը կորչում է */</span>
+<span class="k">.card</span> <span class="t">picture</span> { <span class="f">height</span>: <span class="n">200px</span>; <span class="f">overflow</span>: <span class="s">hidden</span>; }</code></pre>
+    </div>
+
+    <div class="tree">Բնօրինակ նկարներ          width: 100% միայն
+┌────────┐ ┌──────┐       ┌────────┐┌────────┐
+│        │ │      │       │        ││        │
+│  4:3   │ │ 16:9 │       │        │└────────┘
+│        │ └──────┘       │        │  քարտերի
+└────────┘                └────────┘  ներսում խառնաշփոթ</div>
+
+    <div class="tip note">
+      <span class="tag">Ճիշտ լուծումը</span>
+      <p><strong>Կոնտեյները</strong> սահմանում է չափը (<code>aspect-ratio</code>), <strong>նկարը</strong> լցնում է այն առանց դեֆորմացիայի (<code>object-fit: cover</code>)։<br><br>
+      Երկու հատկություն, և խնդիրը լուծված է ընդմիշտ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>object-fit</h2>
+    <p>Ասում է՝ ինչպես նկարը պիտի տեղավորվի իրեն հատկացված տուփի մեջ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հինգ արժեք</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="t">img</span> { <span class="f">object-fit</span>: <span class="s">fill</span>; }        <span class="c">/* լռելյայն — ձգվում է ❌ */</span>
+<span class="t">img</span> { <span class="f">object-fit</span>: <span class="s">cover</span>; }       <span class="c">/* լցնում է, ավելցուկը կտրվում ✅ */</span>
+<span class="t">img</span> { <span class="f">object-fit</span>: <span class="s">contain</span>; }     <span class="c">/* ամբողջը երևում է, մնում է դատարկ տեղ */</span>
+<span class="t">img</span> { <span class="f">object-fit</span>: <span class="s">scale-down</span>; }  <span class="c">/* contain, բայց չի մեծացնում */</span>
+<span class="t">img</span> { <span class="f">object-fit</span>: <span class="s">none</span>; }        <span class="c">/* բնօրինակ չափը */</span></code></pre>
+    </div>
+
+    <div class="tree">fill (լռելյայն)     cover            contain
+┌──────────┐        ┌──────────┐     ┌──────────┐
+│ ░░░░░░░░ │        │▓▓▓▓▓▓▓▓▓▓│     │  ▓▓▓▓▓▓  │
+│ ░ձգված░░ │        │▓▓ լցված ▓│     │  ▓ամբող▓ │
+│ ░░░░░░░░ │        │▓▓▓▓▓▓▓▓▓▓│     │  ▓▓▓▓▓▓  │
+└──────────┘        └──────────┘     └──────────┘
+դեֆորմացված        համամասն,        համամասն,
+                   ավելցուկը        դատարկ շերտեր
+                   կտրված է         կողքերին</div>
+
+    <div class="warn note">
+      <span class="tag">object-fit-ը պահանջում է չափեր</span>
+      <p><code>object-fit</code>-ը աշխատում է <strong>միայն</strong> այն դեպքում, երբ նկարն ունի և՛ <code>width</code>, և՛ <code>height</code>։ Առանց դրանց նկարը պարզապես ցուցադրվում է իր բնական չափով, և կտրելու բան չկա։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>գործնական ձևանմուշ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.card</span> <span class="t">picture</span> {
+    <span class="f">display</span>: <span class="s">block</span>;
+    <span class="f">height</span>: <span class="n">200px</span>;
+}
+
+<span class="k">.card</span> <span class="t">img</span> {
+    <span class="f">width</span>: <span class="n">100%</span>;
+    <span class="f">height</span>: <span class="n">100%</span>;
+    <span class="f">object-fit</span>: <span class="s">cover</span>;
+}</code></pre>
+    </div>
+
+    <h3>object-position</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ո՞ր մասը պահել կտրելիս</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="t">img</span> { <span class="f">object-position</span>: <span class="s">center</span>; }      <span class="c">/* լռելյայն */</span>
+<span class="t">img</span> { <span class="f">object-position</span>: <span class="s">top</span>; }         <span class="c">/* դիմանկարների համար ⭐ */</span>
+<span class="t">img</span> { <span class="f">object-position</span>: <span class="s">50% 30%</span>; }
+<span class="t">img</span> { <span class="f">object-position</span>: <span class="s">left bottom</span>; }</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Դիմանկարների կանոն</span>
+      <p><code>cover</code>-ը կտրում է կենտրոնից։ Դիմանկարի դեպքում դա նշանակում է, որ <strong>գլուխը կարող է կտրվել</strong>։<br><br>
+      <code>object-position: top</code>-ը պահում է վերին մասը։ Թիմի բաժնի համար դա գրեթե միշտ ճիշտ ընտրություն է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>aspect-ratio</h2>
+    <p>Ֆիքսված <code>height: 200px</code>-ի փոխարեն՝ <strong>համամասնություն</strong>, որը մասշտաբավորվում է ինքնաբերաբար։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ժամանակակից ձևը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.card</span> <span class="t">picture</span> {
+    <span class="f">display</span>: <span class="s">block</span>;
+    <span class="f">aspect-ratio</span>: <span class="n">4</span> / <span class="n">3</span>;    <span class="c">/* բարձրությունը հաշվարկվում է ինքնաբերաբար */</span>
+}
+
+<span class="k">.card</span> <span class="t">img</span> {
+    <span class="f">width</span>: <span class="n">100%</span>;
+    <span class="f">height</span>: <span class="n">100%</span>;
+    <span class="f">object-fit</span>: <span class="s">cover</span>;
+}</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Համամասնություն</th><th>Ե՞րբ օգտագործել</th></tr>
+      <tr><td><code>1 / 1</code></td><td>Ավատարներ, Instagram-ի ոճ</td></tr>
+      <tr><td><code>4 / 3</code></td><td>Ապրանքների քարտեր</td></tr>
+      <tr><td><code>3 / 2</code></td><td>Լուսանկարներ</td></tr>
+      <tr><td><code>16 / 9</code></td><td>Վիդեո, hero-ներ</td></tr>
+      <tr><td><code>21 / 9</code></td><td>Լայն բաններներ</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ aspect-ratio, ոչ ֆիքսված height</span>
+      <p><code>height: 200px</code> — 375px էկրանին քարտը 355px լայն է, նկարը՝ 200px բարձր։ Համամասնությունը դառնում է գրեթե 16:9։ Իսկ 1440px էկրանին քարտը 300px է, և նույն 200px-ը դառնում է 3:2։<br><br>
+      <strong>Նույն դիզայնը երկու տարբեր տեսքով։</strong> <code>aspect-ratio</code>-ն պահում է համամասնությունը ամեն լայնության վրա։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Կարևոր կողմնակի օգուտ</span>
+      <p><code>aspect-ratio</code>-ը (կամ HTML-ի <code>width</code>/<code>height</code> ատրիբուտները) <strong>ամրագրում է տեղը</strong> նկարի բեռնումից առաջ։<br><br>
+      Առանց դրա էջը «ցատկում է», երբ նկարները բեռնվում են՝ տեքստը շարժվում է ներքև, և օգտագործողը սեղմում է սխալ տեղում։ Սա իրական խնդիր է, և Google-ը դա հաշվի է առնում կայքի գնահատականում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Ֆոնային նկարներ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>hero-ի ձևանմուշ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">#hero</span> {
+    <span class="f">background-image</span>: <span class="s">url</span>(<span class="s">"../images/hero.jpg"</span>);
+    <span class="f">background-size</span>: <span class="s">cover</span>;
+    <span class="f">background-position</span>: <span class="s">center</span>;
+    <span class="f">background-repeat</span>: <span class="s">no-repeat</span>;
+    <span class="f">min-height</span>: <span class="n">70vh</span>;
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ուշադրություն ուղուն</span>
+      <p>CSS-ում ուղին հաշվվում է <strong>CSS ֆայլից</strong>, ոչ HTML-ից։<br><br>
+      Եթե <code>main.css</code>-ը <code>css/</code> թղթապանակում է, իսկ նկարը՝ <code>images/</code>-ում, ապա ուղին է <code>../images/hero.jpg</code>։ Սա Դաս 2-ի ուղիների կանոնի ամենահաճախ մոռացվող կիրառությունն է։</p>
+    </div>
+
+    <h3>Ե՞րբ img, ե՞րբ background</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th></th><th><code>&lt;img&gt;</code></th><th><code>background-image</code></th></tr>
+      <tr><td>Բովանդակություն է</td><td>✅</td><td>❌</td></tr>
+      <tr><td>Ունի <code>alt</code></td><td>✅</td><td>Չունի</td></tr>
+      <tr><td>Որոնողական համակարգը տեսնում է</td><td>✅</td><td>Ոչ</td></tr>
+      <tr><td>Դեկորացիա է</td><td>—</td><td>✅</td></tr>
+      <tr><td>Հեշտ է շերտ դնել վրան</td><td>Պետք է <code>absolute</code></td><td>✅ <code>gradient</code>-ով</td></tr>
+      <tr><td><code>srcset</code> աջակցություն</td><td>✅</td><td>Բարդ է</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Պարզ կանոն</span>
+      <p>Եթե նկարը հանելուց հետո էջը <strong>իմաստ է կորցնում</strong> — դա բովանդակություն է, օգտագործիր <code>&lt;img&gt;</code>։<br><br>
+      Եթե պարզապես ավելի գեղեցիկ էր — դա դեկորացիա է, օգտագործիր <code>background-image</code>։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>գրադիենտ նկարի վրա՝ առանց լրացուցիչ էլեմենտի</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">#hero</span> {
+    <span class="f">background-image</span>:
+        <span class="s">linear-gradient</span>(<span class="s">rgba</span>(<span class="n">37</span>,<span class="n">50</span>,<span class="n">55</span>,<span class="n">.75</span>), <span class="s">rgba</span>(<span class="n">37</span>,<span class="n">50</span>,<span class="n">55</span>,<span class="n">.75</span>)),
+        <span class="s">url</span>(<span class="s">"../images/hero.jpg"</span>);
+    <span class="f">background-size</span>: <span class="s">cover</span>;
+    <span class="f">background-position</span>: <span class="s">center</span>;
+}</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Շերտերի հերթականությունը</span>
+      <p><code>background-image</code>-ը կարող է ունենալ մի քանի շերտ՝ ստորակետով։ <strong>Առաջինը գրվածը վերևում է</strong> — ինչպես Photoshop-ում։<br><br>
+      Այս հնարքով Դաս 15-ի <code>::before</code>-ը դառնում է ավելորդ, և տեքստին <code>z-index</code> պետք չէ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>SVG</h2>
+    <p>Վեկտորային ձևաչափ։ Նկարագրում է <em>ձևերը</em>, ոչ պիքսելները — ուստի ցանկացած չափի վրա մնում է սուր։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>SVG ✅</th><th>SVG ❌</th></tr>
+      <tr><td>Լոգոներ</td><td>Լուսանկարներ</td></tr>
+      <tr><td>Պատկերակներ</td><td>Բարդ գրադիենտներով նկարներ</td></tr>
+      <tr><td>Դիագրամներ, գծապատկերներ</td><td>Ապրանքների ֆոտոներ</td></tr>
+      <tr><td>Պարզ նկարազարդումներ</td><td>Դիմանկարներ</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երեք ձև՝ SVG ներդնելու</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- 1. Որպես նկար — պարզ, բայց CSS-ով չես գունավորի --&gt;</span>
+<span class="p">&lt;</span><span class="t">img</span> <span class="f">src</span>=<span class="s">"images/logo.svg"</span> <span class="f">alt</span>=<span class="s">"ՏեխնոՄարկետ"</span> <span class="f">width</span>=<span class="s">"140"</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- 2. Ուղիղ HTML-ում — կարելի է ոճավորել CSS-ով ⭐ --&gt;</span>
+<span class="p">&lt;</span><span class="t">svg</span> <span class="f">viewBox</span>=<span class="s">"0 0 24 24"</span> <span class="f">class</span>=<span class="s">"icon"</span> <span class="f">aria-hidden</span>=<span class="s">"true"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">path</span> <span class="f">d</span>=<span class="s">"M12 2 L2 22 L22 22 Z"</span><span class="p">/&gt;</span>
+<span class="p">&lt;/</span><span class="t">svg</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- 3. Որպես ֆոն --&gt;</span>
+<span class="c">/* background-image: url("../images/pattern.svg"); */</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>inline SVG-ի ոճավորումը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.icon</span> {
+    <span class="f">width</span>: <span class="n">24px</span>;
+    <span class="f">height</span>: <span class="n">24px</span>;
+    <span class="f">fill</span>: <span class="k">currentColor</span>;      <span class="c">/* ⭐ վերցնում է տեքստի գույնը */</span>
+}
+
+<span class="k">.btn</span>:<span class="k">hover</span> <span class="k">.icon</span> { <span class="f">fill</span>: <span class="s">white</span>; }
+
+<span class="c">/* Գծային պատկերակների համար */</span>
+<span class="k">.icon-stroke</span> {
+    <span class="f">fill</span>: <span class="s">none</span>;
+    <span class="f">stroke</span>: <span class="k">currentColor</span>;
+    <span class="f">stroke-width</span>: <span class="n">2</span>;
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">fill: currentColor — ամենաօգտակար հնարքը</span>
+      <p><code>currentColor</code>-ը հատուկ արժեք է․ այն նշանակում է «այս էլեմենտի <code>color</code>-ը»։<br><br>
+      Արդյունքում պատկերակը ինքնաբերաբար ընդունում է կոճակի կամ հղումի գույնը՝ ներառյալ <code>:hover</code> վիճակում։ Մեկ SVG ֆայլ, տասնյակ գունային տարբերակ, զրո լրացուցիչ կոդ։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Հասանելիություն</span>
+      <p><strong>Դեկորատիվ պատկերակ</strong> (կողքին տեքստ կա) → <code>aria-hidden="true"</code><br>
+      <strong>Իմաստ կրող պատկերակ</strong> (միայնակ կոճակի ներսում) → կոճակին տուր <code>aria-label="Փակել"</code><br><br>
+      Երբեք մի՛ թող պատկերակ-կոճակը առանց տեքստային բացատրության։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>srcset — ճիշտ չափը ճիշտ էկրանին</h2>
+
+    <div class="warn note">
+      <span class="tag">Խնդիրը</span>
+      <p>2400px լայնությամբ նկարը կշռում է 800 ԿԲ։ Հեռախոսում այն ցուցադրվում է 350px-ով — բայց <strong>ներբեռնվում է ամբողջությամբ</strong>։<br><br>
+      Դանդաղ ինտերնետով դա 10+ վայրկյան սպասում մեկ նկարի համար։ Օգտագործողը կհեռանա։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>srcset + sizes</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">img</span>
+    <span class="f">src</span>=<span class="s">"images/laptop-800.jpg"</span>
+    <span class="f">srcset</span>=<span class="s">"images/laptop-400.jpg   400w,
+            images/laptop-800.jpg   800w,
+            images/laptop-1600.jpg 1600w"</span>
+    <span class="f">sizes</span>=<span class="s">"(max-width: 576px) 100vw,
+           (max-width: 992px) 50vw,
+           33vw"</span>
+    <span class="f">alt</span>=<span class="s">"Նոութբուք Pro բաց վիճակում"</span>
+    <span class="f">width</span>=<span class="s">"800"</span> <span class="f">height</span>=<span class="s">"600"</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ատրիբուտ</th><th>Ինչ է ասում բրաուզերին</th></tr>
+      <tr><td><code>src</code></td><td>Պահեստային տարբերակ հին բրաուզերների համար</td></tr>
+      <tr><td><code>srcset</code></td><td>«Ահա ինչ չափերի ֆայլեր ունեմ»։ <code>w</code> = նկարի իրական լայնությունը</td></tr>
+      <tr><td><code>sizes</code></td><td>«Ահա որքան տեղ կզբաղեցնի նկարը էկրանին»</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչպես է բրաուզերը որոշում</span>
+      <p><strong>1.</strong> Կարդում է <code>sizes</code>-ը և հաշվում՝ 375px էկրանին նկարը կլինի <code>100vw</code> = 375px։<br>
+      <strong>2.</strong> Հաշվի է առնում էկրանի խտությունը՝ Retina-ի դեպքում ×2 = 750px։<br>
+      <strong>3.</strong> Ընտրում է <code>srcset</code>-ից ամենամոտ չափը՝ 800w։<br><br>
+      Ամեն ինչ ավտոմատ։ Քո գործը՝ պատրաստել ֆայլերը և ճիշտ նկարագրել։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">sizes-ը կրկնում է քո media query-ները</span>
+      <p>Նկատեցի՞ր՝ <code>576px</code> և <code>992px</code>-ը նույն breakpoint-ներն են, ինչ Դաս 14-ում։ Իսկ <code>100vw / 50vw / 33vw</code>-ն համապատասխանում է <code>w-sm-100 / w-md-50 / w-33</code>-ին։<br><br>
+      Այսինքն՝ <code>sizes</code>-ը պարզապես նույն տրամաբանության վերապատմումն է բրաուզերի համար։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>&lt;picture&gt;</h2>
+    <p>Երբ պետք է ոչ թե <em>նույն</em> նկարի տարբեր չափեր, այլ <strong>տարբեր ֆայլեր</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>1. Ժամանակակից ձևաչափեր</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">picture</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">source</span> <span class="f">srcset</span>=<span class="s">"images/hero.avif"</span> <span class="f">type</span>=<span class="s">"image/avif"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">source</span> <span class="f">srcset</span>=<span class="s">"images/hero.webp"</span> <span class="f">type</span>=<span class="s">"image/webp"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">img</span> <span class="f">src</span>=<span class="s">"images/hero.jpg"</span> <span class="f">alt</span>=<span class="s">"Աշխատասենյակ նոութբուքով"</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">picture</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչպես է աշխատում</span>
+      <p>Բրաուզերը կարդում է <code>source</code>-երը <strong>վերևից ներքև</strong> և վերցնում առաջինը, որը հասկանում է։ Եթե ոչ մեկը՝ ընկնում է <code>&lt;img&gt;</code>-ի վրա։<br><br>
+      Այսինքն՝ ժամանակակից բրաուզերը կվերցնի AVIF-ը (ամենաթեթևը), հինը՝ JPG-ն։ <strong><code>&lt;img&gt;</code>-ը պարտադիր է</strong> — այն վերջին ապահովագրությունն է և կրում է <code>alt</code>-ը։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>2. Արտիստիկ կադրավորում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">picture</span><span class="p">&gt;</span>
+    <span class="c">&lt;!-- Հեռախոսում՝ ուղղահայաց կադր --&gt;</span>
+    <span class="p">&lt;</span><span class="t">source</span> <span class="f">media</span>=<span class="s">"(max-width: 576px)"</span>
+            <span class="f">srcset</span>=<span class="s">"images/hero-mobile.jpg"</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- Համակարգչում՝ լայն կադր --&gt;</span>
+    <span class="p">&lt;</span><span class="t">img</span> <span class="f">src</span>=<span class="s">"images/hero-wide.jpg"</span> <span class="f">alt</span>=<span class="s">"Աշխատասենյակ"</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">picture</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ է սա պետք</span>
+      <p>Լայն 21:9 բանները հեռախոսում դառնում է բարակ շերտ, որտեղ ոչինչ չի երևում։ Պարզապես փոքրացնելը չի օգնի — <strong>պետք է ուրիշ կադր</strong>՝ մոտեցված, ուղղահայաց։<br><br>
+      Դա կոչվում է <em>art direction</em>։ <code>srcset</code>-ը լուծում է <strong>քաշի</strong> խնդիրը, <code>&lt;picture media&gt;</code>-ն՝ <strong>կոմպոզիցիայի</strong>։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Խնդիր</th><th>Լուծում</th></tr>
+      <tr><td>Նույն նկարը, տարբեր չափեր</td><td><code>srcset</code> + <code>sizes</code></td></tr>
+      <tr><td>Ժամանակակից ձևաչափեր</td><td><code>&lt;picture&gt;</code> + <code>type</code></td></tr>
+      <tr><td>Տարբեր կադրավորում</td><td><code>&lt;picture&gt;</code> + <code>media</code></td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Օպտիմիզացիա</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ձևաչափ</th><th>Հարաբերական քաշ</th><th>Ե՞րբ</th></tr>
+      <tr><td>PNG</td><td>100%</td><td>Թափանցիկություն, սուր եզրեր</td></tr>
+      <tr><td>JPG</td><td>~30%</td><td>Լուսանկարներ (ունիվերսալ)</td></tr>
+      <tr><td><strong>WebP</strong></td><td>~20%</td><td>Ամեն ինչ, բացի հին բրաուզերներից</td></tr>
+      <tr><td><strong>AVIF</strong></td><td>~12%</td><td>Ամենաթեթևը, աջակցությունը լավն է</td></tr>
+      <tr><td>SVG</td><td>Չափից անկախ</td><td>Լոգոներ, պատկերակներ</td></tr>
+    </table>
+    </div>
+
+    <h3>Ստուգաթերթ ամեն նկարի համար</h3>
+    <ul class="goals">
+      <li>Չափը չի գերազանցում իրական ցուցադրման չափը × 2</li>
+      <li>Ձևաչափը ճիշտ է ընտրված</li>
+      <li>Ֆայլը սեղմված է (squoosh.app կամ tinypng.com)</li>
+      <li>Կա <code>alt</code></li>
+      <li>Կան <code>width</code> և <code>height</code> ատրիբուտները</li>
+      <li>Էկրանից դուրս նկարներն ունեն <code>loading="lazy"</code></li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ուշացումով բեռնում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- Առաջին էկրանի նկարներ — ԱՌԱՆՑ lazy --&gt;</span>
+<span class="p">&lt;</span><span class="t">img</span> <span class="f">src</span>=<span class="s">"images/hero.jpg"</span> <span class="f">alt</span>=<span class="s">"..."</span> <span class="f">fetchpriority</span>=<span class="s">"high"</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Ներքևի նկարներ — lazy --&gt;</span>
+<span class="p">&lt;</span><span class="t">img</span> <span class="f">src</span>=<span class="s">"images/product-5.jpg"</span> <span class="f">alt</span>=<span class="s">"..."</span> <span class="f">loading</span>=<span class="s">"lazy"</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Հաճախ սխալ են անում</span>
+      <p><code>loading="lazy"</code> <strong>առաջին էկրանի</strong> նկարի վրա → այն սկսում է բեռնվել ուշ, և օգտագործողը տեսնում է դատարկ տեղ։<br><br>
+      Կանոն՝ <code>lazy</code> միայն այն նկարներին, որոնք սկզբում <em>չեն երևում</em>։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչպես ստուգել</span>
+      <p>DevTools → <strong>Network</strong> → <em>Img</em> ֆիլտր → թարմացրու էջը։<br><br>
+      Կտեսնես ամեն նկարի քաշը և բեռնման ժամանակը։ Եթե որևէ մեկը 300 ԿԲ-ից ծանր է — հավանաբար այն պիտի սեղմել։ Ընդհանուր էջը լավ է, երբ 1 ՄԲ-ից պակաս է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Խաղահրապարակ</h2>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="css">CSS</button>
+        <button class="live__tab" data-pane="html">HTML</button>
+      </div>
+      <textarea class="live__code" data-pane="css">* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: system-ui, sans-serif;
+    background: #f5f5f5;
+    padding: 14px;
+    line-height: 1.5;
+}
+
+h3 { font-size: 13px; margin: 16px 0 6px; color: #555; }
+
+.row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* Փոխարինում ենք իրական նկարները SVG-ով,
+   որ ամեն ինչ աշխատի առանց ֆայլերի */
+.box {
+    width: 150px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.box img {
+    display: block;
+    width: 100%;
+}
+
+/* ===== 1. object-fit-ի համեմատություն ===== */
+.frame {
+    height: 100px;
+    background: #dfe6ea;
+}
+
+.frame img { width: 100%; height: 100%; }
+
+.fit-fill    img { object-fit: fill; }      /* ❌ ձգված */
+.fit-cover   img { object-fit: cover; }     /* ✅ */
+.fit-contain img { object-fit: contain; }
+
+/* ===== 2. object-position ===== */
+.pos-center img { object-fit: cover; object-position: center; }
+.pos-top    img { object-fit: cover; object-position: top; }
+
+/* ===== 3. aspect-ratio ===== */
+.ratio-1-1  { aspect-ratio: 1 / 1; }
+.ratio-4-3  { aspect-ratio: 4 / 3; }
+.ratio-16-9 { aspect-ratio: 16 / 9; }
+
+.ratio-1-1, .ratio-4-3, .ratio-16-9 {
+    background: #dfe6ea;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.ratio-1-1 img, .ratio-4-3 img, .ratio-16-9 img {
+    width: 100%; height: 100%; object-fit: cover;
+}
+
+/* ===== 4. Ֆոն + գրադիենտ ===== */
+.hero {
+    min-height: 130px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    color: #fff;
+    background-image:
+        linear-gradient(rgba(37,50,55,.7), rgba(37,50,55,.7)),
+        linear-gradient(120deg, #d4a373, #6b4423);
+    background-size: cover;
+    background-position: center;
+}
+
+/* ===== 5. SVG պատկերակ՝ currentColor ===== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border-radius: 8px;
+    border: 1px solid #003459;
+    background: #fff;
+    color: #003459;          /* ← պատկերակը վերցնում է սա */
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn:hover { background: #003459; color: #fff; }
+
+.icon { width: 18px; height: 18px; fill: currentColor; }</textarea>
+      <textarea class="live__code is-hidden" data-pane="html">&lt;h3&gt;1. object-fit — նույն նկարը, երեք վարքագիծ&lt;/h3&gt;
+&lt;div class="row"&gt;
+    &lt;div class="box"&gt;
+        &lt;div class="frame fit-fill"&gt;
+            &lt;img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect width='200' height='300' fill='%239db4c0'/%3E%3Ccircle cx='100' cy='90' r='45' fill='%23003459'/%3E%3Crect x='40' y='160' width='120' height='110' rx='12' fill='%23003459'/%3E%3C/svg%3E" alt="Դեմո"&gt;
+        &lt;/div&gt;
+        &lt;p style="padding:8px;font-size:12px"&gt;fill ❌&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div class="box"&gt;
+        &lt;div class="frame fit-cover"&gt;
+            &lt;img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect width='200' height='300' fill='%239db4c0'/%3E%3Ccircle cx='100' cy='90' r='45' fill='%23003459'/%3E%3Crect x='40' y='160' width='120' height='110' rx='12' fill='%23003459'/%3E%3C/svg%3E" alt="Դեմո"&gt;
+        &lt;/div&gt;
+        &lt;p style="padding:8px;font-size:12px"&gt;cover ✅&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div class="box"&gt;
+        &lt;div class="frame fit-contain"&gt;
+            &lt;img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect width='200' height='300' fill='%239db4c0'/%3E%3Ccircle cx='100' cy='90' r='45' fill='%23003459'/%3E%3Crect x='40' y='160' width='120' height='110' rx='12' fill='%23003459'/%3E%3C/svg%3E" alt="Դեմո"&gt;
+        &lt;/div&gt;
+        &lt;p style="padding:8px;font-size:12px"&gt;contain&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3&gt;2. object-position — դիմանկարի գլուխը&lt;/h3&gt;
+&lt;div class="row"&gt;
+    &lt;div class="box"&gt;
+        &lt;div class="frame pos-center"&gt;
+            &lt;img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect width='200' height='300' fill='%23dfe6ea'/%3E%3Ccircle cx='100' cy='70' r='42' fill='%23c62828'/%3E%3Crect x='45' y='130' width='110' height='150' rx='14' fill='%23003459'/%3E%3C/svg%3E" alt="Դիմանկար"&gt;
+        &lt;/div&gt;
+        &lt;p style="padding:8px;font-size:12px"&gt;center — գլուխը կտրվեց&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div class="box"&gt;
+        &lt;div class="frame pos-top"&gt;
+            &lt;img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect width='200' height='300' fill='%23dfe6ea'/%3E%3Ccircle cx='100' cy='70' r='42' fill='%23c62828'/%3E%3Crect x='45' y='130' width='110' height='150' rx='14' fill='%23003459'/%3E%3C/svg%3E" alt="Դիմանկար"&gt;
+        &lt;/div&gt;
+        &lt;p style="padding:8px;font-size:12px"&gt;top ✅&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3&gt;3. aspect-ratio — նեղացրու պատուհանը&lt;/h3&gt;
+&lt;div class="row"&gt;
+    &lt;div style="flex:1;min-width:110px"&gt;
+        &lt;div class="ratio-1-1"&gt;
+            &lt;img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%239db4c0'/%3E%3Cpath d='M0 200 L90 100 L160 160 L220 110 L300 200 Z' fill='%23003459'/%3E%3Ccircle cx='245' cy='45' r='24' fill='%23fff'/%3E%3C/svg%3E" alt="Բնանկար"&gt;
+        &lt;/div&gt;
+        &lt;p style="font-size:12px"&gt;1 / 1&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div style="flex:1;min-width:110px"&gt;
+        &lt;div class="ratio-4-3"&gt;
+            &lt;img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%239db4c0'/%3E%3Cpath d='M0 200 L90 100 L160 160 L220 110 L300 200 Z' fill='%23003459'/%3E%3Ccircle cx='245' cy='45' r='24' fill='%23fff'/%3E%3C/svg%3E" alt="Բնանկար"&gt;
+        &lt;/div&gt;
+        &lt;p style="font-size:12px"&gt;4 / 3&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div style="flex:1;min-width:110px"&gt;
+        &lt;div class="ratio-16-9"&gt;
+            &lt;img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%239db4c0'/%3E%3Cpath d='M0 200 L90 100 L160 160 L220 110 L300 200 Z' fill='%23003459'/%3E%3Ccircle cx='245' cy='45' r='24' fill='%23fff'/%3E%3C/svg%3E" alt="Բնանկար"&gt;
+        &lt;/div&gt;
+        &lt;p style="font-size:12px"&gt;16 / 9&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3&gt;4. Ֆոն + գրադիենտ մեկ հատկությամբ&lt;/h3&gt;
+&lt;div class="hero"&gt;
+    &lt;div&gt;
+        &lt;strong&gt;Տեքստը ընթեռնելի է&lt;/strong&gt;
+        &lt;p style="font-size:13px"&gt;առանց ::before-ի և z-index-ի&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3&gt;5. SVG պատկերակ — fill: currentColor&lt;/h3&gt;
+&lt;button class="btn"&gt;
+    &lt;svg class="icon" viewBox="0 0 24 24" aria-hidden="true"&gt;
+        &lt;path d="M7 18a2 2 0 100 4 2 2 0 000-4zm10 0a2 2 0 100 4 2 2 0 000-4zM1 2h3l3 12h11l3-8H7"/&gt;
+    &lt;/svg&gt;
+    Ավելացնել զամբյուղ
+&lt;/button&gt;</textarea>
+      <div class="live__actions">
+        <span>Սավառնիր կոճակի վրայով — պատկերակը փոխում է գույնը</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Փորձիր</span>
+      <p><strong>1.</strong> Ջնջիր <code>.frame img { height: 100% }</code>-ը — <code>object-fit</code>-ը կաշխատի՞։<br>
+      <strong>2.</strong> Փոխիր <code>.pos-top</code>-ը <code>bottom</code>-ի։<br>
+      <strong>3.</strong> Փոխիր <code>.ratio-16-9</code>-ը <code>21 / 9</code>-ի։<br>
+      <strong>4.</strong> Ջնջիր <code>.icon { fill: currentColor }</code>-ը և սավառնիր կոճակի վրայով։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Դասարանական</h2>
+    <p>Վերցնում ենք ապրանքների բաժինը և կարգի ենք բերում նկարները։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>css/global.css — այսօրվա ավելացումը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ---------- Նկարների օգնականներ ---------- */</span>
+<span class="k">.img-cover</span> {
+    <span class="f">width</span>: <span class="n">100%</span>;
+    <span class="f">height</span>: <span class="n">100%</span>;
+    <span class="f">object-fit</span>: <span class="s">cover</span>;
+}
+
+<span class="k">.img-contain</span> {
+    <span class="f">width</span>: <span class="n">100%</span>;
+    <span class="f">height</span>: <span class="n">100%</span>;
+    <span class="f">object-fit</span>: <span class="s">contain</span>;
+}
+
+<span class="k">.ratio-1-1</span>  { <span class="f">aspect-ratio</span>: <span class="n">1</span> / <span class="n">1</span>; }
+<span class="k">.ratio-4-3</span>  { <span class="f">aspect-ratio</span>: <span class="n">4</span> / <span class="n">3</span>; }
+<span class="k">.ratio-3-2</span>  { <span class="f">aspect-ratio</span>: <span class="n">3</span> / <span class="n">2</span>; }
+<span class="k">.ratio-16-9</span> { <span class="f">aspect-ratio</span>: <span class="n">16</span> / <span class="n">9</span>; }</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-33 w-md-50 w-sm-100"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">article</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">picture</span> <span class="f">class</span>=<span class="s">"ratio-4-3"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">source</span> <span class="f">srcset</span>=<span class="s">"images/laptop.webp"</span> <span class="f">type</span>=<span class="s">"image/webp"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">img</span> <span class="f">class</span>=<span class="s">"img-cover"</span>
+                 <span class="f">src</span>=<span class="s">"images/laptop.jpg"</span>
+                 <span class="f">alt</span>=<span class="s">"Նոութբուք Pro 14 բաց վիճակում"</span>
+                 <span class="f">width</span>=<span class="s">"800"</span> <span class="f">height</span>=<span class="s">"600"</span>
+                 <span class="f">loading</span>=<span class="s">"lazy"</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">picture</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__body"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"title-4 mb-10"</span><span class="p">&gt;</span>Նոութբուք Pro 14<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"price"</span><span class="p">&gt;</span>450&amp;nbsp;000 ֏<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ուշադրություն՝ picture-ը հիմա կրում է aspect-ratio-ն</span>
+      <p>Դաս 8-ից <code>global.css</code>-ում ունենք <code>picture { display: block }</code>։ Դրա շնորհիվ <code>aspect-ratio</code>-ն աշխատում է դրա վրա։<br><br>
+      Կառուցվածքը՝ <strong><code>picture</code> սահմանում է կադրի ձևը, <code>img</code> լցնում է այն</strong>։ Նույն տրամաբանությունը, ինչ <code>.col</code>-ի և <code>.wrapper</code>-ի դեպքում — ամեն շերտն իր գործն է անում։</p>
+    </div>
+
+    <ol>
+      <li>Ավելացրու <code>global.css</code>-ի նոր դասերը</li>
+      <li>Փաթեթավորիր բոլոր նկարները <code>&lt;picture&gt;</code>-ի մեջ</li>
+      <li>Ավելացրու <code>ratio-*</code> դասը <code>picture</code>-ին</li>
+      <li>Ավելացրու <code>img-cover</code> դասը <code>img</code>-ին</li>
+      <li>Ավելացրու <code>width</code>, <code>height</code>, <code>loading="lazy"</code></li>
+      <li>Ստուգիր, որ բոլոր <code>alt</code>-երը իմաստալից են</li>
+      <li>Բացիր DevTools → Network → Img և ստուգիր քաշերը</li>
+    </ol>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Վերցրու 6 նկար բոլորովին տարբեր չափերի։ Ցուցադրիր դրանք նույն ցանցում՝ <code>aspect-ratio</code> + <code>object-fit: cover</code>-ով։</li>
+      <li>Ցուցադրիր <code>object-fit</code>-ի հինգ արժեքը՝ նույն նկարով։ Նկարագրիր ամեն մեկը։</li>
+      <li>Գտիր դիմանկար, որտեղ <code>cover</code>-ը կտրում է գլուխը։ Ուղղիր <code>object-position</code>-ով։</li>
+      <li>Համեմատիր <code>height: 200px</code>-ը և <code>aspect-ratio: 4/3</code>-ը՝ նեղացնելով պատուհանը։ Ուղարկիր երկու սքրինշոթ։</li>
+      <li>Կառուցիր hero՝ ֆոնային նկարով և գրադիենտ շերտով՝ մեկ <code>background-image</code> հատկությամբ։</li>
+      <li>Գտիր անվճար SVG պատկերակներ (օր.՝ Feather Icons)։ Ներդրիր երեքը inline և գունավորիր <code>fill: currentColor</code>-ով։</li>
+      <li>Ստեղծիր կոճակ պատկերակով, որի գույնը փոխվում է <code>:hover</code>-ի ժամանակ։</li>
+      <li>Պատրաստիր մեկ նկարի երեք չափ (400/800/1600) և գրիր <code>srcset</code> + <code>sizes</code>։ Ստուգիր DevTools-ով՝ որ ֆայլն է բեռնվում տարբեր լայնություններում։</li>
+      <li>Փոխարկիր 5 նկար WebP-ի (squoosh.app)։ Համեմատիր քաշերը և գրիր տոկոսային տարբերությունը։</li>
+      <li>Ամբողջ էջում ավելացրու <code>loading="lazy"</code> ներքևի նկարներին։ Չափիր բեռնման ժամանակը DevTools → Network-ում՝ առաջ և հետո։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 12 ============ -->
+  <section id="s12">
+    <h2><span class="num">12</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հատկություն</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>object-fit: cover</code></td><td>Լցնում է առանց դեֆորմացիայի ⭐</td></tr>
+      <tr><td><code>object-fit: contain</code></td><td>Ամբողջը երևում է</td></tr>
+      <tr><td><code>object-position: top</code></td><td>Դիմանկարների համար</td></tr>
+      <tr><td><code>aspect-ratio: 4 / 3</code></td><td>Կայուն համամասնություն ⭐</td></tr>
+      <tr><td><code>background-size: cover</code></td><td>Ֆոնի համար</td></tr>
+      <tr><td><code>fill: currentColor</code></td><td>SVG-ն վերցնում է տեքստի գույնը ⭐</td></tr>
+      <tr><td><code>srcset</code> + <code>sizes</code></td><td>Ճիշտ չափը ճիշտ էկրանին</td></tr>
+      <tr><td><code>&lt;picture&gt;</code> + <code>type</code></td><td>WebP / AVIF</td></tr>
+      <tr><td><code>&lt;picture&gt;</code> + <code>media</code></td><td>Այլ կադրավորում</td></tr>
+      <tr><td><code>loading="lazy"</code></td><td>Միայն էկրանից դուրս նկարներին</td></tr>
+      <tr><td><code>width</code> + <code>height</code></td><td>Ամրագրում է տեղը, էջը չի ցատկում ⭐</td></tr>
+    </table>
+    </div>
+
+    <h3>Հիմնական ձևանմուշը</h3>
+    <div class="tree">&lt;picture class="ratio-4-3"&gt;
+    &lt;img class="img-cover" src="..." alt="..."
+         width="800" height="600" loading="lazy"&gt;
+&lt;/picture&gt;
+
+picture  →  սահմանում է կադրի ձևը
+img      →  լցնում է այն</div>
+
+    <h3>Ի՞նչ ավելացավ global.css-ում այսօր</h3>
+    <div class="tree">✓ .img-cover / .img-contain
+✓ .ratio-1-1 / .ratio-4-3 / .ratio-3-2 / .ratio-16-9</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Բոլոր նկարներն ունեն <code>alt</code></li>
+      <li>Բոլոր նկարներն ունեն <code>width</code> և <code>height</code></li>
+      <li>Կադրերի համամասնությունը միատեսակ է</li>
+      <li>Ոչ մի նկար չի ձգված</li>
+      <li>Դիմանկարներում գլուխները չեն կտրված</li>
+      <li>Էկրանից դուրս նկարներն ունեն <code>loading="lazy"</code></li>
+      <li>Առաջին էկրանի նկարներն <strong>չունեն</strong> <code>lazy</code></li>
+      <li>Ոչ մի ֆայլ 300 ԿԲ-ից ծանր չէ</li>
+      <li>Լոգոն և պատկերակները SVG են</li>
+      <li>Էջը բեռնվելիս չի «ցատկում»</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել <code>cover</code>-ի և <code>contain</code>-ի տարբերությունը</li>
+      <li>Գիտե՞մ, ինչու <code>aspect-ratio</code>, ոչ ֆիքսված <code>height</code></li>
+      <li>Հասկանո՞ւմ եմ, ե՞րբ <code>&lt;img&gt;</code>, ե՞րբ <code>background-image</code></li>
+      <li>Գիտե՞մ, ինչ է անում <code>currentColor</code>-ը</li>
+      <li>Կարո՞ղ եմ բացատրել <code>srcset</code>-ի և <code>&lt;picture media&gt;</code>-ի տարբերությունը</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Կոմպոնենտներ․ քարտեր, կոճակների համակարգ, պիտակներ, <code>::before</code> և <code>::after</code>, ստվերներ։ Կհավաքենք այն ամենը, ինչ սովորել ենք, կրկնվող կոմպոնենտների գրադարանում։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 16 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 22 — Նախագիծ · օր 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<style>
+.mock{border:1px solid var(--rule);border-radius:10px;overflow:hidden;margin:22px 0;background:#fff}
+.mock svg{display:block;width:100%;height:auto}
+</style>
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 22 · 2 ժամ · Նախագիծ, օր 1 / 2</p>
+  <h1>ՏեխնոՄարկետ · կմախք և դասավորություն</h1>
+  <p class="lede">Այսօր ոչինչ նոր չենք սովորի։ Կկիրառենք 21 դասի ամեն ինչ մեկ իրական էջի վրա՝ մակետից մինչև աշխատող դասավորություն։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 01–21</span>
+    <span>Բլոկ 1 · Նախագիծ</span>
+    <span>Աշխատանքային հոսք՝ Դաս 13</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Օրվա պլան</h2>
+    <ul class="goals">
+      <li>Մակետի վերլուծություն և չափումներ</li>
+      <li>Ֆայլերի կառուցվածք</li>
+      <li><code>main.css</code>-ի հիմքը՝ տոկեններով</li>
+      <li>HTML կմախք՝ բոլոր բաժինները</li>
+      <li>Header և hero</li>
+      <li>Ապրանքների ցանց</li>
+      <li>Առավելություններ, CTA, footer</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Կարևոր՝ հերթականությունը</span>
+      <p>Դաս 13-ի հոսքը՝ <strong>չափել → <code>main.css</code> → HTML</strong>։<br><br>
+      Գայթակղիչ է սկսել HTML-ից, որովհետև այնտեղ արագ արդյունք է երևում։ Բայց այդ դեպքում ամեն բաժնի համար նորից կմտածես չափերի մասին, և վերջում կունենաս 14 տարբեր տառաչափ։<br><br>
+      Առաջին 30 րոպեն՝ ոչ մի HTML։</p>
+    </div>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Մակետը</h2>
+
+    <div class="mock">
+    <svg viewBox="0 0 760 1120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ՏեխնոՄարկետ landing page-ի մակետ">
+      <rect width="760" height="1120" fill="#ffffff"/>
+
+      <!-- HEADER -->
+      <rect x="0" y="0" width="760" height="60" fill="#ffffff"/>
+      <line x1="0" y1="60" x2="760" y2="60" stroke="#e6e6e6"/>
+      <text x="60" y="37" font-family="sans-serif" font-size="17" font-weight="700" fill="#003459">ՏեխնոՄարկետ</text>
+      <text x="400" y="36" font-family="sans-serif" font-size="12" fill="#444">Ապրանքներ</text>
+      <text x="480" y="36" font-family="sans-serif" font-size="12" fill="#444">Առավելություններ</text>
+      <text x="588" y="36" font-family="sans-serif" font-size="12" fill="#444">Կապ</text>
+      <rect x="630" y="18" width="70" height="26" rx="6" fill="#003459"/>
+      <text x="646" y="35" font-family="sans-serif" font-size="11" fill="#fff">Զամբյուղ</text>
+
+      <!-- HERO -->
+      <rect x="0" y="60" width="760" height="250" fill="#253237"/>
+      <text x="60" y="150" font-family="sans-serif" font-size="36" font-weight="700" fill="#ffffff">Տեխնիկա, որին</text>
+      <text x="60" y="192" font-family="sans-serif" font-size="36" font-weight="700" fill="#ffffff">կարելի է վստահել</text>
+      <text x="60" y="222" font-family="sans-serif" font-size="14" fill="#c9d4d9">Ընտրիր 5000+ ապրանքից · Անվճար առաքում Երևանում</text>
+      <rect x="60" y="242" width="140" height="42" rx="6" fill="#9db4c0"/>
+      <text x="92" y="268" font-family="sans-serif" font-size="14" font-weight="700" fill="#1a1a1a">Դիտել կատալոգը</text>
+      <rect x="212" y="242" width="120" height="42" rx="6" fill="none" stroke="#9db4c0" stroke-width="1.5"/>
+      <text x="240" y="268" font-family="sans-serif" font-size="14" fill="#ffffff">Մեր մասին</text>
+
+      <!-- PRODUCTS -->
+      <rect x="0" y="310" width="760" height="380" fill="#f5f5f5"/>
+      <text x="60" y="368" font-family="sans-serif" font-size="26" font-weight="700" fill="#1a1a1a">Հանրաճանաչ ապրանքներ</text>
+      <line x1="60" y1="382" x2="108" y2="382" stroke="#003459" stroke-width="3"/>
+
+      <g>
+        <rect x="60" y="410" width="200" height="240" rx="12" fill="#ffffff"/>
+        <rect x="60" y="410" width="200" height="130" fill="#dfe6ea"/>
+        <rect x="72" y="422" width="52" height="20" rx="10" fill="#c62828"/>
+        <text x="82" y="436" font-family="sans-serif" font-size="11" fill="#fff">-30%</text>
+        <text x="76" y="568" font-family="sans-serif" font-size="14" font-weight="700" fill="#1a1a1a">Նոութբուք Pro 14</text>
+        <text x="76" y="588" font-family="sans-serif" font-size="12" fill="#6b6b6b">16 ԳԲ / 512 ԳԲ SSD</text>
+        <text x="76" y="626" font-family="sans-serif" font-size="16" font-weight="700" fill="#003459">450 000 ֏</text>
+        <rect x="182" y="608" width="64" height="28" rx="6" fill="#003459"/>
+        <text x="202" y="627" font-family="sans-serif" font-size="11" fill="#fff">Գնել</text>
+      </g>
+      <g>
+        <rect x="280" y="410" width="200" height="240" rx="12" fill="#ffffff"/>
+        <rect x="280" y="410" width="200" height="130" fill="#dfe6ea"/>
+        <text x="296" y="568" font-family="sans-serif" font-size="14" font-weight="700" fill="#1a1a1a">Մոնիտոր 27" 4K</text>
+        <text x="296" y="588" font-family="sans-serif" font-size="12" fill="#6b6b6b">IPS, 144 Հց</text>
+        <text x="296" y="626" font-family="sans-serif" font-size="16" font-weight="700" fill="#003459">120 000 ֏</text>
+        <rect x="402" y="608" width="64" height="28" rx="6" fill="#003459"/>
+        <text x="422" y="627" font-family="sans-serif" font-size="11" fill="#fff">Գնել</text>
+      </g>
+      <g>
+        <rect x="500" y="410" width="200" height="240" rx="12" fill="#ffffff"/>
+        <rect x="500" y="410" width="200" height="130" fill="#dfe6ea"/>
+        <rect x="512" y="422" width="46" height="20" rx="10" fill="#0f7b4f"/>
+        <text x="522" y="436" font-family="sans-serif" font-size="11" fill="#fff">ՆՈՐ</text>
+        <text x="516" y="568" font-family="sans-serif" font-size="14" font-weight="700" fill="#1a1a1a">Ստեղնաշար K3</text>
+        <text x="516" y="588" font-family="sans-serif" font-size="12" fill="#6b6b6b">Մեխանիկական</text>
+        <text x="516" y="626" font-family="sans-serif" font-size="16" font-weight="700" fill="#003459">25 000 ֏</text>
+        <rect x="622" y="608" width="64" height="28" rx="6" fill="#003459"/>
+        <text x="642" y="627" font-family="sans-serif" font-size="11" fill="#fff">Գնել</text>
+      </g>
+
+      <!-- FEATURES -->
+      <rect x="0" y="690" width="760" height="230" fill="#ffffff"/>
+      <text x="60" y="742" font-family="sans-serif" font-size="26" font-weight="700" fill="#1a1a1a">Ինչո՞ւ մենք</text>
+      <line x1="60" y1="756" x2="108" y2="756" stroke="#003459" stroke-width="3"/>
+
+      <circle cx="90" cy="810" r="20" fill="#e6ecf0"/>
+      <text x="60" y="856" font-family="sans-serif" font-size="14" font-weight="700" fill="#1a1a1a">Անվճար առաքում</text>
+      <text x="60" y="876" font-family="sans-serif" font-size="12" fill="#6b6b6b">50 000 ֏-ից բարձր</text>
+      <text x="60" y="892" font-family="sans-serif" font-size="12" fill="#6b6b6b">պատվերների դեպքում</text>
+
+      <circle cx="310" cy="810" r="20" fill="#e6ecf0"/>
+      <text x="280" y="856" font-family="sans-serif" font-size="14" font-weight="700" fill="#1a1a1a">2 տարվա երաշխիք</text>
+      <text x="280" y="876" font-family="sans-serif" font-size="12" fill="#6b6b6b">Պաշտոնական սերվիս</text>
+      <text x="280" y="892" font-family="sans-serif" font-size="12" fill="#6b6b6b">ամբողջ երկրում</text>
+
+      <circle cx="530" cy="810" r="20" fill="#e6ecf0"/>
+      <text x="500" y="856" font-family="sans-serif" font-size="14" font-weight="700" fill="#1a1a1a">14 օր վերադարձ</text>
+      <text x="500" y="876" font-family="sans-serif" font-size="12" fill="#6b6b6b">Առանց հարցերի,</text>
+      <text x="500" y="892" font-family="sans-serif" font-size="12" fill="#6b6b6b">եթե չհամապատասխանի</text>
+
+      <!-- CTA -->
+      <rect x="0" y="920" width="760" height="110" fill="#003459"/>
+      <text x="60" y="962" font-family="sans-serif" font-size="20" font-weight="700" fill="#ffffff">Բաժանորդագրվիր զեղչերին</text>
+      <text x="60" y="986" font-family="sans-serif" font-size="12" fill="#c9d4d9">Ամիսը մեկ նամակ, առանց սպամի</text>
+      <rect x="440" y="955" width="180" height="40" rx="6" fill="#ffffff"/>
+      <text x="454" y="980" font-family="sans-serif" font-size="12" fill="#9a9a9a">ani@example.com</text>
+      <rect x="628" y="955" width="72" height="40" rx="6" fill="#9db4c0"/>
+      <text x="644" y="980" font-family="sans-serif" font-size="12" font-weight="700" fill="#1a1a1a">Ուղարկել</text>
+
+      <!-- FOOTER -->
+      <rect x="0" y="1030" width="760" height="90" fill="#253237"/>
+      <text x="60" y="1062" font-family="sans-serif" font-size="15" font-weight="700" fill="#ffffff">ՏեխնոՄարկետ</text>
+      <text x="60" y="1082" font-family="sans-serif" font-size="11" fill="#9aa5ab">Երևան, Աբովյան 15</text>
+      <text x="300" y="1062" font-family="sans-serif" font-size="11" fill="#cfd8dd">Ապրանքներ</text>
+      <text x="300" y="1080" font-family="sans-serif" font-size="11" fill="#cfd8dd">Առաքում</text>
+      <text x="450" y="1062" font-family="sans-serif" font-size="11" fill="#cfd8dd">Երաշխիք</text>
+      <text x="450" y="1080" font-family="sans-serif" font-size="11" fill="#cfd8dd">Կապ</text>
+      <text x="600" y="1104" font-family="sans-serif" font-size="10" fill="#9aa5ab">© 2026</text>
+    </svg>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Բաժին</th><th>Կառուցվածք</th></tr>
+      <tr><td><code>header</code></td><td>Լոգո + մենյու + կոճակ, <code>sticky</code></td></tr>
+      <tr><td><code>#hero</code></td><td>Մուգ ֆոն, վերնագիր, 2 կոճակ</td></tr>
+      <tr><td><code>#products</code></td><td>Վերնագիր + 3 քարտ (ցանց)</td></tr>
+      <tr><td><code>#features</code></td><td>Վերնագիր + 3 սյուն պատկերակներով</td></tr>
+      <tr><td><code>#cta</code></td><td>Տեքստ ձախում, ֆորմա աջում</td></tr>
+      <tr><td><code>footer</code></td><td>3 սյուն + ներքևի տող</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Չափումների աղյուսակ</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ի՞նչ</th><th>Արժեք</th><th>Տոկեն</th></tr>
+      <tr><td>Մուգ ֆոն</td><td><code>#253237</code></td><td><code>--dark</code></td></tr>
+      <tr><td>Ակցենտ</td><td><code>#003459</code></td><td><code>--accent</code></td></tr>
+      <tr><td>Բաց ակցենտ</td><td><code>#9DB4C0</code></td><td><code>--accent-light</code></td></tr>
+      <tr><td>Էջի ֆոն</td><td><code>#F5F5F5</code></td><td><code>--bg</code></td></tr>
+      <tr><td>Քարտի ֆոն</td><td><code>#FFFFFF</code></td><td><code>--surface</code></td></tr>
+      <tr><td>Տեքստ</td><td><code>#1A1A1A</code></td><td><code>--text</code></td></tr>
+      <tr><td>Երկրորդական</td><td><code>#6B6B6B</code></td><td><code>--text-muted</code></td></tr>
+      <tr><td>Զեղչ</td><td><code>#C62828</code></td><td><code>--danger</code></td></tr>
+      <tr><td>Նոր</td><td><code>#0F7B4F</code></td><td><code>--success</code></td></tr>
+      <tr><td colspan="3" style="background:rgba(0,0,0,.04)"></td></tr>
+      <tr><td>Hero վերնագիր</td><td>36px / 700</td><td><code>.title-1</code></td></tr>
+      <tr><td>Բաժնի վերնագիր</td><td>26px / 700</td><td><code>.title-2</code></td></tr>
+      <tr><td>Քարտի վերնագիր</td><td>14px / 700</td><td><code>.title-4</code></td></tr>
+      <tr><td>Հիմնական տեքստ</td><td>14px / 400</td><td><code>body</code></td></tr>
+      <tr><td>Փոքր</td><td>12px / 400</td><td><code>.text-small</code></td></tr>
+      <tr><td colspan="3" style="background:rgba(0,0,0,.04)"></td></tr>
+      <tr><td><strong>Պատեր</strong></td><td>60px</td><td><code>--wall</code></td></tr>
+      <tr><td><strong>Քարտերի բացակ</strong></td><td>20px</td><td><code>--gap</code> = 10px</td></tr>
+      <tr><td>Բաժնի ուղղահայաց</td><td>60px</td><td><code>section</code></td></tr>
+      <tr><td>Վերնագիր → ցանց</td><td>28px → <strong>30px</strong></td><td><code>.mb-30</code></td></tr>
+      <tr><td colspan="3" style="background:rgba(0,0,0,.04)"></td></tr>
+      <tr><td>Քարտի կլորացում</td><td>12px</td><td><code>--radius-md</code></td></tr>
+      <tr><td>Կոճակի կլորացում</td><td>6px</td><td><code>--radius-sm</code></td></tr>
+      <tr><td>Քարտի <code>padding</code></td><td>16px</td><td>—</td></tr>
+      <tr><td>Նկարի համամասնություն</td><td>200×130 ≈ <strong>3/2</strong></td><td><code>.ratio-3-2</code></td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Երկու կլորացում</span>
+      <p>Չափեցինք 28px վերնագրի և ցանցի միջև, բայց սանդղակում կան 10/20/30/40։ Վերցնում ենք <strong>30</strong>։<br><br>
+      Նկարը 200×130 է — դա 1.54:1։ Ամենամոտ ստանդարտը 3:2 = 1.5։ Օգտագործում ենք այն։<br><br>
+      Դաս 13-ի կանոնը՝ <em>համակարգը կարևոր է, ոչ պիքսելային ճշգրտությունը</em>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ֆայլերի կառուցվածք</h2>
+
+    <div class="tree">technomarket/
+│
+├── index.html
+├── components.html        ← ոճերի ուղեցույց (Դաս 17)
+│
+├── css/
+│   ├── global.css         ← վարքագիծ, չի փոխվում նախագծից նախագիծ
+│   └── main.css           ← այս նախագծի արժեքները
+│
+└── images/
+    ├── laptop.jpg
+    ├── monitor.jpg
+    ├── keyboard.jpg
+    └── icons/
+        ├── truck.svg
+        ├── shield.svg
+        └── refresh.svg</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.html — head</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;!DOCTYPE </span><span class="t">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">html</span> <span class="f">lang</span>=<span class="s">"hy"</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">charset</span>=<span class="s">"UTF-8"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">name</span>=<span class="s">"viewport"</span> <span class="f">content</span>=<span class="s">"width=device-width, initial-scale=1.0"</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">title</span><span class="p">&gt;</span>ՏեխնոՄարկետ — տեխնիկա Երևանում<span class="p">&lt;/</span><span class="t">title</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">name</span>=<span class="s">"description"</span> <span class="f">content</span>=<span class="s">"5000+ ապրանք, անվճար առաքում, 2 տարվա երաշխիք"</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">property</span>=<span class="s">"og:title"</span> <span class="f">content</span>=<span class="s">"ՏեխնոՄարկետ"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">property</span>=<span class="s">"og:description"</span> <span class="f">content</span>=<span class="s">"Տեխնիկա, որին կարելի է վստահել"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">property</span>=<span class="s">"og:image"</span> <span class="f">content</span>=<span class="s">"images/og.jpg"</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"icon"</span> <span class="f">href</span>=<span class="s">"images/favicon.svg"</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"preconnect"</span> <span class="f">href</span>=<span class="s">"https://fonts.googleapis.com"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"preconnect"</span> <span class="f">href</span>=<span class="s">"https://fonts.gstatic.com"</span> <span class="f">crossorigin</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">link</span> <span class="f">href</span>=<span class="s">"https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;700&amp;display=swap"</span>
+          <span class="f">rel</span>=<span class="s">"stylesheet"</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"stylesheet"</span> <span class="f">href</span>=<span class="s">"css/global.css"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"stylesheet"</span> <span class="f">href</span>=<span class="s">"css/main.css"</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">head</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Հերթականությունը կարևոր է</span>
+      <p><code>global.css</code>-ը <strong>միշտ առաջ</strong>։ Այն սահմանում է վարքագիծը, <code>main.css</code>-ը՝ արժեքները։ Երբ երկուսը հակասեն, պիտի հաղթի երկրորդը (Դաս 6՝ կասկադ)։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>main.css — հիմքը</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>բաժիններ 1–5</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ============ 1. ՏՈԿԵՆՆԵՐ ============ */</span>
+<span class="k">:root</span> {
+    <span class="c">/* Գունապնակ */</span>
+    <span class="f">--navy-900</span>: <span class="s">#00253f</span>;
+    <span class="f">--navy-700</span>: <span class="s">#003459</span>;
+    <span class="f">--navy-300</span>: <span class="s">#9db4c0</span>;
+    <span class="f">--slate-900</span>: <span class="s">#253237</span>;
+    <span class="f">--slate-800</span>: <span class="s">#1a1a1a</span>;
+    <span class="f">--slate-500</span>: <span class="s">#6b6b6b</span>;
+    <span class="f">--slate-100</span>: <span class="s">#f5f5f5</span>;
+    <span class="f">--white</span>: <span class="s">#ffffff</span>;
+    <span class="f">--red-600</span>: <span class="s">#c62828</span>;
+    <span class="f">--green-600</span>: <span class="s">#0f7b4f</span>;
+
+    <span class="c">/* Իմաստային */</span>
+    <span class="f">--bg</span>: <span class="s">var</span>(<span class="f">--slate-100</span>);
+    <span class="f">--surface</span>: <span class="s">var</span>(<span class="f">--white</span>);
+    <span class="f">--dark</span>: <span class="s">var</span>(<span class="f">--slate-900</span>);
+    <span class="f">--text</span>: <span class="s">var</span>(<span class="f">--slate-800</span>);
+    <span class="f">--text-muted</span>: <span class="s">var</span>(<span class="f">--slate-500</span>);
+    <span class="f">--accent</span>: <span class="s">var</span>(<span class="f">--navy-700</span>);
+    <span class="f">--accent-hover</span>: <span class="s">var</span>(<span class="f">--navy-900</span>);
+    <span class="f">--accent-light</span>: <span class="s">var</span>(<span class="f">--navy-300</span>);
+    <span class="f">--on-dark</span>: <span class="s">var</span>(<span class="f">--white</span>);
+    <span class="f">--border</span>: <span class="s">#e2e6e9</span>;
+    <span class="f">--danger</span>: <span class="s">var</span>(<span class="f">--red-600</span>);
+    <span class="f">--success</span>: <span class="s">var</span>(<span class="f">--green-600</span>);
+
+    <span class="c">/* Կմախք */</span>
+    <span class="f">--wall</span>: <span class="n">60px</span>;
+    <span class="f">--gap</span>: <span class="n">10px</span>;
+
+    <span class="c">/* Ձև */</span>
+    <span class="f">--radius-sm</span>: <span class="n">6px</span>;
+    <span class="f">--radius-md</span>: <span class="n">12px</span>;
+    <span class="f">--radius-full</span>: <span class="n">999px</span>;
+
+    <span class="f">--shadow-sm</span>: <span class="n">0</span> <span class="n">1px</span> <span class="n">3px</span> <span class="s">rgba</span>(<span class="n">0</span>,<span class="n">0</span>,<span class="n">0</span>,<span class="n">.08</span>);
+    <span class="f">--shadow-md</span>: <span class="n">0</span> <span class="n">8px</span> <span class="n">20px</span> <span class="s">rgba</span>(<span class="n">0</span>,<span class="n">0</span>,<span class="n">0</span>,<span class="n">.12</span>);
+    <span class="f">--shadow-lg</span>: <span class="n">0</span> <span class="n">10px</span> <span class="n">28px</span> <span class="s">rgba</span>(<span class="n">0</span>,<span class="n">0</span>,<span class="n">0</span>,<span class="n">.16</span>);
+
+    <span class="f">--transition</span>: <span class="n">.2s</span> <span class="s">ease</span>;
+}
+
+<span class="c">/* ============ 2. ԲԱԶԱ ============ */</span>
+<span class="t">body</span> {
+    <span class="f">font-family</span>: <span class="s">"Noto Sans Armenian", system-ui, sans-serif</span>;
+    <span class="f">font-size</span>: <span class="n">0.875rem</span>;
+    <span class="f">line-height</span>: <span class="n">1.6</span>;
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--text</span>);
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--bg</span>);
+}
+
+<span class="c">/* ============ 3. ԿՄԱԽՔ ============ */</span>
+<span class="t">section</span> { <span class="f">padding</span>: <span class="n">60px</span> <span class="n">0</span>; }
+<span class="k">.row</span>    { <span class="f">padding</span>: <span class="n">0</span> <span class="s">calc</span>(<span class="s">var</span>(<span class="f">--wall</span>) - <span class="s">var</span>(<span class="f">--gap</span>)); }
+<span class="k">.col</span>    { <span class="f">padding</span>: <span class="s">var</span>(<span class="f">--gap</span>); }
+
+<span class="c">/* ============ 4. ՏԻՊՈԳՐԱՖԻԱ ============ */</span>
+<span class="t">h1</span>, <span class="k">.title-1</span> { <span class="f">font-size</span>: <span class="s">clamp</span>(<span class="n">1.75rem</span>, <span class="n">4vw</span>, <span class="n">2.25rem</span>); <span class="f">font-weight</span>: <span class="n">700</span>; <span class="f">line-height</span>: <span class="n">1.15</span>; }
+<span class="t">h2</span>, <span class="k">.title-2</span> { <span class="f">font-size</span>: <span class="s">clamp</span>(<span class="n">1.25rem</span>, <span class="n">3vw</span>, <span class="n">1.625rem</span>); <span class="f">font-weight</span>: <span class="n">700</span>; <span class="f">line-height</span>: <span class="n">1.25</span>; }
+<span class="t">h3</span>, <span class="k">.title-3</span> { <span class="f">font-size</span>: <span class="n">1.125rem</span>; <span class="f">font-weight</span>: <span class="n">700</span>; }
+<span class="t">h4</span>, <span class="k">.title-4</span> { <span class="f">font-size</span>: <span class="n">0.875rem</span>; <span class="f">font-weight</span>: <span class="n">700</span>; }
+
+<span class="k">.text-muted</span> { <span class="f">color</span>: <span class="s">var</span>(<span class="f">--text-muted</span>); }
+<span class="k">.text-small</span> { <span class="f">font-size</span>: <span class="n">0.75rem</span>; }
+
+<span class="c">/* ============ 5. ՀԵՌԱՎՈՐՈՒԹՅՈՒՆՆԵՐ ============ */</span>
+<span class="k">.mb-10</span> { <span class="f">margin-bottom</span>: <span class="n">10px</span>; }
+<span class="k">.mb-20</span> { <span class="f">margin-bottom</span>: <span class="n">20px</span>; }
+<span class="k">.mb-30</span> { <span class="f">margin-bottom</span>: <span class="n">30px</span>; }
+
+<span class="k">.gap-10</span> { <span class="f">gap</span>: <span class="n">10px</span>; }
+<span class="k">.gap-20</span> { <span class="f">gap</span>: <span class="n">20px</span>; }</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ուշադրություն՝ clamp() վերնագրերում</span>
+      <p>Դաս 14-ից՝ վերնագրերն արդեն ադապտիվ են։ Դա նշանակում է, որ վաղը <code>@media</code>-ում դրանք ուղղելու կարիք չի լինի։<br><br>
+      Մեկ որոշում այսօր՝ մեկ պակաս խնդիր վաղը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>HTML կմախք</h2>
+    <p>Նախ՝ միայն կառուցվածքը, առանց բովանդակության։ Այսպես տեսնում ես ամբողջ էջը մեկ էկրանում։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.html — body</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">body</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#main"</span> <span class="f">class</span>=<span class="s">"skip-link"</span><span class="p">&gt;</span>Անցնել բովանդակությանը<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">header</span> <span class="f">class</span>=<span class="s">"header"</span><span class="p">&gt;</span> ... <span class="p">&lt;/</span><span class="t">header</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">main</span> <span class="f">id</span>=<span class="s">"main"</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">section</span> <span class="f">id</span>=<span class="s">"hero"</span><span class="p">&gt;</span> ... <span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">section</span> <span class="f">id</span>=<span class="s">"products"</span><span class="p">&gt;</span> ... <span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">section</span> <span class="f">id</span>=<span class="s">"features"</span><span class="p">&gt;</span> ... <span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">section</span> <span class="f">id</span>=<span class="s">"cta"</span><span class="p">&gt;</span> ... <span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="t">main</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">footer</span> <span class="f">class</span>=<span class="s">"footer"</span><span class="p">&gt;</span> ... <span class="p">&lt;/</span><span class="t">footer</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="t">body</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ սկսել կմախքից</span>
+      <p>Երբ ամբողջ էջի կառուցվածքը տեղավորվում է 15 տողում, դու <strong>տեսնում ես համակարգը</strong>։<br><br>
+      Հետո լցնում ես ամեն բաժինը հերթով, և ամեն անգամ գիտես՝ որտեղ ես գտնվում։ Առանց դրա 400-տողանոց ֆայլում հեշտ է կորչել։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Header և Hero</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">header</span> <span class="f">class</span>=<span class="s">"header"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row align-center justify-between"</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span> <span class="f">class</span>=<span class="s">"logo"</span><span class="p">&gt;</span>ՏեխնոՄարկետ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">nav</span> <span class="f">aria-label</span>=<span class="s">"Գլխավոր մենյու"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">ul</span> <span class="f">class</span>=<span class="s">"menu flex align-center gap-10"</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#products"</span><span class="p">&gt;</span>Ապրանքներ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#features"</span><span class="p">&gt;</span>Առավելություններ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#cta"</span><span class="p">&gt;</span>Կապ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span> <span class="f">class</span>=<span class="s">"btn btn--primary btn--sm"</span><span class="p">&gt;</span>Զամբյուղ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+                <span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">nav</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">header</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">section</span> <span class="f">id</span>=<span class="s">"hero"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-70 w-md-100"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">h1</span> <span class="f">class</span>=<span class="s">"mb-10"</span><span class="p">&gt;</span>Տեխնիկա, որին կարելի է վստահել<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"hero__lead mb-20"</span><span class="p">&gt;</span>
+                    Ընտրիր 5000+ ապրանքից · Անվճար առաքում Երևանում
+                <span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"flex gap-10 flex-wrap"</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#products"</span> <span class="f">class</span>=<span class="s">"btn btn--light"</span><span class="p">&gt;</span>Դիտել կատալոգը<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#features"</span> <span class="f">class</span>=<span class="s">"btn btn--outline-light"</span><span class="p">&gt;</span>Մեր մասին<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+                <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css — բաժին 8</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ---------- Header ---------- */</span>
+<span class="k">.header</span> {
+    <span class="f">position</span>: <span class="s">sticky</span>;
+    <span class="f">top</span>: <span class="n">0</span>;
+    <span class="f">z-index</span>: <span class="n">100</span>;
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--surface</span>);
+    <span class="f">border-bottom</span>: <span class="n">1px</span> <span class="s">solid</span> <span class="s">var</span>(<span class="f">--border</span>);
+}
+
+<span class="k">.header</span> <span class="k">.row</span> { <span class="f">padding-top</span>: <span class="n">8px</span>; <span class="f">padding-bottom</span>: <span class="n">8px</span>; }
+
+<span class="k">.logo</span> {
+    <span class="f">font-size</span>: <span class="n">1.0625rem</span>;
+    <span class="f">font-weight</span>: <span class="n">700</span>;
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--accent</span>);
+}
+
+<span class="k">.menu</span> <span class="t">a</span> {
+    <span class="f">padding</span>: <span class="n">11px</span> <span class="n">12px</span>;
+    <span class="f">border-radius</span>: <span class="s">var</span>(<span class="f">--radius-sm</span>);
+    <span class="f">transition</span>: <span class="s">background-color</span> <span class="s">var</span>(<span class="f">--transition</span>);
+}
+
+<span class="k">.menu</span> <span class="t">a</span>:<span class="k">hover</span> { <span class="f">background</span>: <span class="s">var</span>(<span class="f">--bg</span>); }
+
+<span class="c">/* ---------- Hero ---------- */</span>
+<span class="k">#hero</span> {
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--dark</span>);
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--on-dark</span>);
+    <span class="f">padding</span>: <span class="n">70px</span> <span class="n">0</span>;
+}
+
+<span class="k">#hero</span> <span class="k">.hero__lead</span> {
+    <span class="f">color</span>: <span class="s">#c9d4d9</span>;      <span class="c">/* կոնտրաստ 9.1:1 մուգի վրա ✓ */</span>
+    <span class="f">font-size</span>: <span class="n">1rem</span>;
+}
+
+<span class="c">/* Hero-ի կոճակները */</span>
+<span class="k">.btn--light</span> {
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--accent-light</span>);
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--text</span>);
+}
+<span class="k">.btn--light</span>:<span class="k">hover</span> { <span class="f">background</span>: <span class="s">var</span>(<span class="f">--white</span>); }
+
+<span class="k">.btn--outline-light</span> {
+    <span class="f">background</span>: <span class="s">transparent</span>;
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--on-dark</span>);
+    <span class="f">border-color</span>: <span class="s">var</span>(<span class="f">--accent-light</span>);
+}
+<span class="k">.btn--outline-light</span>:<span class="k">hover</span> {
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--accent-light</span>);
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--text</span>);
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ w-70 hero-ում</span>
+      <p>Առանց սահմանափակման վերնագիրը լայն էկրանին կձգվի ամբողջ 1820px-ով, և տողերը կդառնան անընթեռնելի երկար (Դաս 7՝ 50–75 նիշ)։<br><br>
+      <code>w-70</code>-ը պահում է տեքստը հարմարավետ լայնության մեջ։ Հեռախոսում այն դառնում է <code>w-md-100</code>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Ապրանքների բաժինը</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML — Grid-ով (Դաս 20)</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">section</span> <span class="f">id</span>=<span class="s">"products"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-100"</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">h2</span> <span class="f">class</span>=<span class="s">"section-title mb-30"</span><span class="p">&gt;</span>Հանրաճանաչ ապրանքներ<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"grid-auto gap-20"</span><span class="p">&gt;</span>
+
+                <span class="p">&lt;</span><span class="t">article</span> <span class="f">class</span>=<span class="s">"card"</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"card__badge"</span><span class="p">&gt;</span>-30%<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+
+                    <span class="p">&lt;</span><span class="t">picture</span> <span class="f">class</span>=<span class="s">"card__media ratio-3-2"</span><span class="p">&gt;</span>
+                        <span class="p">&lt;</span><span class="t">source</span> <span class="f">srcset</span>=<span class="s">"images/laptop.webp"</span> <span class="f">type</span>=<span class="s">"image/webp"</span><span class="p">&gt;</span>
+                        <span class="p">&lt;</span><span class="t">img</span> <span class="f">class</span>=<span class="s">"img-cover"</span> <span class="f">src</span>=<span class="s">"images/laptop.jpg"</span>
+                             <span class="f">alt</span>=<span class="s">"Նոութբուք Pro 14 բաց վիճակում"</span>
+                             <span class="f">width</span>=<span class="s">"600"</span> <span class="f">height</span>=<span class="s">"400"</span> <span class="f">loading</span>=<span class="s">"lazy"</span><span class="p">&gt;</span>
+                    <span class="p">&lt;/</span><span class="t">picture</span><span class="p">&gt;</span>
+
+                    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__body"</span><span class="p">&gt;</span>
+                        <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"card__title"</span><span class="p">&gt;</span>Նոութբուք Pro 14<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+                        <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__meta"</span><span class="p">&gt;</span>16 ԳԲ / 512 ԳԲ SSD<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+                        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__footer"</span><span class="p">&gt;</span>
+                            <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__price"</span><span class="p">&gt;</span>450&amp;nbsp;000 ֏<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+                            <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"btn btn--primary btn--sm"</span><span class="p">&gt;</span>Գնել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+                        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+                    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+                <span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span>
+
+                <span class="c">&lt;!-- ԵՒս երկուսը՝ նույն կառուցվածքով --&gt;</span>
+
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ Grid, ոչ .col w-33</span>
+      <p>Դաս 20-ի կանոնը՝ միատեսակ տարրերի ցանկ → <code>.grid-auto</code>։<br><br>
+      Առավելությունը՝ վաղը հաճախորդն ասում է «ավելացրու ևս 3 ապրանք» — պարզապես պատճենում ես <code>&lt;article&gt;</code>-ը։ Ոչ մի <code>w-*</code> դաս, ոչ մի media query։ Ցանցն ինքն է հարմարվում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css — քարտը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ---------- Բաժնի վերնագիր ---------- */</span>
+<span class="k">.section-title</span> {
+    <span class="f">position</span>: <span class="s">relative</span>;
+    <span class="f">padding-bottom</span>: <span class="n">12px</span>;
+}
+
+<span class="k">.section-title</span>::<span class="k">after</span> {
+    <span class="f">content</span>: <span class="s">""</span>;
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">left</span>: <span class="n">0</span>;
+    <span class="f">bottom</span>: <span class="n">0</span>;
+    <span class="f">width</span>: <span class="n">48px</span>;
+    <span class="f">height</span>: <span class="n">3px</span>;
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--accent</span>);
+}
+
+<span class="c">/* ---------- Քարտ ---------- */</span>
+<span class="k">.card</span> {
+    <span class="f">position</span>: <span class="s">relative</span>;
+    <span class="f">display</span>: <span class="s">flex</span>;
+    <span class="f">flex-direction</span>: <span class="s">column</span>;
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--surface</span>);
+    <span class="f">border-radius</span>: <span class="s">var</span>(<span class="f">--radius-md</span>);
+    <span class="f">overflow</span>: <span class="s">hidden</span>;
+    <span class="f">box-shadow</span>: <span class="s">var</span>(<span class="f">--shadow-sm</span>);
+    <span class="f">transition</span>: <span class="s">transform</span> <span class="s">var</span>(<span class="f">--transition</span>), <span class="s">box-shadow</span> <span class="s">var</span>(<span class="f">--transition</span>);
+}
+
+<span class="k">.card</span>:<span class="k">hover</span> {
+    <span class="f">transform</span>: <span class="s">translateY</span>(-<span class="n">4px</span>);
+    <span class="f">box-shadow</span>: <span class="s">var</span>(<span class="f">--shadow-md</span>);
+}
+
+<span class="k">.card__badge</span> {
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">top</span>: <span class="n">10px</span>;
+    <span class="f">left</span>: <span class="n">10px</span>;
+    <span class="f">z-index</span>: <span class="n">2</span>;
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--danger</span>);
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--white</span>);
+    <span class="f">padding</span>: <span class="n">3px</span> <span class="n">10px</span>;
+    <span class="f">border-radius</span>: <span class="s">var</span>(<span class="f">--radius-full</span>);
+    <span class="f">font-size</span>: <span class="n">0.6875rem</span>;
+    <span class="f">font-weight</span>: <span class="n">700</span>;
+}
+
+<span class="k">.card__badge--new</span> { <span class="f">background</span>: <span class="s">var</span>(<span class="f">--success</span>); }
+
+<span class="k">.card__body</span> {
+    <span class="f">display</span>: <span class="s">flex</span>;
+    <span class="f">flex-direction</span>: <span class="s">column</span>;
+    <span class="f">flex-grow</span>: <span class="n">1</span>;
+    <span class="f">padding</span>: <span class="n">16px</span>;
+}
+
+<span class="k">.card__title</span> { <span class="f">font-size</span>: <span class="n">0.875rem</span>; <span class="f">font-weight</span>: <span class="n">700</span>; <span class="f">margin-bottom</span>: <span class="n">4px</span>; }
+<span class="k">.card__meta</span>  { <span class="f">font-size</span>: <span class="n">0.75rem</span>; <span class="f">color</span>: <span class="s">var</span>(<span class="f">--text-muted</span>); }
+
+<span class="k">.card__footer</span> {
+    <span class="f">margin-top</span>: <span class="s">auto</span>;
+    <span class="f">padding-top</span>: <span class="n">16px</span>;
+    <span class="f">display</span>: <span class="s">flex</span>;
+    <span class="f">justify-content</span>: <span class="s">space-between</span>;
+    <span class="f">align-items</span>: <span class="s">center</span>;
+    <span class="f">gap</span>: <span class="n">10px</span>;
+}
+
+<span class="k">.card__price</span> {
+    <span class="f">font-size</span>: <span class="n">1rem</span>;
+    <span class="f">font-weight</span>: <span class="n">700</span>;
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--accent</span>);
+}</code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Առավելություններ, CTA, Footer</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>#features</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">section</span> <span class="f">id</span>=<span class="s">"features"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-100"</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">h2</span> <span class="f">class</span>=<span class="s">"section-title mb-30"</span><span class="p">&gt;</span>Ինչո՞ւ մենք<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"grid-auto gap-20"</span><span class="p">&gt;</span>
+
+                <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"feature"</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"feature__icon"</span><span class="p">&gt;</span>
+                        <span class="p">&lt;</span><span class="t">svg</span> <span class="f">viewBox</span>=<span class="s">"0 0 24 24"</span> <span class="f">aria-hidden</span>=<span class="s">"true"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">svg</span><span class="p">&gt;</span>
+                    <span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"title-4 mb-10"</span><span class="p">&gt;</span>Անվճար առաքում<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"text-muted"</span><span class="p">&gt;</span>50 000 ֏-ից բարձր պատվերների դեպքում<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+                <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+                <span class="c">&lt;!-- ԵՒս երկուսը --&gt;</span>
+
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>#cta — ֆորմայով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">section</span> <span class="f">id</span>=<span class="s">"cta"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row align-center flex-wrap"</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-50 w-md-100"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">h2</span> <span class="f">class</span>=<span class="s">"title-3 mb-10"</span><span class="p">&gt;</span>Բաժանորդագրվիր զեղչերին<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"cta__lead"</span><span class="p">&gt;</span>Ամիսը մեկ նամակ, առանց սպամի<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-50 w-md-100"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">form</span> <span class="f">class</span>=<span class="s">"flex gap-10 flex-wrap"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"mail"</span> <span class="f">class</span>=<span class="s">"visually-hidden"</span><span class="p">&gt;</span>Էլ. հասցե<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"email"</span> <span class="f">id</span>=<span class="s">"mail"</span> <span class="f">name</span>=<span class="s">"mail"</span>
+                       <span class="f">class</span>=<span class="s">"input"</span> <span class="f">placeholder</span>=<span class="s">"ani@example.com"</span> <span class="f">required</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">button</span> <span class="f">type</span>=<span class="s">"submit"</span> <span class="f">class</span>=<span class="s">"btn btn--light"</span><span class="p">&gt;</span>Ուղարկել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">form</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ---------- Առավելություններ ---------- */</span>
+<span class="k">#features</span> { <span class="f">background</span>: <span class="s">var</span>(<span class="f">--surface</span>); }
+
+<span class="k">.feature__icon</span> {
+    <span class="f">display</span>: <span class="s">inline-flex</span>;
+    <span class="f">align-items</span>: <span class="s">center</span>;
+    <span class="f">justify-content</span>: <span class="s">center</span>;
+    <span class="f">width</span>: <span class="n">48px</span>;
+    <span class="f">height</span>: <span class="n">48px</span>;
+    <span class="f">margin-bottom</span>: <span class="n">14px</span>;
+    <span class="f">border-radius</span>: <span class="n">50%</span>;
+    <span class="f">background</span>: <span class="s">#e6ecf0</span>;
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--accent</span>);
+}
+
+<span class="k">.feature__icon</span> <span class="t">svg</span> {
+    <span class="f">width</span>: <span class="n">22px</span>;
+    <span class="f">height</span>: <span class="n">22px</span>;
+    <span class="f">fill</span>: <span class="k">currentColor</span>;   <span class="c">/* Դաս 16 */</span>
+}
+
+<span class="c">/* ---------- CTA ---------- */</span>
+<span class="k">#cta</span> {
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--accent</span>);
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--on-dark</span>);
+    <span class="f">padding</span>: <span class="n">44px</span> <span class="n">0</span>;
+}
+
+<span class="k">#cta</span> <span class="k">.cta__lead</span> { <span class="f">color</span>: <span class="s">#c9d4d9</span>; }
+
+<span class="k">.input</span> {
+    <span class="f">flex-grow</span>: <span class="n">1</span>;
+    <span class="f">min-width</span>: <span class="n">0</span>;            <span class="c">/* Դաս 12 ⭐ */</span>
+    <span class="f">padding</span>: <span class="n">11px</span> <span class="n">14px</span>;
+    <span class="f">border</span>: <span class="n">1px</span> <span class="s">solid transparent</span>;
+    <span class="f">border-radius</span>: <span class="s">var</span>(<span class="f">--radius-sm</span>);
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--white</span>);
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--text</span>);
+}
+
+<span class="k">.input</span>:<span class="k">focus-visible</span> {
+    <span class="f">outline</span>: <span class="n">2px</span> <span class="s">solid</span> <span class="s">var</span>(<span class="f">--accent-light</span>);
+    <span class="f">outline-offset</span>: <span class="n">2px</span>;
+}
+
+<span class="k">#cta</span> <span class="k">.btn</span> { <span class="f">flex-shrink</span>: <span class="n">0</span>; }   <span class="c">/* Դաս 12 */</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Երկու գիծ Դաս 12-ից</span>
+      <p><code>min-width: 0</code> դաշտի վրա և <code>flex-shrink: 0</code> կոճակի վրա։<br><br>
+      Առանց առաջինի՝ երկար <code>placeholder</code>-ը կպայթեցնի դասավորությունը։ Առանց երկրորդի՝ կոճակի տեքստը կսեղմվի երկու տողի։<br><br>
+      Երկու տող, որոնք գրվում են մեկ անգամ և խնայում են կես ժամ դեբագ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Օրվա ստուգում</h2>
+    <p>Մինչև վաղը՝ ամեն ինչ պիտի աշխատի <strong>համակարգչի</strong> լայնության վրա։ Ադապտիվությունը վաղվա գործն է։</p>
+
+    <h3>Կառուցվածք</h3>
+    <ul class="goals">
+      <li>Ամեն <code>section</code>-ն ունի <code>id</code></li>
+      <li>Կմախքը պահպանված է՝ <code>.row &gt; .col &gt; .wrapper</code></li>
+      <li>Grid-ը օգտագործվում է միատեսակ ցանցերի համար</li>
+      <li>Կա <code>skip-link</code></li>
+      <li>Կա մեկ <code>h1</code>, վերնագրերի հերթականությունը ճիշտ է</li>
+    </ul>
+
+    <h3>CSS</h3>
+    <ul class="goals">
+      <li><code>:root</code>-ից դուրս HEX գույն չկա</li>
+      <li>Բոլոր հեռավորությունները սանդղակի վրա են</li>
+      <li>Ամեն ֆոնի դաս ունի իր <code>color</code>-ը</li>
+      <li>Կոնտրաստները ստուգված են</li>
+      <li>Կոճակներն ունեն չորս վիճակ</li>
+    </ul>
+
+    <h3>Բովանդակություն</h3>
+    <ul class="goals">
+      <li>Բոլոր նկարներն ունեն իմաստալից <code>alt</code></li>
+      <li>Բոլոր նկարներն ունեն <code>width</code> և <code>height</code></li>
+      <li>Ֆորմայի դաշտն ունի <code>label</code></li>
+      <li>Ոչ մի <code>lorem ipsum</code> չի մնացել</li>
+    </ul>
+
+    <div class="warn note">
+      <span class="tag">Ամենահաճախ սխալը նախագծի առաջին օրը</span>
+      <p>Սկսում ես դասավորությունից, հասնում ես երրորդ բաժնին, և հանկարծ պարզվում է, որ քարտի <code>padding</code>-ը մի տեղ 16px է, մյուսում՝ 14px, երրորդում՝ 20px։<br><br>
+      Պատճառը՝ ամեն բաժնի համար նորից ես մտածել։ Լուծումը՝ <strong>ամեն նոր արժեք գրելուց առաջ ստուգիր, արդյոք այն արդեն կա տոկեններում</strong>։<br><br>
+      Եթե չկա — ավելացրու տոկեն, ոչ թե գրիր տեղում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ստեղծիր նախագծի թղթապանակը ճիշտ կառուցվածքով։</li>
+      <li>Պատրաստիր <code>global.css</code>-ը՝ բոլոր 21 դասերի ավելացումներով։</li>
+      <li>Գրիր <code>main.css</code>-ի բաժիններ 1–5-ը՝ տոկեններ, բազա, կմախք, տիպոգրաֆիա, հեռավորություններ։</li>
+      <li>Կառուցիր HTML կմախքը՝ բոլոր 6 բաժինը, առանց բովանդակության։</li>
+      <li>Լցրու header-ը և hero-ն։ Ստուգիր <code>sticky</code>-ն ոլորելով։</li>
+      <li>Կառուցիր ապրանքների ցանցը՝ 3 քարտ։ Ապա ավելացրու ևս 3՝ համոզվելու, որ ցանցը ինքն է հարմարվում։</li>
+      <li>Կառուցիր առավելությունների բաժինը՝ SVG պատկերակներով (Feather Icons)։</li>
+      <li>Կառուցիր CTA-ն ֆորմայով։ Ստուգիր երկար <code>placeholder</code>-ով։</li>
+      <li>Կառուցիր footer-ը՝ 3 սյուն և ներքևի տող։</li>
+      <li>Անցիր օրվա ստուգաթերթով և ուղարկիր սքրինշոթ ամբողջ էջի։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Ամփոփում</h2>
+
+    <h3>Ի՞նչ դասեր կիրառեցինք այսօր</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դաս</th><th>Ի՞նչ</th></tr>
+      <tr><td>05</td><td>Սեմանտիկ կմախք, <code>skip-link</code></td></tr>
+      <tr><td>10–12</td><td><code>.row &gt; .col &gt; .wrapper</code>, Flexbox</td></tr>
+      <tr><td>13</td><td>Չափել → CSS → HTML</td></tr>
+      <tr><td>14</td><td><code>clamp()</code> վերնագրերում</td></tr>
+      <tr><td>15</td><td><code>sticky</code> header, պիտակ քարտի վրա</td></tr>
+      <tr><td>16</td><td><code>aspect-ratio</code>, <code>object-fit</code>, <code>currentColor</code></td></tr>
+      <tr><td>17</td><td><code>.btn</code>, <code>.card</code>, <code>::after</code> վերնագրի տակ</td></tr>
+      <tr><td>18</td><td>Header, նավիգացիա</td></tr>
+      <tr><td>19</td><td>Երկու շերտի տոկեններ</td></tr>
+      <tr><td>20</td><td><code>.grid-auto</code></td></tr>
+      <tr><td>21</td><td><code>transition</code> քարտի և կոճակի վրա</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Վաղը՝ օր 2</span>
+      <p>Ադապտիվություն բոլոր չափերի համար, բուրգեր-մենյու, մանրամասների հղկում, հասանելիության ամբողջական ստուգում, օպտիմիզացիա և հրապարակում GitHub Pages-ում։<br><br>
+      Այսօրվա աշխատանքը պահպանիր — վաղը դրա վրա ենք կառուցելու։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 22 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

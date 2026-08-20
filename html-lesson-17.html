@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 17 — Կոմպոնենտներ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 17 · 2 ժամ</p>
+  <h1>Կոմպոնենտներ</h1>
+  <p class="lede">Կայքը կրկնվող մասերից է կազմված՝ կոճակներ, քարտեր, պիտակներ։ Այսօր դրանք դառնում են <strong>համակարգ</strong>՝ մոդիֆիկատորներով, չորս վիճակով և կանխատեսելի անուններով։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 13, 15, 16</span>
+    <span>Բլոկ 1 · Կոմպոնենտներ</span>
+    <span>BEM գործնականում</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ե՞րբ ստեղծել կոմպոնենտ</li>
+      <li>BEM անվանակարգում</li>
+      <li>Կոճակների համակարգ՝ տեսակներ, չափեր, վիճակներ</li>
+      <li>Ստվերների սանդղակ</li>
+      <li><code>::before</code> և <code>::after</code></li>
+      <li>Ապրանքի քարտ՝ ամբողջական</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ե՞րբ ստեղծել կոմպոնենտ</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Իրավիճակ</th><th>Ի՞նչ անել</th></tr>
+      <tr><td>Հանդիպում է 1 անգամ</td><td>Utility-դասեր՝ <code>flex gap-10 mb-20</code></td></tr>
+      <tr><td>Հանդիպում է 2–3 անգամ</td><td>Դեռ utility, բայց ուշադիր հետևիր</td></tr>
+      <tr><td><strong>4+ անգամ</strong></td><td><strong>Կոմպոնենտ</strong>՝ սեփական դասով</td></tr>
+      <tr><td>Ունի վիճակներ (<code>hover</code>, <code>active</code>)</td><td>Կոմպոնենտ</td></tr>
+      <tr><td>Ունի տարբերակներ (մեծ/փոքր, կարմիր/կապույտ)</td><td>Կոմպոնենտ + մոդիֆիկատորներ</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Հիշեցում Դաս 13-ից</span>
+      <p>Մենք չենք ընտրում «utility կամ BEM»։ Օգտագործում ենք <strong>երկուսն էլ</strong>՝<br><br>
+      <code>.row</code>, <code>.col</code>, <code>.w-33</code>, <code>.mb-20</code> — կմախք և բացակներ<br>
+      <code>.btn</code>, <code>.card</code>, <code>.badge</code> — կրկնվող կոմպոնենտներ<br><br>
+      Այսօր կենտրոնանում ենք երկրորդի վրա։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Հակառակ ծայրահեղությունը</span>
+      <p>Կոմպոնենտ ամեն բանի համար նույնպես սխալ է։ Եթե ունես <code>.hero-title</code>, <code>.about-title</code>, <code>.contact-title</code> և բոլորը նույնն են՝ դա ուղղակի <code>h2</code> է։<br><br>
+      Կոմպոնենտն արժեք ունի, երբ այն <em>իսկապես</em> կրկնվում է և ունի սեփական տրամաբանություն։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>BEM անվանակարգում</h2>
+
+    <div class="tree">.card              ← Բլոկ (ինքնուրույն կոմպոնենտ)
+.card__title       ← Էլեմենտ (մաս է, առանձին չի ապրում)
+.card--featured    ← Մոդիֆիկատոր (տարբերակ)
+
+  __  երկու ընդգծում  →  «-ի մասն է»
+  --  երկու գծիկ      →  «այսպիսի տարբերակ»</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>գործնականում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">article</span> <span class="f">class</span>=<span class="s">"card card--featured"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"card__badge"</span><span class="p">&gt;</span>Հիթ<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">picture</span> <span class="f">class</span>=<span class="s">"card__media ratio-4-3"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">picture</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__body"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"card__title"</span><span class="p">&gt;</span>Նոութբուք Pro<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__price"</span><span class="p">&gt;</span>450 000 ֏<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երկու տարածված սխալ</span>
+      <p><strong>1. Ներդրվածությունն արտացոլել անվան մեջ</strong><br>
+      <code>.card__body__title</code> ❌ → <code>.card__title</code> ✅<br>
+      BEM-ում կա միայն <em>մեկ</em> մակարդակի էլեմենտ, որքան էլ խորն է HTML-ը։<br><br>
+      <strong>2. Մոդիֆիկատորը առանց բլոկի</strong><br>
+      <code>class="card--featured"</code> ❌ → <code>class="card card--featured"</code> ✅<br>
+      Մոդիֆիկատորը միայն <em>փոփոխում</em> է, չի փոխարինում։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ ոչ պարզապես ներդրված սելեկտորներ</span>
+      <p><code>.card h3 { ... }</code> — կաշխատի։ Բայց՝<br><br>
+      <strong>1.</strong> Եթե քարտի ներսում հայտնվի ուրիշ <code>h3</code>, այն էլ կստանա ոճերը։<br>
+      <strong>2.</strong> Սպեցիֆիկությունն աճում է, և հետո դժվար է վերագրել (Դաս 6)։<br>
+      <strong>3.</strong> Կարդալով <code>class="card__title"</code>՝ անմիջապես գիտես, որտեղ փնտրել CSS-ը։<br><br>
+      BEM-ի բոլոր սելեկտորները մեկ դասի են՝ սպեցիֆիկությունը <code>0-1-0</code>։ Հարթ և կանխատեսելի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Կոճակների համակարգ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>1. Բազա</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.btn</span> {
+    <span class="f">display</span>: <span class="s">inline-flex</span>;
+    <span class="f">align-items</span>: <span class="s">center</span>;
+    <span class="f">justify-content</span>: <span class="s">center</span>;
+    <span class="f">gap</span>: <span class="n">8px</span>;
+
+    <span class="f">padding</span>: <span class="n">12px</span> <span class="n">24px</span>;
+    <span class="f">min-height</span>: <span class="n">44px</span>;              <span class="c">/* սեղմելի տարածք ⭐ */</span>
+
+    <span class="f">border</span>: <span class="n">1px</span> <span class="s">solid transparent</span>;  <span class="c">/* որ hover-ին չցատկի */</span>
+    <span class="f">border-radius</span>: <span class="n">6px</span>;
+
+    <span class="f">font-weight</span>: <span class="n">700</span>;
+    <span class="f">white-space</span>: <span class="s">nowrap</span>;
+    <span class="f">cursor</span>: <span class="s">pointer</span>;
+    <span class="f">transition</span>: <span class="s">background-color .15s, color .15s, border-color .15s</span>;
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>2. Տեսակներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Հիմնական գործողություն — էջում սովորաբար մեկ հատ */</span>
+<span class="k">.btn--primary</span> {
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--secondary</span>);
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--on-dark</span>);
+}
+<span class="k">.btn--primary</span>:<span class="k">hover</span> { <span class="f">background</span>: <span class="s">#00253f</span>; }
+
+<span class="c">/* Երկրորդական */</span>
+<span class="k">.btn--outline</span> {
+    <span class="f">background</span>: <span class="s">transparent</span>;
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--secondary</span>);
+    <span class="f">border-color</span>: <span class="s">var</span>(<span class="f">--secondary</span>);
+}
+<span class="k">.btn--outline</span>:<span class="k">hover</span> {
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--secondary</span>);
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--on-dark</span>);
+}
+
+<span class="c">/* Երրորդական — գրեթե հղում */</span>
+<span class="k">.btn--ghost</span> {
+    <span class="f">background</span>: <span class="s">transparent</span>;
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--secondary</span>);
+}
+<span class="k">.btn--ghost</span>:<span class="k">hover</span> { <span class="f">background</span>: <span class="s">var</span>(<span class="f">--bg</span>); }
+
+<span class="c">/* Վտանգավոր գործողություն */</span>
+<span class="k">.btn--danger</span> {
+    <span class="f">background</span>: <span class="s">#c62828</span>;
+    <span class="f">color</span>: <span class="s">#ffffff</span>;
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>3. Չափեր և ձևեր</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.btn--sm</span> { <span class="f">padding</span>: <span class="n">8px</span> <span class="n">16px</span>;  <span class="f">min-height</span>: <span class="n">36px</span>; <span class="f">font-size</span>: <span class="n">0.875rem</span>; }
+<span class="k">.btn--lg</span> { <span class="f">padding</span>: <span class="n">16px</span> <span class="n">32px</span>; <span class="f">min-height</span>: <span class="n">54px</span>; <span class="f">font-size</span>: <span class="n">1.125rem</span>; }
+
+<span class="k">.btn--block</span> { <span class="f">width</span>: <span class="n">100%</span>; }
+<span class="k">.btn--icon</span>  { <span class="f">padding</span>: <span class="n">0</span>; <span class="f">width</span>: <span class="n">44px</span>; }   <span class="c">/* քառակուսի */</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>4. Վիճակներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Ֆոկուս — ստեղնաշարի համար ⭐ */</span>
+<span class="k">.btn</span>:<span class="k">focus-visible</span> {
+    <span class="f">outline</span>: <span class="n">2px</span> <span class="s">solid</span> <span class="s">var</span>(<span class="f">--secondary</span>);
+    <span class="f">outline-offset</span>: <span class="n">2px</span>;
+}
+
+<span class="c">/* Սեղմված */</span>
+<span class="k">.btn</span>:<span class="k">active</span> { <span class="f">transform</span>: <span class="s">translateY</span>(<span class="n">1px</span>); }
+
+<span class="c">/* Անջատված */</span>
+<span class="k">.btn</span>:<span class="k">disabled</span>,
+<span class="k">.btn</span><span class="k">.is-disabled</span> {
+    <span class="f">opacity</span>: <span class="n">.5</span>;
+    <span class="f">cursor</span>: <span class="s">not-allowed</span>;
+    <span class="f">pointer-events</span>: <span class="s">none</span>;
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Չորս վիճակի կանոն</span>
+      <p>Ամեն ինտերակտիվ էլեմենտ պիտի ունենա՝<br>
+      <strong>1.</strong> Սովորական — հասկանալի է, որ սեղմելի է<br>
+      <strong>2.</strong> <code>:hover</code> — մկնիկի համար<br>
+      <strong>3.</strong> <code>:focus-visible</code> — <strong>ստեղնաշարի համար</strong><br>
+      <strong>4.</strong> <code>:active</code> — սեղմման պահին<br><br>
+      Ամենահաճախ մոռացվողը երրորդն է։ Առանց դրա ստեղնաշարով նավարկողը չգիտի՝ որտեղ է գտնվում։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">button թե՞ a</span>
+      <p><code>&lt;button&gt;</code> — երբ ինչ-որ բան <strong>կատարվում է</strong>․ բացվում է մոդալ, ուղարկվում է ֆորմա, ապրանքն ավելանում է զամբյուղ։<br><br>
+      <code>&lt;a href&gt;</code> — երբ <strong>անցնում ես ուրիշ տեղ</strong>․ ուրիշ էջ, ուրիշ բաժին։<br><br>
+      Երկուսն էլ կարող են ունենալ <code>.btn</code> դասը և նույն տեսքը։ Բայց էկրանընթերցիչը հայտարարում է «կոճակ» կամ «հղում», և օգտագործողը գիտի՝ ինչ սպասել։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Ստվերներ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>սանդղակ, ոչ պատահական արժեքներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">:root</span> {
+    <span class="f">--shadow-sm</span>: <span class="n">0</span> <span class="n">1px</span> <span class="n">3px</span>  <span class="s">rgba</span>(<span class="n">0</span>,<span class="n">0</span>,<span class="n">0</span>,<span class="n">.08</span>);
+    <span class="f">--shadow-md</span>: <span class="n">0</span> <span class="n">4px</span> <span class="n">12px</span> <span class="s">rgba</span>(<span class="n">0</span>,<span class="n">0</span>,<span class="n">0</span>,<span class="n">.10</span>);
+    <span class="f">--shadow-lg</span>: <span class="n">0</span> <span class="n">10px</span> <span class="n">28px</span> <span class="s">rgba</span>(<span class="n">0</span>,<span class="n">0</span>,<span class="n">0</span>,<span class="n">.14</span>);
+}
+
+<span class="k">.card</span>       { <span class="f">box-shadow</span>: <span class="s">var</span>(<span class="f">--shadow-sm</span>); }
+<span class="k">.card</span>:<span class="k">hover</span> { <span class="f">box-shadow</span>: <span class="s">var</span>(<span class="f">--shadow-md</span>); }
+<span class="k">.dropdown</span>   { <span class="f">box-shadow</span>: <span class="s">var</span>(<span class="f">--shadow-lg</span>); }</code></pre>
+    </div>
+
+    <div class="tree">box-shadow: 0  4px  12px  rgba(0,0,0,.1)
+            │   │    │     │
+            │   │    │     └─ գույն և թափանցիկություն
+            │   │    └─ լղոզում (blur)
+            │   └─ ուղղահայաց տեղաշարժ
+            └─ հորիզոնական տեղաշարժ</div>
+
+    <div class="tip note">
+      <span class="tag">Երկու կանոն բնական ստվերի համար</span>
+      <p><strong>1.</strong> Հորիզոնական տեղաշարժը գրեթե միշտ <code>0</code> է — լույսը գալիս է վերևից։<br>
+      <strong>2.</strong> Որքան մեծ է ուղղահայաց տեղաշարժը, այնքան մեծ պիտի լինի լղոզումը։ Մոտավոր հարաբերությունը՝ <strong>լղոզումը ≈ տեղաշարժը × 3</strong>։<br><br>
+      <code>0 2px 30px</code> — տարօրինակ է երևում, կարծես օբյեկտը լողում է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>::before և ::after</h2>
+    <p>Կեղծ էլեմենտներ՝ CSS-ով ստեղծված «երեխաներ»։ HTML-ում դրանք չկան։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>content-ը պարտադիր է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.el</span>::<span class="k">before</span> {
+    <span class="f">content</span>: <span class="s">""</span>;      <span class="c">/* առանց սրա ոչինչ չի երևա ⭐ */</span>
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>չորս գործնական օրինակ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* 1. Ցուցակ ✓ նշաններով */</span>
+<span class="k">.check-list</span> <span class="t">li</span> {
+    <span class="f">position</span>: <span class="s">relative</span>;
+    <span class="f">padding-left</span>: <span class="n">28px</span>;
+}
+<span class="k">.check-list</span> <span class="t">li</span>::<span class="k">before</span> {
+    <span class="f">content</span>: <span class="s">"✓"</span>;
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">left</span>: <span class="n">0</span>;
+    <span class="f">color</span>: <span class="s">#0f7b4f</span>;
+    <span class="f">font-weight</span>: <span class="n">700</span>;
+}
+
+<span class="c">/* 2. Գիծ վերնագրի տակ */</span>
+<span class="k">.section-title</span> { <span class="f">position</span>: <span class="s">relative</span>; <span class="f">padding-bottom</span>: <span class="n">12px</span>; }
+<span class="k">.section-title</span>::<span class="k">after</span> {
+    <span class="f">content</span>: <span class="s">""</span>;
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">left</span>: <span class="n">0</span>;
+    <span class="f">bottom</span>: <span class="n">0</span>;
+    <span class="f">width</span>: <span class="n">48px</span>;
+    <span class="f">height</span>: <span class="n">3px</span>;
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--secondary</span>);
+}
+
+<span class="c">/* 3. Պարտադիր դաշտ */</span>
+<span class="k">.required</span>::<span class="k">after</span> {
+    <span class="f">content</span>: <span class="s">" *"</span>;
+    <span class="f">color</span>: <span class="s">#c62828</span>;
+}
+
+<span class="c">/* 4. Bread crumbs — բաժանարար ամեն երկրորդից սկսած */</span>
+<span class="k">.crumbs</span> <span class="t">li</span> + <span class="t">li</span>::<span class="k">before</span> {
+    <span class="f">content</span>: <span class="s">"/"</span>;
+    <span class="f">margin</span>: <span class="n">0</span> <span class="n">8px</span>;
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--muted</span>);
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երկու սահմանափակում</span>
+      <p><strong>1.</strong> <code>::before</code>/<code>::after</code> չեն աշխատում <em>փոխարինվող</em> էլեմենտների վրա՝ <code>img</code>, <code>input</code>, <code>br</code>, <code>hr</code>։ Դրանք սեփական բովանդակություն չունեն։ Լուծում՝ փաթեթավորիր <code>span</code>-ի կամ <code>picture</code>-ի մեջ։<br><br>
+      <strong>2.</strong> <code>content</code>-ի տեքստը <strong>անհասանելի է</strong> ընտրելու և պատճենելու համար, և էկրանընթերցիչները այն կարդում են անհետևողականորեն։ Կարևոր տեղեկություն երբեք մի՛ դիր <code>content</code>-ի մեջ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Ապրանքի քարտ · ամբողջական</h2>
+    <p>Հավաքում ենք ամեն ինչ՝ Դաս 11-ի <code>margin-top: auto</code>, Դաս 15-ի պիտակը, Դաս 16-ի <code>aspect-ratio</code>-ն։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-33 w-md-50 w-sm-100"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">article</span> <span class="f">class</span>=<span class="s">"card"</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"card__badge"</span><span class="p">&gt;</span>-30%<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">picture</span> <span class="f">class</span>=<span class="s">"card__media ratio-4-3"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">img</span> <span class="f">class</span>=<span class="s">"img-cover"</span> <span class="f">src</span>=<span class="s">"images/laptop.jpg"</span>
+                 <span class="f">alt</span>=<span class="s">"Նոութբուք Pro 14"</span>
+                 <span class="f">width</span>=<span class="s">"800"</span> <span class="f">height</span>=<span class="s">"600"</span> <span class="f">loading</span>=<span class="s">"lazy"</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">picture</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__body"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"card__title"</span><span class="p">&gt;</span>Նոութբուք Pro 14<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__meta"</span><span class="p">&gt;</span>16 ԳԲ / 512 ԳԲ SSD<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__footer"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__price"</span><span class="p">&gt;</span>450&amp;nbsp;000 ֏<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"btn btn--primary btn--sm"</span><span class="p">&gt;</span>Գնել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>CSS</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.card</span> {
+    <span class="f">position</span>: <span class="s">relative</span>;         <span class="c">/* խարիսխ պիտակի համար — Դաս 15 */</span>
+    <span class="f">display</span>: <span class="s">flex</span>;
+    <span class="f">flex-direction</span>: <span class="s">column</span>;    <span class="c">/* footer-ը ներքև — Դաս 11 */</span>
+    <span class="f">height</span>: <span class="n">100%</span>;
+
+    <span class="f">background</span>: <span class="s">#ffffff</span>;
+    <span class="f">border-radius</span>: <span class="n">12px</span>;
+    <span class="f">overflow</span>: <span class="s">hidden</span>;
+    <span class="f">box-shadow</span>: <span class="s">var</span>(<span class="f">--shadow-sm</span>);
+    <span class="f">transition</span>: <span class="s">box-shadow .2s, transform .2s</span>;
+}
+
+<span class="k">.card</span>:<span class="k">hover</span> {
+    <span class="f">box-shadow</span>: <span class="s">var</span>(<span class="f">--shadow-md</span>);
+    <span class="f">transform</span>: <span class="s">translateY</span>(-<span class="n">2px</span>);
+}
+
+<span class="k">.card__badge</span> {
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">top</span>: <span class="n">10px</span>;
+    <span class="f">left</span>: <span class="n">10px</span>;
+    <span class="f">z-index</span>: <span class="n">2</span>;
+    <span class="f">background</span>: <span class="s">#c62828</span>;
+    <span class="f">color</span>: <span class="s">#ffffff</span>;
+    <span class="f">padding</span>: <span class="n">4px</span> <span class="n">10px</span>;
+    <span class="f">border-radius</span>: <span class="n">999px</span>;
+    <span class="f">font-size</span>: <span class="n">0.75rem</span>;
+    <span class="f">font-weight</span>: <span class="n">700</span>;
+}
+
+<span class="k">.card__body</span> {
+    <span class="f">display</span>: <span class="s">flex</span>;
+    <span class="f">flex-direction</span>: <span class="s">column</span>;
+    <span class="f">flex-grow</span>: <span class="n">1</span>;              <span class="c">/* լցնում է մնացած տեղը — Դաս 12 */</span>
+    <span class="f">padding</span>: <span class="n">16px</span>;
+}
+
+<span class="k">.card__title</span> { <span class="f">font-size</span>: <span class="n">1rem</span>; <span class="f">font-weight</span>: <span class="n">700</span>; <span class="f">margin-bottom</span>: <span class="n">6px</span>; }
+<span class="k">.card__meta</span>  { <span class="f">font-size</span>: <span class="n">0.875rem</span>; <span class="f">color</span>: <span class="s">var</span>(<span class="f">--muted</span>); }
+
+<span class="k">.card__footer</span> {
+    <span class="f">margin-top</span>: <span class="s">auto</span>;           <span class="c">/* հրում է ներքև ⭐ */</span>
+    <span class="f">padding-top</span>: <span class="n">14px</span>;
+    <span class="f">display</span>: <span class="s">flex</span>;
+    <span class="f">justify-content</span>: <span class="s">space-between</span>;
+    <span class="f">align-items</span>: <span class="s">center</span>;
+    <span class="f">gap</span>: <span class="n">10px</span>;
+}
+
+<span class="k">.card__price</span> {
+    <span class="f">font-size</span>: <span class="n">1.125rem</span>;
+    <span class="f">font-weight</span>: <span class="n">700</span>;
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--secondary</span>);
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Չորս դասի արդյունքը մեկ կոմպոնենտում</span>
+      <p><code>position: relative</code> → Դաս 15<br>
+      <code>flex-direction: column</code> + <code>margin-top: auto</code> → Դաս 11<br>
+      <code>flex-grow: 1</code> → Դաս 12<br>
+      <code>aspect-ratio</code> + <code>object-fit</code> → Դաս 16<br><br>
+      Ոչ մի նոր հատկություն։ Պարզապես ճիշտ հավաքված։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Խաղահրապարակ</h2>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="html">HTML</button>
+        <button class="live__tab" data-pane="css">CSS</button>
+      </div>
+      <textarea class="live__code" data-pane="html">&lt;h3 class="section-title"&gt;Կոճակների տեսակներ&lt;/h3&gt;
+&lt;div class="row"&gt;
+    &lt;button class="btn btn--primary"&gt;Primary&lt;/button&gt;
+    &lt;button class="btn btn--outline"&gt;Outline&lt;/button&gt;
+    &lt;button class="btn btn--ghost"&gt;Ghost&lt;/button&gt;
+    &lt;button class="btn btn--danger"&gt;Danger&lt;/button&gt;
+    &lt;button class="btn btn--primary" disabled&gt;Disabled&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;h3 class="section-title"&gt;Չափեր&lt;/h3&gt;
+&lt;div class="row"&gt;
+    &lt;button class="btn btn--primary btn--sm"&gt;Small&lt;/button&gt;
+    &lt;button class="btn btn--primary"&gt;Normal&lt;/button&gt;
+    &lt;button class="btn btn--primary btn--lg"&gt;Large&lt;/button&gt;
+    &lt;button class="btn btn--outline btn--icon" aria-label="Փակել"&gt;✕&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;h3 class="section-title"&gt;Ապրանքի քարտ&lt;/h3&gt;
+&lt;div class="cards"&gt;
+
+    &lt;article class="card"&gt;
+        &lt;span class="card__badge"&gt;-30%&lt;/span&gt;
+        &lt;div class="card__media"&gt;&lt;/div&gt;
+        &lt;div class="card__body"&gt;
+            &lt;h4 class="card__title"&gt;Նոութբուք Pro 14&lt;/h4&gt;
+            &lt;p class="card__meta"&gt;16 ԳԲ / 512 ԳԲ SSD&lt;/p&gt;
+            &lt;div class="card__footer"&gt;
+                &lt;p class="card__price"&gt;450 000 ֏&lt;/p&gt;
+                &lt;button class="btn btn--primary btn--sm"&gt;Գնել&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/article&gt;
+
+    &lt;article class="card card--featured"&gt;
+        &lt;span class="card__badge card__badge--new"&gt;ՆՈՐ&lt;/span&gt;
+        &lt;div class="card__media media-2"&gt;&lt;/div&gt;
+        &lt;div class="card__body"&gt;
+            &lt;h4 class="card__title"&gt;Մոնիտոր 27 4K&lt;/h4&gt;
+            &lt;p class="card__meta"&gt;Այս քարտն ունի շատ ավելի երկար
+            նկարագրություն, բայց կոճակը մնում է նույն մակարդակին&lt;/p&gt;
+            &lt;div class="card__footer"&gt;
+                &lt;p class="card__price"&gt;120 000 ֏&lt;/p&gt;
+                &lt;button class="btn btn--primary btn--sm"&gt;Գնել&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/article&gt;
+
+&lt;/div&gt;
+
+&lt;h3 class="section-title"&gt;::before և ::after&lt;/h3&gt;
+
+&lt;ul class="crumbs"&gt;
+    &lt;li&gt;&lt;a href="#"&gt;Գլխավոր&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#"&gt;Տեխնիկա&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;Նոութբուքեր&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ul class="check-list"&gt;
+    &lt;li&gt;Անվճար առաքում&lt;/li&gt;
+    &lt;li&gt;2 տարվա երաշխիք&lt;/li&gt;
+    &lt;li&gt;14 օր վերադարձ&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;label class="required"&gt;Էլ. հասցե&lt;/label&gt;&lt;/p&gt;</textarea>
+      <textarea class="live__code is-hidden" data-pane="css">:root {
+    --secondary: #003459;
+    --bg: #f5f5f5;
+    --text: #1a1a1a;
+    --muted: #6b6b6b;
+    --on-dark: #fff;
+
+    --shadow-sm: 0 1px 3px  rgba(0,0,0,.08);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.12);
+    --shadow-lg: 0 10px 28px rgba(0,0,0,.16);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 14px;
+    line-height: 1.5;
+}
+
+ul { list-style: none; }
+a { color: inherit; text-decoration: none; }
+
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+/* ===== ՎԵՐՆԱԳԻՐ ::after-ով ===== */
+.section-title {
+    position: relative;
+    padding-bottom: 12px;
+    margin: 24px 0 14px;
+    font-size: 15px;
+}
+
+.section-title::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 48px;
+    height: 3px;
+    background: var(--secondary);
+}
+
+/* ===== ԿՈՃԱԿՆԵՐ ===== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    min-height: 44px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 15px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color .15s, color .15s, border-color .15s;
+}
+
+.btn--primary { background: var(--secondary); color: var(--on-dark); }
+.btn--primary:hover { background: #00253f; }
+
+.btn--outline {
+    background: transparent;
+    color: var(--secondary);
+    border-color: var(--secondary);
+}
+.btn--outline:hover { background: var(--secondary); color: var(--on-dark); }
+
+.btn--ghost { background: transparent; color: var(--secondary); }
+.btn--ghost:hover { background: #e6ecf0; }
+
+.btn--danger { background: #c62828; color: #fff; }
+.btn--danger:hover { background: #a51f1f; }
+
+.btn--sm { padding: 8px 16px;  min-height: 36px; font-size: 13px; }
+.btn--lg { padding: 16px 32px; min-height: 54px; font-size: 17px; }
+.btn--icon { padding: 0; width: 44px; }
+
+.btn:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 2px;
+}
+
+.btn:active { transform: translateY(1px); }
+
+.btn:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ===== ՔԱՐՏԵՐ ===== */
+.cards { display: flex; flex-wrap: wrap; gap: 14px; align-items: stretch; }
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 230px;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow .2s, transform .2s;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+/* Մոդիֆիկատոր */
+.card--featured { outline: 2px solid var(--secondary); }
+
+.card__media {
+    aspect-ratio: 4 / 3;
+    background: linear-gradient(135deg, #9db4c0, #003459);
+}
+
+.media-2 { background: linear-gradient(135deg, #c7b299, #5c4a3a); }
+
+.card__badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+    background: #c62828;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.card__badge--new { background: #0f7b4f; }
+
+.card__body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 14px;
+}
+
+.card__title { font-size: 15px; margin-bottom: 6px; }
+.card__meta  { font-size: 13px; color: var(--muted); }
+
+.card__footer {
+    margin-top: auto;         /* ⭐ */
+    padding-top: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.card__price { font-size: 17px; font-weight: 700; color: var(--secondary); }
+
+/* ===== ::before ՕՐԻՆԱԿՆԵՐ ===== */
+.crumbs { display: flex; flex-wrap: wrap; font-size: 13px; }
+
+.crumbs li + li::before {
+    content: "/";
+    margin: 0 8px;
+    color: var(--muted);
+}
+
+.check-list { margin-top: 14px; }
+
+.check-list li {
+    position: relative;
+    padding-left: 26px;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.check-list li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #0f7b4f;
+    font-weight: 700;
+}
+
+.required { font-size: 14px; font-weight: 700; }
+
+.required::after {
+    content: " *";
+    color: #c62828;
+}</textarea>
+      <div class="live__actions">
+        <span>Սեղմիր Tab՝ ֆոկուսի վիճակը տեսնելու համար</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Փորձիր</span>
+      <p><strong>1.</strong> Ջնջիր <code>.btn { border: 1px solid transparent }</code>-ը և սավառնիր <code>.btn--outline</code>-ի վրայով։<br>
+      <strong>2.</strong> Ջնջիր <code>.card__footer { margin-top: auto }</code>-ը։<br>
+      <strong>3.</strong> Ջնջիր <code>.check-list li::before { content: "✓" }</code>-ի <code>content</code>-ը։<br>
+      <strong>4.</strong> Փոխիր <code>--shadow-md</code>-ը <code>0 2px 30px</code>-ի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Դասարանական</h2>
+    <p>Կառուցում ենք կոմպոնենտների գրադարան՝ առանձին էջ, որտեղ հավաքված են բոլոր տարրերը։</p>
+
+    <ol>
+      <li>Ստեղծիր <code>components.html</code> ֆայլ</li>
+      <li>Ավելացրու <code>main.css</code>-ում ստվերների փոփոխականները</li>
+      <li>Կառուցիր <code>.btn</code> բազան և չորս տեսակ</li>
+      <li>Ավելացրու երեք չափ և չորս վիճակ</li>
+      <li>Կառուցիր <code>.card</code>-ը BEM-ով</li>
+      <li>Ավելացրու <code>.card--featured</code> մոդիֆիկատոր</li>
+      <li>Կառուցիր <code>.badge</code> երեք տարբերակով</li>
+      <li>Ավելացրու <code>.section-title</code>՝ <code>::after</code> գծով</li>
+      <li>Ստուգիր ամեն կոճակը <kbd>Tab</kbd>-ով</li>
+    </ol>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ առանձին էջ</span>
+      <p><code>components.html</code>-ը քո <strong>ոճերի ուղեցույցն</strong> է։ Այնտեղ բոլոր կոմպոնենտները երևում են կողք կողքի, և անմիջապես նկատում ես անհամապատասխանությունները՝ մեկը 6px կլորացում ունի, մյուսը՝ 8px։<br><br>
+      Իրական թիմերում այս էջը կոչվում է <em>style guide</em> կամ <em>design system</em>, և այն ամենակարևոր փաստաթղթերից է։ Դաս 22–23-ի նախագծում այն շատ կօգնի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Կառուցիր <code>components.html</code>՝ բոլոր կոճակների տեսակներով, չափերով և վիճակներով։</li>
+      <li>Ցուցադրիր չորս վիճակը մեկ կոճակի վրա։ Ուղարկիր չորս սքրինշոթ։</li>
+      <li>Ջնջիր <code>:focus-visible</code>-ը և փորձիր նավարկել <kbd>Tab</kbd>-ով։ Նկարագրիր զգացողությունը։</li>
+      <li>Վերաշարադրիր Դաս 16-ի քարտը ամբողջովին BEM-ով։ Համեմատիր utility տարբերակի հետ։</li>
+      <li>Ստեղծիր <code>.card--horizontal</code> մոդիֆիկատոր՝ նկարը ձախում, տեքստը աջում։</li>
+      <li>Կառուցիր ստվերների սանդղակ՝ երեք մակարդակ։ Ցուցադրիր դրանք երեք քարտի վրա։</li>
+      <li>Ցուցադրիր, ինչ է լինում, երբ լղոզումը փոքր է տեղաշարժից՝ <code>0 10px 3px</code>։</li>
+      <li>Կառուցիր ✓ ցուցակ և bread crumbs՝ միայն <code>::before</code>-ով, առանց լրացուցիչ HTML-ի։</li>
+      <li>Ավելացրու <code>::after</code> գիծ բոլոր բաժինների վերնագրերին։</li>
+      <li>Անցիր ամբողջ նախագծով և գտիր բոլոր կրկնվող տարրերը։ Կազմիր ցուցակ՝ ի՞նչը պիտի դառնա կոմպոնենտ և ինչու։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
+
+    <h3>BEM</h3>
+    <div class="tree">.block             ինքնուրույն կոմպոնենտ
+.block__element    մաս, առանձին չի ապրում
+.block--modifier   տարբերակ (գրվում է բլոկի ՀԵՏ)</div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հատկություն</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>min-height: 44px</code></td><td>Սեղմելի տարածք ⭐</td></tr>
+      <tr><td><code>border: 1px solid transparent</code></td><td>Կոճակը չի ցատկում hover-ին ⭐</td></tr>
+      <tr><td><code>:focus-visible</code></td><td>Ստեղնաշարի ֆոկուս ⭐</td></tr>
+      <tr><td><code>:disabled</code> + <code>pointer-events: none</code></td><td>Անջատված վիճակ</td></tr>
+      <tr><td><code>cursor: not-allowed</code></td><td>Անջատվածի ցուցիչ</td></tr>
+      <tr><td><code>box-shadow: 0 4px 12px</code></td><td>Լղոզումը ≈ տեղաշարժը × 3</td></tr>
+      <tr><td><code>content: ""</code></td><td>Պարտադիր <code>::before</code>-ի համար ⭐</td></tr>
+      <tr><td><code>li + li::before</code></td><td>Բաժանարար՝ ամեն երկրորդից</td></tr>
+      <tr><td><code>margin-top: auto</code></td><td>Footer-ը քարտի ներքևում</td></tr>
+    </table>
+    </div>
+
+    <h3>Ի՞նչ ավելացավ main.css-ում այսօր</h3>
+    <div class="tree">✓ --shadow-sm / --shadow-md / --shadow-lg
+✓ .btn + 4 տեսակ + 4 չափ + 4 վիճակ
+✓ .card և բոլոր .card__* էլեմենտները
+✓ .badge, .section-title, .check-list, .crumbs</div>
+
+    <h3>Կոմպոնենտի ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Ունի չորս վիճակ՝ սովորական, hover, focus-visible, active</li>
+      <li>Սեղմելի տարածքը ≥ 44×44px</li>
+      <li>Չի ցատկում hover-ի ժամանակ</li>
+      <li>Կոնտրաստը ≥ 4.5:1 բոլոր վիճակներում</li>
+      <li>Անունները BEM-ով են</li>
+      <li>Մոդիֆիկատորը գրված է բլոկի հետ</li>
+      <li>Չի կախված իր տեղից էջում</li>
+      <li>Աշխատում է ցանկացած լայնության <code>.col</code>-ում</li>
+      <li>Երկար և կարճ տեքստի դեպքում էլ ճիշտ է երևում</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել BEM-ի երեք մասը</li>
+      <li>Գիտե՞մ, ե՞րբ ստեղծել կոմպոնենտ, ե՞րբ մնալ utility-ի վրա</li>
+      <li>Կարո՞ղ եմ անվանել կոճակի չորս վիճակը</li>
+      <li>Հասկանո՞ւմ եմ, ինչու <code>border: transparent</code></li>
+      <li>Գիտե՞մ, ինչու <code>content: ""</code></li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Նավիգացիա՝ header, բուրգեր-մենյու, dropdown, footer։ Կկառուցենք ամբողջական նավիգացիոն համակարգ, որը աշխատում է և՛ մկնիկով, և՛ ստեղնաշարով, և՛ հեռախոսում։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 17 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 24 — Եզրափակիչ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 24 · 2 ժամ · Բլոկի եզրափակիչ</p>
+  <h1>Ի՞նչ սովորեցինք և ուր ենք գնում</h1>
+  <p class="lede">24 դաս, 48 ժամ, մեկ իրական նախագիծ։ Այսօր հավաքում ենք ամեն ինչ մեկ պատկերի մեջ, ազնվորեն գնահատում ենք մեզ և նայում ենք հաջորդ բլոկին։</p>
+
+  <div class="facts">
+    <span>HTML/CSS բլոկն ավարտված է</span>
+    <span>Հաջորդը՝ JavaScript, 24 դաս</span>
+    <span>Ինքնագնահատում</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Օրվա պլան</h2>
+    <ul class="goals">
+      <li>Ճանապարհի քարտեզը՝ 24 դասը մեկ պատկերում</li>
+      <li>Հինգ գաղափար, որոնք կմնան</li>
+      <li>Հաճախակի սխալների վերլուծություն</li>
+      <li>Ինքնագնահատում</li>
+      <li>Ի՞նչ չսովորեցինք և ինչու</li>
+      <li>Կամուրջ JavaScript-ին</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ճանապարհի քարտեզը</h2>
+
+    <div class="tree">HTML — կմախք (1–5)
+  01  Ինչպես է աշխատում վեբը
+  02  Տեքստ, հղումներ, նկարներ, ուղիներ
+  03  Աղյուսակներ → խիստ ներդրվածություն
+  04  Ֆորմաներ → label-ի կարևորությունը
+  05  Սեմանտիկա → main > section
+
+CSS — հիմունքներ (6–9)
+  06  Սելեկտորներ, կասկադ → ծնվեց global.css
+  07  Գույն, տիպոգրաֆիա → կոնտրաստ
+  08  Box model → box-sizing բացատրվեց
+  09  display → ինչու inline-block-ը բավարար չէ
+
+Կառուցվածք (10–13)
+  10  .row > .col > .wrapper ⭐
+  11  Flexbox I → առանցքներ
+  12  Flexbox II → flex-grow, gap
+  13  Դիզայնից դեպի կոդ ⭐
+
+Կիրառում (14–19)
+  14  Ադապտիվություն
+  15  position, z-index
+  16  Նկարներ, aspect-ratio
+  17  Կոմպոնենտներ, BEM
+  18  Նավիգացիա, բուրգեր
+  19  Տոկեններ և թեմաներ ⭐
+
+Առաջադեմ (20–21)
+  20  Grid
+  21  Անցումներ և անիմացիաներ
+
+Նախագիծ (22–24)
+  22  Կմախք և դասավորություն
+  23  Ադապտիվություն և հրապարակում
+  24  Եզրափակիչ</div>
+
+    <div class="tip note">
+      <span class="tag">Երեք ⭐ դասը</span>
+      <p><strong>10</strong> — կառուցվածքի համակարգը։ Առանց դրա մնացած ամեն ինչը կլիներ առանձին հնարքների հավաքածու։<br><br>
+      <strong>13</strong> — աշխատանքային հոսքը։ Չափել → CSS → HTML։ Դա ոչ թե CSS-ի, այլ <em>մասնագետի</em> գիտելիք է։<br><br>
+      <strong>19</strong> — տոկենների երկու շերտը։ Այն, ինչ թույլ է տալիս մեկ բլոկով փոխել ամբողջ էջի տեսքը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Հինգ գաղափար, որոնք կմնան</h2>
+    <p>CSS հատկությունները կփոխվեն։ Այս հինգը՝ ոչ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>1. Պատասխանատվությունների բաժանում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Ամեն շերտ մեկ գործ է անում */</span>
+
+<span class="t">section</span>   → ֆոն, ուղղահայաց բացակ
+<span class="k">.row</span>      → պատեր, դասավորության ուղղություն
+<span class="k">.col</span>      → լայնություն, բացակներ
+<span class="k">.wrapper</span>  → տեսք
+
+<span class="c">/* Նույն սկզբունքը JS-ում՝ ֆունկցիա = մեկ գործ
+   Նույնը PHP-ում՝ MVC = Model, View, Controller */</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>2. Վարքագիծ ≠ արժեք</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* global.css — ինչպես է աշխատում */</span>
+<span class="k">.row</span> { <span class="f">display</span>: <span class="s">flex</span>; }
+
+<span class="c">/* main.css — ինչքան է */</span>
+<span class="k">.row</span> { <span class="f">padding</span>: <span class="n">0</span> <span class="n">50px</span>; }
+
+<span class="c">/* Առաջինը տանում ես հաջորդ նախագիծ։
+   Երկրորդը գրում ես նորից։            */</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>3. Համակարգ, ոչ պատահական արժեքներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ❌ 14 տառաչափ, 9 երանգ մոխրագույնի, 17px բացակ */</span>
+<span class="c">/* ✅ 5 տառաչափ, 3 մոխրագույն, 10/20/30/40 սանդղակ */</span>
+
+<span class="c">/* Երբ արժեքը սանդղակի վրա չէ՝ հարցրու ինքդ քեզ.
+   «Ինչո՞ւ հենց 17px»։ Եթե պատասխան չկա — կլորացրու։ */</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>4. Ոչ բոլորն են օգտագործում մկնիկ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Ամեն ինտերակտիվ էլեմենտ՝ 4 վիճակ */</span>
+:<span class="k">hover</span>  →  մկնիկ
+:<span class="k">focus-visible</span>  →  ստեղնաշար ⭐
+:<span class="k">active</span>  →  սեղմման պահ
+:<span class="k">disabled</span>  →  անհասանելի
+
+<span class="c">/* Կոնտրաստ ≥ 4.5:1 · alt ամեն նկարի · label ամեն դաշտի */</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>5. Ազնվություն սահմանափակումների մասին</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* «Բուրգեր-մենյուն checkbox-ով է։
+    Չի փակվում Esc-ով և հղումին սեղմելուց հետո։
+    Կուղղվի JS-ով»։
+
+   Սա ավելի արժեքավոր է, քան ձևացնելը,
+   թե ամեն ինչ կատարյալ է։                    */</span></code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Հաճախակի սխալները</h2>
+    <p>Տասը սխալ, որ ամենից շատ են հանդիպել այս 24 դասում։ Դրանք վերադառնում են՝ նույնիսկ երբ թվում է, թե արդեն սովորել ես։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>#</th><th>Սխալ</th><th>Դաս</th></tr>
+      <tr><td>1</td><td>Ֆոն <code>.col</code>-ի վրա → բացակները անհետանում են</td><td>10</td></tr>
+      <tr><td>2</td><td><code>transition</code>-ը <code>:hover</code>-ում → ելքը կտրուկ է</td><td>21</td></tr>
+      <tr><td>3</td><td><code>absolute</code> առանց ծնողի <code>relative</code>-ի</td><td>15</td></tr>
+      <tr><td>4</td><td><code>sticky</code> առանց <code>top</code>-ի կամ <code>background</code>-ի</td><td>15</td></tr>
+      <tr><td>5</td><td>Media query-ն ֆայլի մեջտեղում</td><td>14</td></tr>
+      <tr><td>6</td><td><code>gap</code> + տոկոսային լայնություններ</td><td>12</td></tr>
+      <tr><td>7</td><td>Ֆիքսված <code>height</code> տեքստի համար</td><td>8</td></tr>
+      <tr><td>8</td><td>Մոռացված <code>:focus-visible</code></td><td>17</td></tr>
+      <tr><td>9</td><td>HEX գույն <code>:root</code>-ից դուրս</td><td>19</td></tr>
+      <tr><td>10</td><td><code>overflow-x: hidden</code> <code>body</code>-ի վրա՝ խնդիրը ծածկելու համար</td><td>14</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ախտորոշման կարգը</span>
+      <p>Երբ ինչ-որ բան չի աշխատում, անցիր այս հերթականությամբ․<br><br>
+      <strong>1.</strong> Բացիր DevTools և ընտրիր էլեմենտը<br>
+      <strong>2.</strong> Styles վահանակում նայիր՝ կանոնը կիրառվե՞լ է (եթե ջնջված է — սպեցիֆիկություն)<br>
+      <strong>3.</strong> Computed ներդիրում նայիր իրական արժեքը<br>
+      <strong>4.</strong> Box model դիագրամում նայիր չափերը<br>
+      <strong>5.</strong> Ստուգիր ծնողներին — <code>position</code>, <code>overflow</code>, <code>display</code><br><br>
+      90% դեպքերում պատասխանը գտնվում է առաջին երկու քայլում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Ինքնագնահատում</h2>
+    <p>Ազնվորեն։ Ոչ ոք չի տեսնի, բացի քեզնից։</p>
+
+    <h3>Մակարդակ 1 — հասկանում եմ</h3>
+    <ul class="goals">
+      <li>Կարող եմ բացատրել, ինչ է <code>box-sizing: border-box</code>-ը և ինչու</li>
+      <li>Գիտեմ Flexbox-ի երկու առանցքը</li>
+      <li>Հասկանում եմ սպեցիֆիկությունը</li>
+      <li>Կարող եմ բացատրել, ինչու <code>rem</code>, ոչ <code>px</code></li>
+      <li>Գիտեմ <code>absolute</code>-ի և <code>relative</code>-ի կապը</li>
+    </ul>
+
+    <h3>Մակարդակ 2 — կարող եմ անել</h3>
+    <ul class="goals">
+      <li>Կառուցում եմ ադապտիվ ցանց առանց նայելու</li>
+      <li>Կենտրոնացնում եմ բլոկը երկու առանցքով</li>
+      <li>Կառուցում եմ քարտ՝ կոճակը ներքևում</li>
+      <li>Ստուգում եմ կոնտրաստը DevTools-ով</li>
+      <li>Գտնում եմ հորիզոնական սքրոլի պատճառը</li>
+    </ul>
+
+    <h3>Մակարդակ 3 — կարող եմ որոշել</h3>
+    <ul class="goals">
+      <li>Ընտրում եմ Grid-ի և Flex-ի միջև՝ հիմնավորելով</li>
+      <li>Որոշում եմ, ե՞րբ utility, ե՞րբ կոմպոնենտ</li>
+      <li>Գտնում եմ սանդղակը խառը չափումներից</li>
+      <li>Ընտրում եմ breakpoint-ը ըստ բովանդակության, ոչ սարքի</li>
+      <li>Գիտեմ, ե՞րբ <code>clamp()</code>, ե՞րբ media query</li>
+    </ul>
+
+    <h3>Մակարդակ 4 — մտածում եմ օգտագործողի մասին</h3>
+    <ul class="goals">
+      <li>Ստուգում եմ ամեն էջ <kbd>Tab</kbd>-ով</li>
+      <li>Գրում եմ իմաստալից <code>alt</code></li>
+      <li>Հարգում եմ <code>prefers-reduced-motion</code>-ը</li>
+      <li>Մտածում եմ դանդաղ ինտերնետի մասին</li>
+      <li>Փաստագրում եմ սահմանափակումները</li>
+    </ul>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Արդյունք</th><th>Ի՞նչ անել</th></tr>
+      <tr><td>16–20 ✓</td><td>Պատրաստ ես JS բլոկին</td></tr>
+      <tr><td>11–15 ✓</td><td>Կրկնիր դաս 10, 13, 19-ը և վերաշարադրիր նախագիծը</td></tr>
+      <tr><td>6–10 ✓</td><td>Կրկնիր ամբողջ «Կառուցվածք» բաժինը (10–13)</td></tr>
+      <tr><td>0–5 ✓</td><td>Անցիր դասերով նորից՝ ամեն դասին կատարելով տնայինը</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Կարևոր</span>
+      <p>Առաջին երկու մակարդակը <em>գիտելիք</em> են։ Երրորդն ու չորրորդը՝ <strong>մասնագիտություն</strong>։<br><br>
+      Շատերը կանգ են առնում երկրորդում՝ գիտեն հատկությունները, բայց ամեն նոր նախագծում սկսում են զրոյից և պատահական որոշումներ են կայացնում։<br><br>
+      Տարբերությունը հենց այնտեղ է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Ի՞նչ չսովորեցինք</h2>
+    <p>Ազնվորեն՝ շատ բան։ Ահա ցուցակը և պատճառները։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Թեմա</th><th>Ինչո՞ւ ոչ</th></tr>
+      <tr><td><strong>Sass / SCSS</strong></td><td>CSS փոփոխականներն ու ներդրվածությունը հիմա բավական են։ Sass-ը սովորվում է մեկ երեկոյում, երբ հասկանում ես մաքուր CSS-ը</td></tr>
+      <tr><td><strong>Tailwind</strong></td><td>Մենք արդեն կառուցեցինք utility-համակարգ ձեռքով։ Tailwind-ը նույն գաղափարն է՝ պատրաստի</td></tr>
+      <tr><td><strong>Bootstrap</strong></td><td>Նույն պատճառով։ Հիմա գիտես, ինչպես է աշխատում դրա <code>grid</code>-ը</td></tr>
+      <tr><td><strong>Container queries</strong></td><td>Նոր է։ Կպետք գա կոմպոնենտային մոտեցումների դեպքում</td></tr>
+      <tr><td><strong>CSS Layers, <code>:has()</code></strong></td><td>Օգտակար, բայց մեծ նախագծերի համար</td></tr>
+      <tr><td><strong>Անիմացիաների գրադարաններ</strong></td><td>GSAP, Framer Motion — JS-ից հետո</td></tr>
+      <tr><td><strong>Դիզայն</strong></td><td>Առանձին մասնագիտություն է։ Մենք սովորեցինք <em>իրականացնել</em> դիզայնը, ոչ ստեղծել այն</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ մաքուր CSS, ոչ գրադարան</span>
+      <p>Գրադարանով սկսողը արագ արդյունք է ստանում, բայց չի հասկանում, <em>ինչու</em> է այն աշխատում։ Երբ ինչ-որ բան կոտրվի — փակուղի է։<br><br>
+      Դու հիմա կարող ես բացել Bootstrap-ի կոդը և կարդալ այն։ Կտեսնես նույն <code>.row</code>, <code>.col</code>, <code>box-sizing</code>, <code>flex</code>։<br><br>
+      Գրադարանը գործիք է, ոչ փոխարինող։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Կամուրջ JavaScript-ին</h2>
+    <p>Մեր էջը գեղեցիկ է և հասանելի։ Բայց այն <strong>ոչինչ չի անում</strong>։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ինչ ունենք հիմա</th><th>Ինչ կավելանա JS-ով</th></tr>
+      <tr><td>Բուրգեր՝ checkbox-ով</td><td>Ճիշտ մենյու՝ <kbd>Esc</kbd>, դրսում սեղմում, <code>aria-expanded</code></td></tr>
+      <tr><td>Ապրանքները՝ HTML-ում ձեռքով</td><td>Ցուցակ տվյալներից՝ <code>render()</code></td></tr>
+      <tr><td>Չկա որոնում</td><td>Ֆիլտր, տեսակավորում, որոնում</td></tr>
+      <tr><td>«Գնել» կոճակը ոչինչ չի անում</td><td>Զամբյուղ՝ հաշվիչով և գումարով</td></tr>
+      <tr><td>Ֆորման չի ուղարկվում</td><td>Վալիդացիա և ուղարկում</td></tr>
+      <tr><td>Թեմայի անջատիչը թերի է</td><td><code>localStorage</code>՝ ընտրությունը հիշվում է</td></tr>
+      <tr><td>Ապրանքները ֆիքսված են</td><td><code>fetch</code>՝ տվյալներ սերվերից</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ի՞նչ կմնա անփոփոխ</span>
+      <p>Ամբողջ CSS-ը։<br><br>
+      JS-ը փոխում է <strong>դասերը</strong> և <strong>բովանդակությունը</strong>, ոչ ոճերը։ <code>.card</code>, <code>.btn--primary</code>, <code>.is-open</code> — դրանք բոլորը մնում են։<br><br>
+      Դրա համար ենք սովորել <code>.is-active</code>, <code>.is-open</code> ձևի դասերը՝ դրանք հենց JS-ի համար են։ Երկրորդ բլոկում կտեսնես, ինչպես։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>նախադիտում — այսպես կաշխատի</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// JS բլոկ, Դաս 11 — բուրգերի ճիշտ տարբերակը</span>
+
+<span class="k">const</span> <span class="n">burger</span> = <span class="t">document</span>.<span class="f">querySelector</span>(<span class="s">'.burger'</span>);
+<span class="k">const</span> <span class="n">header</span> = <span class="t">document</span>.<span class="f">querySelector</span>(<span class="s">'.header'</span>);
+
+<span class="n">burger</span>.<span class="f">addEventListener</span>(<span class="s">'click'</span>, () =&gt; {
+    <span class="k">const</span> <span class="n">isOpen</span> = <span class="n">header</span>.<span class="f">classList</span>.<span class="f">toggle</span>(<span class="s">'is-open'</span>);
+    <span class="n">burger</span>.<span class="f">setAttribute</span>(<span class="s">'aria-expanded'</span>, <span class="n">isOpen</span>);
+});
+
+<span class="c">// Իսկ CSS-ում պարզապես.
+//   .header.is-open .menu { transform: translateX(0); }
+//
+// Ոչ մի checkbox։ Ոչ մի ~ սելեկտոր։</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Երկրորդ բլոկի կառուցվածքը</span>
+      <p><strong>1–8</strong> — JS-ի հիմունքներ՝ փոփոխականներ, ցիկլեր, ֆունկցիաներ, զանգվածներ, օբյեկտներ<br>
+      <strong>9–14</strong> — DOM և իրադարձություններ՝ էջը դառնում է կենդանի<br>
+      <strong>15–16</strong> — մինի նախագիծ՝ կատալոգ ֆիլտրերով<br>
+      <strong>17–18</strong> — Git և մոդուլներ<br>
+      <strong>19–21</strong> — ասինխրոն JS և API-ներ<br>
+      <strong>22–24</strong> — OOP և վերջնական նախագիծ</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Ի՞նչ անել մինչև հաջորդ բլոկը</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Առաջադրանք</th><th>Ինչու</th></tr>
+      <tr><td><strong>Վերաշարադրիր նախագիծը զրոյից</strong></td><td>Երկրորդ անգամը երկու անգամ արագ է և հինգ անգամ մաքուր</td></tr>
+      <tr><td>Կրկնիր մեկ ուրիշ մակետ</td><td>Dribbble, Behance — ընտրիր պարզ landing</td></tr>
+      <tr><td>Ամրագրիր <code>global.css</code>-ը</td><td>Դա քո գործիքն է հաջորդ բոլոր նախագծերի համար</td></tr>
+      <tr><td>Ընդլայնիր <code>components.html</code>-ը</td><td>Ավելացրու մոդալ, թաբեր, ակորդեոն</td></tr>
+      <tr><td>Բացիր սիրած կայքի DevTools-ը</td><td>Նայիր, ինչպես են դրանք արել</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ամենակարևոր առաջադրանքը</span>
+      <p><strong>Վերաշարադրիր ՏեխնոՄարկետը զրոյից՝ առանց նայելու հին կոդին։</strong><br><br>
+      Այն, ինչ հիշում ես՝ իսկապես սովորած է։ Այն, ինչ պիտի փնտրես՝ դեռ ոչ։<br><br>
+      Այս վարժությունը ցույց կտա քո իրական մակարդակը ավելի լավ, քան ցանկացած թեստ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Վերջնական տնային</h2>
+    <ol class="hw">
+      <li>Անցիր ինքնագնահատման 20 կետով։ Գրիր, քանիսին ես ✓ դրել։</li>
+      <li>Ընտրիր 3 կետ, որոնց վստահ չես, և կրկնիր համապատասխան դասերը։</li>
+      <li>Վերաշարադրիր ՏեխնոՄարկետը զրոյից՝ առանց նայելու հին կոդին։ Չափիր ժամանակը։</li>
+      <li>Համեմատիր երկու տարբերակը։ Գրիր, ի՞նչը դարձավ ավելի լավ։</li>
+      <li>Գտիր նոր մակետ և կրկնիր այն։ Սկսիր չափումների աղյուսակից։</li>
+      <li>Ընդլայնիր <code>components.html</code>-ը՝ ավելացրու մոդալ և թաբեր (միայն տեսքը)։</li>
+      <li>Բացիր ցանկացած հայտնի կայք և վերլուծիր՝ ի՞նչ սանդղակ են օգտագործում, քանի՞ տառաչափ։</li>
+      <li>Գործարկիր Lighthouse քո երկու նախագծի վրա։ Համեմատիր։</li>
+      <li>Հրապարակիր երկրորդ նախագիծը GitHub Pages-ում։</li>
+      <li>Գրիր կարճ տեքստ՝ «Ի՞նչն էր ամենադժվարը այս բլոկում և ինչպես հաղթահարեցի»։ Դա կօգնի հաջորդ բլոկում։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Ամփոփում</h2>
+
+    <div class="tree">24 դաս · 48 ժամ
+
+  Սովորեցինք՝
+    HTML     — սեմանտիկ կմախք
+    CSS      — կասկադ, box model, Flexbox, Grid
+    Համակարգ — .row > .col > .wrapper
+    Հոսք     — չափել → CSS → HTML
+    Տոկեններ — երկու շերտ, թեմաներ
+    Հասանելիություն — Tab, կոնտրաստ, alt
+
+  Կառուցեցինք՝
+    global.css  — բազմակի օգտագործման գործիք
+    main.css    — նախագծի արժեքներ
+    components.html — ոճերի ուղեցույց
+    ՏեխնոՄարկետ — հրապարակված landing page
+
+  Հաջորդը՝
+    JavaScript — 24 դաս
+    PHP        — 24 դաս</div>
+
+    <div class="tip note">
+      <span class="tag">Վերջին միտքը</span>
+      <p>CSS-ը հաճախ համարում են «հեշտ» մասը։ Դա սխալ է։<br><br>
+      Հեշտ է գրել CSS, որն աշխատում է մեկ էկրանին։ Դժվար է գրել CSS, որը <strong>չի փլվում</strong>՝ երբ բովանդակությունը փոխվում է, երբ էկրանը նեղանում է, երբ վեց ամիս անց վերադառնում ես ֆայլին։<br><br>
+      Դու սովորեցիր հենց երկրորդը։ Հատկությունները քեզ մոտ միշտ կլինեն որոնման հեռավորության վրա։ Համակարգային մտածողությունը՝ ոչ։<br><br>
+      Հանդիպենք JavaScript բլոկում։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 24 / 24 · ✓ Ավարտված</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>
