@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHP Դաս 8 — MySQL · սխեմա, SELECT, JOIN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>PHP Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">PHP Դաս 8 · 2 ժամ</p>
+  <h1>MySQL · սխեմա, SELECT, JOIN</h1>
+  <p class="lede">Այսօր PHP չենք գրի։ Աշխատում ենք միայն phpMyAdmin-ում — որ SQL-ը սովորենք որպես առանձին լեզու, ոչ որպես PHP-ի տողեր։</p>
+
+  <div class="facts">
+    <span>Բլոկ 3 · Դաս 8 / 24</span>
+    <span>Առանց PHP-ի, միայն SQL</span>
+    <span>Սխեմայի նախագծում</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ինչո՞ւ բազա, ոչ ֆայլեր</li>
+      <li>Աղյուսակներ և տվյալների տիպեր</li>
+      <li>ՏեխնոՄարկետի սխեման</li>
+      <li>Կապեր և արտաքին բանալիներ</li>
+      <li><code>SELECT</code>, <code>WHERE</code>, <code>ORDER BY</code>, <code>LIMIT</code></li>
+      <li><code>JOIN</code></li>
+      <li>Ագրեգացիա և <code>GROUP BY</code></li>
+      <li>Ինդեքսներ</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչո՞ւ բազա</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Խնդիր</th><th><code>data.php</code></th><th>MySQL</th></tr>
+      <tr><td>Ավելացնել ապրանք</td><td>Խմբագրել կոդը</td><td><code>INSERT</code></td></tr>
+      <tr><td>Գտնել ըստ գնի</td><td>Կարդալ ամեն ինչ, ֆիլտրել</td><td><code>WHERE</code> ինդեքսով</td></tr>
+      <tr><td>10 000 ապրանք</td><td>Ամեն հարցումով հիշողության մեջ</td><td>Միայն պետքականը</td></tr>
+      <tr><td>Երկու օգտագործող միաժամանակ</td><td>Ֆայլը կկոռուպտվի</td><td>Տրանզակցիաներ</td></tr>
+      <tr><td>Կապեր տվյալների միջև</td><td>Ձեռքով</td><td><code>JOIN</code></td></tr>
+      <tr><td>Որոնում տեքստով</td><td>Ցիկլ ամեն տողով</td><td><code>LIKE</code>, full-text</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Գլխավոր տարբերությունը</span>
+      <p><code>data.php</code>-ում տվյալները <strong>կոդի մաս են</strong>։ Փոխելու համար պետք է ծրագրավորող։<br><br>
+      Բազայում դրանք <strong>առանձին են կոդից</strong>։ Ապրանք ավելացնում է մենեջերը ադմին վահանակից, առանց քեզ։<br><br>
+      Դա նույն սկզբունքն է, ինչ <code>global.css</code>-ի և <code>main.css</code>-ի բաժանումը՝ վարքագիծն առանձին, արժեքներն առանձին։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Տվյալների տիպեր</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Տիպ</th><th>Ե՞րբ</th></tr>
+      <tr><td><code>INT UNSIGNED</code></td><td>ID, քանակ — ոչ բացասական</td></tr>
+      <tr><td><code>TINYINT(1)</code></td><td>Այո/ոչ (<code>0</code> / <code>1</code>)</td></tr>
+      <tr><td><code>VARCHAR(255)</code></td><td>Կարճ տեքստ՝ անուն, էլ. հասցե</td></tr>
+      <tr><td><code>TEXT</code></td><td>Երկար տեքստ՝ նկարագրություն</td></tr>
+      <tr><td><code>DECIMAL(10,2)</code></td><td><strong>Գներ և գումարներ</strong> ⭐</td></tr>
+      <tr><td><code>DATETIME</code></td><td>Ամսաթիվ և ժամ</td></tr>
+      <tr><td><code>ENUM(...)</code></td><td>Սահմանափակ ցուցակ՝ կարգավիճակ</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Գները երբեք <code>FLOAT</code> չեն</span>
+      <p><code>FLOAT</code>-ը և <code>DOUBLE</code>-ը պահում են մոտավոր արժեք։ <code>0.1 + 0.2</code>-ը այնտեղ <strong>0.3 չէ</strong>։<br><br>
+      Հազար պատվերի վրա կուտակվում է սխալ, և հաշվապահությունը չի համընկնում։ Դա ոչ թե տեսական խնդիր է, այլ դասական սխալ, որ գտնում են աուդիտի ժամանակ։<br><br>
+      <code>DECIMAL(10,2)</code> — ճշգրիտ, 10 նիշ ընդհանուր, 2-ը՝ ստորակետից հետո։<br><br>
+      <strong>Այլընտրանք՝</strong> գումարը պահել <code>INT</code>-ով, դրամով (ոչ լումայով)։ Հայկական դրամի դեպքում դա հաճախ ամենապարզն է։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Կոդավորում</span>
+      <p>Բազան և աղյուսակները՝ <code>utf8mb4</code>, համեմատումը՝ <code>utf8mb4_unicode_ci</code>։<br><br>
+      Հին <code>utf8</code>-ը MySQL-ում իրական UTF-8 չէ — այն չի պահում էմոջի և որոշ նիշեր։ Անունը շփոթեցնող է, բայց <code>utf8mb4</code>-ն է ճիշտը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>ՏեխնոՄարկետի սխեման</h2>
+
+    <div class="tree">categories                products
+┌────────────────┐        ┌──────────────────────┐
+│ id          PK │◀───┐   │ id                PK │
+│ name           │    └───│ category_id       FK │
+│ slug           │        │ name                 │
+└────────────────┘        │ slug                 │
+                          │ specs                │
+                          │ description          │
+orders                    │ price                │
+┌────────────────┐        │ discount             │
+│ id          PK │        │ image                │
+│ customer_name  │        │ stock                │
+│ email          │        │ is_active            │
+│ phone          │        │ created_at           │
+│ total          │        └──────────────────────┘
+│ status         │                   ▲
+│ created_at     │                   │
+└────────────────┘                   │
+        ▲                            │
+        │        order_items         │
+        │        ┌─────────────────┐ │
+        └────────│ order_id     FK │ │
+                 │ product_id   FK │─┘
+                 │ quantity        │
+                 │ price           │  ← գինը գնման պահին
+                 └─────────────────┘</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>schema.sql</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">CREATE DATABASE</span> technomarket
+    <span class="k">CHARACTER SET</span> utf8mb4
+    <span class="k">COLLATE</span> utf8mb4_unicode_ci;
+
+<span class="k">USE</span> technomarket;
+
+<span class="k">CREATE TABLE</span> categories (
+    id    <span class="t">INT UNSIGNED</span> <span class="k">AUTO_INCREMENT PRIMARY KEY</span>,
+    name  <span class="t">VARCHAR</span>(<span class="n">100</span>) <span class="k">NOT NULL</span>,
+    slug  <span class="t">VARCHAR</span>(<span class="n">100</span>) <span class="k">NOT NULL UNIQUE</span>
+) <span class="k">ENGINE</span>=InnoDB;
+
+<span class="k">CREATE TABLE</span> products (
+    id          <span class="t">INT UNSIGNED</span> <span class="k">AUTO_INCREMENT PRIMARY KEY</span>,
+    category_id <span class="t">INT UNSIGNED</span> <span class="k">NULL</span>,
+
+    name        <span class="t">VARCHAR</span>(<span class="n">200</span>) <span class="k">NOT NULL</span>,
+    slug        <span class="t">VARCHAR</span>(<span class="n">200</span>) <span class="k">NOT NULL UNIQUE</span>,
+    specs       <span class="t">VARCHAR</span>(<span class="n">255</span>) <span class="k">NULL</span>,
+    description <span class="t">TEXT</span> <span class="k">NULL</span>,
+
+    price       <span class="t">DECIMAL</span>(<span class="n">10</span>,<span class="n">2</span>) <span class="k">NOT NULL</span>,
+    discount    <span class="t">TINYINT UNSIGNED</span> <span class="k">NOT NULL DEFAULT</span> <span class="n">0</span>,
+    stock       <span class="t">INT UNSIGNED</span> <span class="k">NOT NULL DEFAULT</span> <span class="n">0</span>,
+
+    image       <span class="t">VARCHAR</span>(<span class="n">255</span>) <span class="k">NULL</span>,
+    is_active   <span class="t">TINYINT</span>(<span class="n">1</span>) <span class="k">NOT NULL DEFAULT</span> <span class="n">1</span>,
+    created_at  <span class="t">DATETIME</span> <span class="k">NOT NULL DEFAULT CURRENT_TIMESTAMP</span>,
+
+    <span class="k">CONSTRAINT</span> fk_products_category
+        <span class="k">FOREIGN KEY</span> (category_id) <span class="k">REFERENCES</span> categories(id)
+        <span class="k">ON DELETE SET NULL</span>,
+
+    <span class="k">INDEX</span> idx_active_price (is_active, price),
+    <span class="k">INDEX</span> idx_category (category_id)
+) <span class="k">ENGINE</span>=InnoDB;</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Որոշում</th><th>Ինչու</th></tr>
+      <tr><td><code>slug</code> դաշտ</td><td>Մարդկային հասցեներ՝ <code>/product/laptop-pro-14</code> (Դաս 14)</td></tr>
+      <tr><td><code>is_active</code></td><td>Թաքցնել առանց ջնջելու ⭐</td></tr>
+      <tr><td><code>discount</code> առանձին</td><td>Հին գինը մնում է, զեղչը՝ ժամանակավոր</td></tr>
+      <tr><td><code>created_at</code></td><td>Տեսակավորում «նոր»-ով, վերլուծություն</td></tr>
+      <tr><td><code>ON DELETE SET NULL</code></td><td>Կատեգորիան ջնջելիս ապրանքները մնում են</td></tr>
+      <tr><td><code>ENGINE=InnoDB</code></td><td>Արտաքին բանալիներ և տրանզակցիաներ</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ <code>order_items</code>-ում կրկնում ենք գինը</span>
+      <p>Թվում է ավելորդություն — գինն արդեն կա <code>products</code>-ում։<br><br>
+      Բայց գները փոխվում են։ Եթե պատվերի էջում գինը վերցնես <code>products</code>-ից, ապա վաղը, երբ գինը բարձրանա, <strong>հին պատվերները կցուցադրեն նոր գինը</strong>։ Հաշվապահությունը կփլվի։<br><br>
+      <code>order_items.price</code>-ը գինն է <strong>գնման պահին</strong>։ Դա պատմական փաստ է, ոչ ընթացիկ արժեք։<br><br>
+      Սա տվյալների մոդելավորման կարևոր սկզբունք է․ <em>պատմությունը սառեցվում է, ընթացիկ վիճակը՝ ոչ</em>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>SELECT</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հիմունքներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">-- Բոլորը (միայն ուսումնական նպատակով)</span>
+<span class="k">SELECT</span> * <span class="k">FROM</span> products;
+
+<span class="c">-- ✅ Հստակ դաշտեր</span>
+<span class="k">SELECT</span> id, name, price <span class="k">FROM</span> products;
+
+<span class="c">-- Պայման</span>
+<span class="k">SELECT</span> id, name, price
+<span class="k">FROM</span> products
+<span class="k">WHERE</span> is_active = <span class="n">1</span> <span class="k">AND</span> price &lt; <span class="n">200000</span>;
+
+<span class="c">-- Տեսակավորում և սահման</span>
+<span class="k">SELECT</span> id, name, price
+<span class="k">FROM</span> products
+<span class="k">WHERE</span> is_active = <span class="n">1</span>
+<span class="k">ORDER BY</span> price <span class="k">ASC</span>
+<span class="k">LIMIT</span> <span class="n">12</span> <span class="k">OFFSET</span> <span class="n">0</span>;</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ ոչ <code>SELECT *</code></span>
+      <p><strong>1.</strong> Փոխանցվում է ավելորդ տվյալ — <code>description</code>-ը ցուցակում պետք չէ<br>
+      <strong>2.</strong> Երբ ավելացնես նոր դաշտ, կոդը լուռ կսկսի քաշել այն<br>
+      <strong>3.</strong> Ինդեքսը հաճախ չի կարող ծածկել հարցումը<br><br>
+      Կատալոգի էջում <code>description</code>-ը 5 ԿԲ է × 12 ապրանք = 60 ԿԲ ավելորդ ամեն հարցումով։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>WHERE-ի հնարավորությունները</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">WHERE</span> price <span class="k">BETWEEN</span> <span class="n">50000</span> <span class="k">AND</span> <span class="n">200000</span>
+<span class="k">WHERE</span> category_id <span class="k">IN</span> (<span class="n">1</span>, <span class="n">3</span>, <span class="n">5</span>)
+<span class="k">WHERE</span> name <span class="k">LIKE</span> <span class="s">'%նոութբուք%'</span>
+<span class="k">WHERE</span> description <span class="k">IS NULL</span>
+<span class="k">WHERE</span> discount &gt; <span class="n">0</span> <span class="k">AND</span> stock &gt; <span class="n">0</span>
+<span class="k">WHERE</span> created_at &gt;= <span class="k">DATE_SUB</span>(<span class="k">NOW</span>(), <span class="k">INTERVAL</span> <span class="n">30</span> <span class="k">DAY</span>)</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag"><code>NULL</code>-ը հատուկ է</span>
+      <p><code>WHERE description = NULL</code> — <strong>երբեք ոչինչ չի վերադարձնի</strong>։<br><br>
+      <code>NULL</code>-ը «անհայտ» է, ոչ արժեք։ Անհայտը հավասար չէ անհայտին։<br><br>
+      Ճիշտ ձևը՝ <code>IS NULL</code> և <code>IS NOT NULL</code>։ Սա ամենահաճախ սխալներից է սկսնակների մոտ։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հաշվարկվող դաշտեր</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">SELECT</span>
+    id,
+    name,
+    price,
+    discount,
+    <span class="k">ROUND</span>(price * (<span class="n">100</span> - discount) / <span class="n">100</span>) <span class="k">AS</span> final_price
+<span class="k">FROM</span> products
+<span class="k">WHERE</span> is_active = <span class="n">1</span>
+<span class="k">ORDER BY</span> final_price <span class="k">ASC</span>;</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ուշադրություն՝ սա փոխարինում է PHP-ի ֆունկցիային</span>
+      <p>Դաս 3-ում գրեցինք <code>finalPrice()</code> PHP-ում և տեսակավորեցինք <code>usort</code>-ով։<br><br>
+      Հիմա բազան կարող է անել երկուսն էլ՝ ավելի արագ և առանց բոլոր տողերը հիշողություն բերելու։<br><br>
+      Ընդհանուր կանոն՝ <strong>ֆիլտրում և տեսակավորում՝ բազայում, ձևաչափում՝ PHP-ում</strong>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>JOIN</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ապրանքները կատեգորիայի անունով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">SELECT</span>
+    p.id,
+    p.name,
+    p.price,
+    c.name <span class="k">AS</span> category_name
+<span class="k">FROM</span> products p
+<span class="k">LEFT JOIN</span> categories c <span class="k">ON</span> c.id = p.category_id
+<span class="k">WHERE</span> p.is_active = <span class="n">1</span>
+<span class="k">ORDER BY</span> p.price;</code></pre>
+    </div>
+
+    <div class="tree">INNER JOIN                LEFT JOIN
+
+products  categories      products  categories
+   ●─────────●               ●─────────●
+   ●─────────●               ●─────────●
+   ●    ✗                    ●─────── NULL
+
+Միայն զույգերը            Բոլոր ապրանքները,
+                          նույնիսկ առանց կատեգորիայի</div>
+
+    <div class="warn note">
+      <span class="tag">Ե՞րբ որը</span>
+      <p><code>INNER JOIN</code> — երբ կապը <strong>պարտադիր է</strong>։ Առանց կատեգորիայի ապրանքը պարզապես չի ցուցադրվի։<br><br>
+      <code>LEFT JOIN</code> — երբ կապը <strong>ցանկալի է</strong>։ Ապրանքը ցուցադրվում է, կատեգորիան կլինի <code>NULL</code>։<br><br>
+      Մեր սխեմայում <code>category_id</code>-ն <code>NULL</code> կարող է լինել (<code>ON DELETE SET NULL</code>) → ուստի <code>LEFT JOIN</code>։<br><br>
+      Դասական սխալ՝ <code>INNER JOIN</code> և հետո զարմանք, թե ինչու ապրանքների կեսը անհետացավ։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երեք աղյուսակ — պատվերի բովանդակությունը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">SELECT</span>
+    o.id            <span class="k">AS</span> order_id,
+    o.customer_name,
+    p.name          <span class="k">AS</span> product_name,
+    oi.quantity,
+    oi.price,
+    oi.quantity * oi.price <span class="k">AS</span> line_total
+<span class="k">FROM</span> orders o
+<span class="k">INNER JOIN</span> order_items oi <span class="k">ON</span> oi.order_id = o.id
+<span class="k">INNER JOIN</span> products p    <span class="k">ON</span> p.id = oi.product_id
+<span class="k">WHERE</span> o.id = <span class="n">42</span>;</code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Ագրեգացիա</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հինգ ֆունկցիա</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">SELECT</span>
+    <span class="k">COUNT</span>(*)     <span class="k">AS</span> total,
+    <span class="k">AVG</span>(price)   <span class="k">AS</span> avg_price,
+    <span class="k">MIN</span>(price)   <span class="k">AS</span> cheapest,
+    <span class="k">MAX</span>(price)   <span class="k">AS</span> most_expensive,
+    <span class="k">SUM</span>(stock)   <span class="k">AS</span> total_stock
+<span class="k">FROM</span> products
+<span class="k">WHERE</span> is_active = <span class="n">1</span>;</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>GROUP BY — ապրանքների քանակը կատեգորիաներով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">SELECT</span>
+    c.name,
+    <span class="k">COUNT</span>(p.id) <span class="k">AS</span> product_count,
+    <span class="k">ROUND</span>(<span class="k">AVG</span>(p.price)) <span class="k">AS</span> avg_price
+<span class="k">FROM</span> categories c
+<span class="k">LEFT JOIN</span> products p <span class="k">ON</span> p.category_id = c.id <span class="k">AND</span> p.is_active = <span class="n">1</span>
+<span class="k">GROUP BY</span> c.id, c.name
+<span class="k">HAVING</span> product_count &gt; <span class="n">0</span>
+<span class="k">ORDER BY</span> product_count <span class="k">DESC</span>;</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag"><code>WHERE</code> vs <code>HAVING</code></span>
+      <p><code>WHERE</code> — ֆիլտրում է <strong>տողերը</strong> խմբավորումից <em>առաջ</em><br>
+      <code>HAVING</code> — ֆիլտրում է <strong>խմբերը</strong> խմբավորումից <em>հետո</em><br><br>
+      <code>COUNT()</code>-ով չես կարող ֆիլտրել <code>WHERE</code>-ում, որովհետև այն դեռ գոյություն չունի։<br><br>
+      Ուշադրություն նաև՝ պայմանը <code>p.is_active = 1</code> դրված է <code>ON</code>-ում, ոչ <code>WHERE</code>-ում։ <code>WHERE</code>-ում այն կչեղարկեր <code>LEFT JOIN</code>-ը՝ դատարկ կատեգորիաները կանհետանային։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Ինդեքսներ</h2>
+
+    <div class="tree">Առանց ինդեքսի              Ինդեքսով
+
+  Կարդալ 1-ին տողը           Բացել «բովանդակությունը»
+  Կարդալ 2-րդ տողը           Գտնել էջը
+  ...                        Գնալ ուղիղ այնտեղ
+  Կարդալ 100 000-րդը
+
+  ~100 000 գործողություն     ~17 գործողություն</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ստեղծել և ստուգել</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">CREATE INDEX</span> idx_price <span class="k">ON</span> products(price);
+
+<span class="c">-- Կոմպոզիտային — կարգը կարևոր է ⭐</span>
+<span class="k">CREATE INDEX</span> idx_active_price <span class="k">ON</span> products(is_active, price);
+
+<span class="c">-- Ստուգում՝ օգտագործվու՞մ է</span>
+<span class="k">EXPLAIN SELECT</span> id, name <span class="k">FROM</span> products
+<span class="k">WHERE</span> is_active = <span class="n">1</span> <span class="k">ORDER BY</span> price;</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ինդեքսավորել</th><th>Չինդեքսավորել</th></tr>
+      <tr><td>Դաշտեր <code>WHERE</code>-ում</td><td>Փոքր աղյուսակներ</td></tr>
+      <tr><td>Դաշտեր <code>JOIN</code>-ում</td><td>Դաշտեր, որ հազվադեպ են որոնվում</td></tr>
+      <tr><td>Դաշտեր <code>ORDER BY</code>-ում</td><td>Հաճախ փոփոխվող դաշտեր</td></tr>
+      <tr><td><code>UNIQUE</code> դաշտեր՝ <code>slug</code></td><td>Ամեն դաշտ «ամեն դեպքում»</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինդեքսը անվճար չէ</span>
+      <p>Ամեն ինդեքս <strong>դանդաղեցնում է</strong> <code>INSERT</code>-ը, <code>UPDATE</code>-ը և <code>DELETE</code>-ը, և զբաղեցնում է տեղ։<br><br>
+      Ամեն դաշտի վրա ինդեքս դնելը վնասակար է։ Դիր այնտեղ, որտեղ իսկապես որոնում ես — և ստուգիր <code>EXPLAIN</code>-ով, որ այն օգտագործվում է։<br><br>
+      Կոմպոզիտային ինդեքսում կարգը կարևոր է․ <code>(is_active, price)</code>-ը աշխատում է <code>WHERE is_active = 1 ORDER BY price</code>-ի համար, բայց ոչ միայն <code>ORDER BY price</code>-ի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Դասարանական</h2>
+
+    <ol>
+      <li>Բացիր phpMyAdmin-ը (Laragon → Menu → MySQL)</li>
+      <li>Ստեղծիր <code>technomarket</code> բազան <code>utf8mb4</code>-ով</li>
+      <li>Կատարիր <code>schema.sql</code>-ը SQL ներդիրում</li>
+      <li>Ավելացրու 4 կատեգորիա և 12 ապրանք</li>
+      <li>Գրիր 10 հարցում ցուցակից ներքևում</li>
+      <li>Կատարիր <code>EXPLAIN</code> երկու հարցման վրա</li>
+      <li>Ջնջիր ինդեքսը, կրկնիր <code>EXPLAIN</code>-ը, համեմատիր</li>
+    </ol>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>10 հարցում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">-- 1. Ակտիվ ապրանքները՝ գնի աճման կարգով</span>
+<span class="c">-- 2. Ապրանքները զեղչով</span>
+<span class="c">-- 3. Ապրանքները 50 000 – 200 000 միջակայքում</span>
+<span class="c">-- 4. Անվան մեջ «նոութբուք» պարունակողները</span>
+<span class="c">-- 5. Ամենաթանկ 3 ապրանքը</span>
+<span class="c">-- 6. Ապրանքները կատեգորիայի անունով (LEFT JOIN)</span>
+<span class="c">-- 7. Ապրանքների քանակը ամեն կատեգորիայում</span>
+<span class="c">-- 8. Միջին գինը կատեգորիաներով</span>
+<span class="c">-- 9. Կատեգորիաներ, որտեղ 3-ից ավելի ապրանք կա (HAVING)</span>
+<span class="c">-- 10. Վերջին 5 ավելացված ապրանքը</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ այսօր առանց PHP-ի</span>
+      <p>SQL-ը <strong>առանձին լեզու է</strong>, ոչ PHP-ի մաս։ Երբ այն սովորում ես PHP-ի տողերի ներսում, երկու բան միանգամից է լինում՝ և SQL, և PDO — և հեշտ է շփոթել, թե որ սխալն որտեղից է։<br><br>
+      phpMyAdmin-ում սխալը անմիջապես երևում է հստակ հաղորդագրությամբ։ Երբ վաղը հարցումը տեղափոխես PHP, արդեն կիմանաս, որ SQL-ը ճիշտ է։<br><br>
+      Դա նույն սկզբունքն է, ինչ HTML բլոկի Դաս 13-ում՝ <em>մեկ բան միանգամից</em>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ստեղծիր բազան և լրացրու 12 ապրանքով և 4 կատեգորիայով։</li>
+      <li>Գրիր 10 հարցումը։ Ուղարկիր SQL-ը և արդյունքների սքրինշոթերը։</li>
+      <li>Ցուցադրիր <code>WHERE description = NULL</code>-ի և <code>IS NULL</code>-ի տարբերությունը։</li>
+      <li>Համեմատիր <code>INNER JOIN</code>-ը և <code>LEFT JOIN</code>-ը՝ ապրանք առանց կատեգորիայի ավելացնելով։</li>
+      <li>Տեղափոխիր <code>p.is_active = 1</code>-ը <code>ON</code>-ից <code>WHERE</code>։ Ի՞նչ փոխվեց <code>GROUP BY</code>-ի արդյունքում։</li>
+      <li>Ստեղծիր <code>orders</code> և <code>order_items</code> աղյուսակները և գրիր հարցում պատվերի բովանդակության համար։</li>
+      <li>Ցուցադրիր, ինչու <code>FLOAT</code>-ը գների համար վատ է․ ստեղծիր փորձնական աղյուսակ և գումարիր 0.1 + 0.2։</li>
+      <li>Կատարիր <code>EXPLAIN</code> ինդեքսով և առանց դրա։ Ուղարկիր երկու սքրինշոթ։</li>
+      <li>Ավելացրու ապրանք հայերեն անունով և էմոջիով։ Ստուգիր, որ <code>utf8mb4</code>-ը աշխատում է։</li>
+      <li>Խնդրիր AI-ին վերանայել քո սխեման։ Ի՞նչ առաջարկեց։ Համաձա՞յն ես։ Ինչու։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>SQL</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>SELECT ... FROM</code></td><td>Ընտրել դաշտեր</td></tr>
+      <tr><td><code>WHERE</code></td><td>Ֆիլտրել տողերը</td></tr>
+      <tr><td><code>ORDER BY ... ASC/DESC</code></td><td>Տեսակավորել</td></tr>
+      <tr><td><code>LIMIT n OFFSET m</code></td><td>Էջավորում</td></tr>
+      <tr><td><code>LEFT JOIN ... ON</code></td><td>Կապել աղյուսակները ⭐</td></tr>
+      <tr><td><code>GROUP BY</code></td><td>Խմբավորել</td></tr>
+      <tr><td><code>HAVING</code></td><td>Ֆիլտրել խմբերը</td></tr>
+      <tr><td><code>IS NULL</code></td><td>Ոչ <code>= NULL</code> ⭐</td></tr>
+      <tr><td><code>EXPLAIN</code></td><td>Ստուգել ինդեքսը</td></tr>
+    </table>
+    </div>
+
+    <h3>Հարցման կարգը</h3>
+    <div class="tree">SELECT    ← ի՞նչ դաշտեր
+FROM      ← որտեղից
+JOIN      ← ինչի՞ հետ կապել
+WHERE     ← ո՞ր տողերը
+GROUP BY  ← ինչպե՞ս խմբավորել
+HAVING    ← ո՞ր խմբերը
+ORDER BY  ← ինչպե՞ս տեսակավորել
+LIMIT     ← քանի՞սը</div>
+
+    <h3>Սխեմայի կանոններ</h3>
+    <div class="tree">· Գները՝ DECIMAL, երբեք FLOAT
+· utf8mb4, ոչ utf8
+· ENGINE=InnoDB
+· is_active՝ ջնջելու փոխարեն
+· Պատմական տվյալները սառեցվում են
+  (order_items.price)
+· Ինդեքս այնտեղ, որտեղ WHERE / JOIN / ORDER BY</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Բազան <code>utf8mb4</code> է</li>
+      <li>Ամեն աղյուսակ ունի <code>PRIMARY KEY</code></li>
+      <li>Գները <code>DECIMAL</code> են</li>
+      <li>Կան արտաքին բանալիներ</li>
+      <li>Կան ինդեքսներ որոնվող դաշտերի վրա</li>
+      <li><code>EXPLAIN</code>-ը ցույց է տալիս ինդեքսի օգտագործումը</li>
+      <li>Հայերենը և էմոջին ճիշտ են պահվում</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչու գները <code>FLOAT</code> չեն</li>
+      <li>Գիտե՞մ <code>INNER</code>-ի և <code>LEFT JOIN</code>-ի տարբերությունը</li>
+      <li>Հասկանո՞ւմ եմ, ինչու <code>= NULL</code>-ը չի աշխատում</li>
+      <li>Կարո՞ղ եմ բացատրել, ինչու <code>order_items</code>-ում կրկնվում է գինը</li>
+      <li>Գիտե՞մ <code>WHERE</code>-ի և <code>HAVING</code>-ի տարբերությունը</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>PDO և SQL injection — անվտանգության երրորդ դասը։ Կմիացնենք PHP-ն բազային և կտեսնենք, ինչու տողերի միացումով հարցում կառուցելը ամենավտանգավոր բանն է, որ կարելի է անել։<br><br>
+      Այսօրվա հարցումները կտեղափոխվեն կոդ — և <code>data.php</code>-ը վերջապես կանհետանա։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>PHP Բլոկ · Դաս 8 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

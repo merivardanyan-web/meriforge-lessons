@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHP Դաս 1 — Սերվերը և միջավայրը</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>PHP Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">PHP Դաս 1 · 2 ժամ</p>
+  <h1>Սերվերը և միջավայրը</h1>
+  <p class="lede">48 դաս ամեն ինչ ապրում էր բրաուզերում։ Այսօր անցնում ենք մյուս կողմ։ Նախ հասկանում ենք, <em>որտեղ</em> է աշխատում PHP-ն, հետո միայն գրում առաջին տողը։</p>
+
+  <div class="facts">
+    <span>Բլոկ 3 · Դաս 1 / 24</span>
+    <span>Նախապայման՝ HTML և JS բլոկներ</span>
+    <span>Միջավայր և դեբագ</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ի՞նչ է սերվերը իրականում</li>
+      <li>Client-side vs server-side</li>
+      <li>PHP-ի ներկառուցված սերվերը</li>
+      <li>Ինչո՞ւ դա բավարար չէ և ի՞նչ է բանդլը</li>
+      <li>Laragon-ի տեղադրում</li>
+      <li>Առաջին PHP էջը</li>
+      <li><code>var_dump</code> և սխալների ցուցադրում</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Որտե՞ղ է աշխատում կոդը</h2>
+
+    <div class="tree">JS բլոկում                    PHP բլոկում
+
+  Բրաուզեր                     Սերվեր
+  ┌──────────┐                 ┌──────────┐
+  │ HTML     │                 │  PHP     │
+  │ CSS      │                 │  MySQL   │
+  │ JS  ←──── կոդը այստեղ է    └────┬─────┘
+  └──────────┘                      │ ուղարկում է
+                                    │ պատրաստի HTML
+                               ┌────▼─────┐
+                               │ Բրաուզեր │
+                               │ HTML/CSS/JS
+                               └──────────┘</div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th></th><th>JavaScript</th><th>PHP</th></tr>
+      <tr><td>Որտեղ է աշխատում</td><td>Օգտագործողի համակարգչում</td><td>Սերվերում</td></tr>
+      <tr><td>Կոդը տեսանե՞լի է</td><td>✅ Ctrl+U</td><td>❌ Երբեք</td></tr>
+      <tr><td>Հասանելի է տվյալների բազա</td><td>❌</td><td>✅</td></tr>
+      <tr><td>Կախված է սարքից</td><td>Այո</td><td>Ոչ</td></tr>
+      <tr><td>Անջատե՞լ կարելի է</td><td>Այո</td><td>Ոչ ⭐</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Վերջին տողը կարևոր է</span>
+      <p>JS-ը կարելի է անջատել, փոփոխել Console-ում, շրջանցել։ Ուստի <strong>բրաուզերի վալիդացիան անվտանգություն չէ</strong> (HTML Դաս 4)։<br><br>
+      PHP-ի կոդին օգտագործողը չի հասնում։ Դրա համար ամեն կարևոր ստուգում պիտի կրկնվի սերվերում։ Դա կլինի Դաս 6-ի հիմնական թեման։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ի՞նչ է տեսնում բրաուզերը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- Այն, ինչ գրում ես --&gt;</span>
+<span class="p">&lt;</span><span class="t">h1</span><span class="p">&gt;</span>&lt;?= <span class="s">"Բարև, "</span> . <span class="n">$name</span> ?&gt;<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Այն, ինչ ստանում է բրաուզերը --&gt;</span>
+<span class="p">&lt;</span><span class="t">h1</span><span class="p">&gt;</span>Բարև, Անի<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">PHP-ն HTML գեներատոր է</span>
+      <p>Սա ամենակարևոր մտավոր մոդելն է սկզբում։ PHP-ն «չի աշխատում էջում» — այն <strong>գրում է էջը</strong>, ապա անհետանում։<br><br>
+      Երբ բրաուզերը ստանում է պատասխանը, PHP-ի կոդն արդեն կատարված է և չկա։ Ոչ մի <code>onclick</code>, ոչ մի արձագանք — դրա համար է JavaScript-ը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Հարցում → պատասխան</h2>
+
+    <div class="tree">1. Օգտագործողը մուտքագրում է հասցեն
+        │
+2. Բրաուզերը ուղարկում է HTTP հարցում
+        │
+3. Սերվերը (Apache) ստանում է այն
+        │
+4. Տեսնում է .php ընդլայնումը → փոխանցում է PHP-ին
+        │
+5. PHP-ն կատարում է կոդը
+   · կարող է դիմել MySQL-ին
+   · կարող է կարդալ ֆայլեր
+   · արդյունքում գեներացնում է HTML
+        │
+6. Apache-ն ուղարկում է HTML-ը բրաուզերին
+        │
+7. Բրաուզերը նկարում է էջը
+   → այստեղ սկսում է աշխատել JS-ը
+
+PHP-ի կյանքը՝ 5-րդ քայլը։ Միլիվայրկյաններ։</div>
+
+    <div class="warn note">
+      <span class="tag">Ամեն հարցում՝ մաքուր էջ</span>
+      <p>PHP-ն ոչինչ չի հիշում հարցումների միջև։ Ամեն անգամ սկրիպտը սկսվում է զրոյից՝ բոլոր փոփոխականները դատարկ։<br><br>
+      Դա տարբերվում է JS-ից, որտեղ էջը բաց մնալիս վիճակը պահպանվում է։ Հիշելու համար պետք են <strong>սեսիաներ</strong> (Դաս 7) կամ <strong>տվյալների բազա</strong> (Դաս 8)։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>PHP-ի ներկառուցված սերվերը</h2>
+    <p>Նախքան բանդլ տեղադրելը՝ տեսնենք, թե ինչ է PHP-ն ինքնին։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>տերմինալ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># Ստուգում — կա՞ PHP համակարգում</span>
+php -v
+
+<span class="c"># Ստեղծիր թղթապանակ մեկ ֆայլով՝ index.php</span>
+<span class="c"># Ապա այդ թղթապանակում՝</span>
+php -S localhost:8000
+
+<span class="c"># Բացիր բրաուզերում՝ http://localhost:8000</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ի՞նչ եղավ հենց հիմա</span>
+      <p>PHP-ն սովորական ծրագիր է, ինչպես Node.js-ը։ <code>php -S</code>-ը գործարկեց փոքրիկ վեբ-սերվեր, որը լսում է 8000 պորտը։<br><br>
+      Ոչ մի կախարդանք։ Երբ փակես տերմինալը, սերվերը կանհետանա։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ սա բավարար չէ</span>
+      <p>Ներկառուցված սերվերը <strong>զարգացման խաղալիք է</strong>, ոչ իրական Apache։<br><br>
+      · Չկա <code>.htaccess</code> և <code>mod_rewrite</code> → <strong>Դաս 14-ի Router-ը չի աշխատի</strong><br>
+      · Չկա MySQL<br>
+      · Չկա phpMyAdmin<br>
+      · Չի աշխատում մի քանի հարցում միաժամանակ<br><br>
+      Ուստի տեղադրում ենք բանդլ։ Բայց հիմա գիտես, որ բանդլը մեկ ծրագիր չէ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Բանդլ · Laragon</h2>
+
+    <div class="tree">Laragon = երեք առանձին ծրագիր մեկ պատուհանում
+
+  Apache   →  վեբ-սերվեր, ընդունում է հարցումները
+  PHP      →  կատարում է կոդը
+  MySQL    →  պահում է տվյալները
+
+  + phpMyAdmin  →  բազայի ինտերֆեյս բրաուզերում
+  + Composer    →  փաթեթների կառավարիչ (Դաս 13)</div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Համակարգ</th><th>Ի՞նչ տեղադրել</th></tr>
+      <tr><td><strong>Windows</strong></td><td><strong>Laragon</strong> (Full տարբերակը)</td></tr>
+      <tr><td>macOS</td><td>Herd կամ MAMP</td></tr>
+      <tr><td>Linux</td><td>Apache + PHP + MySQL փաթեթներով</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>տեղադրում՝ 6 քայլ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># 1. laragon.org → Download → Laragon Full
+
+# 2. Տեղադրիր C:\laragon (ուղին ԱՌԱՆՑ բացատների և հայերենի!)
+
+# 3. Բացիր Laragon → Start All
+#    Երկու կանաչ ցուցիչ՝ Apache և MySQL
+
+# 4. Menu → Apache → PHP → ընտրիր 8.2 կամ ավելի նոր
+
+# 5. Նախագծերի թղթապանակը՝
+#    C:\laragon\www\
+
+# 6. Ստուգում՝ բացիր http://localhost</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ավտոմատ դոմեններ — Laragon-ի գլխավոր հարմարությունը</span>
+      <p>Ստեղծիր թղթապանակ <code>C:\laragon\www\technomarket</code> → Laragon-ում սեղմիր <strong>Reload</strong>։<br><br>
+      Կայքն արդեն հասանելի է՝ <code>http://technomarket.test</code><br><br>
+      Ոչ մի կարգավորում, ոչ մի <code>hosts</code> ֆայլ։ Դա մոտ է իրական hosting-ին և հարմար է Laravel-ի համար։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երեք սխալ տեղադրման ժամանակ</span>
+      <p><strong>1. Ուղին բացատներով կամ հայերենով</strong> — <code>C:\Իմ ֆայլերը\laragon</code> → խնդիրներ Composer-ի և Laravel-ի հետ։ Միայն <code>C:\laragon</code>։<br><br>
+      <strong>2. 80 պորտը զբաղված է</strong> — Skype, IIS կամ ուրիշ բանդլ։ Apache-ը չի գործարկվի։ Փակիր մրցակիցը կամ Laragon-ում փոխիր պորտը 8080-ի։<br><br>
+      <strong>3. Հակավիրուսը արգելափակում է</strong> — ավելացրու <code>C:\laragon</code>-ը բացառություններում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Առաջին PHP էջը</h2>
+
+    <div class="tree">C:\laragon\www\technomarket\
+    └── index.php</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="n">$siteName</span> = <span class="s">"ՏեխնոՄարկետ"</span>;
+<span class="n">$year</span> = <span class="f">date</span>(<span class="s">"Y"</span>);
+<span class="p">?&gt;</span>
+<span class="p">&lt;!DOCTYPE </span><span class="t">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">html</span> <span class="f">lang</span>=<span class="s">"hy"</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">charset</span>=<span class="s">"UTF-8"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">title</span><span class="p">&gt;</span>&lt;?= <span class="n">$siteName</span> ?&gt;<span class="p">&lt;/</span><span class="t">title</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">body</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">h1</span><span class="p">&gt;</span>&lt;?= <span class="n">$siteName</span> ?&gt;<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>&amp;copy; &lt;?= <span class="n">$year</span> ?&gt;<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="t">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">html</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ի՞նչ է</th></tr>
+      <tr><td><code>&lt;?php ... ?&gt;</code></td><td>PHP-ի բլոկ</td></tr>
+      <tr><td><code>&lt;?= $x ?&gt;</code></td><td>Կրճատում <code>&lt;?php echo $x; ?&gt;</code>-ի ⭐</td></tr>
+      <tr><td><code>$name</code></td><td>Փոփոխական — միշտ <code>$</code>-ով</td></tr>
+      <tr><td><code>;</code></td><td>Պարտադիր ամեն հրահանգից հետո</td></tr>
+      <tr><td><code>.</code></td><td>Տողերի միացում (JS-ում <code>+</code> էր)</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Փակող <code>?&gt;</code>-ը մաքուր PHP ֆայլերում</span>
+      <p>Եթե ֆայլը միայն PHP է (առանց HTML-ի), <strong>փակող թեգը մի՛ գրիր</strong>։<br><br>
+      Դրանից հետո պատահական բացատը կամ նոր տողը ուղարկվում է բրաուզերին և կոտրում է <code>header()</code>-ը և սեսիաները։ Դա դասական սխալ է, որին կհանդիպենք Դաս 7-ում։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երեք առաջին սխալը</span>
+      <p><strong>Սպիտակ էջ</strong> → սխալ կա, բայց ցուցադրումն անջատված է։ Լուծումը՝ հաջորդ բաժնում։<br><br>
+      <strong>Կոդը երևում է տեքստով</strong> → ֆայլը բացել ես որպես <code>file:///</code>, ոչ <code>http://</code>։ PHP-ն չի կատարվել։ Հասցեագոտում պիտի լինի <code>localhost</code> կամ <code>.test</code>։<br><br>
+      <strong>404</strong> → ֆայլը սխալ թղթապանակում է կամ անունը <code>index.PHP</code> է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Դեբագ · քո նոր Console-ը</h2>
+    <p>JS-ում ունեիր <code>console.log</code> և DevTools։ Այստեղ գործիքներն այլ են։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>սխալների ցուցադրում — առաջին բանը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="c">// Զարգացման ժամանակ՝ ֆայլի ամենասկզբում</span>
+<span class="f">ini_set</span>(<span class="s">'display_errors'</span>, <span class="n">1</span>);
+<span class="f">ini_set</span>(<span class="s">'display_startup_errors'</span>, <span class="n">1</span>);
+<span class="f">error_reporting</span>(<span class="k">E_ALL</span>);</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Իրական սերվերում՝ ՀԱԿԱՌԱԿԸ</span>
+      <p><code>display_errors</code>-ը հրապարակված կայքում պիտի լինի <strong>անջատված</strong>։<br><br>
+      Սխալի տեքստը ցույց է տալիս ֆայլերի ուղիները, բազայի կառուցվածքը, երբեմն՝ գաղտնաբառերը։ Դա հարձակվողի համար նվեր է։<br><br>
+      Կանոն՝ զարգացման ժամանակ՝ ամեն սխալ էկրանին։ Հրապարակելուց հետո՝ ամեն սխալ լոգ-ֆայլում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>var_dump — PHP-ի console.log-ը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="n">$name</span> = <span class="s">"Անի"</span>;
+<span class="n">$age</span> = <span class="n">25</span>;
+<span class="n">$isActive</span> = <span class="k">true</span>;
+<span class="n">$items</span> = [<span class="s">"նոութբուք"</span>, <span class="s">"մկնիկ"</span>];
+
+<span class="f">var_dump</span>(<span class="n">$name</span>);      <span class="c">// string(8) "Անի"  ← ցույց է տալիս ՏԻՊԸ ⭐</span>
+<span class="f">var_dump</span>(<span class="n">$age</span>);       <span class="c">// int(25)</span>
+<span class="f">var_dump</span>(<span class="n">$isActive</span>);  <span class="c">// bool(true)</span>
+<span class="f">var_dump</span>(<span class="n">$items</span>);     <span class="c">// array(2) { ... }</span>
+
+<span class="c">// Ավելի ընթեռնելի զանգվածների համար</span>
+<span class="f">print_r</span>(<span class="n">$items</span>);
+
+<span class="c">// Ընթեռնելի ձևաչափմամբ</span>
+<span class="k">echo</span> <span class="s">"&lt;pre&gt;"</span>;
+<span class="f">print_r</span>(<span class="n">$items</span>);
+<span class="k">echo</span> <span class="s">"&lt;/pre&gt;"</span>;
+
+<span class="c">// Երբ պետք է կանգնեցնել կատարումը այդ տեղում</span>
+<span class="f">var_dump</span>(<span class="n">$items</span>);
+<span class="k">die</span>();   <span class="c">// կամ exit;</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">var_dump vs print_r</span>
+      <p><code>var_dump</code> — ցույց է տալիս <strong>տիպը և երկարությունը</strong>։ Օգտագործիր, երբ չես հասկանում, ինչու համեմատությունը չի աշխատում։<br><br>
+      <code>print_r</code> — ավելի կոմպակտ, հարմար է զանգվածների կառուցվածքը տեսնելու համար։<br><br>
+      <code>&lt;pre&gt;</code>-ի մեջ փաթեթավորելը պարտադիր չէ, բայց առանց դրա ամեն ինչ մեկ տողում է։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>օգտակար օգնական</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">function</span> <span class="f">dd</span>(<span class="n">$data</span>): <span class="k">void</span>
+{
+    <span class="k">echo</span> <span class="s">"&lt;pre style='background:#1e252a;color:#e8eced;padding:14px;border-radius:8px'&gt;"</span>;
+    <span class="f">var_dump</span>(<span class="n">$data</span>);
+    <span class="k">echo</span> <span class="s">"&lt;/pre&gt;"</span>;
+    <span class="k">die</span>();
+}
+
+<span class="c">// Օգտագործում</span>
+<span class="f">dd</span>(<span class="n">$items</span>);</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ <code>dd</code></span>
+      <p>«dump and die»։ Laravel-ում այս ֆունկցիան ներկառուցված է և ամենաշատ օգտագործվողն է։ Սովորիր անունը հիմա — Դաս 18-ում այն ծանոթ կլինի։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>JavaScript</th><th>PHP</th></tr>
+      <tr><td><code>console.log(x)</code></td><td><code>var_dump($x)</code></td></tr>
+      <tr><td><code>typeof x</code></td><td><code>gettype($x)</code></td></tr>
+      <tr><td><code>debugger</code></td><td><code>die()</code> / Xdebug</td></tr>
+      <tr><td>DevTools → Console</td><td>Բրաուզերի էջն ինքը + լոգեր</td></tr>
+      <tr><td>Սխալները Console-ում</td><td>Սխալները էջի վրա</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Դասարանական</h2>
+    <p>Այսօր ձեռք ենք բերում աշխատող միջավայր և առաջին դինամիկ էջը։</p>
+
+    <ol>
+      <li>Ստուգիր <code>php -v</code> տերմինալում</li>
+      <li>Ստեղծիր թղթապանակ մեկ <code>index.php</code>-ով և գործարկիր <code>php -S localhost:8000</code></li>
+      <li>Տեղադրիր Laragon (Full) → Start All</li>
+      <li>Ընտրիր PHP 8.2+</li>
+      <li>Ստեղծիր <code>C:\laragon\www\technomarket\</code></li>
+      <li>Reload → ստուգիր <code>http://technomarket.test</code></li>
+      <li>Տեղափոխիր այնտեղ HTML բլոկի պատրաստի նախագիծը</li>
+      <li>Փոխանվանիր <code>index.html</code> → <code>index.php</code></li>
+      <li>Ստուգիր՝ ամեն ինչ դեռ աշխատո՞ւմ է</li>
+      <li>Ավելացրու սխալների ցուցադրումը և <code>dd()</code> ֆունկցիան</li>
+    </ol>
+
+    <div class="tip note">
+      <span class="tag">Ութերորդ քայլի մասին</span>
+      <p><code>.html</code>-ից <code>.php</code> փոխանվանելով՝ էջում ոչինչ չի փոխվում։ Դա ճիշտ է և կարևոր է տեսնել․<br><br>
+      <strong>Ամեն վավեր HTML ֆայլ արդեն վավեր PHP ֆայլ է։</strong> PHP-ն պարզապես դուրս է գրում այն ամենը, ինչ <code>&lt;?php ?&gt;</code>-ից դուրս է։<br><br>
+      Հիմա կարող ես աստիճանաբար ավելացնել դինամիկա՝ առանց ամեն ինչ վերաշարադրելու։ Հաջորդ դասերին հենց դա կանենք։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>առաջին դինամիկ փոփոխությունը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- Footer-ում, ֆիքսված 2026-ի փոխարեն --&gt;</span>
+
+<span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>&amp;copy; &lt;?= <span class="f">date</span>(<span class="s">"Y"</span>) ?&gt; ՏեխնոՄարկետ<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Հաջորդ տարի ինքն իրեն կթարմացվի։
+     Փոքր բան է, բայց արդեն դինամիկ էջ է։ --&gt;</span></code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Տեղադրիր Laragon։ Ուղարկիր սքրինշոթ երկու կանաչ ցուցիչով։</li>
+      <li>Գործարկիր <code>php -S</code> և Laragon։ Գրիր, ի՞նչ տարբերություն նկատեցիր։</li>
+      <li>Տեղափոխիր ՏեխնոՄարկետը <code>www</code>-ի մեջ և բաց արա <code>.test</code> հասցեով։</li>
+      <li>Փոխանվանիր <code>index.html</code> → <code>index.php</code>։ Համոզվիր, որ ամեն ինչ աշխատում է։</li>
+      <li>Դարձրու footer-ի տարեթիվը դինամիկ։</li>
+      <li>Ստեղծիր փոփոխականներ կայքի անվան, հեռախոսի և հասցեի համար։ Օգտագործիր դրանք էջում առնվազն 3 տեղում։</li>
+      <li>Ավելացրու սխալների ցուցադրումը։ Դիտմամբ արա սխալ (մոռացիր <code>;</code>) և նկարագրիր հաղորդագրությունը։</li>
+      <li>Գրիր <code>dd()</code> ֆունկցիան և փորձարկիր այն 4 տարբեր տիպի վրա։</li>
+      <li>Համեմատիր <code>var_dump</code>-ը և <code>print_r</code>-ը զանգվածի վրա։ Ո՞րն է ավելի հարմար և ե՞րբ։</li>
+      <li>Բացիր էջը և սեղմիր <kbd>Ctrl</kbd>+<kbd>U</kbd>։ Գտի՞ր PHP կոդը։ Բացատրիր, ինչու։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>&lt;?php ... ?&gt;</code></td><td>PHP բլոկ</td></tr>
+      <tr><td><code>&lt;?= $x ?&gt;</code></td><td>Կարճ <code>echo</code> ⭐</td></tr>
+      <tr><td><code>$name</code></td><td>Փոփոխական</td></tr>
+      <tr><td><code>.</code></td><td>Տողերի միացում</td></tr>
+      <tr><td><code>var_dump($x)</code></td><td>Տիպ + արժեք ⭐</td></tr>
+      <tr><td><code>print_r($arr)</code></td><td>Ընթեռնելի զանգված</td></tr>
+      <tr><td><code>die()</code></td><td>Կանգնեցնել կատարումը</td></tr>
+      <tr><td><code>date("Y")</code></td><td>Ընթացիկ տարին</td></tr>
+      <tr><td><code>error_reporting(E_ALL)</code></td><td>Ցույց տալ բոլոր սխալները</td></tr>
+    </table>
+    </div>
+
+    <h3>Ախտորոշում</h3>
+    <div class="tree">Սպիտակ էջ          →  միացրու error_reporting
+Կոդը երևում է      →  բացել ես file:// -ով, ոչ http:// -ով
+404                →  սխալ ուղի կամ ֆայլի անուն
+500                →  շարահյուսական սխալ, նայիր լոգերում
+Apache չի գործարկվում  →  80 պորտը զբաղված է</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Laragon-ը գործարկվում է, երկու ցուցիչն էլ կանաչ են</li>
+      <li>PHP տարբերակը 8.2+ է</li>
+      <li>Նախագիծը հասանելի է <code>.test</code> հասցեով</li>
+      <li>Սխալները ցուցադրվում են</li>
+      <li>Հասկանում եմ, ինչու PHP կոդը չի երևում Ctrl+U-ով</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել client-side և server-side տարբերությունը</li>
+      <li>Գիտե՞մ, ինչո՞ւ <code>php -S</code>-ը բավարար չէ մեր դասընթացի համար</li>
+      <li>Հասկանո՞ւմ եմ, որ PHP-ն HTML գեներատոր է</li>
+      <li>Գիտե՞մ, ինչու <code>display_errors</code>-ը վտանգավոր է իրական սերվերում</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Շարահյուսություն՝ արագ անցում JavaScript-ից։ Տիպեր, <code>==</code>-ի և <code>===</code>-ի տարբերությունը (PHP-ում այն ավելի վտանգավոր է, քան JS-ում), տողերի հետ աշխատանք, պայմաններ և ցիկլեր։<br><br>
+      Գաղափարները ծանոթ են — կենտրոնանալու ենք միայն տարբերությունների վրա։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>PHP Բլոկ · Դաս 1 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

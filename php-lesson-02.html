@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHP Դաս 2 — Շարահյուսություն JS-ից հետո</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>PHP Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">PHP Դաս 2 · 2 ժամ</p>
+  <h1>Շարահյուսություն JS-ից հետո</h1>
+  <p class="lede">Ցիկլերն ու պայմանները նոր չեն։ Այսօր անցնում ենք արագ և կանգ ենք առնում միայն այնտեղ, որտեղ PHP-ն <strong>վարվում է այլ կերպ</strong> — և հատկապես այնտեղ, որտեղ դա վտանգավոր է։</p>
+
+  <div class="facts">
+    <span>Բլոկ 3 · Դաս 2 / 24</span>
+    <span>Նախապայման՝ JS Դաս 1–4</span>
+    <span>Տարբերությունների դաս</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Փոփոխականներ և տիպեր</li>
+      <li>Տողեր՝ երկու տեսակի չակերտ</li>
+      <li><code>==</code> և <code>===</code> — PHP-ում ավելի վտանգավոր</li>
+      <li>Դատարկություն՝ <code>null</code>, <code>isset</code>, <code>empty</code></li>
+      <li>Պայմաններ և <code>match</code></li>
+      <li>Ցիկլեր և <code>foreach</code></li>
+      <li>HTML-ի հետ խառնելու ձևը</li>
+    </ul>
+
+    <div class="note">
+      <span class="tag">Դասի տրամաբանությունը</span>
+      <p>Չենք բացատրում, ինչ է ցիկլը։ Դա գիտես JS Դաս 3-ից։<br><br>
+      Ցույց ենք տալիս, ինչ է փոխվում — և ինչու որոշ տարբերություններ ուղղակի անհարմար են, իսկ մյուսները <strong>սխալների աղբյուր</strong>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Փոփոխականներ և տիպեր</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հիմնական տարբերությունները</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// JavaScript              // PHP</span>
+<span class="k">let</span> name = <span class="s">"Անի"</span>;         <span class="n">$name</span> = <span class="s">"Անի"</span>;
+<span class="k">const</span> MAX = <span class="n">100</span>;          <span class="k">const</span> <span class="n">MAX</span> = <span class="n">100</span>;
+                           <span class="c">// կամ define('MAX', 100);</span></code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th></th><th>JavaScript</th><th>PHP</th></tr>
+      <tr><td>Հայտարարում</td><td><code>let</code>, <code>const</code></td><td>Ոչինչ, պարզապես <code>$</code></td></tr>
+      <tr><td>Ռեգիստրը փոփոխականում</td><td>Կարևոր է</td><td>Կարևոր է</td></tr>
+      <tr><td>Ռեգիստրը ֆունկցիայում</td><td>Կարևոր է</td><td><strong>Կարևոր չէ</strong> ⚠️</td></tr>
+      <tr><td>Հրահանգի վերջ</td><td>Ցանկալի է <code>;</code></td><td><strong>Պարտադիր</strong> <code>;</code></td></tr>
+      <tr><td>Անվանման ոճ</td><td><code>camelCase</code></td><td><code>$snake_case</code> կամ <code>$camelCase</code></td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ամենահաճախ սխալը առաջին շաբաթում</span>
+      <p>Մոռացված <code>$</code>-ը։ JS-ից եկածները գրում են <code>name = "Անի"</code> և ստանում են անհասկանալի սխալ։<br><br>
+      Հիշիր՝ <strong>PHP-ում ամեն փոփոխական սկսվում է դոլարով</strong>։ Նաև ֆունկցիայի ներսում, նաև զանգվածում, նաև <code>foreach</code>-ում։</p>
+    </div>
+
+    <h3>Տիպերը</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ութ տիպ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="n">$name</span>   = <span class="s">"Անի"</span>;         <span class="c">// string</span>
+<span class="n">$age</span>    = <span class="n">25</span>;             <span class="c">// int</span>
+<span class="n">$price</span>  = <span class="n">450000.50</span>;      <span class="c">// float</span>
+<span class="n">$isNew</span>  = <span class="k">true</span>;           <span class="c">// bool</span>
+<span class="n">$items</span>  = [<span class="s">"ա"</span>, <span class="s">"բ"</span>];     <span class="c">// array</span>
+<span class="n">$empty</span>  = <span class="k">null</span>;           <span class="c">// null</span>
+
+<span class="f">gettype</span>(<span class="n">$age</span>);            <span class="c">// "integer"</span>
+<span class="f">is_int</span>(<span class="n">$age</span>);             <span class="c">// true</span>
+<span class="f">is_string</span>(<span class="n">$name</span>);         <span class="c">// true</span>
+
+<span class="c">// Բացահայտ փոխարկում</span>
+<span class="n">$n</span> = (<span class="k">int</span>) <span class="s">"25"</span>;         <span class="c">// 25</span>
+<span class="n">$s</span> = (<span class="k">string</span>) <span class="n">25</span>;        <span class="c">// "25"</span>
+<span class="n">$f</span> = (<span class="k">float</span>) <span class="s">"3.14"</span>;     <span class="c">// 3.14</span></code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Տողեր</h2>
+    <p>Այստեղ PHP-ն ունի բան, որ JS-ում չկա՝ <strong>չակերտի տեսակը փոխում է վարքագիծը</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>մեկ vs կրկնակի չակերտ ⭐</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="n">$name</span> = <span class="s">"Անի"</span>;
+
+<span class="c">// Կրկնակի — փոփոխականները ՀԱՇՎԱՐԿՎՈՒՄ են</span>
+<span class="k">echo</span> <span class="s">"Բարև, $name!"</span>;      <span class="c">// Բարև, Անի!</span>
+
+<span class="c">// Մեկ — ամեն ինչ բառացի</span>
+<span class="k">echo</span> <span class="s">'Բարև, $name!'</span>;      <span class="c">// Բարև, $name!</span>
+
+<span class="c">// Ձևավոր փակագծերը՝ երբ սահմանը պարզ չէ</span>
+<span class="k">echo</span> <span class="s">"Գին՝ {<span class="n">$price</span>}֏"</span>;
+<span class="k">echo</span> <span class="s">"Ապրանք՝ {<span class="n">$product</span>['name']}"</span>;   <span class="c">// զանգվածի համար պարտադիր</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ի՞նչ ընտրել</span>
+      <p><strong>Մեկ չակերտ</strong> — երբ փոփոխական չկա։ Չնչին, բայց ավելի արագ է և ավելի ազնիվ ընթերցողի համար․ անմիջապես երևում է, որ ինտերպոլացիա չկա։<br><br>
+      <strong>Կրկնակի</strong> — երբ ներսում փոփոխական է։<br><br>
+      Իսկ HTML-ի ներսում լավագույնը՝ ընդհանրապես չօգտագործել <code>echo</code>, այլ դուրս գալ PHP-ից։ Այդ մասին՝ բաժին 07-ում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>օգտակար ֆունկցիաներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">strlen</span>(<span class="n">$s</span>);                 <span class="c">// երկարություն ԲԱՅՏԵՐՈՎ ⚠️</span>
+<span class="f">mb_strlen</span>(<span class="n">$s</span>);              <span class="c">// երկարություն ՆԻՇԵՐՈՎ ✅</span>
+
+<span class="f">mb_strtoupper</span>(<span class="n">$s</span>);
+<span class="f">mb_strtolower</span>(<span class="n">$s</span>);
+<span class="f">trim</span>(<span class="n">$s</span>);                   <span class="c">// հանում է եզրերի բացատները</span>
+<span class="f">str_replace</span>(<span class="s">"ա"</span>, <span class="s">"բ"</span>, <span class="n">$s</span>);
+<span class="f">str_contains</span>(<span class="n">$s</span>, <span class="s">"նոութ"</span>);   <span class="c">// PHP 8+</span>
+<span class="f">explode</span>(<span class="s">","</span>, <span class="n">$s</span>);            <span class="c">// տող → զանգված (JS՝ split)</span>
+<span class="f">implode</span>(<span class="s">", "</span>, <span class="n">$arr</span>);        <span class="c">// զանգված → տող (JS՝ join)</span>
+<span class="f">number_format</span>(<span class="n">450000</span>, <span class="n">0</span>, <span class="s">"."</span>, <span class="s">" "</span>);   <span class="c">// 450 000</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">mb_ նախածանցը հայերենի համար պարտադիր է</span>
+      <p><code>strlen("Անի")</code> վերադարձնում է <strong>6</strong>, ոչ 3։ Հայերեն ամեն նիշը UTF-8-ում երկու բայտ է։<br><br>
+      Նույնը՝ <code>strtoupper</code>-ը հայերեն տառերը չի փոխի, <code>substr</code>-ը կկտրի բառը մեջտեղից և կստացվի կոտրված նիշ։<br><br>
+      <strong>Կանոն՝ եթե տողը կարող է հայերեն լինել — օգտագործիր <code>mb_</code> տարբերակը։</strong> Մեր դասընթացում դա գրեթե միշտ այդպես է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>== և === — վտանգավոր բաժինը</h2>
+
+    <div class="warn note">
+      <span class="tag">Ուշադրություն</span>
+      <p>JS-ում <code>==</code>-ը վատ սովորություն է։ PHP-ում այն <strong>անվտանգության խոցելիություն</strong> է։ Այս բաժինը արժե կարդալ երկու անգամ։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>համեմատիր JS-ի հետ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Երկուսում էլ նույնը</span>
+<span class="s">"25"</span> == <span class="n">25</span>          <span class="c">// true  — տիպերը փոխարկվում են</span>
+<span class="s">"25"</span> === <span class="n">25</span>         <span class="c">// false — տիպերն էլ են համեմատվում ✅</span>
+
+<span class="c">// PHP 8-ում ուղղվեց մեծ խնդիր</span>
+<span class="s">"abc"</span> == <span class="n">0</span>          <span class="c">// PHP 7՝ true (!)  ·  PHP 8՝ false</span>
+
+<span class="c">// Բայց սա դեռ գործում է</span>
+<span class="s">"1"</span> == <span class="s">"01"</span>          <span class="c">// true</span>
+<span class="s">"10"</span> == <span class="s">"1e1"</span>        <span class="c">// true — երկուսն էլ թիվ են</span>
+<span class="n">0</span> == <span class="s">""</span>              <span class="c">// false PHP 8-ում</span>
+<span class="k">null</span> == <span class="k">false</span>        <span class="c">// true</span>
+<span class="n">0</span> == <span class="k">false</span>           <span class="c">// true</span>
+[] == <span class="k">false</span>          <span class="c">// true</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ինչու է սա անվտանգության հարց</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ❌ Իրական խոցելիություն</span>
+<span class="k">if</span> (<span class="n">$userToken</span> == <span class="n">$dbToken</span>) {
+    <span class="c">// Եթե երկու token-ն էլ նման են թվերի,
+    // դրանք համեմատվում են ՈՐՊԵՍ ԹԻՎ։
+    // "0e123" == "0e456" → true, քանի որ երկուսն էլ 0 են։</span>
+}
+
+<span class="c">// ✅ Ճիշտ</span>
+<span class="k">if</span> (<span class="n">$userToken</span> === <span class="n">$dbToken</span>) { ... }
+
+<span class="c">// ✅ Գաղտնաբառերի և token-ների համար՝ էլ ավելի լավ</span>
+<span class="k">if</span> (<span class="f">hash_equals</span>(<span class="n">$dbToken</span>, <span class="n">$userToken</span>)) { ... }</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Կանոն ամբողջ դասընթացի համար</span>
+      <p><strong>Միշտ <code>===</code>։ Բացառություններ չկան։</strong><br><br>
+      Եթե տիպերը տարբեր են և դա նորմալ է, բացահայտ փոխարկիր՝ <code>(int) $_GET['id'] === $product['id']</code>։<br><br>
+      Այդպես կոդը ասում է, թե ինչ է անում, և չի հենվում PHP-ի թաքնված կանոնների վրա։ Դաս 16-ում, երբ գրենք նույնականացումը, սա կդառնա կրիտիկական։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դատարկություն</h2>
+    <p>PHP-ում «դատարկ»-ը երեք տարբեր բան է նշանակում, և դրանք շփոթելը հաճախակի սխալ է։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th></th><th>Ի՞նչ է ստուգում</th><th>Ե՞րբ</th></tr>
+      <tr><td><code>isset($x)</code></td><td>Գոյություն ունի՞ և <code>null</code> չէ՞</td><td><code>$_POST</code>, զանգվածի բանալի ⭐</td></tr>
+      <tr><td><code>empty($x)</code></td><td>Բացակայո՞ւմ է կամ «դատարկ» է</td><td>Ֆորմայի դաշտ</td></tr>
+      <tr><td><code>is_null($x)</code></td><td>Ուղիղ <code>null</code> է՞</td><td>Բազայից եկած արժեք</td></tr>
+      <tr><td><code>array_key_exists()</code></td><td>Բանալին կա՞, նույնիսկ <code>null</code>-ով</td><td>Երբ <code>null</code>-ը վավեր արժեք է</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>empty-ի թակարդը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Այս ամենի համար empty() վերադարձնում է true</span>
+<span class="f">empty</span>(<span class="s">""</span>);        <span class="c">// true</span>
+<span class="f">empty</span>(<span class="s">"0"</span>);       <span class="c">// true  ⚠️ տողային զրո</span>
+<span class="f">empty</span>(<span class="n">0</span>);         <span class="c">// true  ⚠️</span>
+<span class="f">empty</span>(<span class="n">0.0</span>);       <span class="c">// true</span>
+<span class="f">empty</span>([]);        <span class="c">// true</span>
+<span class="f">empty</span>(<span class="k">null</span>);      <span class="c">// true</span>
+<span class="f">empty</span>(<span class="k">false</span>);     <span class="c">// true</span>
+
+<span class="c">// ❌ Իրական սխալ ֆորմայում</span>
+<span class="k">if</span> (<span class="f">empty</span>(<span class="n">$_POST</span>[<span class="s">'quantity'</span>])) {
+    <span class="c">// Օգտագործողը գրեց 0 → համարվում է «չի լրացրել»</span>
+}
+
+<span class="c">// ✅ Ճիշտ</span>
+<span class="k">if</span> (!<span class="f">isset</span>(<span class="n">$_POST</span>[<span class="s">'quantity'</span>]) || <span class="n">$_POST</span>[<span class="s">'quantity'</span>] === <span class="s">''</span>) { ... }</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երկու շատ օգտակար օպերատոր</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ?? — null coalescing (նույնը, ինչ JS-ում)</span>
+<span class="n">$page</span> = <span class="n">$_GET</span>[<span class="s">'page'</span>] ?? <span class="n">1</span>;
+<span class="c">// Եթե 'page' չկա → 1։ Առանց սխալի։ ⭐</span>
+
+<span class="c">// ?-> — nullsafe (PHP 8+)</span>
+<span class="n">$city</span> = <span class="n">$user</span>?-&gt;<span class="f">getAddress</span>()?-&gt;<span class="n">city</span>;
+<span class="c">// Եթե $user-ը null է → $city = null, ոչ սխալ</span>
+
+<span class="c">// Կարճ ternary</span>
+<span class="n">$title</span> = <span class="n">$product</span>[<span class="s">'name'</span>] ?: <span class="s">"Անանուն"</span>;</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag"><code>??</code>-ը կդառնա քո ամենաշատ օգտագործվող օպերատորը</span>
+      <p>Դաս 6-ից սկսած ամեն ֆորմայի դաշտ կկարդաս այսպես․<br><br>
+      <code>$name = trim($_POST['name'] ?? '');</code><br><br>
+      Առանց <code>??</code>-ի ամեն բացակայող դաշտ սխալ է առաջացնում։ Սա ոչ թե ոճ է, այլ անհրաժեշտություն։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Պայմաններ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ծանոթ է, բացի elseif-ից</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">if</span> (<span class="n">$price</span> &gt; <span class="n">100000</span>) {
+    <span class="k">echo</span> <span class="s">"Թանկ"</span>;
+} <span class="k">elseif</span> (<span class="n">$price</span> &gt; <span class="n">50000</span>) {   <span class="c">// միասին, ոչ else if</span>
+    <span class="k">echo</span> <span class="s">"Միջին"</span>;
+} <span class="k">else</span> {
+    <span class="k">echo</span> <span class="s">"Մատչելի"</span>;
+}
+
+<span class="c">// Տրամաբանական օպերատորներ — նույնը</span>
+<span class="n">$a</span> &amp;&amp; <span class="n">$b</span>;   <span class="n">$a</span> || <span class="n">$b</span>;   !<span class="n">$a</span>;</code></pre>
+    </div>
+
+    <h3>match — PHP 8-ի նոր գործիքը</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>switch-ի ավելի լավ տարբերակը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// switch — բազմաբառ, պահանջում է break</span>
+<span class="k">switch</span> (<span class="n">$status</span>) {
+    <span class="k">case</span> <span class="s">'new'</span>:      <span class="n">$label</span> = <span class="s">'Նոր'</span>;      <span class="k">break</span>;
+    <span class="k">case</span> <span class="s">'paid'</span>:     <span class="n">$label</span> = <span class="s">'Վճարված'</span>;  <span class="k">break</span>;
+    <span class="k">default</span>:         <span class="n">$label</span> = <span class="s">'Անհայտ'</span>;
+}
+
+<span class="c">// match — կարճ, վերադարձնում է արժեք, խիստ === համեմատում ⭐</span>
+<span class="n">$label</span> = <span class="k">match</span> (<span class="n">$status</span>) {
+    <span class="s">'new'</span>      =&gt; <span class="s">'Նոր'</span>,
+    <span class="s">'paid'</span>     =&gt; <span class="s">'Վճարված'</span>,
+    <span class="s">'shipped'</span>  =&gt; <span class="s">'Ճանապարհին'</span>,
+    <span class="k">default</span>   =&gt; <span class="s">'Անհայտ'</span>,
+};
+
+<span class="c">// Մի քանի արժեք մեկ ճյուղում</span>
+<span class="n">$class</span> = <span class="k">match</span> (<span class="n">$status</span>) {
+    <span class="s">'paid'</span>, <span class="s">'shipped'</span> =&gt; <span class="s">'badge--success'</span>,
+    <span class="s">'cancelled'</span>      =&gt; <span class="s">'badge--danger'</span>,
+    <span class="k">default</span>          =&gt; <span class="s">'badge'</span>,
+};</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչու <code>match</code></span>
+      <p><strong>1.</strong> Օգտագործում է <code>===</code>, ոչ <code>==</code> — ինքնաբերաբար ավելի անվտանգ։<br>
+      <strong>2.</strong> Չկա <code>break</code> → չկա մոռացված <code>break</code>-ի սխալ։<br>
+      <strong>3.</strong> Վերադարձնում է արժեք → հարմար է վերագրման համար։<br>
+      <strong>4.</strong> Առանց <code>default</code>-ի և չհամընկնելու դեպքում գցում է սխալ, ոչ լուռ անցնում։<br><br>
+      Օգտագործիր <code>match</code>-ը լռելյայն։ <code>switch</code>-ը պետք է միայն այն դեպքում, երբ մեկ ճյուղում մի քանի հրահանգ է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Ցիկլեր</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ծանոթ երեքը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">for</span> (<span class="n">$i</span> = <span class="n">0</span>; <span class="n">$i</span> &lt; <span class="n">10</span>; <span class="n">$i</span>++) { ... }
+
+<span class="k">while</span> (<span class="n">$row</span> = <span class="n">$stmt</span>-&gt;<span class="f">fetch</span>()) { ... }
+
+<span class="k">do</span> { ... } <span class="k">while</span> (<span class="n">$condition</span>);
+
+<span class="c">// break և continue — նույնը, ինչ JS-ում</span></code></pre>
+    </div>
+
+    <h3>foreach — PHP-ի գլխավոր ցիկլը</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երկու ձև</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Միայն արժեքները</span>
+<span class="k">foreach</span> (<span class="n">$products</span> <span class="k">as</span> <span class="n">$product</span>) {
+    <span class="k">echo</span> <span class="n">$product</span>[<span class="s">'name'</span>];
+}
+
+<span class="c">// Բանալի և արժեք ⭐</span>
+<span class="k">foreach</span> (<span class="n">$product</span> <span class="k">as</span> <span class="n">$key</span> =&gt; <span class="n">$value</span>) {
+    <span class="k">echo</span> <span class="s">"$key: $value"</span>;
+}
+
+<span class="c">// Ինդեքսի հետ</span>
+<span class="k">foreach</span> (<span class="n">$products</span> <span class="k">as</span> <span class="n">$i</span> =&gt; <span class="n">$product</span>) {
+    <span class="k">echo</span> (<span class="n">$i</span> + <span class="n">1</span>) . <span class="s">". "</span> . <span class="n">$product</span>[<span class="s">'name'</span>];
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">foreach-ի հղումային թակարդ</span>
+      <p>Սա PHP-ի ամենահայտնի «WTF»-երից է․<br><br>
+      <code>foreach ($arr as &amp;$v) { ... }</code><br>
+      <code>foreach ($arr as $v) { ... }</code> ← այստեղ վերջին տարրը կփչանա<br><br>
+      Առաջին ցիկլից հետո <code>$v</code>-ն մնում է որպես <strong>հղում</strong> վերջին տարրին։ Երկրորդ ցիկլը գրում է հենց այդ հղումի մեջ։<br><br>
+      Լուծում՝ <code>unset($v);</code> հղումային <code>foreach</code>-ից անմիջապես հետո։ Կամ ավելի պարզ՝ <strong>ընդհանրապես չօգտագործել <code>&amp;</code></strong> և վերադարձնել նոր զանգված։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>PHP և HTML — ճիշտ խառնելը</h2>
+    <p>Այստեղ որոշվում է՝ քո կոդը կլինի ընթեռնելի, թե՞ կդառնա «PHP ապուր»։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ ինչպես չանել</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">foreach</span> (<span class="n">$products</span> <span class="k">as</span> <span class="n">$p</span>) {
+    <span class="k">echo</span> <span class="s">'&lt;article class="card"&gt;'</span>;
+    <span class="k">echo</span> <span class="s">'&lt;h3 class="card__title"&gt;'</span> . <span class="n">$p</span>[<span class="s">'name'</span>] . <span class="s">'&lt;/h3&gt;'</span>;
+    <span class="k">echo</span> <span class="s">'&lt;p class="card__price"&gt;'</span> . <span class="n">$p</span>[<span class="s">'price'</span>] . <span class="s">' ֏&lt;/p&gt;'</span>;
+    <span class="k">echo</span> <span class="s">'&lt;/article&gt;'</span>;
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչու սա վատ է</span>
+      <p>· Խմբագրիչը HTML չի տեսնում — չկա գունավորում, չկա ավտոլրացում<br>
+      · Չակերտները խառնվում են<br>
+      · Չփակված թեգը գտնելն անհնար է<br>
+      · Դիզայներին ցույց տալ չես կարող</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>✅ այլընտրանքային շարահյուսություն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span> <span class="k">foreach</span> (<span class="n">$products</span> <span class="k">as</span> <span class="n">$p</span>): <span class="p">?&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">article</span> <span class="f">class</span>=<span class="s">"card"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"card__title"</span><span class="p">&gt;</span>&lt;?= <span class="n">$p</span>[<span class="s">'name'</span>] ?&gt;<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__price"</span><span class="p">&gt;</span>&lt;?= <span class="n">$p</span>[<span class="s">'price'</span>] ?&gt; ֏<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span>
+
+<span class="p">&lt;?php</span> <span class="k">endforeach</span>; <span class="p">?&gt;</span></code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սովորական</th><th>Շաբլոնի համար</th></tr>
+      <tr><td><code>if (...) { }</code></td><td><code>if (...): endif;</code></td></tr>
+      <tr><td><code>foreach (...) { }</code></td><td><code>foreach (...): endforeach;</code></td></tr>
+      <tr><td><code>for (...) { }</code></td><td><code>for (...): endfor;</code></td></tr>
+      <tr><td><code>while (...) { }</code></td><td><code>while (...): endwhile;</code></td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ամբողջական օրինակ՝ ՏեխնոՄարկետից</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"grid-auto gap-20"</span><span class="p">&gt;</span>
+
+<span class="p">&lt;?php</span> <span class="k">if</span> (<span class="f">empty</span>(<span class="n">$products</span>)): <span class="p">?&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"text-muted"</span><span class="p">&gt;</span>Ապրանքներ չեն գտնվել։<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+<span class="p">&lt;?php</span> <span class="k">else</span>: <span class="p">?&gt;</span>
+
+    <span class="p">&lt;?php</span> <span class="k">foreach</span> (<span class="n">$products</span> <span class="k">as</span> <span class="n">$p</span>): <span class="p">?&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">article</span> <span class="f">class</span>=<span class="s">"card"</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;?php</span> <span class="k">if</span> (<span class="n">$p</span>[<span class="s">'discount'</span>] &gt; <span class="n">0</span>): <span class="p">?&gt;</span>
+                <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"card__badge"</span><span class="p">&gt;</span>-&lt;?= <span class="n">$p</span>[<span class="s">'discount'</span>] ?&gt;%<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+            <span class="p">&lt;?php</span> <span class="k">endif</span>; <span class="p">?&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__body"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"card__title"</span><span class="p">&gt;</span>&lt;?= <span class="n">$p</span>[<span class="s">'name'</span>] ?&gt;<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__meta"</span><span class="p">&gt;</span>&lt;?= <span class="n">$p</span>[<span class="s">'specs'</span>] ?&gt;<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+                <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__footer"</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__price"</span><span class="p">&gt;</span>
+                        &lt;?= <span class="f">number_format</span>(<span class="n">$p</span>[<span class="s">'price'</span>], <span class="n">0</span>, <span class="s">"."</span>, <span class="s">"&amp;nbsp;"</span>) ?&gt; ֏
+                    <span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"btn btn--primary btn--sm"</span><span class="p">&gt;</span>Գնել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+                <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;?php</span> <span class="k">endforeach</span>; <span class="p">?&gt;</span>
+
+<span class="p">&lt;?php</span> <span class="k">endif</span>; <span class="p">?&gt;</span>
+
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ուշադրություն՝ CSS-ը չփոխվեց</span>
+      <p><code>.grid-auto</code>, <code>.card</code>, <code>.card__badge</code>, <code>.btn--primary</code> — բոլորը HTML բլոկից են։ Ոչ մի տող CSS չգրեցինք։<br><br>
+      Հենց դա էր խոստումը Դաս 24-ում․ <em>«JS-ը և PHP-ն փոխում են դասերը և բովանդակությունը, ոչ ոճերը»</em>։ Հիմա տեսնում ես այն գործողության մեջ։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Կարևոր զգուշացում</span>
+      <p>Այս օրինակում <code>&lt;?= $p['name'] ?&gt;</code>-ը <strong>դեռ վտանգավոր է</strong>։ Եթե ապրանքի անվան մեջ լինի <code>&lt;script&gt;</code>, այն կկատարվի բրաուզերում։<br><br>
+      Դա XSS-ն է, և <strong>Դաս 5-ը</strong> ամբողջովին դրա մասին է։ Այնտեղ կսովորենք <code>htmlspecialchars</code>-ը և կվերադառնանք այս կոդին՝ ուղղելու։<br><br>
+      Հիմա հիշիր միայն՝ բազայից եկած տվյալը երբեք ուղիղ չի դրվում էջում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Դասարանական</h2>
+    <p>Ապրանքները դուրս ենք բերում փոփոխականից, ոչ HTML-ից ձեռքով։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>data.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+
+<span class="n">$siteName</span> = <span class="s">"ՏեխնոՄարկետ"</span>;
+<span class="n">$phone</span>    = <span class="s">"+374 10 123456"</span>;
+
+<span class="n">$products</span> = [
+    [
+        <span class="s">'name'</span>     =&gt; <span class="s">'Նոութբուք Pro 14'</span>,
+        <span class="s">'specs'</span>    =&gt; <span class="s">'16 ԳԲ / 512 ԳԲ SSD'</span>,
+        <span class="s">'price'</span>    =&gt; <span class="n">450000</span>,
+        <span class="s">'discount'</span> =&gt; <span class="n">30</span>,
+        <span class="s">'image'</span>    =&gt; <span class="s">'laptop.jpg'</span>,
+    ],
+    [
+        <span class="s">'name'</span>     =&gt; <span class="s">'Մոնիտոր 27" 4K'</span>,
+        <span class="s">'specs'</span>    =&gt; <span class="s">'IPS, 144 Հց'</span>,
+        <span class="s">'price'</span>    =&gt; <span class="n">120000</span>,
+        <span class="s">'discount'</span> =&gt; <span class="n">0</span>,
+        <span class="s">'image'</span>    =&gt; <span class="s">'monitor.jpg'</span>,
+    ],
+    [
+        <span class="s">'name'</span>     =&gt; <span class="s">'Ստեղնաշար K3'</span>,
+        <span class="s">'specs'</span>    =&gt; <span class="s">'Մեխանիկական'</span>,
+        <span class="s">'price'</span>    =&gt; <span class="n">25000</span>,
+        <span class="s">'discount'</span> =&gt; <span class="n">0</span>,
+        <span class="s">'image'</span>    =&gt; <span class="s">'keyboard.jpg'</span>,
+    ],
+];</code></pre>
+    </div>
+
+    <ol>
+      <li>Ստեղծիր <code>data.php</code> վերևի բովանդակությամբ</li>
+      <li><code>index.php</code>-ի սկզբում ավելացրու <code>require 'data.php';</code></li>
+      <li>Փոխարինիր երեք ձեռքով գրված քարտերը <code>foreach</code>-ով</li>
+      <li>Ավելացրու պայման՝ պիտակը երևա միայն երբ <code>discount &gt; 0</code></li>
+      <li>Օգտագործիր <code>number_format</code> գների համար</li>
+      <li>Ավելացրու ևս 3 ապրանք զանգվածում — HTML-ը չպիտի փոխվի</li>
+      <li>Ավելացրու պայման դատարկ զանգվածի համար</li>
+      <li>Փոխարինիր footer-ի հեռախոսը փոփոխականով</li>
+    </ol>
+
+    <div class="tip note">
+      <span class="tag">Վեցերորդ քայլը գլխավորն է</span>
+      <p>Երբ ավելացնում ես ապրանք և HTML-ը <strong>ընդհանրապես չի փոխվում</strong> — դա այն պահն է, երբ էջը դառնում է դինամիկ։<br><br>
+      Դաս 10-ում այս զանգվածը կփոխարինվի բազայի հարցումով, և <code>foreach</code>-ը կմնա նույնը։ Ամբողջ շաբլոնը՝ անփոփոխ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Կատարիր դասարանականի բոլոր 8 քայլը։</li>
+      <li>Փորձարկիր 6 համեմատություն <code>==</code>-ով և <code>===</code>-ով։ Կազմիր աղյուսակ արդյունքներով։</li>
+      <li>Ցուցադրիր, թե ինչու <code>"0e123" == "0e456"</code>-ը վտանգավոր է։ Բացատրիր սեփական բառերով։</li>
+      <li>Փորձարկիր <code>strlen</code>-ը և <code>mb_strlen</code>-ը հայերեն բառի վրա։ Բացատրիր տարբերությունը։</li>
+      <li>Կազմիր աղյուսակ՝ <code>isset</code>, <code>empty</code>, <code>is_null</code> 6 տարբեր արժեքի վրա։</li>
+      <li>Գտիր <code>empty</code>-ի թակարդի իրական օրինակ քո ֆորմայում և ուղղիր։</li>
+      <li>Վերաշարադրիր որևէ <code>switch</code> <code>match</code>-ով։ Հաշվիր՝ քանի՞ տող կրճատվեց։</li>
+      <li>Ցուցադրիր <code>foreach</code>-ի հղումային թակարդը կոդով և բացատրիր, ինչու է վերջին տարրը փչանում։</li>
+      <li>Վերաշարադրիր մեկ բաժին <code>echo</code>-ով, ապա այլընտրանքային շարահյուսությամբ։ Ո՞րն է ընթեռնելի։</li>
+      <li>Օգտագործիր <code>??</code>-ը առնվազն երեք տեղում։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
+
+    <h3>JS → PHP</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>JavaScript</th><th>PHP</th></tr>
+      <tr><td><code>let x = 5</code></td><td><code>$x = 5</code></td></tr>
+      <tr><td><code>"a" + "b"</code></td><td><code>"a" . "b"</code></td></tr>
+      <tr><td><code>`Բարև ${name}`</code></td><td><code>"Բարև $name"</code></td></tr>
+      <tr><td><code>=== </code></td><td><code>===</code> — <strong>միշտ</strong> ⭐</td></tr>
+      <tr><td><code>x ?? y</code></td><td><code>$x ?? $y</code></td></tr>
+      <tr><td><code>x?.y</code></td><td><code>$x?-&gt;y</code></td></tr>
+      <tr><td><code>for...of</code></td><td><code>foreach ($a as $v)</code></td></tr>
+      <tr><td><code>for...in</code></td><td><code>foreach ($a as $k =&gt; $v)</code></td></tr>
+      <tr><td><code>str.split(",")</code></td><td><code>explode(",", $s)</code></td></tr>
+      <tr><td><code>arr.join(", ")</code></td><td><code>implode(", ", $a)</code></td></tr>
+      <tr><td><code>str.includes()</code></td><td><code>str_contains()</code></td></tr>
+      <tr><td><code>str.length</code></td><td><code>mb_strlen($s)</code></td></tr>
+      <tr><td><code>switch</code></td><td><code>match</code> ⭐</td></tr>
+    </table>
+    </div>
+
+    <h3>Երեք վտանգավոր տեղը</h3>
+    <div class="tree">1.  ==  →  միշտ գրիր ===
+2.  empty("0")  →  true, ուստի զգույշ ֆորմաներում
+3.  strlen("Անի")  →  6, ոչ 3։ Օգտագործիր mb_</div>
+
+    <h3>Շաբլոնի շարահյուսություն</h3>
+    <div class="tree">&lt;?php foreach ($items as $i): ?&gt;
+    &lt;li&gt;&lt;?= $i ?&gt;&lt;/li&gt;
+&lt;?php endforeach; ?&gt;</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Ամենուր <code>===</code>, ոչ <code>==</code></li>
+      <li>Հայերեն տողերի համար <code>mb_</code></li>
+      <li>Ֆորմայի դաշտերը կարդացվում են <code>??</code>-ով</li>
+      <li>HTML-ը գրված է շաբլոնի շարահյուսությամբ, ոչ <code>echo</code>-ով</li>
+      <li>Ապրանքները գալիս են զանգվածից</li>
+      <li>Նոր ապրանք ավելացնելիս HTML-ը չի փոխվում</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչու <code>==</code>-ը անվտանգության խնդիր է</li>
+      <li>Գիտե՞մ, ե՞րբ <code>isset</code>, ե՞րբ <code>empty</code></li>
+      <li>Հասկանո՞ւմ եմ մեկ և կրկնակի չակերտի տարբերությունը</li>
+      <li>Գիտե՞մ, ինչու <code>match</code>-ը լավն է <code>switch</code>-ից</li>
+      <li>Կարո՞ղ եմ բացատրել, ինչու <code>mb_strlen</code></li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Զանգվածներ և ֆունկցիաներ։ Ասոցիատիվ զանգվածները PHP-ի սիրտն են — բազայի ամեն տող դրանք են։ Կտեսնենք նաև <code>array_map</code>, <code>array_filter</code>, <code>usort</code> — ուղիղ համապատասխանություններ JS Դաս 6-ի հետ։<br><br>
+      Ֆունկցիաներում կսովորենք տիպերի հայտարարումը — բան, որ JS-ում չկար։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>PHP Բլոկ · Դաս 2 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>
