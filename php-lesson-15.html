@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHP Դաս 15 — Controller և View</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>PHP Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">PHP Դաս 15 · 2 ժամ · Սեփական MVC 2 / 4</p>
+  <h1>Controller և View</h1>
+  <p class="lede">Router-ը կա։ Հիմա հավաքում ենք մնացածը՝ <code>Request</code>, <code>Response</code>, <code>View</code>, կոնտրոլեր-դասեր։ Դասի վերջում կունենաս սեփական մինի-ֆրեյմվորք։</p>
+
+  <div class="facts">
+    <span>Բլոկ 3 · Դաս 15 / 24</span>
+    <span>M · V · C միասին</span>
+    <span>Հիմքը Laravel-ի համար</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>MVC՝ ի՞նչ է որտեղ</li>
+      <li><code>Request</code> — <code>$_GET</code>-ի փոխարեն</li>
+      <li><code>Response</code> — <code>echo</code>-ի փոխարեն</li>
+      <li><code>View</code> — <code>render()</code>-ի փոխարեն</li>
+      <li>Կոնտրոլեր-դասեր</li>
+      <li>Router-ը դասերով</li>
+      <li>Բացառությունների կենտրոնացված մշակում</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>MVC՝ ի՞նչ է որտեղ</h2>
+
+    <div class="tree">Հարցում
+   │
+   ▼
+┌─────────────┐
+│ CONTROLLER  │  · կարդում է պարամետրերը
+│             │  · կանչում է Model-ը
+│             │  · ընտրում է View-ն
+└──┬───────┬──┘  ⚠️ ՉԻ պարունակում SQL
+   │       │     ⚠️ ՉԻ պարունակում HTML
+   ▼       ▼
+┌──────┐ ┌──────┐
+│MODEL │ │ VIEW │
+│      │ │      │
+│Product│ │HTML  │
+│Repo   │ │e()   │
+│SQL    │ │ցիկլեր│
+└──────┘ └──────┘
+ ⚠️ ՉԻ    ⚠️ ՉԻ դիմում
+ գիտի     բազային
+ HTML-ի   ուղիղ
+ մասին</div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Շերտ</th><th>Պատասխանատվություն</th><th>Մեր ֆայլերը</th></tr>
+      <tr><td><strong>Model</strong></td><td>Տվյալներ և բիզնես-կանոններ</td><td><code>src/Models/</code>, <code>src/Repositories/</code></td></tr>
+      <tr><td><strong>View</strong></td><td>Ներկայացում</td><td><code>views/</code></td></tr>
+      <tr><td><strong>Controller</strong></td><td>Կապում է դրանք</td><td><code>src/Controllers/</code></td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ծանոթ սկզբունք</span>
+      <p>Հիշո՞ւմ ես HTML բլոկի Դաս 24-ի առաջին գաղափարը՝ <em>«ամեն շերտ մեկ գործ է անում»</em>․ <code>section</code>՝ ֆոն, <code>.row</code>՝ պատեր, <code>.col</code>՝ լայնություն, <code>.wrapper</code>՝ տեսք։<br><br>
+      MVC-ն նույն սկզբունքն է՝ սերվերի կողմում։ Եվ նույն օգուտը՝ երբ պիտի փոխես մի բան, գիտես ուր նայել։<br><br>
+      Ամենակարևոր կանոնը՝ <strong>կոնտրոլերում ոչ SQL, ոչ HTML</strong>։ Եթե կոնտրոլերը 40 տողից երկար է, հավանաբար այնտեղ ընկել է մի բան, որի տեղը այնտեղ չէ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Request</h2>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ չօգտագործել <code>$_GET</code>-ը ուղիղ</span>
+      <p><strong>1.</strong> Ամեն տեղ պիտի գրես <code>?? ''</code> և <code>trim()</code><br>
+      <strong>2.</strong> Ամեն արժեք տող է — <code>(int)</code> ամեն տեղ<br>
+      <strong>3.</strong> Չես կարող փորձարկել․ <code>$_GET</code>-ը գլոբալ է<br>
+      <strong>4.</strong> Կոնտրոլերի ստորագրությունը չի ասում, ինչից է կախված</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Http/Request.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">namespace</span> <span class="t">App\Http</span>;
+
+<span class="k">class</span> <span class="t">Request</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>(
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">string</span> <span class="n">$method</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">string</span> <span class="n">$path</span>,
+        <span class="k">private</span> <span class="k">readonly</span> <span class="k">array</span> <span class="n">$query</span>,
+        <span class="k">private</span> <span class="k">readonly</span> <span class="k">array</span> <span class="n">$body</span>,
+        <span class="k">private</span> <span class="k">readonly</span> <span class="k">array</span> <span class="n">$files</span> = [],
+    ) {}
+
+    <span class="k">public static function</span> <span class="f">fromGlobals</span>(): <span class="k">self</span>
+    {
+        <span class="n">$uri</span>  = <span class="n">$_SERVER</span>[<span class="s">'REQUEST_URI'</span>] ?? <span class="s">'/'</span>;
+        <span class="n">$path</span> = <span class="f">parse_url</span>(<span class="n">$uri</span>, <span class="k">PHP_URL_PATH</span>) ?: <span class="s">'/'</span>;
+
+        <span class="k">return</span> <span class="k">new</span> <span class="k">self</span>(
+            <span class="n">method</span>: <span class="n">$_SERVER</span>[<span class="s">'REQUEST_METHOD'</span>] ?? <span class="s">'GET'</span>,
+            <span class="n">path</span>:   <span class="s">'/'</span> . <span class="f">trim</span>(<span class="n">$path</span>, <span class="s">'/'</span>),
+            <span class="n">query</span>:  <span class="n">$_GET</span>,
+            <span class="n">body</span>:   <span class="n">$_POST</span>,
+            <span class="n">files</span>:  <span class="n">$_FILES</span>,
+        );
+    }
+
+    <span class="c">// ---------- Ընթերցում ----------</span>
+
+    <span class="k">public function</span> <span class="f">query</span>(<span class="k">string</span> <span class="n">$key</span>, <span class="k">string</span> <span class="n">$default</span> = <span class="s">''</span>): <span class="k">string</span>
+    {
+        <span class="k">return</span> <span class="f">trim</span>((<span class="k">string</span>) (<span class="n">$this</span>-&gt;<span class="n">query</span>[<span class="n">$key</span>] ?? <span class="n">$default</span>));
+    }
+
+    <span class="k">public function</span> <span class="f">input</span>(<span class="k">string</span> <span class="n">$key</span>, <span class="k">string</span> <span class="n">$default</span> = <span class="s">''</span>): <span class="k">string</span>
+    {
+        <span class="k">return</span> <span class="f">trim</span>((<span class="k">string</span>) (<span class="n">$this</span>-&gt;<span class="n">body</span>[<span class="n">$key</span>] ?? <span class="n">$default</span>));
+    }
+
+    <span class="k">public function</span> <span class="f">int</span>(<span class="k">string</span> <span class="n">$key</span>, <span class="k">int</span> <span class="n">$default</span> = <span class="n">0</span>): <span class="k">int</span>
+    {
+        <span class="n">$value</span> = <span class="n">$this</span>-&gt;<span class="n">body</span>[<span class="n">$key</span>] ?? <span class="n">$this</span>-&gt;<span class="n">query</span>[<span class="n">$key</span>] ?? <span class="k">null</span>;
+        <span class="n">$int</span>   = <span class="f">filter_var</span>(<span class="n">$value</span>, <span class="k">FILTER_VALIDATE_INT</span>);
+
+        <span class="k">return</span> <span class="n">$int</span> === <span class="k">false</span> ? <span class="n">$default</span> : <span class="n">$int</span>;
+    }
+
+    <span class="c">/** Ցուցակից մեկը — Դաս 6-ի օրինաչափությունը ⭐ */</span>
+    <span class="k">public function</span> <span class="f">oneOf</span>(<span class="k">string</span> <span class="n">$key</span>, <span class="k">array</span> <span class="n">$allowed</span>, <span class="k">string</span> <span class="n">$default</span>): <span class="k">string</span>
+    {
+        <span class="n">$value</span> = (<span class="k">string</span>) (<span class="n">$this</span>-&gt;<span class="n">query</span>[<span class="n">$key</span>] ?? <span class="n">$this</span>-&gt;<span class="n">body</span>[<span class="n">$key</span>] ?? <span class="s">''</span>);
+
+        <span class="k">return</span> <span class="f">in_array</span>(<span class="n">$value</span>, <span class="n">$allowed</span>, <span class="k">true</span>) ? <span class="n">$value</span> : <span class="n">$default</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">has</span>(<span class="k">string</span> <span class="n">$key</span>): <span class="k">bool</span>
+    {
+        <span class="k">return</span> <span class="f">isset</span>(<span class="n">$this</span>-&gt;<span class="n">body</span>[<span class="n">$key</span>]) || <span class="f">isset</span>(<span class="n">$this</span>-&gt;<span class="n">query</span>[<span class="n">$key</span>]);
+    }
+
+    <span class="k">public function</span> <span class="f">all</span>(): <span class="k">array</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">body</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">file</span>(<span class="k">string</span> <span class="n">$key</span>): ?<span class="k">array</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">files</span>[<span class="n">$key</span>] ?? <span class="k">null</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">isPost</span>(): <span class="k">bool</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">method</span> === <span class="s">'POST'</span>;
+    }
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ի՞նչ ձեռք բերեցինք</span>
+      <p><code>$request-&gt;int('page', 1)</code> — մեկ կանչ՝ լռելյայն արժեքով, փոխարկումով և վավերացումով միասին։<br><br>
+      Առաջ դա էր՝ <code>max(1, (int) ($_GET['page'] ?? 1))</code>։<br><br>
+      <code>oneOf()</code>-ը Դաս 6-ի սպիտակ ցուցակի օրինաչափությունն է՝ դարձած մեթոդ։ Հիմա անհնար է մոռանալ այն․ պարզապես չկա այլ ձև տեսակավորման պարամետր կարդալու։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Response</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Http/Response.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">namespace</span> <span class="t">App\Http</span>;
+
+<span class="k">class</span> <span class="t">Response</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>(
+        <span class="k">private</span> <span class="k">readonly</span> <span class="k">string</span> <span class="n">$body</span> = <span class="s">''</span>,
+        <span class="k">private</span> <span class="k">readonly</span> <span class="k">int</span> <span class="n">$status</span> = <span class="n">200</span>,
+        <span class="k">private</span> <span class="k">readonly</span> <span class="k">array</span> <span class="n">$headers</span> = [],
+    ) {}
+
+    <span class="k">public static function</span> <span class="f">html</span>(<span class="k">string</span> <span class="n">$body</span>, <span class="k">int</span> <span class="n">$status</span> = <span class="n">200</span>): <span class="k">self</span>
+    {
+        <span class="k">return</span> <span class="k">new</span> <span class="k">self</span>(<span class="n">$body</span>, <span class="n">$status</span>, [
+            <span class="s">'Content-Type'</span> =&gt; <span class="s">'text/html; charset=utf-8'</span>,
+        ]);
+    }
+
+    <span class="k">public static function</span> <span class="f">json</span>(<span class="k">array</span> <span class="n">$data</span>, <span class="k">int</span> <span class="n">$status</span> = <span class="n">200</span>): <span class="k">self</span>
+    {
+        <span class="k">return</span> <span class="k">new</span> <span class="k">self</span>(
+            <span class="f">json_encode</span>(<span class="n">$data</span>, <span class="k">JSON_UNESCAPED_UNICODE</span> | <span class="k">JSON_THROW_ON_ERROR</span>),
+            <span class="n">$status</span>,
+            [<span class="s">'Content-Type'</span> =&gt; <span class="s">'application/json; charset=utf-8'</span>]
+        );
+    }
+
+    <span class="k">public static function</span> <span class="f">redirect</span>(<span class="k">string</span> <span class="n">$to</span>, <span class="k">int</span> <span class="n">$status</span> = <span class="n">303</span>): <span class="k">self</span>
+    {
+        <span class="k">return</span> <span class="k">new</span> <span class="k">self</span>(<span class="s">''</span>, <span class="n">$status</span>, [<span class="s">'Location'</span> =&gt; <span class="n">$to</span>]);
+    }
+
+    <span class="k">public function</span> <span class="f">send</span>(): <span class="k">void</span>
+    {
+        <span class="k">http_response_code</span>(<span class="n">$this</span>-&gt;<span class="n">status</span>);
+
+        <span class="k">foreach</span> (<span class="n">$this</span>-&gt;<span class="n">headers</span> <span class="k">as</span> <span class="n">$name</span> =&gt; <span class="n">$value</span>) {
+            <span class="k">header</span>(<span class="s">"{<span class="n">$name</span>}: {<span class="n">$value</span>}"</span>);
+        }
+
+        <span class="k">echo</span> <span class="n">$this</span>-&gt;<span class="n">body</span>;
+    }
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ օբյեկտ, ոչ <code>echo</code></span>
+      <p><strong>1. Կոնտրոլերը ոչինչ չի տպում</strong> — այն <em>վերադարձնում</em> է պատասխան։ Դա նշանակում է, որ այն կարելի է փորձարկել․ կանչում ես մեթոդը և ստուգում վերադարձված օբյեկտը։<br><br>
+      <strong>2. Վերնագրերը ուղարկվում են մեկ տեղում</strong> — վերջ Դաս 6-ի «headers already sent» խնդրին։<br><br>
+      <strong>3. Կոնտրոլերը չգիտի ձևաչափը</strong> — <code>Response::json()</code>-ը կանչելով նույն կոնտրոլերը կարող է սպասարկել և՛ էջ, և՛ API (Դաս 17)։<br><br>
+      <code>JSON_THROW_ON_ERROR</code>-ը կարևոր է․ առանց դրա կոտրված UTF-8-ի դեպքում <code>json_encode</code>-ը լուռ վերադարձնում է <code>false</code>, և հաճախորդը ստանում է դատարկ պատասխան։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>View</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/View.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">namespace</span> <span class="t">App</span>;
+
+<span class="k">use</span> <span class="t">RuntimeException</span>;
+
+<span class="k">class</span> <span class="t">View</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>(
+        <span class="k">private</span> <span class="k">readonly</span> <span class="k">string</span> <span class="n">$basePath</span>,
+        <span class="k">private</span> <span class="k">readonly</span> <span class="k">string</span> <span class="n">$layout</span> = <span class="s">'layout'</span>,
+    ) {}
+
+    <span class="c">/** Միայն մասնակի շաբլոն, առանց layout-ի */</span>
+    <span class="k">public function</span> <span class="f">partial</span>(<span class="k">string</span> <span class="n">$name</span>, <span class="k">array</span> <span class="n">$data</span> = []): <span class="k">string</span>
+    {
+        <span class="n">$file</span> = <span class="n">$this</span>-&gt;<span class="n">basePath</span> . <span class="s">'/'</span> . <span class="n">$name</span> . <span class="s">'.php'</span>;
+
+        <span class="k">if</span> (!<span class="f">is_file</span>(<span class="n">$file</span>)) {
+            <span class="k">throw</span> <span class="k">new</span> <span class="t">RuntimeException</span>(<span class="s">"Շաբլոնը չի գտնվել՝ {<span class="n">$name</span>}"</span>);
+        }
+
+        <span class="f">extract</span>(<span class="n">$data</span>, <span class="k">EXTR_SKIP</span>);      <span class="c">// ⭐ չի վերագրում $this-ը</span>
+
+        <span class="f">ob_start</span>();
+
+        <span class="k">try</span> {
+            <span class="k">require</span> <span class="n">$file</span>;
+        } <span class="k">catch</span> (<span class="t">\Throwable</span> <span class="n">$e</span>) {
+            <span class="f">ob_end_clean</span>();          <span class="c">// ⭐ չթողնել կիսատ HTML</span>
+            <span class="k">throw</span> <span class="n">$e</span>;
+        }
+
+        <span class="k">return</span> <span class="f">ob_get_clean</span>();
+    }
+
+    <span class="c">/** Էջ՝ layout-ի մեջ դրված */</span>
+    <span class="k">public function</span> <span class="f">page</span>(<span class="k">string</span> <span class="n">$name</span>, <span class="k">array</span> <span class="n">$data</span> = [], <span class="k">string</span> <span class="n">$title</span> = <span class="s">''</span>): <span class="k">string</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="f">partial</span>(<span class="n">$this</span>-&gt;<span class="n">layout</span>, [
+            <span class="s">'title'</span>   =&gt; <span class="n">$title</span>,
+            <span class="s">'content'</span> =&gt; <span class="n">$this</span>-&gt;<span class="f">partial</span>(<span class="n">$name</span>, <span class="n">$data</span>),
+        ]);
+    }
+
+    <span class="c">/** Ադմինի layout */</span>
+    <span class="k">public function</span> <span class="f">withLayout</span>(<span class="k">string</span> <span class="n">$layout</span>): <span class="k">self</span>
+    {
+        <span class="k">return</span> <span class="k">new</span> <span class="k">self</span>(<span class="n">$this</span>-&gt;<span class="n">basePath</span>, <span class="n">$layout</span>);
+    }
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երկու կարևոր դետալ</span>
+      <p><strong><code>EXTR_SKIP</code></strong> — եթե <code>$data</code>-ում լինի <code>'this'</code> կամ <code>'file'</code> բանալի, առանց այս դրոշի այն կվերագրեր տեղական փոփոխականները և կկոտրեր մեթոդը։ Դա հազվադեպ է, բայց ախտորոշելը՝ մղձավանջ։<br><br>
+      <strong><code>ob_end_clean()</code> <code>catch</code>-ում</strong> — եթե շաբլոնում բացառություն է լինում, բուֆերում արդեն կա կիսատ HTML։ Առանց մաքրման՝ սխալի էջը կհայտնվի կիսատ <code>&lt;div&gt;</code>-ների մեջ, և դասավորությունը կփլվի։<br><br>
+      Երկուսն էլ այն դեպքերն են, որ ձեռնարկներում չկան, բայց իրական նախագծերում պատահում են։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag"><code>withLayout()</code> — անփոփոխելի օբյեկտ</span>
+      <p>Այն չի փոխում ընթացիկ <code>View</code>-ն, այլ վերադարձնում է <strong>նոր օրինակ</strong>։<br><br>
+      <code>$view-&gt;withLayout('layout-admin')-&gt;page('admin/list', $data)</code><br><br>
+      Այդպես նույն <code>View</code>-ն կարող է օգտագործվել և՛ հանրային էջերում, և՛ ադմինում՝ առանց վիճակի փոփոխության։ Laravel-ում շատ դասեր հենց այս ձևով են աշխատում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Կոնտրոլեր-դասեր</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Controllers/ProductController.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">namespace</span> <span class="t">App\Controllers</span>;
+
+<span class="k">use</span> <span class="t">App\Http\Request</span>;
+<span class="k">use</span> <span class="t">App\Http\Response</span>;
+<span class="k">use</span> <span class="t">App\Repositories\ProductRepository</span>;
+<span class="k">use</span> <span class="t">App\Repositories\CategoryRepository</span>;
+<span class="k">use</span> <span class="t">App\View</span>;
+<span class="k">use</span> <span class="t">App\Exceptions\NotFoundException</span>;
+
+<span class="k">class</span> <span class="t">ProductController</span>
+{
+    <span class="k">private const</span> <span class="n">SORTS</span> = [<span class="s">'price_asc'</span>, <span class="s">'price_desc'</span>, <span class="s">'name'</span>, <span class="s">'newest'</span>];
+    <span class="k">private const</span> <span class="n">PER_PAGE</span> = <span class="n">12</span>;
+
+    <span class="k">public function</span> <span class="f">__construct</span>(
+        <span class="k">private</span> <span class="k">readonly</span> <span class="t">ProductRepository</span> <span class="n">$products</span>,
+        <span class="k">private</span> <span class="k">readonly</span> <span class="t">CategoryRepository</span> <span class="n">$categories</span>,
+        <span class="k">private</span> <span class="k">readonly</span> <span class="t">View</span> <span class="n">$view</span>,
+    ) {}
+
+    <span class="k">public function</span> <span class="f">index</span>(<span class="t">Request</span> <span class="n">$request</span>): <span class="t">Response</span>
+    {
+        <span class="n">$sort</span> = <span class="n">$request</span>-&gt;<span class="f">oneOf</span>(<span class="s">'sort'</span>, <span class="k">self</span>::<span class="n">SORTS</span>, <span class="s">'price_asc'</span>);
+        <span class="n">$page</span> = <span class="f">max</span>(<span class="n">1</span>, <span class="n">$request</span>-&gt;<span class="f">int</span>(<span class="s">'page'</span>, <span class="n">1</span>));
+
+        <span class="n">$products</span> = <span class="n">$this</span>-&gt;<span class="n">products</span>-&gt;<span class="f">findAll</span>(
+            <span class="k">null</span>,
+            <span class="n">$sort</span>,
+            <span class="k">self</span>::<span class="n">PER_PAGE</span>,
+            (<span class="n">$page</span> - <span class="n">1</span>) * <span class="k">self</span>::<span class="n">PER_PAGE</span>
+        );
+
+        <span class="k">return</span> <span class="t">Response</span>::<span class="f">html</span>(
+            <span class="n">$this</span>-&gt;<span class="n">view</span>-&gt;<span class="f">page</span>(<span class="s">'pages/home'</span>, [
+                <span class="s">'products'</span>   =&gt; <span class="n">$products</span>,
+                <span class="s">'categories'</span> =&gt; <span class="n">$this</span>-&gt;<span class="n">categories</span>-&gt;<span class="f">findAll</span>(),
+                <span class="s">'total'</span>      =&gt; <span class="n">$this</span>-&gt;<span class="n">products</span>-&gt;<span class="f">count</span>(),
+                <span class="s">'sort'</span>       =&gt; <span class="n">$sort</span>,
+                <span class="s">'page'</span>       =&gt; <span class="n">$page</span>,
+                <span class="s">'perPage'</span>    =&gt; <span class="k">self</span>::<span class="n">PER_PAGE</span>,
+            ], <span class="s">'ՏեխնոՄարկետ — տեխնիկա Երևանում'</span>)
+        );
+    }
+
+    <span class="k">public function</span> <span class="f">show</span>(<span class="t">Request</span> <span class="n">$request</span>, <span class="k">string</span> <span class="n">$slug</span>): <span class="t">Response</span>
+    {
+        <span class="n">$product</span> = <span class="n">$this</span>-&gt;<span class="n">products</span>-&gt;<span class="f">findBySlug</span>(<span class="n">$slug</span>);
+
+        <span class="k">if</span> (<span class="n">$product</span> === <span class="k">null</span>) {
+            <span class="k">throw</span> <span class="k">new</span> <span class="t">NotFoundException</span>(<span class="s">'Ապրանքը չի գտնվել'</span>);   <span class="c">// ⭐</span>
+        }
+
+        <span class="k">return</span> <span class="t">Response</span>::<span class="f">html</span>(
+            <span class="n">$this</span>-&gt;<span class="n">view</span>-&gt;<span class="f">page</span>(
+                <span class="s">'pages/product'</span>,
+                [<span class="s">'product'</span> =&gt; <span class="n">$product</span>],
+                <span class="n">$product</span>-&gt;<span class="n">name</span> . <span class="s">' — ՏեխնոՄարկետ'</span>
+            )
+        );
+    }
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ուշադրություն՝ 30 տող, զրո SQL, զրո HTML</span>
+      <p>Կոնտրոլերը կարդում է պարամետրերը, կանչում Repository-ն, ընտրում շաբլոնը։ Վերջ։<br><br>
+      Կախվածությունները երևում են կոնստրուկտորում՝ երեք հատ։ Եթե դրանք դառնան յոթ, դա ազդանշան է, որ կոնտրոլերը շատ բան է անում։<br><br>
+      Իսկ <code>$request</code>-ը փոխանցվում է մեթոդին, ոչ կոնստրուկտորին — որովհետև այն փոխվում է ամեն կանչի հետ, իսկ Repository-ն՝ ոչ։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Բացառություն, ոչ <code>abort()</code></span>
+      <p>Դաս 14-ում <code>abort(404)</code>-ը ուղիղ տպում էր էջը և կանչում <code>exit</code>։ Դա աշխատում է, բայց երկու խնդիր ունի․<br><br>
+      · Կոնտրոլերը դառնում է չփորձարկելի — <code>exit</code>-ը սպանում է թեստը<br>
+      · Կոնտրոլերը որոշում է, ինչպես ցուցադրել սխալը — դա իր գործը չէ<br><br>
+      <code>throw new NotFoundException()</code>-ը պարզապես ասում է․ «այս բանը չկա»։ Իսկ <em>ինչպես</em> դա ցույց տալ — HTML էջ, թե JSON — որոշում է front controller-ը։<br><br>
+      Դաս 17-ում այս տարբերությունը կրիտիկական կդառնա․ API-ն 404-ը պիտի վերադարձնի JSON-ով, ոչ HTML-ով։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Exceptions/</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">namespace</span> <span class="t">App\Exceptions</span>;
+
+<span class="k">class</span> <span class="t">HttpException</span> <span class="k">extends</span> <span class="t">\RuntimeException</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>(
+        <span class="k">string</span> <span class="n">$message</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">int</span> <span class="n">$status</span> = <span class="n">500</span>,
+    ) {
+        <span class="k">parent</span>::<span class="f">__construct</span>(<span class="n">$message</span>);
+    }
+}
+
+<span class="k">class</span> <span class="t">NotFoundException</span> <span class="k">extends</span> <span class="t">HttpException</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>(<span class="k">string</span> <span class="n">$message</span> = <span class="s">'Էջը չի գտնվել'</span>)
+    {
+        <span class="k">parent</span>::<span class="f">__construct</span>(<span class="n">$message</span>, <span class="n">404</span>);
+    }
+}
+
+<span class="k">class</span> <span class="t">MethodNotAllowedException</span> <span class="k">extends</span> <span class="t">HttpException</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>()
+    {
+        <span class="k">parent</span>::<span class="f">__construct</span>(<span class="s">'Մեթոդը թույլատրված չէ'</span>, <span class="n">405</span>);
+    }
+}</code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Router-ը դասերով</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>routes.php — ընթեռնելի է որպես ցանկ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">use</span> <span class="t">App\Controllers\ProductController</span>;
+<span class="k">use</span> <span class="t">App\Controllers\CartController</span>;
+<span class="k">use</span> <span class="t">App\Controllers\ContactController</span>;
+<span class="k">use</span> <span class="t">App\Controllers\AdminController</span>;
+
+<span class="c">/** @var App\Http\Router $router */</span>
+
+<span class="c">// ---------- Հանրային ----------</span>
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/'</span>,                 [<span class="t">ProductController</span>::<span class="k">class</span>, <span class="s">'index'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/product/{slug}'</span>,  [<span class="t">ProductController</span>::<span class="k">class</span>, <span class="s">'show'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/category/{slug}'</span>, [<span class="t">ProductController</span>::<span class="k">class</span>, <span class="s">'category'</span>]);
+
+<span class="c">// ---------- Կապ ----------</span>
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/contact'</span>,          [<span class="t">ContactController</span>::<span class="k">class</span>, <span class="s">'form'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/contact'</span>,         [<span class="t">ContactController</span>::<span class="k">class</span>, <span class="s">'submit'</span>]);
+
+<span class="c">// ---------- Զամբյուղ ----------</span>
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/cart'</span>,             [<span class="t">CartController</span>::<span class="k">class</span>, <span class="s">'index'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/cart/add'</span>,        [<span class="t">CartController</span>::<span class="k">class</span>, <span class="s">'add'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/cart/remove'</span>,     [<span class="t">CartController</span>::<span class="k">class</span>, <span class="s">'remove'</span>]);
+
+<span class="c">// ---------- Ադմին ⚠️ Դաս 16 ----------</span>
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/admin'</span>,            [<span class="t">AdminController</span>::<span class="k">class</span>, <span class="s">'index'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/admin/edit/{id}'</span>,  [<span class="t">AdminController</span>::<span class="k">class</span>, <span class="s">'form'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/admin/edit/{id}'</span>, [<span class="t">AdminController</span>::<span class="k">class</span>, <span class="s">'save'</span>]);</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Router::dispatch — վերադարձնում է Response</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">public function</span> <span class="f">dispatch</span>(<span class="t">Request</span> <span class="n">$request</span>): <span class="t">Response</span>
+{
+    <span class="n">$method</span> = <span class="n">$request</span>-&gt;<span class="n">method</span>;
+    <span class="n">$path</span>   = <span class="n">$request</span>-&gt;<span class="n">path</span>;
+
+    <span class="k">foreach</span> (<span class="n">$this</span>-&gt;<span class="n">routes</span>[<span class="n">$method</span>] ?? [] <span class="k">as</span> <span class="n">$route</span> =&gt; <span class="n">$action</span>) {
+
+        <span class="n">$params</span> = <span class="n">$this</span>-&gt;<span class="f">matchRoute</span>(<span class="n">$route</span>, <span class="n">$path</span>);
+
+        <span class="k">if</span> (<span class="n">$params</span> === <span class="k">null</span>) {
+            <span class="k">continue</span>;
+        }
+
+        [<span class="n">$class</span>, <span class="n">$action</span>] = <span class="n">$action</span>;
+
+        <span class="n">$controller</span> = <span class="n">$this</span>-&gt;<span class="n">container</span>-&gt;<span class="f">make</span>(<span class="n">$class</span>);   <span class="c">// ⭐</span>
+
+        <span class="k">return</span> <span class="n">$controller</span>-&gt;<span class="n">$action</span>(<span class="n">$request</span>, ...<span class="n">$params</span>);
+    }
+
+    <span class="k">if</span> (<span class="n">$this</span>-&gt;<span class="f">existsWithOtherMethod</span>(<span class="n">$method</span>, <span class="n">$path</span>)) {
+        <span class="k">throw</span> <span class="k">new</span> <span class="t">MethodNotAllowedException</span>();
+    }
+
+    <span class="k">throw</span> <span class="k">new</span> <span class="t">NotFoundException</span>();
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ <code>[Class::class, 'method']</code></span>
+      <p>Կոնտրոլերի օբյեկտը ստեղծվում է <strong>միայն այն ժամանակ, երբ ուղին համընկնում է</strong>։<br><br>
+      Եթե <code>routes.php</code>-ում ուղիղ գրեինք <code>new ProductController(...)</code>, ապա ամեն հարցումով կստեղծվեին բոլոր 4 կոնտրոլերները՝ իրենց Repository-ներով և PDO միացումներով։ Օգտագործվում է մեկը։<br><br>
+      Այս մոտեցումը կոչվում է lazy resolution։ Laravel-ում ուղիների գրառումը ճիշտ նույն տեսքն ունի՝ <code>Route::get('/', [ProductController::class, 'index'])</code>։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Container::make — կոնտրոլերի հավաքում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">public function</span> <span class="f">make</span>(<span class="k">string</span> <span class="n">$class</span>): <span class="k">object</span>
+{
+    <span class="k">return</span> <span class="k">match</span> (<span class="n">$class</span>) {
+        <span class="t">ProductController</span>::<span class="k">class</span> =&gt; <span class="k">new</span> <span class="t">ProductController</span>(
+            <span class="n">$this</span>-&gt;<span class="f">products</span>(),
+            <span class="n">$this</span>-&gt;<span class="f">categories</span>(),
+            <span class="n">$this</span>-&gt;<span class="f">view</span>(),
+        ),
+
+        <span class="t">CartController</span>::<span class="k">class</span> =&gt; <span class="k">new</span> <span class="t">CartController</span>(
+            <span class="n">$this</span>-&gt;<span class="f">products</span>(),
+            <span class="n">$this</span>-&gt;<span class="f">cart</span>(),
+            <span class="n">$this</span>-&gt;<span class="f">view</span>(),
+        ),
+
+        <span class="k">default</span> =&gt; <span class="k">throw</span> <span class="k">new</span> <span class="t">\RuntimeException</span>(<span class="s">"Անհայտ դաս՝ {<span class="n">$class</span>}"</span>),
+    };
+}</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ազնիվ նշում</span>
+      <p>Այս <code>match</code>-ը ձեռքով է։ Ամեն նոր կոնտրոլերի հետ պիտի ավելացնես ճյուղ։<br><br>
+      Laravel-ը դա անում է <strong>ավտոմատ</strong>՝ reflection-ով կարդում է կոնստրուկտորի տիպերը և ինքն է հավաքում կախվածությունները։ Դա կոչվում է autowiring։<br><br>
+      Մենք դա չենք գրի — չափազանց բարդ է այս փուլում։ Բայց հիմա հասկանում ես, <em>ինչ</em> է անում Laravel-ը այնտեղ, և Դաս 18-ում այն կախարդանք չի թվա։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Front controller</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>public/index.php — ամբողջ ծրագիրը 40 տողում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">use</span> <span class="t">App\Exceptions\HttpException</span>;
+<span class="k">use</span> <span class="t">App\Http\Request</span>;
+<span class="k">use</span> <span class="t">App\Http\Response</span>;
+<span class="k">use</span> <span class="t">App\Http\Router</span>;
+
+<span class="k">require_once</span> <span class="n">__DIR__</span> . <span class="s">'/../bootstrap.php'</span>;
+
+<span class="n">$request</span> = <span class="t">Request</span>::<span class="f">fromGlobals</span>();
+<span class="n">$router</span>  = <span class="k">new</span> <span class="t">Router</span>(<span class="n">$app</span>);
+
+<span class="k">require</span> <span class="n">__DIR__</span> . <span class="s">'/../routes.php'</span>;
+
+<span class="k">try</span> {
+    <span class="n">$response</span> = <span class="n">$router</span>-&gt;<span class="f">dispatch</span>(<span class="n">$request</span>);
+
+} <span class="k">catch</span> (<span class="t">HttpException</span> <span class="n">$e</span>) {
+
+    <span class="c">// Սպասված սխալ՝ 404, 405, 403</span>
+    <span class="n">$response</span> = <span class="t">Response</span>::<span class="f">html</span>(
+        <span class="n">$app</span>-&gt;<span class="f">view</span>()-&gt;<span class="f">page</span>(<span class="s">'pages/error'</span>, [
+            <span class="s">'code'</span>    =&gt; <span class="n">$e</span>-&gt;<span class="n">status</span>,
+            <span class="s">'message'</span> =&gt; <span class="n">$e</span>-&gt;<span class="f">getMessage</span>(),
+        ], (<span class="k">string</span>) <span class="n">$e</span>-&gt;<span class="n">status</span>),
+        <span class="n">$e</span>-&gt;<span class="n">status</span>
+    );
+
+} <span class="k">catch</span> (<span class="t">\Throwable</span> <span class="n">$e</span>) {
+
+    <span class="c">// Անսպասելի սխալ</span>
+    <span class="k">error_log</span>((<span class="k">string</span>) <span class="n">$e</span>);       <span class="c">// ⭐ մանրամասները՝ լոգում</span>
+
+    <span class="n">$debug</span> = (<span class="n">$_ENV</span>[<span class="s">'APP_DEBUG'</span>] ?? <span class="s">'false'</span>) === <span class="s">'true'</span>;
+
+    <span class="n">$response</span> = <span class="t">Response</span>::<span class="f">html</span>(
+        <span class="n">$app</span>-&gt;<span class="f">view</span>()-&gt;<span class="f">page</span>(<span class="s">'pages/error'</span>, [
+            <span class="s">'code'</span>    =&gt; <span class="n">500</span>,
+            <span class="s">'message'</span> =&gt; <span class="n">$debug</span> ? <span class="n">$e</span>-&gt;<span class="f">getMessage</span>() : <span class="s">'Տեխնիկական խնդիր'</span>,
+        ], <span class="s">'500'</span>),
+        <span class="n">500</span>
+    );
+}
+
+<span class="n">$response</span>-&gt;<span class="f">send</span>();</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ահա ամբողջ ծրագրի կմախքը</span>
+      <p>Հարցում → Router → Կոնտրոլեր → Պատասխան → ուղարկում։<br><br>
+      Եվ երկու <code>catch</code>՝ սպասված սխալների և անսպասելիների համար։<br><br>
+      Ամենակարևորը՝ <strong>ամեն սխալ մշակվում է մեկ տեղում</strong>։ Ցանկացած կոնտրոլերում գցված բացառությունը հայտնվում է այստեղ։ Չկա էջ, որտեղ սխալը կվերածվի սպիտակ էկրանի կամ կցուցադրի stack trace օգտագործողին։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag"><code>APP_DEBUG</code>-ը կրիտիկական է</span>
+      <p>Զարգացման ժամանակ <code>$e-&gt;getMessage()</code>-ը էկրանին խնայում է ժամանակ։<br><br>
+      Production-ում այն կարող է պարունակել SQL հարցում, ֆայլերի ուղիներ, բազայի կառուցվածք։<br><br>
+      Դա Դաս 1-ի <code>display_errors</code>-ի և Դաս 9-ի <code>PDOException</code>-ի նույն կանոնն է՝ երրորդ անգամ։ Այս անգամ այն ամրագրված է <strong>մեկ տեղում ամբողջ ծրագրի համար</strong>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Դասարանական</h2>
+
+    <div class="tree">technomarket/
+├── public/
+│   ├── index.php          ← front controller
+│   └── .htaccess
+│
+├── src/
+│   ├── Container.php
+│   ├── View.php
+│   ├── helpers.php
+│   ├── Http/
+│   │   ├── Request.php
+│   │   ├── Response.php
+│   │   └── Router.php
+│   ├── Exceptions/
+│   │   ├── HttpException.php
+│   │   ├── NotFoundException.php
+│   │   └── MethodNotAllowedException.php
+│   ├── Controllers/
+│   │   ├── ProductController.php
+│   │   ├── CartController.php
+│   │   ├── ContactController.php
+│   │   └── AdminController.php
+│   ├── Models/
+│   ├── Repositories/
+│   └── Services/
+│
+├── views/
+├── routes.php
+└── bootstrap.php</div>
+
+    <ol>
+      <li>Ստեղծիր <code>Request</code>-ը <code>fromGlobals()</code>-ով</li>
+      <li>Ստեղծիր <code>Response</code>-ը երեք ֆաբրիկա մեթոդով</li>
+      <li>Ստեղծիր <code>View</code>-ն <code>partial()</code> և <code>page()</code> մեթոդներով</li>
+      <li>Ստեղծիր բացառությունների երեք դասը</li>
+      <li>Փոխիր Router-ը՝ ընդունի <code>Request</code>, վերադարձնի <code>Response</code></li>
+      <li>Ավելացրու <code>Container::make()</code></li>
+      <li>Վերաշարադրիր <code>ProductController</code>-ը դասով</li>
+      <li>Վերաշարադրիր մնացած երեք կոնտրոլերը</li>
+      <li>Թարմացրու <code>routes.php</code>-ը</li>
+      <li>Գրիր նոր <code>public/index.php</code>-ը <code>try/catch</code>-ով</li>
+    </ol>
+
+    <div class="warn note">
+      <span class="tag">Չորս փորձարկում</span>
+      <p><strong>1.</strong> Բոլոր էջերը բացվում են<br>
+      <strong>2.</strong> <code>/product/չկա</code> → 404 էջ, ոչ սպիտակ էկրան<br>
+      <strong>3.</strong> Դիտմամբ գցիր բացառություն կոնտրոլերում → 500 էջ, ոչ կիսատ HTML ⭐<br>
+      <strong>4.</strong> Փոխիր <code>APP_DEBUG=false</code> և կրկնիր → հաղորդագրությունը թաքնվե՞ց</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Երրորդ փորձարկումն է կարևորը</span>
+      <p>Առանց <code>ob_end_clean()</code>-ի <code>View</code>-ում սխալի էջը կհայտնվի կիսատ <code>&lt;div&gt;</code>-ների մեջ։ Կտեսնես երկու header, կոտրված դասավորություն, երբեմն՝ երկու <code>&lt;/html&gt;</code>։<br><br>
+      Փորձարկիր երկու տարբերակով — դա այն դետալն է, որ ձեռնարկներում չկա, բայց իրական նախագծում անմիջապես երևում է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Կատարիր դասարանականի 10 քայլը և չորս փորձարկումը։</li>
+      <li>Ուղարկիր սքրինշոթ 500 էջի՝ <code>APP_DEBUG</code>-ի երկու վիճակում։</li>
+      <li>Ջնջիր <code>ob_end_clean()</code>-ը և ցուցադրիր կիսատ HTML-ի խնդիրը։</li>
+      <li>Ցուցադրիր <code>EXTR_SKIP</code>-ի արժեքը՝ փոխանցելով <code>['file' =&gt; 'x']</code> շաբլոնին։</li>
+      <li>Ավելացրու <code>Response::json()</code>-ի փորձնական ուղի և բացիր բրաուզերում։</li>
+      <li>Հաշվիր՝ քանի՞ տող է <code>ProductController</code>-ը։ Կա՞ SQL կամ HTML դրանում։</li>
+      <li>Ավելացրու <code>/search</code> ուղին և մեթոդ <code>ProductController</code>-ում։</li>
+      <li>Ցուցադրիր lazy resolution-ի արժեքը՝ դիր <code>error_log()</code> ամեն կոնտրոլերի կոնստրուկտորում և հաշվիր, քանիսն են ստեղծվում մեկ հարցումով։</li>
+      <li>Համեմատիր Դաս 10-ի <code>admin/form.php</code>-ը և նոր <code>AdminController</code>-ը։ Ի՞նչ բարելավվեց։</li>
+      <li>Խնդրիր AI-ին վերանայել ճարտարապետությունը։ Ի՞նչ առաջարկեց և համաձա՞յն ես։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դաս</th><th>Պատասխանատվություն</th></tr>
+      <tr><td><code>Request</code></td><td>Մուտքային տվյալներ</td></tr>
+      <tr><td><code>Response</code></td><td>Ելքային տվյալներ</td></tr>
+      <tr><td><code>Router</code></td><td>Ուղի → կոնտրոլեր</td></tr>
+      <tr><td><code>Controller</code></td><td>Կապում է Model-ը և View-ն</td></tr>
+      <tr><td><code>Repository</code></td><td>SQL</td></tr>
+      <tr><td><code>Model</code></td><td>Տվյալներ և կանոններ</td></tr>
+      <tr><td><code>View</code></td><td>HTML</td></tr>
+      <tr><td><code>Container</code></td><td>Հավաքում է օբյեկտները</td></tr>
+    </table>
+    </div>
+
+    <h3>Կոնտրոլերի կանոնները</h3>
+    <div class="tree">✅ Կարդալ Request-ից
+✅ Կանչել Repository
+✅ Վերադարձնել Response
+✅ Գցել բացառություն
+
+❌ SQL
+❌ HTML
+❌ echo
+❌ exit / die
+❌ header()</div>
+
+    <h3>Հարցումի ուղին</h3>
+    <div class="tree">Request::fromGlobals()
+    ▼
+Router::dispatch($request)
+    ▼
+Container::make(Controller)
+    ▼
+$controller->action($request, ...$params)
+    ▼
+Response
+    ▼
+$response->send()</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Կոնտրոլերները դասեր են, ոչ ֆունկցիաներ</li>
+      <li>Կախվածությունները կոնստրուկտորում են</li>
+      <li>Կոնտրոլերում չկա SQL և HTML</li>
+      <li>Կոնտրոլերները վերադարձնում են <code>Response</code></li>
+      <li>Սխալները բացառություններ են, ոչ <code>exit</code></li>
+      <li>Բոլոր բացառությունները մշակվում են մեկ տեղում</li>
+      <li><code>APP_DEBUG</code>-ը կառավարում է սխալի մանրամասները</li>
+      <li>Կոնտրոլերները ստեղծվում են ըստ պահանջի</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ի՞նչ է անում ամեն շերտը</li>
+      <li>Գիտե՞մ, ինչու կոնտրոլերը չի տպում</li>
+      <li>Հասկանո՞ւմ եմ, ինչու բացառություն, ոչ <code>abort()</code></li>
+      <li>Կարո՞ղ եմ բացատրել lazy resolution-ը</li>
+      <li>Գիտե՞մ, ինչու <code>ob_end_clean()</code>-ը պետք է</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Նույնականացում և CSRF — անվտանգության չորրորդ և վերջին դասը։<br><br>
+      Հինգ դաս ասում էինք «ադմինը պաշտպանված չէ»։ Այժմ ֆրեյմվորքն ունի այն ամենը, ինչ պետք է դա շտկելու համար․ մեկ մուտք, ուղիների ցուցակ, կենտրոնացված բացառություններ։<br><br>
+      Կսովորենք <code>password_hash</code>, մուտք և ելք, middleware-ի գաղափարը և CSRF token-ը։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>PHP Բլոկ · Դաս 15 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHP Դաս 14 — Router և front controller</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>PHP Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">PHP Դաս 14 · 2 ժամ · Սեփական MVC 1 / 4</p>
+  <h1>Router և front controller</h1>
+  <p class="lede">Դաս 1-ում ասացինք՝ «ներկառուցված սերվերը չունի <code>.htaccess</code>, ուստի Դաս 14-ի Router-ը չի աշխատի»։ Ահա այդ դասը։</p>
+
+  <div class="facts">
+    <span>Բլոկ 3 · Դաս 14 / 24</span>
+    <span>Սեփական MVC-ի սկիզբը</span>
+    <span>Մեկ մուտք բոլոր հարցումների համար</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ինչո՞ւ մեկ մուտք</li>
+      <li><code>.htaccess</code> և <code>mod_rewrite</code></li>
+      <li>Public թղթապանակ</li>
+      <li>Router՝ ուղիների ցուցակ</li>
+      <li>Դինամիկ հատվածներ՝ <code>/product/{slug}</code></li>
+      <li>404 և 405</li>
+      <li>Հասցեների գեներացում</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ընթացիկ խնդիրը</h2>
+
+    <div class="tree">Հիմա՝ ֆայլ = հասցե
+
+  /index.php              →  index.php
+  /contact.php            →  contact.php
+  /admin/form.php?id=5    →  admin/form.php
+  /cart-add.php           →  cart-add.php
+
+Խնդիրները
+
+  · Հասցեներում երևում է .php-ն
+  · Կառուցվածքը բացահայտում է ֆայլային համակարգը
+  · /product.php?id=5 — վատ SEO, վատ ընթեռնելիություն
+  · Ամեն ֆայլում կրկնվում է bootstrap-ը
+  · Ընդհանուր տրամաբանություն (մուտքի ստուգում)
+    պիտի կրկնվի ամեն ֆայլում ⚠️</div>
+
+    <div class="tree">Ուզում ենք՝ մեկ մուտք
+
+  Ցանկացած հասցե
+        │
+        ▼
+  public/index.php     ← միակ մուտքը
+        │
+   ┌────┴─────┐
+   │  Router  │  ո՞ր կոնտրոլերը կանչել
+   └────┬─────┘
+        ▼
+   Կոնտրոլեր  →  Repository  →  View</div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ սա այդքան կարևոր է</span>
+      <p>Մեկ մուտքը նշանակում է <strong>մեկ տեղ, որտեղ կատարվում է ամեն հարցումի համար ընդհանուր բանը</strong>։<br><br>
+      Սեսիայի սկիզբ, բազայի միացում, սխալների կարգավորում, մուտքի ստուգում, CSRF-ի ստուգում (Դաս 16) — ամեն ինչ մեկ ֆայլում։<br><br>
+      Հիմա, եթե մոռանաս <code>bootstrap.php</code>-ը նոր էջում, այն պարզապես չի աշխատի։ Իսկ եթե Դաս 16-ում մոռանաս մուտքի ստուգումը ադմին էջում — <strong>դա կդառնա խոցելիություն</strong>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Public թղթապանակ</h2>
+
+    <div class="warn note">
+      <span class="tag">Անվտանգության հիմնական քայլ</span>
+      <p>Հիմա <code>.env</code>-ը, <code>src/</code>-ը և <code>vendor/</code>-ը գտնվում են վեբ-արմատում։ Եթե Apache-ի կարգավորումը սխալ լինի, կամ <code>.htaccess</code>-ը չաշխատի, <code>technomarket.test/.env</code>-ը կվերադարձնի <strong>գաղտնաբառը տեքստով</strong>։<br><br>
+      Լուծումը՝ վեբ-սերվերին տալ միայն <code>public/</code>-ը։ Մնացած ամեն ինչը ֆիզիկապես անհասանելի է դրսից։<br><br>
+      Բոլոր ժամանակակից ֆրեյմվորքները այդպես են կառուցված։ Laravel-ում այն կոչվում է հենց <code>public/</code>։</p>
+    </div>
+
+    <div class="tree">technomarket/
+├── public/              ← ՄԻԱՅՆ սա է հասանելի
+│   ├── index.php        ← front controller
+│   ├── .htaccess
+│   ├── css/
+│   ├── js/
+│   └── images/
+│
+├── src/                 ← անհասանելի ✅
+├── views/               ← անհասանելի ✅
+├── vendor/              ← անհասանելի ✅
+├── .env                 ← անհասանելի ✅
+├── routes.php
+└── bootstrap.php</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Laragon — փոխել արմատը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># Laragon → Menu → Apache → sites-enabled
+# → auto.technomarket.test.conf
+
+DocumentRoot "C:/laragon/www/technomarket/public"
+
+&lt;Directory "C:/laragon/www/technomarket/public"&gt;
+    AllowOverride All
+    Require all granted
+&lt;/Directory&gt;
+
+<span class="c"># Ապա՝ Laragon → Reload</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Եթե չի ստացվում</span>
+      <p>Laragon-ում կա ավելի պարզ ձև՝ <strong>Menu → Apache → Document Root → public</strong>։<br><br>
+      Իսկ իրական hosting-ում սովորաբար կա «Document root» դաշտ վահանակում։ Եթե այն չկա (էժան shared hosting), ապա <code>public/</code>-ի պարունակությունը դրվում է <code>public_html</code>-ում, իսկ մնացածը՝ մեկ մակարդակ վերև։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>.htaccess</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>public/.htaccess</div><button class="copy">Պատճենել</button></div>
+<pre><code>&lt;IfModule mod_rewrite.c&gt;
+    RewriteEngine On
+
+    <span class="c"># Եթե ֆայլը կամ թղթապանակը իսկապես կա — տուր այն
+    # (css, js, images)</span>
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    <span class="c"># Մնացած ամեն ինչը → index.php</span>
+    RewriteRule ^ index.php [L]
+&lt;/IfModule&gt;
+
+<span class="c"># Թղթապանակի պարունակությունը չցուցադրել</span>
+Options -Indexes</code></pre>
+    </div>
+
+    <div class="tree">Ինչպես է աշխատում
+
+  GET /product/laptop-pro-14
+        │
+  Apache՝ կա՞ այդպիսի ֆայլ։  → Ոչ
+  Apache՝ կա՞ այդպիսի թղթապանակ։ → Ոչ
+        │
+  → Ուղարկում է public/index.php
+    ԲԱՅՑ հասցեն մնում է անփոփոխ ⭐
+        │
+  $_SERVER['REQUEST_URI'] = '/product/laptop-pro-14'
+
+
+  GET /css/main.css
+        │
+  Apache՝ կա՞ այդպիսի ֆայլ։ → Այո
+        │
+  → Տալիս է ֆայլը ուղիղ, առանց PHP-ի ✅</div>
+
+    <div class="warn note">
+      <span class="tag">Երբ չի աշխատում</span>
+      <p><strong>1. <code>mod_rewrite</code>-ը անջատված է</strong> — Laragon-ում լռելյայն միացված է։ Ստուգիր <code>phpinfo()</code>-ով։<br><br>
+      <strong>2. <code>AllowOverride None</code></strong> — Apache-ը անտեսում է <code>.htaccess</code>-ը ամբողջովին։ Պիտի լինի <code>All</code>։<br><br>
+      <strong>3. Ֆայլի անունը</strong> — <code>.htaccess</code>, ոչ <code>htaccess.txt</code>։ Windows-ը դժվարանում է կետով սկսվող անուն ստեղծել — օգտագործիր խմբագրիչը, ոչ Explorer-ը։<br><br>
+      <strong>4. PHP-ի ներկառուցված սերվեր</strong> — <code>php -S</code>-ը <code>.htaccess</code> չի կարդում ընդհանրապես։ Ահա Դաս 1-ի պատճառը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Router</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Http/Router.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">namespace</span> <span class="t">App\Http</span>;
+
+<span class="k">class</span> <span class="t">Router</span>
+{
+    <span class="c">/** @var array&lt;string, array&lt;string, callable&gt;&gt; */</span>
+    <span class="k">private</span> <span class="k">array</span> <span class="n">$routes</span> = [];
+
+    <span class="k">public function</span> <span class="f">get</span>(<span class="k">string</span> <span class="n">$path</span>, <span class="k">callable</span> <span class="n">$handler</span>): <span class="k">void</span>
+    {
+        <span class="n">$this</span>-&gt;<span class="f">add</span>(<span class="s">'GET'</span>, <span class="n">$path</span>, <span class="n">$handler</span>);
+    }
+
+    <span class="k">public function</span> <span class="f">post</span>(<span class="k">string</span> <span class="n">$path</span>, <span class="k">callable</span> <span class="n">$handler</span>): <span class="k">void</span>
+    {
+        <span class="n">$this</span>-&gt;<span class="f">add</span>(<span class="s">'POST'</span>, <span class="n">$path</span>, <span class="n">$handler</span>);
+    }
+
+    <span class="k">private function</span> <span class="f">add</span>(<span class="k">string</span> <span class="n">$method</span>, <span class="k">string</span> <span class="n">$path</span>, <span class="k">callable</span> <span class="n">$handler</span>): <span class="k">void</span>
+    {
+        <span class="n">$this</span>-&gt;<span class="n">routes</span>[<span class="n">$method</span>][<span class="n">$path</span>] = <span class="n">$handler</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">dispatch</span>(<span class="k">string</span> <span class="n">$method</span>, <span class="k">string</span> <span class="n">$uri</span>): <span class="k">void</span>
+    {
+        <span class="c">// 1. Մաքրում ենք հասցեն</span>
+        <span class="n">$path</span> = <span class="f">parse_url</span>(<span class="n">$uri</span>, <span class="k">PHP_URL_PATH</span>) ?? <span class="s">'/'</span>;
+        <span class="n">$path</span> = <span class="s">'/'</span> . <span class="f">trim</span>(<span class="n">$path</span>, <span class="s">'/'</span>);
+
+        <span class="c">// 2. Ուղիղ համընկնում</span>
+        <span class="k">if</span> (<span class="f">isset</span>(<span class="n">$this</span>-&gt;<span class="n">routes</span>[<span class="n">$method</span>][<span class="n">$path</span>])) {
+            (<span class="n">$this</span>-&gt;<span class="n">routes</span>[<span class="n">$method</span>][<span class="n">$path</span>])();
+            <span class="k">return</span>;
+        }
+
+        <span class="c">// 3. Դինամիկ հատվածներով</span>
+        <span class="k">foreach</span> (<span class="n">$this</span>-&gt;<span class="n">routes</span>[<span class="n">$method</span>] ?? [] <span class="k">as</span> <span class="n">$route</span> =&gt; <span class="n">$handler</span>) {
+
+            <span class="n">$params</span> = <span class="n">$this</span>-&gt;<span class="f">match</span>(<span class="n">$route</span>, <span class="n">$path</span>);
+
+            <span class="k">if</span> (<span class="n">$params</span> !== <span class="k">null</span>) {
+                <span class="n">$handler</span>(...<span class="n">$params</span>);
+                <span class="k">return</span>;
+            }
+        }
+
+        <span class="c">// 4. Ուղին կա՞ ուրիշ մեթոդով</span>
+        <span class="k">foreach</span> (<span class="n">$this</span>-&gt;<span class="n">routes</span> <span class="k">as</span> <span class="n">$m</span> =&gt; <span class="n">$paths</span>) {
+            <span class="k">if</span> (<span class="n">$m</span> === <span class="n">$method</span>) {
+                <span class="k">continue</span>;
+            }
+
+            <span class="k">foreach</span> (<span class="f">array_keys</span>(<span class="n">$paths</span>) <span class="k">as</span> <span class="n">$route</span>) {
+                <span class="k">if</span> (<span class="n">$route</span> === <span class="n">$path</span> || <span class="n">$this</span>-&gt;<span class="f">match</span>(<span class="n">$route</span>, <span class="n">$path</span>) !== <span class="k">null</span>) {
+                    <span class="n">$this</span>-&gt;<span class="f">abort</span>(<span class="n">405</span>, <span class="s">'Մեթոդը թույլատրված չէ'</span>);
+                }
+            }
+        }
+
+        <span class="n">$this</span>-&gt;<span class="f">abort</span>(<span class="n">404</span>, <span class="s">'Էջը չի գտնվել'</span>);
+    }
+
+    <span class="c">/** Վերադարձնում է պարամետրերը կամ null */</span>
+    <span class="k">private function</span> <span class="f">match</span>(<span class="k">string</span> <span class="n">$route</span>, <span class="k">string</span> <span class="n">$path</span>): ?<span class="k">array</span>
+    {
+        <span class="k">if</span> (!<span class="f">str_contains</span>(<span class="n">$route</span>, <span class="s">'{'</span>)) {
+            <span class="k">return</span> <span class="k">null</span>;
+        }
+
+        <span class="c">// /product/{slug} → #^/product/([^/]+)$#</span>
+        <span class="n">$pattern</span> = <span class="f">preg_replace</span>(
+            <span class="s">'#\{[a-z_]+\}#'</span>,
+            <span class="s">'([^/]+)'</span>,
+            <span class="f">preg_quote</span>(<span class="n">$route</span>, <span class="s">'#'</span>)
+        );
+
+        <span class="c">// preg_quote-ը փախցնում է { } — վերականգնում ենք</span>
+        <span class="n">$pattern</span> = <span class="f">str_replace</span>([<span class="s">'\{'</span>, <span class="s">'\}'</span>], [<span class="s">'{'</span>, <span class="s">'}'</span>], <span class="n">$pattern</span>);
+        <span class="n">$pattern</span> = <span class="f">preg_replace</span>(<span class="s">'#\{[a-z_]+\}#'</span>, <span class="s">'([^/]+)'</span>, <span class="n">$pattern</span>);
+
+        <span class="k">if</span> (!<span class="f">preg_match</span>(<span class="s">'#^'</span> . <span class="n">$pattern</span> . <span class="s">'$#u'</span>, <span class="n">$path</span>, <span class="n">$m</span>)) {
+            <span class="k">return</span> <span class="k">null</span>;
+        }
+
+        <span class="f">array_shift</span>(<span class="n">$m</span>);        <span class="c">// առաջինը ամբողջ համընկնումն է</span>
+
+        <span class="k">return</span> <span class="f">array_map</span>(<span class="s">'urldecode'</span>, <span class="n">$m</span>);
+    }
+
+    <span class="k">public function</span> <span class="f">abort</span>(<span class="k">int</span> <span class="n">$code</span>, <span class="k">string</span> <span class="n">$message</span>): <span class="k">never</span>
+    {
+        <span class="k">http_response_code</span>(<span class="n">$code</span>);
+
+        <span class="k">echo</span> <span class="f">render</span>(<span class="s">'layout'</span>, [
+            <span class="s">'title'</span>   =&gt; <span class="n">$code</span> . <span class="s">' — '</span> . <span class="n">$message</span>,
+            <span class="s">'content'</span> =&gt; <span class="f">render</span>(<span class="s">'pages/error'</span>, <span class="f">compact</span>(<span class="s">'code'</span>, <span class="s">'message'</span>)),
+        ]);
+
+        <span class="k">exit</span>;
+    }
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ 405-ի ստուգումը</span>
+      <p>Երբ ուղին կա, բայց մեթոդը սխալ է, <code>404</code>-ը շփոթեցնող է — ծրագրավորողը կմտածի, որ ուղին չկա և կփնտրի տառասխալ։<br><br>
+      <code>405 Method Not Allowed</code>-ը ասում է ուղիղ․ «ուղին ճիշտ է, բայց GET-ի փոխարեն պետք է POST»։<br><br>
+      Դա այն մանրուքն է, որ ժամեր է խնայում ախտորոշման ժամանակ։ Laravel-ը նույնպես տալիս է 405 այս դեպքում։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag"><code>never</code> վերադարձի տիպը</span>
+      <p>PHP 8.1-ից։ Նշանակում է՝ ֆունկցիան <strong>երբեք չի վերադառնում</strong> — կա՛մ <code>exit</code>, կա՛մ բացառություն։<br><br>
+      Օգտակար է, որովհետև IDE-ն և ստատիկ անալիզատորները հասկանում են, որ <code>abort()</code>-ից հետո կոդ չի կատարվի, և չեն զգուշացնում «անհասանելի կոդի» մասին։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Ուղիների ցուցակ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>routes.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="c">/** @var App\Http\Router $router */</span>
+<span class="c">/** @var App\Container $app */</span>
+
+<span class="c">// ---------- Հանրային ----------</span>
+
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/'</span>, <span class="k">fn</span>() =&gt; <span class="f">homePage</span>(<span class="n">$app</span>));
+
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/product/{slug}'</span>, <span class="k">fn</span>(<span class="k">string</span> <span class="n">$slug</span>) =&gt; <span class="f">productPage</span>(<span class="n">$app</span>, <span class="n">$slug</span>));
+
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/category/{slug}'</span>, <span class="k">fn</span>(<span class="k">string</span> <span class="n">$slug</span>) =&gt; <span class="f">categoryPage</span>(<span class="n">$app</span>, <span class="n">$slug</span>));
+
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/contact'</span>,  <span class="k">fn</span>() =&gt; <span class="f">contactForm</span>());
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/contact'</span>, <span class="k">fn</span>() =&gt; <span class="f">contactSubmit</span>());
+
+<span class="c">// ---------- Զամբյուղ ----------</span>
+
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/cart'</span>,         <span class="k">fn</span>() =&gt; <span class="f">cartPage</span>(<span class="n">$app</span>, <span class="n">$cart</span>));
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/cart/add'</span>,    <span class="k">fn</span>() =&gt; <span class="f">cartAdd</span>(<span class="n">$app</span>, <span class="n">$cart</span>));
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/cart/remove'</span>, <span class="k">fn</span>() =&gt; <span class="f">cartRemove</span>(<span class="n">$cart</span>));
+
+<span class="c">// ---------- Ադմին ----------
+// ⚠️ Դեռ առանց պաշտպանության — Դաս 16</span>
+
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/admin'</span>,              <span class="k">fn</span>() =&gt; <span class="f">adminList</span>(<span class="n">$app</span>));
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/admin/create'</span>,       <span class="k">fn</span>() =&gt; <span class="f">adminForm</span>(<span class="n">$app</span>, <span class="k">null</span>));
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/admin/create'</span>,      <span class="k">fn</span>() =&gt; <span class="f">adminSave</span>(<span class="n">$app</span>, <span class="k">null</span>));
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/admin/edit/{id}'</span>,    <span class="k">fn</span>(<span class="k">string</span> <span class="n">$id</span>) =&gt; <span class="f">adminForm</span>(<span class="n">$app</span>, (<span class="k">int</span>) <span class="n">$id</span>));
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/admin/edit/{id}'</span>,   <span class="k">fn</span>(<span class="k">string</span> <span class="n">$id</span>) =&gt; <span class="f">adminSave</span>(<span class="n">$app</span>, (<span class="k">int</span>) <span class="n">$id</span>));
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/admin/delete'</span>,      <span class="k">fn</span>() =&gt; <span class="f">adminDelete</span>(<span class="n">$app</span>));</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>public/index.php — front controller</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">use</span> <span class="t">App\Http\Router</span>;
+
+<span class="k">require_once</span> <span class="n">__DIR__</span> . <span class="s">'/../bootstrap.php'</span>;
+
+<span class="n">$router</span> = <span class="k">new</span> <span class="t">Router</span>();
+
+<span class="k">require</span> <span class="n">__DIR__</span> . <span class="s">'/../routes.php'</span>;
+<span class="k">require</span> <span class="n">__DIR__</span> . <span class="s">'/../src/controllers.php'</span>;
+
+<span class="n">$router</span>-&gt;<span class="f">dispatch</span>(
+    <span class="n">$_SERVER</span>[<span class="s">'REQUEST_METHOD'</span>],
+    <span class="n">$_SERVER</span>[<span class="s">'REQUEST_URI'</span>]
+);</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ուշադրություն՝ ուղիների ցուցակը փաստաթուղթ է</span>
+      <p><code>routes.php</code>-ը կարդալով՝ 30 վայրկյանում հասկանում ես, ինչ էջեր ունի կայքը և ինչ մեթոդներով են դրանք հասանելի։<br><br>
+      Առաջ դրա համար պիտի նայեիր թղթապանակների ծառը և բացեիր ամեն ֆայլ։<br><br>
+      Դա նաև անվտանգության ստուգման կետ է․ մեկ հայացքով երևում է, որ <code>/admin</code>-ը պաշտպանված չէ։ Դաս 16-ում այդ պատկերը կդառնա ակնհայտ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Կոնտրոլերներ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/controllers.php — առայժմ ֆունկցիաներով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">use</span> <span class="t">App\Container</span>;
+
+<span class="k">function</span> <span class="f">homePage</span>(<span class="t">Container</span> <span class="n">$app</span>): <span class="k">void</span>
+{
+    <span class="n">$sort</span>    = <span class="n">$_GET</span>[<span class="s">'sort'</span>] ?? <span class="s">'price_asc'</span>;
+    <span class="n">$page</span>    = <span class="f">max</span>(<span class="n">1</span>, (<span class="k">int</span>) (<span class="n">$_GET</span>[<span class="s">'page'</span>] ?? <span class="n">1</span>));
+    <span class="n">$perPage</span> = <span class="n">12</span>;
+
+    <span class="n">$products</span> = <span class="n">$app</span>-&gt;<span class="f">products</span>()-&gt;<span class="f">findAll</span>(<span class="k">null</span>, <span class="n">$sort</span>, <span class="n">$perPage</span>, (<span class="n">$page</span>-<span class="n">1</span>)*<span class="n">$perPage</span>);
+    <span class="n">$total</span>    = <span class="n">$app</span>-&gt;<span class="f">products</span>()-&gt;<span class="f">count</span>();
+
+    <span class="k">echo</span> <span class="f">render</span>(<span class="s">'layout'</span>, [
+        <span class="s">'title'</span>   =&gt; <span class="s">'ՏեխնոՄարկետ — տեխնիկա Երևանում'</span>,
+        <span class="s">'content'</span> =&gt; <span class="f">render</span>(<span class="s">'pages/home'</span>, <span class="f">compact</span>(<span class="s">'products'</span>, <span class="s">'total'</span>, <span class="s">'sort'</span>, <span class="s">'page'</span>, <span class="s">'perPage'</span>)),
+    ]);
+}
+
+<span class="k">function</span> <span class="f">productPage</span>(<span class="t">Container</span> <span class="n">$app</span>, <span class="k">string</span> <span class="n">$slug</span>): <span class="k">void</span>
+{
+    <span class="n">$product</span> = <span class="n">$app</span>-&gt;<span class="f">products</span>()-&gt;<span class="f">findBySlug</span>(<span class="n">$slug</span>);
+
+    <span class="k">if</span> (<span class="n">$product</span> === <span class="k">null</span>) {
+        <span class="f">abort</span>(<span class="n">404</span>, <span class="s">'Ապրանքը չի գտնվել'</span>);      <span class="c">// ⭐</span>
+    }
+
+    <span class="k">echo</span> <span class="f">render</span>(<span class="s">'layout'</span>, [
+        <span class="s">'title'</span>   =&gt; <span class="n">$product</span>-&gt;<span class="n">name</span> . <span class="s">' — ՏեխնոՄարկետ'</span>,
+        <span class="s">'content'</span> =&gt; <span class="f">render</span>(<span class="s">'pages/product'</span>, <span class="f">compact</span>(<span class="s">'product'</span>)),
+    ]);
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">404-ը կարևոր է, ոչ միայն գեղեցկության համար</span>
+      <p>Առանց <code>abort(404)</code>-ի՝ <code>/product/գոյություն-չունեցող</code>-ը կվերադարձներ դատարկ էջ <strong>200 կոդով</strong>։<br><br>
+      Google-ը դա կինդեքսավորեր որպես վավեր էջ։ Հազարավոր դատարկ էջեր ինդեքսում — դասական SEO խնդիր, որը կոչվում է soft 404։<br><br>
+      Իսկ մոնիտորինգի համակարգերը չէին տեսնի, որ ինչ-որ բան կոտրվել է — 200-ը «ամեն ինչ կարգին է» է նշանակում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Հասցեների գեներացում</h2>
+
+    <div class="warn note">
+      <span class="tag">Խնդիրը, որ ի հայտ կգա շուտով</span>
+      <p>Շաբլոններում գրում ես <code>/product/&lt;?= $p-&gt;slug ?&gt;</code>։ Երեսուն տեղում։<br><br>
+      Վաղը որոշում ես, որ հասցեն պիտի լինի <code>/products/{slug}</code> (հոգնակի)։ Հիմա պիտի գտնես բոլոր երեսուն տեղը։<br><br>
+      Եվ ամենավատը՝ ինչ-որ մեկը կմնա անփոփոխ, և կստացվի կոտրված հղում, որը կհայտնաբերվի ամիսներ անց։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/helpers.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">url</span>(<span class="k">string</span> <span class="n">$path</span>, <span class="k">array</span> <span class="n">$query</span> = []): <span class="k">string</span>
+{
+    <span class="n">$url</span> = <span class="s">'/'</span> . <span class="f">ltrim</span>(<span class="n">$path</span>, <span class="s">'/'</span>);
+
+    <span class="k">if</span> (<span class="n">$query</span> !== []) {
+        <span class="n">$url</span> .= <span class="s">'?'</span> . <span class="f">http_build_query</span>(<span class="n">$query</span>);   <span class="c">// ⭐ ինքն է փախցնում</span>
+    }
+
+    <span class="k">return</span> <span class="n">$url</span>;
+}
+
+<span class="k">function</span> <span class="f">abort</span>(<span class="k">int</span> <span class="n">$code</span>, <span class="k">string</span> <span class="n">$message</span> = <span class="s">''</span>): <span class="k">never</span>
+{
+    <span class="k">http_response_code</span>(<span class="n">$code</span>);
+
+    <span class="k">echo</span> <span class="f">render</span>(<span class="s">'layout'</span>, [
+        <span class="s">'title'</span>   =&gt; (<span class="k">string</span>) <span class="n">$code</span>,
+        <span class="s">'content'</span> =&gt; <span class="f">render</span>(<span class="s">'pages/error'</span>, <span class="f">compact</span>(<span class="s">'code'</span>, <span class="s">'message'</span>)),
+    ]);
+
+    <span class="k">exit</span>;
+}
+
+<span class="k">function</span> <span class="f">redirect</span>(<span class="k">string</span> <span class="n">$path</span>, <span class="k">int</span> <span class="n">$code</span> = <span class="n">303</span>): <span class="k">never</span>
+{
+    <span class="k">header</span>(<span class="s">'Location: '</span> . <span class="f">url</span>(<span class="n">$path</span>), <span class="k">true</span>, <span class="n">$code</span>);
+    <span class="k">exit</span>;
+}
+
+<span class="k">function</span> <span class="f">isCurrent</span>(<span class="k">string</span> <span class="n">$path</span>): <span class="k">bool</span>
+{
+    <span class="n">$current</span> = <span class="f">parse_url</span>(<span class="n">$_SERVER</span>[<span class="s">'REQUEST_URI'</span>], <span class="k">PHP_URL_PATH</span>) ?? <span class="s">'/'</span>;
+
+    <span class="k">return</span> <span class="s">'/'</span> . <span class="f">trim</span>(<span class="n">$current</span>, <span class="s">'/'</span>) === <span class="s">'/'</span> . <span class="f">trim</span>(<span class="n">$path</span>, <span class="s">'/'</span>);
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>շաբլոնում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- Հղումներ --&gt;</span>
+<span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"&lt;?= e($product-&gt;url()) ?&gt;"</span><span class="p">&gt;</span>&lt;?= <span class="f">e</span>(<span class="n">$product</span>-&gt;<span class="n">name</span>) ?&gt;<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Ֆիլտր պարամետրերով --&gt;</span>
+<span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"&lt;?= e(url('/', ['sort' =&gt; 'price_desc'])) ?&gt;"</span><span class="p">&gt;</span>Թանկից էժան<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Ընթացիկ էջի նշում — HTML Դաս 18-ից --&gt;</span>
+<span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"/contact"</span>
+   <span class="p">&lt;?=</span> <span class="f">isCurrent</span>(<span class="s">'/contact'</span>) ? <span class="s">'aria-current="page"'</span> : <span class="s">''</span> <span class="p">?&gt;</span><span class="p">&gt;</span>
+    Կապ
+<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag"><code>aria-current</code>-ը վերադառնում է</span>
+      <p>HTML Դաս 18-ում սովորեցինք, որ ընթացիկ էջը նշվում է <code>aria-current="page"</code>-ով, և CSS-ը ոճավորում է այն առանց լրացուցիչ դասի։<br><br>
+      Այն ժամանակ այն գրում էինք ձեռքով ամեն էջում։ Հիմա սերվերն ինքն է որոշում։<br><br>
+      CSS-ը՝ <code>.menu a[aria-current="page"] { ... }</code> — չի փոխվել ընդհանրապես։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag"><code>http_build_query</code>-ն ապահով է</span>
+      <p>Այն ինքն է կոդավորում պարամետրերը՝ բացատները, հայերենը, հատուկ նիշերը։<br><br>
+      Ձեռքով գրելը՝ <code>'?q=' . $query</code> — վտանգավոր է․ եթե <code>$query</code>-ում լինի <code>&amp;</code> կամ <code>#</code>, հասցեն կկոտրվի, իսկ չակերտի դեպքում կստանաս XSS ատրիբուտում (Դաս 5)։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Դասարանական</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>views/pages/error.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">section</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-100 text-center"</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"error__code"</span><span class="p">&gt;</span>&lt;?= (<span class="k">int</span>) <span class="n">$code</span> ?&gt;<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">h1</span> <span class="f">class</span>=<span class="s">"mb-20"</span><span class="p">&gt;</span>
+                <span class="p">&lt;?=</span> <span class="f">e</span>(<span class="k">match</span> ((<span class="k">int</span>) <span class="n">$code</span>) {
+                    <span class="n">404</span> =&gt; <span class="s">'Էջը չի գտնվել'</span>,
+                    <span class="n">405</span> =&gt; <span class="s">'Մեթոդը թույլատրված չէ'</span>,
+                    <span class="n">500</span> =&gt; <span class="s">'Տեխնիկական խնդիր'</span>,
+                    <span class="k">default</span> =&gt; <span class="s">'Սխալ'</span>,
+                }) <span class="p">?&gt;</span>
+            <span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;?php</span> <span class="k">if</span> (<span class="n">$message</span> !== <span class="s">''</span>): <span class="p">?&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"text-muted mb-30"</span><span class="p">&gt;</span>&lt;?= <span class="f">e</span>(<span class="n">$message</span>) ?&gt;<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+            <span class="p">&lt;?php</span> <span class="k">endif</span>; <span class="p">?&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"/"</span> <span class="f">class</span>=<span class="s">"btn btn--primary"</span><span class="p">&gt;</span>Գլխավոր էջ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.error__code</span> {
+    <span class="f">font-size</span>: <span class="s">clamp</span>(<span class="n">4rem</span>, <span class="n">12vw</span>, <span class="n">8rem</span>);
+    <span class="f">font-weight</span>: <span class="n">700</span>;
+    <span class="f">line-height</span>: <span class="n">1</span>;
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--border</span>);
+    <span class="f">margin-bottom</span>: <span class="n">10px</span>;
+}</code></pre>
+    </div>
+
+    <ol>
+      <li>Ստեղծիր <code>public/</code> և տեղափոխիր <code>css/</code>, <code>js/</code>, <code>images/</code></li>
+      <li>Փոխիր Laragon-ի DocumentRoot-ը</li>
+      <li>Ստեղծիր <code>public/.htaccess</code></li>
+      <li>Գրիր <code>src/Http/Router.php</code>-ը</li>
+      <li>Ստեղծիր <code>routes.php</code>-ը</li>
+      <li>Տեղափոխիր հին էջերի կոդը <code>src/controllers.php</code></li>
+      <li>Գրիր <code>public/index.php</code> front controller-ը</li>
+      <li>Ավելացրու <code>url()</code>, <code>abort()</code>, <code>redirect()</code>, <code>isCurrent()</code></li>
+      <li>Ստեղծիր սխալի էջը</li>
+      <li>Ջնջիր հին <code>contact.php</code>, <code>cart-add.php</code>, <code>admin/</code> ֆայլերը</li>
+    </ol>
+
+    <div class="warn note">
+      <span class="tag">Հինգ պարտադիր փորձարկում</span>
+      <p><strong>1.</strong> <code>/product/laptop-pro-14</code> — աշխատո՞ւմ է<br>
+      <strong>2.</strong> <code>/product/գոյություն-չունի</code> — 404 է, ոչ դատարկ էջ<br>
+      <strong>3.</strong> <code>/cart/add</code> GET-ով բրաուզերում — 405<br>
+      <strong>4.</strong> <code>/css/main.css</code> — բացվում է ուղիղ<br>
+      <strong>5.</strong> <code>/.env</code> — <strong>404 կամ 403, ոչ ֆայլի պարունակություն</strong> ⭐<br><br>
+      Հինգերորդն ամենակարևորն է․ դա ստուգում է, որ public թղթապանակը ճիշտ է կարգավորված։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Կատարիր դասարանականի 10 քայլը և հինգ փորձարկումը։</li>
+      <li>Ուղարկիր սքրինշոթ՝ <code>/.env</code>-ի պատասխանը։</li>
+      <li>Ավելացրու <code>/category/{slug}</code> ուղին և կոնտրոլերը։</li>
+      <li>Ավելացրու <code>/search</code> ուղին <code>?q=</code> պարամետրով։</li>
+      <li>Ցուցադրիր, ինչ կլինի, եթե <code>.htaccess</code>-ից հանես առաջին <code>RewriteCond</code>-ը։ Ինչո՞ւ։</li>
+      <li>Ցուցադրիր 405-ի արժեքը՝ բացիր POST ուղին GET-ով։ Համեմատիր 404-ի հետ։</li>
+      <li>Փոխիր <code>/product/{slug}</code>-ը <code>/products/{slug}</code>-ի։ Քանի՞ ֆայլում պիտի փոխեիր, եթե <code>url()</code>-ը չլիներ։</li>
+      <li>Ավելացրու <code>aria-current</code>-ը մենյուում <code>isCurrent()</code>-ով։</li>
+      <li>Փորձարկիր հայերեն slug՝ <code>/product/նոութբուք</code>։ Աշխատո՞ւմ է <code>urldecode</code>-ը։</li>
+      <li>Խնդրիր AI-ին վերանայել Router-ը անվտանգության տեսանկյունից։ Ի՞նչ գտավ։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է</th></tr>
+      <tr><td><code>$_SERVER['REQUEST_URI']</code></td><td>Ամբողջ հասցեն ⭐</td></tr>
+      <tr><td><code>$_SERVER['REQUEST_METHOD']</code></td><td>GET / POST</td></tr>
+      <tr><td><code>parse_url($u, PHP_URL_PATH)</code></td><td>Միայն ուղին</td></tr>
+      <tr><td><code>http_build_query([...])</code></td><td>Ապահով query ⭐</td></tr>
+      <tr><td><code>http_response_code(404)</code></td><td>Կարգավիճակի կոդ</td></tr>
+      <tr><td><code>never</code></td><td>Ֆունկցիան չի վերադառնում</td></tr>
+      <tr><td><code>$handler(...$params)</code></td><td>Spread օպերատոր</td></tr>
+    </table>
+    </div>
+
+    <h3>Հարցումի ուղին</h3>
+    <div class="tree">Բրաուզեր
+    │  GET /product/laptop-pro-14
+    ▼
+Apache + .htaccess
+    │  ֆայլ չկա → public/index.php
+    ▼
+bootstrap.php
+    │  .env, session, PDO, Container
+    ▼
+Router::dispatch()
+    │  համեմատում է ուղիների հետ
+    ▼
+Կոնտրոլեր
+    │  Repository → Product
+    ▼
+render() → layout → echo</div>
+
+    <h3>Կարգավիճակի կոդեր</h3>
+    <div class="tree">200  OK
+303  See Other      → PRG (Դաս 6)
+404  Not Found      → ուղին չկա
+405  Method Not Allowed → ուղին կա, մեթոդը՝ ոչ
+500  Server Error   → բացառություն</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Վեբ-արմատը <code>public/</code>-ն է</li>
+      <li><code>/.env</code>-ը հասանելի չէ բրաուզերից</li>
+      <li>Ստատիկ ֆայլերը բացվում են ուղիղ</li>
+      <li>Չգտնված ուղին տալիս է 404, ոչ 200</li>
+      <li>Սխալ մեթոդը տալիս է 405</li>
+      <li>Հասցեները գեներացվում են <code>url()</code>-ով</li>
+      <li>Ուղիների ցուցակը մեկ ֆայլում է</li>
+      <li>Հին էջերի ֆայլերը ջնջված են</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչու մեկ մուտք</li>
+      <li>Գիտե՞մ, ինչ է անում առաջին <code>RewriteCond</code>-ը</li>
+      <li>Հասկանո՞ւմ եմ, ինչու <code>public/</code>-ը անվտանգության հարց է</li>
+      <li>Կարո՞ղ եմ բացատրել 404-ի և 405-ի տարբերությունը</li>
+      <li>Գիտե՞մ, ինչու soft 404-ը վնասակար է</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Controller և View — մինի-ֆրեյմվորքի հավաքում։ Կոնտրոլերները ֆունկցիաներից կդառնան դասեր, կհայտնվեն <code>Request</code> և <code>Response</code> օբյեկտները, իսկ <code>render()</code>-ը՝ <code>View</code> դաս։<br><br>
+      Դրանից հետո քո նախագիծը կունենա ճիշտ նույն կառուցվածքը, ինչ Laravel-ը — և Դաս 18-ում կտեսնես, որ ֆրեյմվորքը զարմանք չէ, այլ նույն գաղափարների հասուն տարբերակը։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>PHP Բլոկ · Դաս 14 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>
