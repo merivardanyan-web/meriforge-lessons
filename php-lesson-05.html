@@ -65,11 +65,11 @@
   PHP-ն դուրս է գրում q-ի արժեքը ուղիղ HTML-ի մեջ
         │
   Բրաուզերը ստանում է՝
-        <p>Որոնում՝ <script>alert('XSS')</script></p>
+        <p>Որոնում՝ &lt;script>alert('XSS') &lt;/script&gt;</p>
         │
   Բրաուզերը չգիտի, որ սա օգտագործողի տեքստ էր
         │
-  Այն տեսնում է <script> թեգ  →  ԿԱՏԱՐՈՒՄ Է ԱՅՆ</div>
+  Այն տեսնում է &lt;script> թեգ  →  ԿԱՏԱՐՈՒՄ Է ԱՅՆ</div>
 
     <div class="warn note">
       <span class="tag">Ինչո՞ւ <code>alert</code>-ը լուրջ խնդիր է</span>
