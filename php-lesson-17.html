@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHP Դաս 17 — Սեփական REST API</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>PHP Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">PHP Դաս 17 · 2 ժամ · Սեփական MVC 3 / 3</p>
+  <h1>Սեփական REST API</h1>
+  <p class="lede">JavaScript բլոկում <code>fetch</code>-ը դիմում էր ուրիշների սերվերներին։ Այսօր այն առաջին անգամ կդիմի <strong>քո սերվերին</strong>։ Երկու բլոկները կմիանան մեկ նախագծում։</p>
+
+  <div class="facts">
+    <span>Բլոկ 3 · Դաս 17 / 24</span>
+    <span>JSON · կարգավիճակի կոդեր · CORS</span>
+    <span>Սեփական MVC-ի ավարտը</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ի՞նչ է REST-ը և ինչո՞ւ՝ ռեսուրսներ, ոչ գործողություններ</li>
+      <li>JSON պատասխանի միասնական ձևաչափ</li>
+      <li>Ի՞նչ <strong>չպիտի</strong> երևա API-ում</li>
+      <li>JSON մարմնի ընթերցում</li>
+      <li>Սխալները JSON-ով և HTTP կոդերը</li>
+      <li>CSRF API-ում</li>
+      <li><code>fetch</code>՝ JS բլոկից դեպի քո սերվերը</li>
+      <li>CORS — ե՞րբ է պետք և ե՞րբ՝ ոչ (ծանոթություն)</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>REST-ը՝ ռեսուրսներ, ոչ գործողություններ</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>❌ Գործողությունների անուններ</th><th>✅ Ռեսուրսներ + մեթոդներ</th></tr>
+      <tr><td><code>GET /getProducts</code></td><td><code>GET /api/products</code></td></tr>
+      <tr><td><code>GET /getProductById?id=5</code></td><td><code>GET /api/products/5</code></td></tr>
+      <tr><td><code>POST /addToCart</code></td><td><code>POST /api/cart/items</code></td></tr>
+      <tr><td><code>POST /deleteCartItem</code></td><td><code>DELETE /api/cart/items/5</code></td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Գաղափարը մեկ նախադասությամբ</span>
+      <p><strong>URL-ը ասում է <em>ինչի հետ</em>, HTTP մեթոդը՝ <em>ինչ անել</em>։</strong><br><br>
+      Դաս 6-ի կանոնը՝ GET-ը կարդում է, POST-ը փոխում է, ընդլայնվում է․ <code>PUT</code>/<code>PATCH</code> թարմացնում է, <code>DELETE</code> ջնջում է։<br><br>
+      Առավելությունը՝ API-ն դառնում է կանխատեսելի։ Եթե գիտես, որ կա <code>/api/products</code>, կռահում ես, որ <code>/api/products/5</code>-ը կա։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Մեթոդ</th><th>Ուղի</th><th>Ինչ է անում</th></tr>
+      <tr><td>GET</td><td><code>/api/products</code></td><td>Ցուցակ՝ ֆիլտրով և էջավորմամբ</td></tr>
+      <tr><td>GET</td><td><code>/api/products/{slug}</code></td><td>Մեկ ապրանք</td></tr>
+      <tr><td>GET</td><td><code>/api/cart</code></td><td>Զամբյուղի վիճակը</td></tr>
+      <tr><td>POST</td><td><code>/api/cart/items</code></td><td>Ավելացնել զամբյուղ</td></tr>
+      <tr><td>DELETE</td><td><code>/api/cart/items/{id}</code></td><td>Հանել զամբյուղից</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>JSON պատասխանի ձևաչափ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>միասնական «ծրար»</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Հաջողություն</span>
+{
+    <span class="s">"data"</span>: { <span class="s">"id"</span>: <span class="n">5</span>, <span class="s">"name"</span>: <span class="s">"Նոութբուք Pro 14"</span> },
+    <span class="s">"meta"</span>: { <span class="s">"page"</span>: <span class="n">1</span>, <span class="s">"per_page"</span>: <span class="n">12</span>, <span class="s">"total"</span>: <span class="n">47</span> }
+}
+
+<span class="c">// Սխալ</span>
+{
+    <span class="s">"error"</span>: {
+        <span class="s">"message"</span>: <span class="s">"Տվյալները վավեր չեն"</span>,
+        <span class="s">"errors"</span>: { <span class="s">"qty"</span>: <span class="s">"Քանակը՝ 1-ից 99"</span> }
+    }
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Http/Response.php — նոր մեթոդ, որ խոստացել էինք Դաս 15-ում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">public static function</span> <span class="f">json</span>(<span class="k">array</span> <span class="n">$data</span>, <span class="k">int</span> <span class="n">$status</span> = <span class="n">200</span>): <span class="k">self</span>
+{
+    <span class="k">return</span> <span class="k">new</span> <span class="k">self</span>(
+        <span class="f">json_encode</span>(<span class="n">$data</span>, <span class="k">JSON_UNESCAPED_UNICODE</span> | <span class="k">JSON_THROW_ON_ERROR</span>),
+        <span class="n">$status</span>,
+        [<span class="s">'Content-Type'</span> =&gt; <span class="s">'application/json; charset=utf-8'</span>]
+    );
+}</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Երկու դրոշ</span>
+      <p><code>JSON_UNESCAPED_UNICODE</code>-ը թողնում է հայերենը կարդացվող (<code>"Մոնիտոր"</code>, ոչ <code>"\u0544..."</code>)։ <code>JSON_THROW_ON_ERROR</code>-ը կարևոր է․ առանց դրա կոտրված UTF-8-ի դեպքում <code>json_encode</code>-ը լուռ վերադարձնում է <code>false</code>, և հաճախորդը ստանում է դատարկ պատասխան։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ ծրար, ոչ մերկ զանգված</span>
+      <p><strong>1.</strong> Հաջողությունը միշտ <code>data</code> է, սխալը՝ միշտ <code>error</code>։ JS-ը ստուգում է մեկ բանալի։<br>
+      <strong>2.</strong> Մետատվյալները (էջավորում) ունեն տեղ՝ առանց տվյալները խառնելու։<br>
+      <strong>3.</strong> Վաղը կարող ես ավելացնել <code>links</code> կամ <code>warnings</code>՝ առանց հին հաճախորդներին կոտրելու։<br><br>
+      Սխալների <code>errors</code> բանալիները համընկնում են ֆորմայի դաշտերի անուններին՝ ճիշտ ինչպես Դաս 6-ում։ JS-ը կարող է յուրաքանչյուրը ցույց տալ իր դաշտի կողքին։</p>
+    </div>
+
+    <h3>Ի՞նչ չպիտի երևա API-ում</h3>
+
+    <div class="warn note">
+      <span class="tag">Երբեք <code>json_encode($product)</code> ուղիղ</span>
+      <p>Օբյեկտի <code>public</code> հատկությունները կդառնան JSON։ Այսօր դրանք անվնաս են, բայց վաղը ինչ-որ մեկը կավելացնի <code>costPrice</code> (ինքնարժեք) կամ <code>supplierEmail</code>, և դրանք <strong>ավտոմատ կդառնան հանրային</strong>։<br><br>
+      Այդպես են տեղի ունեցել իրական արտահոսքեր՝ ծրագրավորողը ավելացրել է դաշտ բազայում և չի իմացել, որ API-ն այն հրապարակում է։<br><br>
+      Կանոն՝ <strong>API-ի ձևաչափը հստակ ցանկ է</strong>, ոչ «ամեն ինչ, ինչ կա»։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Models/Product.php — նոր մեթոդ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/** Այն, ինչ թույլ ենք տալիս տեսնել դրսից — բացահայտ ցանկ ⭐ */</span>
+<span class="k">public function</span> <span class="f">toArray</span>(): <span class="k">array</span>
+{
+    <span class="k">return</span> [
+        <span class="s">'id'</span>          =&gt; <span class="n">$this</span>-&gt;<span class="n">id</span>,
+        <span class="s">'name'</span>        =&gt; <span class="n">$this</span>-&gt;<span class="n">name</span>,
+        <span class="s">'slug'</span>        =&gt; <span class="n">$this</span>-&gt;<span class="n">slug</span>,
+        <span class="s">'price'</span>       =&gt; <span class="n">$this</span>-&gt;<span class="n">price</span>,
+        <span class="s">'final_price'</span> =&gt; <span class="n">$this</span>-&gt;<span class="f">finalPrice</span>(),
+        <span class="s">'discount'</span>    =&gt; <span class="n">$this</span>-&gt;<span class="n">discount</span>,
+        <span class="s">'in_stock'</span>    =&gt; <span class="n">$this</span>-&gt;<span class="f">inStock</span>(),     <span class="c">// ⭐ bool, ոչ թիվ</span>
+        <span class="s">'url'</span>         =&gt; <span class="n">$this</span>-&gt;<span class="f">url</span>(),
+        <span class="s">'image'</span>       =&gt; <span class="n">$this</span>-&gt;<span class="f">imageUrl</span>(),
+    ];
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ <code>in_stock</code>, ոչ <code>stock</code></span>
+      <p>Պահեստի ճշգրիտ քանակը մրցակիցը կարող է օգտագործել՝ սկանավորել քո կատալոգը ամեն ժամ և հասկանալ, ինչքան ես վաճառում։<br><br>
+      Հաճախորդին պետք է միայն «կա՞, թե՞ ոչ»։ Տվյալը, որ չի ուղարկվում, չի կարող արտահոսել։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Հիշեցում Դաս 10-ից</span>
+      <p><code>price</code>-ը JSON-ում թիվ է (<code>450000</code>), ոչ տող (<code>"450000.00"</code>)՝ որովհետև <code>Product::fromRow()</code>-ը դեռ Դաս 12-ից փոխարկում է <code>(int)</code>։ Այդ «ավելորդ» փոխարկումը հիմա վճարում է․ JS-ը ստանում է ճիշտ տիպ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>JSON մարմնի ընթերցում</h2>
+
+    <div class="warn note">
+      <span class="tag">Թակարդ, որ ժամեր է խլում</span>
+      <p>Երբ <code>fetch</code>-ը ուղարկում է <code>Content-Type: application/json</code>, PHP-ն <strong><code>$_POST</code>-ը թողնում է դատարկ</strong>։<br><br>
+      <code>$_POST</code>-ը լցվում է միայն <code>application/x-www-form-urlencoded</code> և <code>multipart/form-data</code> ձևաչափերով։ JSON-ը պետք է կարդալ ձեռքով՝ <code>php://input</code>-ից։<br><br>
+      Դա կոտրում է Դաս 15-ի <code>Request</code>-ը, որը կարդում է միայն <code>$_POST</code>։ Լուծում ենք մեկ տեղում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Http/Request.php — փոփոխությունները</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">public function</span> <span class="f">__construct</span>(
+    <span class="k">public</span> <span class="k">readonly</span> <span class="k">string</span> <span class="n">$method</span>,
+    <span class="k">public</span> <span class="k">readonly</span> <span class="k">string</span> <span class="n">$path</span>,
+    <span class="k">private</span> <span class="k">readonly</span> <span class="k">array</span> <span class="n">$query</span>,
+    <span class="k">private</span> <span class="k">readonly</span> <span class="k">array</span> <span class="n">$body</span>,
+    <span class="k">private</span> <span class="k">readonly</span> <span class="k">array</span> <span class="n">$server</span> = [],     <span class="c">// ⭐ նոր՝ վերնագրերի համար</span>
+) {}
+
+<span class="k">public static function</span> <span class="f">fromGlobals</span>(): <span class="k">self</span>
+{
+    <span class="n">$path</span> = <span class="f">parse_url</span>(<span class="n">$_SERVER</span>[<span class="s">'REQUEST_URI'</span>] ?? <span class="s">'/'</span>, <span class="k">PHP_URL_PATH</span>) ?: <span class="s">'/'</span>;
+    <span class="n">$body</span> = <span class="n">$_POST</span>;
+
+    <span class="k">if</span> (<span class="f">str_contains</span>(<span class="n">$_SERVER</span>[<span class="s">'CONTENT_TYPE'</span>] ?? <span class="s">''</span>, <span class="s">'application/json'</span>)) {
+        <span class="n">$raw</span> = <span class="f">file_get_contents</span>(<span class="s">'php://input'</span>);
+
+        <span class="k">if</span> (<span class="n">$raw</span> !== <span class="s">''</span> &amp;&amp; <span class="n">$raw</span> !== <span class="k">false</span>) {
+            <span class="n">$decoded</span> = <span class="f">json_decode</span>(<span class="n">$raw</span>, <span class="k">true</span>);
+
+            <span class="c">// ⭐ Միայն օբյեկտ կամ զանգված։ "5" կամ null-ը վավեր JSON են, բայց մեզ պետք չեն</span>
+            <span class="k">if</span> (!<span class="f">is_array</span>(<span class="n">$decoded</span>)) {
+                <span class="k">throw</span> <span class="k">new</span> <span class="t">HttpException</span>(<span class="s">'Սխալ JSON'</span>, <span class="n">400</span>);
+            }
+
+            <span class="n">$body</span> = <span class="n">$decoded</span>;
+        }
+    }
+
+    <span class="k">return</span> <span class="k">new</span> <span class="k">self</span>(
+        <span class="n">$_SERVER</span>[<span class="s">'REQUEST_METHOD'</span>] ?? <span class="s">'GET'</span>,
+        <span class="s">'/'</span> . <span class="f">trim</span>(<span class="n">$path</span>, <span class="s">'/'</span>),
+        <span class="n">$_GET</span>,
+        <span class="n">$body</span>,
+        <span class="n">$_SERVER</span>,
+    );
+}
+
+<span class="c">/** header('X-CSRF-Token') → $_SERVER['HTTP_X_CSRF_TOKEN'] */</span>
+<span class="k">public function</span> <span class="f">header</span>(<span class="k">string</span> <span class="n">$name</span>): <span class="k">string</span>
+{
+    <span class="n">$key</span> = <span class="s">'HTTP_'</span> . <span class="f">strtoupper</span>(<span class="f">str_replace</span>(<span class="s">'-'</span>, <span class="s">'_'</span>, <span class="n">$name</span>));
+
+    <span class="k">return</span> <span class="f">trim</span>((<span class="k">string</span>) (<span class="n">$this</span>-&gt;<span class="n">server</span>[<span class="n">$key</span>] ?? <span class="s">''</span>));
+}
+
+<span class="k">public function</span> <span class="f">expectsJson</span>(): <span class="k">bool</span>
+{
+    <span class="k">return</span> <span class="f">str_starts_with</span>(<span class="n">$this</span>-&gt;<span class="n">path</span>, <span class="s">'/api/'</span>)
+        || <span class="f">str_contains</span>(<span class="n">$this</span>-&gt;<span class="f">header</span>(<span class="s">'Accept'</span>), <span class="s">'application/json'</span>);
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Արդյունքը</span>
+      <p>Կոնտրոլերները <strong>չեն փոխվում</strong>։ <code>$request-&gt;int('id')</code> և <code>$request-&gt;input('name')</code> աշխատում են նույն կերպ՝ անկախ նրանից՝ տվյալները եկել են HTML ֆորմայից, թե JSON-ից։<br><br>
+      Դա Դաս 15-ում <code>Request</code> օբյեկտի ներդրման հատույցն է․ մուտքի աղբյուրը փոխվեց մեկ տեղում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Սխալները JSON-ով</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Կոդ</th><th>Նշանակություն</th><th>Օրինակ</th></tr>
+      <tr><td><code>200</code></td><td>Հաջողություն</td><td>GET, թարմացում</td></tr>
+      <tr><td><code>201</code></td><td>Ստեղծվեց</td><td>POST՝ նոր պատվեր</td></tr>
+      <tr><td><code>204</code></td><td>Հաջող, առանց մարմնի</td><td>DELETE</td></tr>
+      <tr><td><code>400</code></td><td>Սխալ հարցում</td><td>Կոտրված JSON</td></tr>
+      <tr><td><code>401</code></td><td>Մուտք չկա</td><td>Չնույնականացված</td></tr>
+      <tr><td><code>403</code></td><td>Մուտք կա, իրավունք՝ ոչ</td><td>Մենեջերը փորձում է ադմինի գործողություն</td></tr>
+      <tr><td><code>404</code></td><td>Չկա</td><td>Անհայտ slug</td></tr>
+      <tr><td><code>405</code></td><td>Մեթոդը սխալ է</td><td>GET <code>/api/cart/items</code></td></tr>
+      <tr><td><code>419</code></td><td>CSRF token-ը անվավեր է</td><td>Ժամկետանց էջ</td></tr>
+      <tr><td><code>422</code></td><td>Վավերացումը ձախողվեց ⭐</td><td><code>qty = 500</code></td></tr>
+      <tr><td><code>429</code></td><td>Չափազանց շատ հարցում</td><td>Rate limit</td></tr>
+      <tr><td><code>500</code></td><td>Սերվերի սխալ</td><td>Անսպասելի բացառություն</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">400 թե՞ 422</span>
+      <p><strong>400</strong> — հարցումը իմաստ չունի․ JSON-ը կոտրված է, պարտադիր վերնագիրը բացակայում է։<br>
+      <strong>422</strong> — հարցումը հասկանալի է, բայց <em>արժեքները</em> անընդունելի են․ <code>qty: 500</code>։<br><br>
+      Տարբերությունը կարևոր է JS-ի համար․ 422-ի դեպքում կա <code>errors</code> և այն կարելի է ցույց տալ դաշտերի կողքին։ 400-ի դեպքում դա ծրագրավորողի սխալ է, ոչ օգտագործողի։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Exceptions/ValidationException.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">namespace</span> <span class="t">App\Exceptions</span>;
+
+<span class="k">class</span> <span class="t">ValidationException</span> <span class="k">extends</span> <span class="t">HttpException</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>(
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">array</span> <span class="n">$errors</span>,
+        <span class="k">string</span> <span class="n">$message</span> = <span class="s">'Տվյալները վավեր չեն'</span>,
+    ) {
+        <span class="k">parent</span>::<span class="f">__construct</span>(<span class="n">$message</span>, <span class="n">422</span>);
+    }
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>public/index.php — HTML թե՞ JSON</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">try</span> {
+    <span class="c">// ... Դաս 16-ի երկու ստուգումը և $router-&gt;dispatch() ...</span>
+
+} <span class="k">catch</span> (<span class="t">HttpException</span> <span class="n">$e</span>) {
+
+    <span class="n">$response</span> = <span class="n">$request</span>-&gt;<span class="f">expectsJson</span>()
+        ? <span class="t">Response</span>::<span class="f">json</span>([
+            <span class="s">'error'</span> =&gt; <span class="f">array_filter</span>([
+                <span class="s">'message'</span> =&gt; <span class="n">$e</span>-&gt;<span class="f">getMessage</span>(),
+                <span class="s">'errors'</span>  =&gt; <span class="n">$e</span> <span class="k">instanceof</span> <span class="t">ValidationException</span> ? <span class="n">$e</span>-&gt;<span class="n">errors</span> : <span class="k">null</span>,
+            ]),
+        ], <span class="n">$e</span>-&gt;<span class="n">status</span>)
+        : <span class="t">Response</span>::<span class="f">html</span>(<span class="f">page</span>(<span class="s">'pages/error'</span>, [
+            <span class="s">'code'</span>    =&gt; <span class="n">$e</span>-&gt;<span class="n">status</span>,
+            <span class="s">'message'</span> =&gt; <span class="n">$e</span>-&gt;<span class="f">getMessage</span>(),
+        ], (<span class="k">string</span>) <span class="n">$e</span>-&gt;<span class="n">status</span>), <span class="n">$e</span>-&gt;<span class="n">status</span>);
+
+} <span class="k">catch</span> (<span class="t">\Throwable</span> <span class="n">$e</span>) {
+
+    <span class="k">error_log</span>((<span class="k">string</span>) <span class="n">$e</span>);
+
+    <span class="n">$debug</span>   = (<span class="n">$_ENV</span>[<span class="s">'APP_DEBUG'</span>] ?? <span class="s">'false'</span>) === <span class="s">'true'</span>;
+    <span class="n">$message</span> = <span class="n">$debug</span> ? <span class="n">$e</span>-&gt;<span class="f">getMessage</span>() : <span class="s">'Տեխնիկական խնդիր'</span>;
+
+    <span class="n">$response</span> = <span class="n">$request</span>-&gt;<span class="f">expectsJson</span>()
+        ? <span class="t">Response</span>::<span class="f">json</span>([<span class="s">'error'</span> =&gt; [<span class="s">'message'</span> =&gt; <span class="n">$message</span>]], <span class="n">500</span>)
+        : <span class="t">Response</span>::<span class="f">html</span>(<span class="f">page</span>(<span class="s">'pages/error'</span>, [<span class="s">'code'</span> =&gt; <span class="n">500</span>, <span class="s">'message'</span> =&gt; <span class="n">$message</span>], <span class="s">'500'</span>), <span class="n">500</span>);
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ամենակարևորը՝ սխալն էլ JSON է</span>
+      <p>Եթե API-ի սխալի դեպքում սերվերը վերադարձնի HTML էջ, JS-ի <code>response.json()</code>-ը կգցի <em>«Unexpected token &lt;»</em>՝ մի հաղորդագրություն, որ ոչինչ չի ասում իրական պատճառի մասին։<br><br>
+      Սա JS բլոկի <code>fetch</code>-ի դասերից հայտնի սխալն է, բայց հիմա մենք ենք սերվերի կողմը։ Պատասխանատվությունը մերն է․ <strong>API-ն միշտ պատասխանում է JSON-ով՝ նույնիսկ երբ ամեն ինչ կոտրվել է</strong>։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">500-ի հաղորդագրությունը</span>
+      <p><code>$debug</code>-ը ճիշտ նույն կանոնն է, ինչ Դաս 1, 10 և 15-ում։ Production-ում հաճախորդը տեսնում է «Տեխնիկական խնդիր», իսկ մանրամասները՝ լոգում։ API-ն դրանում բացառություն չէ․ JSON-ի մեջ SQL սխալ արտահոսելը նույնքան վտանգավոր է, որքան էջում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>API կոնտրոլերներ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Controllers/Api/ProductApiController.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">namespace</span> <span class="t">App\Controllers\Api</span>;
+
+<span class="k">use</span> <span class="t">App\Exceptions\NotFoundException</span>;
+<span class="k">use</span> <span class="t">App\Http\Request</span>;
+<span class="k">use</span> <span class="t">App\Http\Response</span>;
+<span class="k">use</span> <span class="t">App\Models\Product</span>;
+<span class="k">use</span> <span class="t">App\Repositories\ProductRepository</span>;
+
+<span class="k">class</span> <span class="t">ProductApiController</span>
+{
+    <span class="k">private const</span> <span class="n">SORTS</span> = [<span class="s">'price_asc'</span>, <span class="s">'price_desc'</span>, <span class="s">'name'</span>, <span class="s">'newest'</span>];
+    <span class="k">private const</span> <span class="n">MAX_PER_PAGE</span> = <span class="n">50</span>;
+
+    <span class="k">public function</span> <span class="f">__construct</span>(
+        <span class="k">private</span> <span class="k">readonly</span> <span class="t">ProductRepository</span> <span class="n">$products</span>,
+    ) {}
+
+    <span class="k">public function</span> <span class="f">index</span>(<span class="t">Request</span> <span class="n">$request</span>): <span class="t">Response</span>
+    {
+        <span class="n">$sort</span>    = <span class="n">$request</span>-&gt;<span class="f">oneOf</span>(<span class="s">'sort'</span>, <span class="k">self</span>::<span class="n">SORTS</span>, <span class="s">'price_asc'</span>);
+        <span class="n">$page</span>    = <span class="f">max</span>(<span class="n">1</span>, <span class="n">$request</span>-&gt;<span class="f">int</span>(<span class="s">'page'</span>, <span class="n">1</span>));
+        <span class="n">$perPage</span> = <span class="f">min</span>(<span class="k">self</span>::<span class="n">MAX_PER_PAGE</span>, <span class="f">max</span>(<span class="n">1</span>, <span class="n">$request</span>-&gt;<span class="f">int</span>(<span class="s">'per_page'</span>, <span class="n">12</span>)));   <span class="c">// ⭐</span>
+
+        <span class="n">$items</span> = <span class="n">$this</span>-&gt;<span class="n">products</span>-&gt;<span class="f">all</span>(<span class="k">null</span>, <span class="n">$sort</span>, <span class="n">$perPage</span>, (<span class="n">$page</span> - <span class="n">1</span>) * <span class="n">$perPage</span>);
+        <span class="n">$total</span> = <span class="n">$this</span>-&gt;<span class="n">products</span>-&gt;<span class="f">count</span>();
+
+        <span class="k">return</span> <span class="t">Response</span>::<span class="f">json</span>([
+            <span class="s">'data'</span> =&gt; <span class="f">array_map</span>(<span class="k">fn</span>(<span class="t">Product</span> <span class="n">$p</span>) =&gt; <span class="n">$p</span>-&gt;<span class="f">toArray</span>(), <span class="n">$items</span>),
+            <span class="s">'meta'</span> =&gt; [
+                <span class="s">'page'</span>      =&gt; <span class="n">$page</span>,
+                <span class="s">'per_page'</span> =&gt; <span class="n">$perPage</span>,
+                <span class="s">'total'</span>    =&gt; <span class="n">$total</span>,
+                <span class="s">'last_page'</span> =&gt; (<span class="k">int</span>) <span class="f">ceil</span>(<span class="n">$total</span> / <span class="n">$perPage</span>),
+            ],
+        ]);
+    }
+
+    <span class="k">public function</span> <span class="f">show</span>(<span class="t">Request</span> <span class="n">$request</span>, <span class="k">string</span> <span class="n">$slug</span>): <span class="t">Response</span>
+    {
+        <span class="n">$product</span> = <span class="n">$this</span>-&gt;<span class="n">products</span>-&gt;<span class="f">findBySlug</span>(<span class="n">$slug</span>)
+            ?? <span class="k">throw</span> <span class="k">new</span> <span class="t">NotFoundException</span>(<span class="s">'Ապրանքը չի գտնվել'</span>);
+
+        <span class="k">return</span> <span class="t">Response</span>::<span class="f">json</span>([<span class="s">'data'</span> =&gt; <span class="n">$product</span>-&gt;<span class="f">toArray</span>()]);
+    }
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Երեք դետալ այս կոդում</span>
+      <p><strong>1. <code>min(MAX_PER_PAGE, ...)</code></strong> — առանց վերին սահմանի <code>?per_page=1000000</code>-ը կբեռնի ամբողջ աղյուսակը հիշողություն։ Դա ամենաէժան ծանրաբեռնման հարձակումն է։ Նույն կանոնը, ինչ Դաս 7-ի <code>min($qty, 99)</code>-ում։<br><br>
+      <strong>2. <code>array_map</code> վերադարձնում է ցուցակ</strong> — և հենց այստեղ փակվում է Դաս 3-ի խոստումը։ Եթե փոխարենը օգտագործեինք <code>array_filter</code>, բանալիները կմնային բացերով, և <code>json_encode</code>-ը կվերածեր <code>data</code>-ն օբյեկտի <code>{"0": ..., "2": ...}</code>։ JS-ի <code>.map()</code>-ը կկոտրվեր։ Ահա թե ինչու էինք այդ դասում սովորում <code>array_values</code>։<br><br>
+      <strong>3. <code>?? throw</code></strong> — PHP 8-ից <code>throw</code>-ը արտահայտություն է։ Մեկ տողում՝ «գտիր, կամ գցիր 404»։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Controllers/Api/CartApiController.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="t">CartApiController</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>(
+        <span class="k">private</span> <span class="k">readonly</span> <span class="t">ProductRepository</span> <span class="n">$products</span>,
+        <span class="k">private</span> <span class="k">readonly</span> <span class="t">Cart</span> <span class="n">$cart</span>,
+    ) {}
+
+    <span class="k">public function</span> <span class="f">add</span>(<span class="t">Request</span> <span class="n">$request</span>): <span class="t">Response</span>
+    {
+        <span class="n">$id</span>  = <span class="n">$request</span>-&gt;<span class="f">int</span>(<span class="s">'id'</span>);
+        <span class="n">$qty</span> = <span class="n">$request</span>-&gt;<span class="f">int</span>(<span class="s">'qty'</span>, <span class="n">1</span>);
+
+        <span class="n">$errors</span> = [];
+
+        <span class="k">if</span> (<span class="n">$qty</span> &lt; <span class="n">1</span> || <span class="n">$qty</span> &gt; <span class="n">99</span>) {
+            <span class="n">$errors</span>[<span class="s">'qty'</span>] = <span class="s">'Քանակը՝ 1-ից 99'</span>;
+        }
+
+        <span class="n">$product</span> = <span class="n">$this</span>-&gt;<span class="n">products</span>-&gt;<span class="f">find</span>(<span class="n">$id</span>);
+
+        <span class="k">if</span> (<span class="n">$product</span> === <span class="k">null</span>) {
+            <span class="k">throw</span> <span class="k">new</span> <span class="t">NotFoundException</span>(<span class="s">'Ապրանքը չի գտնվել'</span>);
+        }
+
+        <span class="k">if</span> (!<span class="n">$product</span>-&gt;<span class="f">inStock</span>()) {
+            <span class="n">$errors</span>[<span class="s">'id'</span>] = <span class="s">'Ապրանքը առկա չէ'</span>;
+        }
+
+        <span class="k">if</span> (<span class="n">$errors</span> !== []) {
+            <span class="k">throw</span> <span class="k">new</span> <span class="t">ValidationException</span>(<span class="n">$errors</span>);
+        }
+
+        <span class="n">$this</span>-&gt;<span class="n">cart</span>-&gt;<span class="f">add</span>(<span class="n">$id</span>, <span class="n">$qty</span>);
+
+        <span class="k">return</span> <span class="t">Response</span>::<span class="f">json</span>([
+            <span class="s">'data'</span> =&gt; [
+                <span class="s">'count'</span>   =&gt; <span class="n">$this</span>-&gt;<span class="n">cart</span>-&gt;<span class="f">count</span>(),
+                <span class="s">'message'</span> =&gt; <span class="s">'Ավելացվեց՝ '</span> . <span class="n">$product</span>-&gt;<span class="n">name</span>,
+            ],
+        ]);
+    }
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Բիզնես-կանոնը մնում է սերվերում</span>
+      <p>JS-ը կարող է թաքցնել «Գնել» կոճակը, երբ ապրանքը առկա չէ։ Դա UX է (Դաս 6-ի <code>required</code>-ի պես)։<br><br>
+      Բայց <code>curl</code>-ը JS չի տեսնում։ Ստուգումը <code>inStock()</code> և <code>qty</code>-ի համար պիտի լինի <strong>այստեղ</strong>։ Երբ API-ն հասանելի է, ամեն վալիդացիա, որ կա միայն JS-ում, գոյություն չունի։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>routes.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// bootstrap.php</span>
+<span class="n">$productApi</span> = <span class="k">new</span> <span class="t">ProductApiController</span>(<span class="n">$products</span>);
+<span class="n">$cartApi</span>    = <span class="k">new</span> <span class="t">CartApiController</span>(<span class="n">$products</span>, <span class="n">$cart</span>);
+
+<span class="c">// routes.php</span>
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/api/products'</span>,         [<span class="n">$productApi</span>, <span class="s">'index'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/api/products/{slug}'</span>,  [<span class="n">$productApi</span>, <span class="s">'show'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/api/cart/items'</span>,       [<span class="n">$cartApi</span>, <span class="s">'add'</span>]);</code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>CSRF API-ում</h2>
+
+    <div class="warn note">
+      <span class="tag">«API-ն JSON է, ուրեմն CSRF չկա» — սխալ պատկերացում</span>
+      <p>Եթե API-ն օգտագործում է <strong>սեսիայի cookie</strong>, բրաուզերը այն կուղարկի ամեն հարցումի հետ, նույնիսկ հարձակվողի էջից։ Դաս 16-ի սցենարն անփոփոխ աշխատում է։<br><br>
+      Մի փոքր քողարկում կա․ ուրիշ դոմենից <code>Content-Type: application/json</code>-ով հարցումը պահանջում է preflight (բաժին 08), ուստի հարձակումը ավելի դժվար է։ Բայց հարձակվողը կարող է ուղարկել <code>text/plain</code> տիպով ֆորմա, իսկ եթե սերվերը <code>php://input</code>-ը վերծանում է առանց Content-Type-ը ստուգելու՝ այն կանցնի։<br><br>
+      Մեր <code>Request</code>-ը ստուգում է <code>application/json</code>-ը, ինչը օգնում է, բայց <strong>պաշտպանությունը չպիտի հիմնվի այդ մանրուքի վրա</strong>։ Token-ը մնում է պարտադիր։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>public/index.php — Դաս 16-ի CSRF ստուգումը, թարմացված</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Անվտանգ մեթոդները վիճակ չեն փոխում</span>
+<span class="k">if</span> (!<span class="f">in_array</span>(<span class="n">$request</span>-&gt;<span class="n">method</span>, [<span class="s">'GET'</span>, <span class="s">'HEAD'</span>, <span class="s">'OPTIONS'</span>], <span class="k">true</span>)) {
+
+    <span class="c">// Ֆորմայից՝ _token դաշտ։ JS-ից՝ X-CSRF-Token վերնագիր ⭐</span>
+    <span class="n">$token</span> = <span class="n">$request</span>-&gt;<span class="f">input</span>(<span class="s">'_token'</span>) ?: <span class="n">$request</span>-&gt;<span class="f">header</span>(<span class="s">'X-CSRF-Token'</span>);
+
+    <span class="k">if</span> (!<span class="f">csrf_verify</span>(<span class="n">$token</span>)) {
+        <span class="k">throw</span> <span class="k">new</span> <span class="t">HttpException</span>(<span class="s">'Ձևաթուղթը ժամկետանց է։ Թարմացրեք էջը։'</span>, <span class="n">419</span>);
+    }
+}</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչու ստուգումը հիմա ընդգրկում է <code>DELETE</code> և <code>PUT</code></span>
+      <p>Դաս 16-ում ստուգում էինք միայն POST։ Բայց REST API-ում վիճակը փոխում են նաև <code>PUT</code>, <code>PATCH</code> և <code>DELETE</code>։ Հիմա պայմանն է՝ <strong>ամեն ինչ, ինչ GET չէ</strong>։<br><br>
+      Եվ այդպես մոռացված մեթոդը չի դառնում բաց դուռ։</p>
+    </div>
+
+    <h3>Token-ը JS-ին հասցնելը</h3>
+    <p>JS-ը չի կարող կարդալ սեսիան։ Ուստի token-ը դնում ենք էջի <code>&lt;head&gt;</code>-ում, որտեղից <code>cart.js</code>-ը այն կվերցնի։ Դաս 16-ի <code>csrf_token()</code>-ը գլոբալ ֆունկցիա է, ուստի այն հասանելի է ամեն շաբլոնում։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>views/layout.php — head-ում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">meta</span> <span class="f">name</span>=<span class="s">"csrf-token"</span> <span class="f">content</span>=<span class="s">"&lt;?= e(csrf_token()) ?&gt;"</span><span class="p">&gt;</span></code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Fetch՝ դեպի քո սերվերը</h2>
+
+    <div class="tip note">
+      <span class="tag">Երկու բլոկի հանդիպման կետը</span>
+      <p>JS բլոկի դասերում <code>fetch</code>-ը կարդում էր ուրիշների տվյալներ և կառուցում էջեր։ Այսօր այն ուղարկում է պատվեր քո սեփական <code>CartApiController</code>-ին, որը հենց դու գրեցիր։<br><br>
+      Եվ առաջին անգամ երկու կողմերն էլ քոնն են՝ սխալը կարող ես փնտրել և՛ <code>Network</code> ներդիրում, և՛ <code>error_log</code>-ում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>public/js/cart.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> <span class="n">csrf</span> = <span class="t">document</span>.<span class="f">querySelector</span>(<span class="s">'meta[name="csrf-token"]'</span>)?.<span class="n">content</span> ?? <span class="s">''</span>;
+
+<span class="k">async function</span> <span class="f">addToCart</span>(<span class="n">id</span>, <span class="n">qty</span> = <span class="n">1</span>) {
+    <span class="k">const</span> <span class="n">response</span> = <span class="k">await</span> <span class="f">fetch</span>(<span class="s">'/api/cart/items'</span>, {
+        <span class="n">method</span>: <span class="s">'POST'</span>,
+        <span class="n">headers</span>: {
+            <span class="s">'Content-Type'</span>: <span class="s">'application/json'</span>,
+            <span class="s">'Accept'</span>: <span class="s">'application/json'</span>,
+            <span class="s">'X-CSRF-Token'</span>: <span class="n">csrf</span>,
+        },
+        <span class="n">body</span>: <span class="t">JSON</span>.<span class="f">stringify</span>({ <span class="n">id</span>, <span class="n">qty</span> }),
+    });
+
+    <span class="k">const</span> <span class="n">payload</span> = <span class="k">await</span> <span class="n">response</span>.<span class="f">json</span>();
+
+    <span class="c">// ⭐ fetch-ը 4xx/5xx-ի դեպքում ՉԻ գցում սխալ — պիտի ստուգել ok-ը</span>
+    <span class="k">if</span> (!<span class="n">response</span>.<span class="n">ok</span>) {
+        <span class="k">const</span> <span class="n">error</span> = <span class="k">new</span> <span class="f">Error</span>(<span class="n">payload</span>.<span class="n">error</span>?.<span class="n">message</span> ?? <span class="s">'Սխալ'</span>);
+        <span class="n">error</span>.<span class="n">details</span> = <span class="n">payload</span>.<span class="n">error</span>?.<span class="n">errors</span> ?? {};
+        <span class="k">throw</span> <span class="n">error</span>;
+    }
+
+    <span class="k">return</span> <span class="n">payload</span>.<span class="n">data</span>;
+}
+
+<span class="t">document</span>.<span class="f">addEventListener</span>(<span class="s">'submit'</span>, <span class="k">async</span> (<span class="n">event</span>) =&gt; {
+    <span class="k">const</span> <span class="n">form</span> = <span class="n">event</span>.<span class="n">target</span>;
+
+    <span class="k">if</span> (!<span class="n">form</span>.<span class="f">matches</span>(<span class="s">'form[data-cart-add]'</span>)) {
+        <span class="k">return</span>;
+    }
+
+    <span class="n">event</span>.<span class="f">preventDefault</span>();
+
+    <span class="k">const</span> <span class="n">button</span> = <span class="n">form</span>.<span class="f">querySelector</span>(<span class="s">'button'</span>);
+    <span class="n">button</span>.<span class="n">disabled</span> = <span class="k">true</span>;
+
+    <span class="k">try</span> {
+        <span class="k">const</span> <span class="n">data</span> = <span class="k">await</span> <span class="f">addToCart</span>(<span class="t">Number</span>(<span class="n">form</span>.<span class="n">elements</span>.<span class="n">id</span>.<span class="n">value</span>));
+
+        <span class="t">document</span>.<span class="f">querySelector</span>(<span class="s">'[data-cart-count]'</span>).<span class="n">textContent</span> = <span class="n">data</span>.<span class="n">count</span>;
+        <span class="t">document</span>.<span class="f">querySelector</span>(<span class="s">'#cart-status'</span>).<span class="n">textContent</span> = <span class="n">data</span>.<span class="n">message</span>;   <span class="c">// ⭐ էկրանընթերցիչի համար</span>
+
+    } <span class="k">catch</span> (<span class="n">error</span>) {
+        <span class="c">// Եթե ինչ-որ բան այն չէ՝ թողնում ենք սովորական ֆորմային</span>
+        <span class="n">form</span>.<span class="f">submit</span>();
+
+    } <span class="k">finally</span> {
+        <span class="n">button</span>.<span class="n">disabled</span> = <span class="k">false</span>;
+    }
+});</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>շաբլոնում՝ HTML-ը գրեթե չի փոխվում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">form</span> <span class="f">method</span>=<span class="s">"post"</span> <span class="f">action</span>=<span class="s">"/cart/add"</span> <span class="f">data-cart-add</span><span class="p">&gt;</span>
+    <span class="p">&lt;?=</span> <span class="f">csrf_field</span>() <span class="p">?&gt;</span>
+    <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"hidden"</span> <span class="f">name</span>=<span class="s">"id"</span> <span class="f">value</span>=<span class="s">"&lt;?= $p-&gt;id ?&gt;"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"btn btn--primary btn--sm"</span><span class="p">&gt;</span>Գնել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">form</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- layout-ում՝ մեկ անգամ --&gt;</span>
+<span class="p">&lt;</span><span class="t">p</span> <span class="f">id</span>=<span class="s">"cart-status"</span> <span class="f">class</span>=<span class="s">"visually-hidden"</span> <span class="f">role</span>=<span class="s">"status"</span><span class="p">&gt;&lt;/</span><span class="t">p</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Progressive enhancement</span>
+      <p>Ֆորման աշխատում է <strong>առանց JS-ի</strong>՝ սովորական POST և redirect (Դաս 7)։ JS-ը միայն բարելավում է փորձը՝ առանց էջի վերբեռնման։<br><br>
+      Եթե JS-ը չբեռնվեց, եթե <code>fetch</code>-ը ձախողվեց, եթե token-ը ժամկետանց է — <code>form.submit()</code>-ը վերադարձնում է սովորական ուղին, որն արդեն ունի իր սխալների էջը։ Օգտագործողը երբեք չի մնում դատարկ կոճակի առաջ։<br><br>
+      Երկու ուղին էլ կանչում են նույն <code>Cart</code> ծառայությունը, ուստի կանոնները (<code>min(99)</code>) մեկ տեղում են։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Հասանելիություն՝ <code>role="status"</code></span>
+      <p>Երբ կոճակը սեղմվում է և հաշվիչը փոխվում է առանց էջի վերբեռնման, <strong>կույր օգտագործողը ոչինչ չի լսում</strong>։ Տեսողական փոփոխությունը նրա համար գոյություն չունի։<br><br>
+      <code>role="status"</code>-ով տարրի տեքստի փոփոխությունը էկրանընթերցիչը կարդում է ինքնաբերաբար։ Ինչը խոստացել էինք HTML բլոկում․ JS-ով թարմացվող ամեն բան հայտարարվում է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>CORS</h2>
+
+    <div class="tree">Same-origin policy
+
+  Էջը՝  https://technomarket.test
+  API՝  https://technomarket.test/api/...   ← նույն origin ✅
+
+  Origin = սխեմա + դոմեն + պորտ
+
+  https://technomarket.test:443    նույն
+  http://technomarket.test         ուրիշ (սխեմա)
+  https://api.technomarket.test    ուրիշ (դոմեն)
+  https://technomarket.test:8000   ուրիշ (պորտ)</div>
+
+    <div class="tip note">
+      <span class="tag">Մեր դեպքում CORS-ը պետք չէ</span>
+      <p>JS-ը և API-ն նույն դոմենում են։ Բրաուզերը ոչինչ չի արգելում։ Հետևաբար <strong>CORS վերնագրեր ավելացնելու կարիք չկա</strong>։<br><br>
+      Ամենահաճախ սխալը՝ սկսնակը ստանում է «CORS error» իր <em>առանձին</em> React հավելվածից (<code>localhost:3000</code>) դեպի API (<code>technomarket.test</code>), «լուծում է» <code>Access-Control-Allow-Origin: *</code>-ով և մոռանում։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչ է իրականում CORS-ը</span>
+      <p>Դա <strong>սերվերի թույլտվությունն է բրաուզերին</strong>․ «այս ուրիշ դոմենից եկած JS-ին թույլ է տրվում կարդալ իմ պատասխանը»։<br><br>
+      Այն պաշտպանում է <em>օգտագործողին</em>, ոչ սերվերին։ <code>curl</code>-ին CORS-ը չի վերաբերում ընդհանրապես։ Ուստի CORS-ը <strong>անվտանգություն չէ API-ի համար</strong>՝ այն չի խանգարում որևէ մեկին կանչել քո API-ն ուղղակի։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Խորացված · եթե իսկապես պետք է՝ սպիտակ ցուցակ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="n">$allowed</span> = [<span class="s">'https://app.technomarket.am'</span>];
+<span class="n">$origin</span>  = <span class="n">$request</span>-&gt;<span class="f">header</span>(<span class="s">'Origin'</span>);
+
+<span class="k">if</span> (<span class="f">in_array</span>(<span class="n">$origin</span>, <span class="n">$allowed</span>, <span class="k">true</span>)) {      <span class="c">// ⭐ Դաս 6-ի օրինաչափությունը</span>
+    <span class="k">header</span>(<span class="s">"Access-Control-Allow-Origin: {<span class="n">$origin</span>}"</span>);
+    <span class="k">header</span>(<span class="s">'Access-Control-Allow-Headers: Content-Type, X-CSRF-Token'</span>);
+    <span class="k">header</span>(<span class="s">'Access-Control-Allow-Methods: GET, POST, DELETE'</span>);
+    <span class="k">header</span>(<span class="s">'Vary: Origin'</span>);
+}
+
+<span class="c">// Preflight՝ բրաուզերը նախ հարցնում է OPTIONS-ով</span>
+<span class="k">if</span> (<span class="n">$request</span>-&gt;<span class="n">method</span> === <span class="s">'OPTIONS'</span>) {
+    <span class="k">return</span> <span class="k">new</span> <span class="t">Response</span>(<span class="s">''</span>, <span class="n">204</span>);
+}</code></pre>
+    </div>
+
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Դասարանական</h2>
+
+    <ol>
+      <li>Ավելացրու <code>Response::json()</code> և <code>Product::toArray()</code> բացահայտ ցանկով</li>
+      <li>Փոխիր <code>Request</code>-ը՝ JSON մարմին, <code>header()</code>, <code>expectsJson()</code>, և ստեղծիր <code>ValidationException</code></li>
+      <li>Փոխիր <code>public/index.php</code>-ի <code>catch</code> բլոկները և CSRF ստուգումը</li>
+      <li>Գրիր <code>ProductApiController</code>-ը և <code>CartApiController</code>-ը, ավելացրու API ուղիները</li>
+      <li>Ավելացրու <code>csrf-token</code> meta-ն, գրիր <code>cart.js</code>-ը և միացրու այն layout-ում <code>defer</code>-ով</li>
+    </ol>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>փորձարկում տերմինալից</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># 1. Ցուցակ — կոդը և ձևաչափը</span>
+curl -i "https://technomarket.test/api/products?per_page=2"
+
+<span class="c"># 2. Անհայտ ապրանք — 404 JSON-ով, ոչ HTML</span>
+curl -i https://technomarket.test/api/products/չկա
+
+<span class="c"># 3. Չգոյություն ունեցող ուղի — 404 JSON-ով (405՝ եթե Դաս 15-ի խորացված տնայինն արել ես)</span>
+curl -i -X DELETE https://technomarket.test/api/products
+
+<span class="c"># 4. POST առանց token-ի — պիտի լինի 419 ⭐</span>
+curl -i -X POST https://technomarket.test/api/cart/items \
+     -H "Content-Type: application/json" \
+     -d '{"id":1,"qty":2}'
+
+<span class="c"># 5. Կոտրված JSON — 400</span>
+curl -i -X POST https://technomarket.test/api/cart/items \
+     -H "Content-Type: application/json" \
+     -d '{id:1'
+
+<span class="c"># 6. per_page-ի սահման</span>
+curl "https://technomarket.test/api/products?per_page=100000"</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Չորրորդը ամենակարևորն է</span>
+      <p><code>curl</code>-ը դեռ չունի սեսիա կամ token։ Պատասխանը <code>419</code> է՝ ճիշտ այն, ինչ պետք է։ Դա ապացուցում է, որ <strong>API-ն ինքն է իրեն պաշտպանում</strong>, ոչ թե կախված է նրանից, թե ինչպես է JS-ը գրված։<br><br>
+      Հինգերորդում նայիր ոչ միայն կոդը, այլ նաև <code>Content-Type</code> վերնագիրը․ <code>application/json</code>, ոչ <code>text/html</code>։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">DevTools → Network</span>
+      <p>Սեղմիր «Գնել» և բացիր <code>Network</code> ներդիրը։ Կտեսնես <code>POST /api/cart/items</code>՝ <code>Request Headers</code>-ում <code>X-CSRF-Token</code>, <code>Payload</code>-ում JSON, <code>Response</code>-ում <code>{"data":{"count":1,...}}</code>։<br><br>
+      Ամբողջ հարցումի ուղին հիմա երևում է երկու կողմերից՝ ճիշտ այն, ինչը չէր երևում Դաս 1-ում, երբ «PHP-ն HTML գեներատոր էր»։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ավարտիր դասարանականի 5 քայլը և վեց <code>curl</code> փորձարկումը։ Ուղարկիր սքրինշոթներ։</li>
+      <li>Ավելացրու <code>GET /api/cart</code>՝ վերադարձնում է զամբյուղի տողերը գումարով։ Օգտագործիր <code>findMany</code>-ը (Դաս 14)։</li>
+      <li>Ավելացրու <code>DELETE /api/cart/items/{id}</code> և ստուգիր, որ առանց token-ի 419 է։</li>
+      <li>Ցուցադրիր <code>$_POST</code>-ի դատարկության թակարդը՝ <code>var_dump($_POST)</code> JSON հարցումի ժամանակ։</li>
+      <li>Ցուցադրիր, ինչ կլինի, եթե <code>toArray()</code>-ի փոխարեն օգտագործես <code>json_encode($product)</code>։ Ավելացրու <code>public $costPrice</code> և տես։</li>
+      <li>Փոխիր <code>array_map</code>-ը <code>array_filter</code>-ով և ցուցադրիր, ինչպես է <code>data</code>-ն դառնում օբյեկտ։</li>
+      <li><em>Խորացված․</em> գրիր <code>/api/products?q=...</code> որոնում և JS ֆայլ՝ debounce-ով, որը թարմացնում է ցուցակը ինչպես JS բլոկի որոնման դասում։</li>
+      <li>Անջատիր JS-ը DevTools-ում և ստուգիր, որ «Գնել» կոճակը դեռ աշխատում է։</li>
+      <li>Փորձիր <code>?per_page=-5</code> և <code>?page=abc</code>։ Ի՞նչ է վերադարձնում API-ն։</li>
+      <li>Խնդրիր AI-ին վերանայել API-ը անվտանգության տեսանկյունից (Դաս 4-ի «վերանայման» ռեժիմով, առանց վերաշարադրելու)։ Ի՞նչ գտավ։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է</th></tr>
+      <tr><td><code>Response::json([...], 200)</code></td><td>JSON պատասխան</td></tr>
+      <tr><td><code>file_get_contents('php://input')</code></td><td>JSON մարմին ⭐</td></tr>
+      <tr><td><code>JSON_THROW_ON_ERROR</code></td><td>Կոտրված JSON-ը չի լռում</td></tr>
+      <tr><td><code>$request-&gt;header('X-CSRF-Token')</code></td><td>Վերնագիր</td></tr>
+      <tr><td><code>toArray()</code></td><td>Բացահայտ ցանկ ⭐</td></tr>
+      <tr><td><code>422</code> + <code>errors</code></td><td>Վավերացման սխալ</td></tr>
+      <tr><td><code>response.ok</code> (JS)</td><td><code>fetch</code>-ը 4xx-ում չի գցում ⭐</td></tr>
+    </table>
+    </div>
+
+    <h3>API-ի կանոնները</h3>
+    <div class="tree">1. Միշտ JSON — նույնիսկ սխալի դեպքում
+2. Բացահայտ ցանկ՝ ինչ ենք տալիս դրսին
+3. Վերին սահման ամեն թվային պարամետրի
+4. Բիզնես-կանոնները սերվերում, ոչ JS-ում
+5. CSRF token ամեն փոփոխող հարցման
+6. Ճիշտ կարգավիճակի կոդ (404, 422, 419)
+7. CORS-ը անվտանգություն չէ</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>API-ն միշտ պատասխանում է JSON-ով, նույնիսկ սխալի դեպքում</li>
+      <li>Ձևաչափը ունի <code>data</code> / <code>error</code> ծրար</li>
+      <li><code>toArray()</code>-ը բացահայտ ցանկ է</li>
+      <li><code>per_page</code>-ը սահմանափակված է</li>
+      <li>CSRF token-ը ստուգվում է վերնագրով</li>
+      <li>Ամեն վավերացում կա սերվերում</li>
+      <li>Ֆորման աշխատում է առանց JS-ի</li>
+      <li>JS-ով թարմացվող հաշվիչը հայտարարվում է <code>role="status"</code>-ով</li>
+      <li>Չկա <code>Access-Control-Allow-Origin: *</code> առանց պատճառի</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչու <code>$_POST</code>-ը դատարկ է JSON-ի դեպքում</li>
+      <li>Գիտե՞մ 400-ի և 422-ի տարբերությունը</li>
+      <li>Հասկանո՞ւմ եմ, ինչու <code>json_encode($product)</code>-ը վտանգավոր է</li>
+      <li>Կարո՞ղ եմ բացատրել, ինչու CSRF-ը API-ում դեռ կա</li>
+      <li>Գիտե՞մ, ինչու CORS-ը անվտանգություն չէ</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Ավարտ՝ սեփական MVC-ն</span>
+      <p>Երեք դասում (15–17) կառուցեցիր Router, Request, Response, կոնտրոլերներ, մուտքի և CSRF ստուգումներ և API։ Դա ֆրեյմվորքի կմախքն է։<br><br>
+      Հաջորդ չորս դասում նույն նախագիծը կփոխարինես <strong>Laravel-ով</strong>։ Ամեն դաս կլինի հայելի․ <em>«ահա այն, ինչ ձեռքով կառուցեցիր, հիմա՝ արդյունաբերական տարբերակը»</em>։ Դաս 18-ում կտեսնես, որ <code>Route::get('/product/{slug}', [ProductController::class, 'show'])</code>-ը գրեթե ճիշտ քո <code>routes.php</code>-ն է։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>PHP Բլոկ · Դաս 17 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

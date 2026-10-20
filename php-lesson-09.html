@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PHP Դաս 9 — PDO և SQL injection</title>
+<title>PHP Դաս 9 — SQL II · կապեր, JOIN, GROUP BY</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -22,453 +22,372 @@
     </button>
   </div>
 
-  <p class="eyebrow">PHP Դաս 9 · 2 ժամ · Անվտանգություն 3 / 4</p>
-  <h1>PDO և SQL injection</h1>
-  <p class="lede">Այսօր միացնում ենք PHP-ն բազային։ Եվ սովորում ենք ամենակարևոր անվտանգության դասը PHP-ում՝ ինչու տողերի միացումով հարցում կառուցելը վտանգավոր է։</p>
+  <p class="eyebrow">PHP Դաս 9 · 2 ժամ · SQL 2 / 2</p>
+  <h1>SQL II · կապեր, JOIN, GROUP BY</h1>
+  <p class="lede">Դաս 8-ում ունեինք մեկ աղյուսակ։ Իրական խանութում ապրանքներն ունեն կատեգորիաներ, պատվերներն ունեն ապրանքներ, և այս տվյալները ապրում են տարբեր աղյուսակներում։ Այսօր սովորում ենք կապել դրանք, կարդալ միասին և հաշվել։ Դեռ առանց PHP-ի։</p>
 
   <div class="facts">
     <span>Բլոկ 3 · Դաս 9 / 24</span>
-    <span>Անվտանգության երրորդ դասը</span>
-    <span>data.php-ն անհետանում է</span>
+    <span>Առանց PHP-ի, միայն SQL</span>
+    <span>Չորս աղյուսակ</span>
   </div>
 
   <!-- ============ 00 ============ -->
   <section id="s0">
     <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
     <ul class="goals">
-      <li>SQL injection — ինչպես է աշխատում</li>
-      <li>PDO-ի միացում ճիշտ կարգավորումներով</li>
-      <li>Prepared statements</li>
-      <li><code>fetchAll</code>, <code>fetch</code>, <code>fetchColumn</code></li>
-      <li>Ի՞նչ չի կարելի պարամետրացնել</li>
-      <li>Կոնֆիգուրացիա և <code>.env</code></li>
-      <li><code>data.php</code> → բազա</li>
+      <li>Ինչու կատեգորիան առանձին աղյուսակ է</li>
+      <li>Արտաքին բանալի (foreign key)</li>
+      <li>ՏեխնոՄարկետի ամբողջական սխեման</li>
+      <li><code>INNER JOIN</code> և <code>LEFT JOIN</code></li>
+      <li><code>COUNT</code>, <code>SUM</code>, <code>AVG</code></li>
+      <li><code>GROUP BY</code> և <code>HAVING</code></li>
+      <li>Ինդեքսներ՝ ծանոթություն</li>
     </ul>
   </section>
 
   <!-- ============ 01 ============ -->
   <section id="s1">
-    <h2><span class="num">01</span>Հարձակումը</h2>
+    <h2><span class="num">01</span>Խնդիրը</h2>
+    <p>Ենթադրենք կատեգորիան պահում ենք ուղիղ <code>products</code>-ում՝ տեքստով․</p>
 
-    <div class="block">
-      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ երբեք այսպես</div><button class="copy">Պատճենել</button></div>
-<pre><code><span class="n">$id</span> = <span class="n">$_GET</span>[<span class="s">'id'</span>];
-
-<span class="n">$sql</span> = <span class="s">"SELECT * FROM products WHERE id = <span class="n">$id</span>"</span>;</code></pre>
-    </div>
-
-    <div class="tree">Նորմալ հարցում՝  ?id=5
-
-  SELECT * FROM products WHERE id = 5
-
-
-Հարձակում՝  ?id=5 OR 1=1
-
-  SELECT * FROM products WHERE id = 5 OR 1=1
-                                        ─────
-                                  միշտ ճիշտ է
-  → վերադարձնում է ԲՈԼՈՐ ապրանքները
-
-
-Ավելի վատ՝  ?id=5; DROP TABLE products--
-
-  SELECT * FROM products WHERE id = 5; DROP TABLE products--
-                                       ──────────────────
-                                       երկրորդ հրաման</div>
+    <div class="tree">products
+┌────┬────────────────────┬──────────────┐
+│ id │ name               │ category     │
+├────┼────────────────────┼──────────────┤
+│  1 │ Նոութբուք Air 13   │ Նոութբուքեր  │
+│  2 │ Նոութբուք Gamer 16 │ Նոութբուքեր  │
+│  3 │ Մոնիտոր 27 4K      │ Մոնիտորներ   │
+│  4 │ Մոնիտոր 24         │ Մոնիտորնէր   │  ← տառասխալ 💥
+└────┴────────────────────┴──────────────┘</div>
 
     <div class="warn note">
-      <span class="tag">Ինչո՞ւ է սա տեղի ունենում</span>
-      <p>Բազան ստանում է <strong>մեկ տող</strong> և ինքն է որոշում, թե որտեղ է հրամանը, որտեղ՝ տվյալը։<br><br>
-      Երբ դու միացնում ես տողերը, օգտագործողի տեքստը դառնում է <strong>հրամանի մաս</strong>։ Բազան չգիտի, որ <code>OR 1=1</code>-ը եկել է դրսից — նրա համար դա քո գրած հարցումն է։<br><br>
-      Ուղիղ նույն տրամաբանությունը, ինչ XSS-ում (Դաս 5)․ տվյալը խառնվում է կոդի հետ։ Տարբերությունը միայն այն է, թե ով է կատարում՝ բրաուզերը կամ բազան։</p>
+      <span class="tag">Երեք խնդիր կրկնվող տեքստով</span>
+      <p><strong>1. Տառասխալներ.</strong> «Մոնիտորնէր»-ը այլ կատեգորիա է։ <code>WHERE category = 'Մոնիտորներ'</code>-ը 4-րդ ապրանքը չի գտնի։<br>
+      <strong>2. Անվանափոխում.</strong> Եթե «Նոութբուքեր»-ը պետք է դառնա «Նոութբուքեր և ուլտրաբուքեր», պետք է թարմացնել 50 տող, և մեկը հաստատ կմոռացվի։<br>
+      <strong>3. Լրացուցիչ տվյալ.</strong> Որտե՞ղ պահել կատեգորիայի slug-ը կամ նկարը։ Ամեն ապրանքի մեջ նորի՞ց։</p>
     </div>
 
-    <div class="scroll">
-    <table class="tbl">
-      <tr><th>Ի՞նչ կարող է անել հարձակվողը</th></tr>
-      <tr><td>Կարդալ բոլոր տվյալները՝ օգտագործողներ, պատվերներ, գաղտնաբառերի հեշեր</td></tr>
-      <tr><td>Փոխել գները և պատվերները</td></tr>
-      <tr><td>Ջնջել աղյուսակները</td></tr>
-      <tr><td>Մուտք գործել առանց գաղտնաբառի (Դաս 16)</td></tr>
-      <tr><td>Որոշ կոնֆիգուրացիաներում՝ կարդալ ֆայլեր սերվերից</td></tr>
-    </table>
-    </div>
+    <div class="tree">Լուծում․ կատեգորիան պահվում է ՄԵԿ անգամ, ապրանքը պահում է նրա id-ն
 
-    <div class="block">
-      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>դասական մուտքի շրջանցում</div><button class="copy">Պատճենել</button></div>
-<pre><code><span class="c">// Խոցելի կոդ</span>
-<span class="n">$sql</span> = <span class="s">"SELECT * FROM users
-        WHERE email = '<span class="n">$email</span>' AND password = '<span class="n">$pass</span>'"</span>;
+categories                    products
+┌────┬─────────────┐          ┌────┬────────────────────┬─────────────┐
+│ id │ name        │          │ id │ name               │ category_id │
+├────┼─────────────┤          ├────┼────────────────────┼─────────────┤
+│  1 │ Նոութբուքեր │◀─────────│  1 │ Նոութբուք Air 13   │      1      │
+│  2 │ Մոնիտորներ  │◀───┐     │  2 │ Նոութբուք Gamer 16 │      1      │
+└────┴─────────────┘    └─────│  3 │ Մոնիտոր 27 4K      │      2      │
+                              │  4 │ Մոնիտոր 24         │      2      │
+                              └────┴────────────────────┴─────────────┘
 
-<span class="c">// Հարձակվողը մուտքագրում է էլ. հասցեի դաշտում՝
-//   ' OR '1'='1'--
-// Ստացվում է՝</span>
-
-<span class="k">SELECT</span> * <span class="k">FROM</span> users
-<span class="k">WHERE</span> email = <span class="s">''</span> <span class="k">OR</span> <span class="s">'1'</span>=<span class="s">'1'</span>--<span class="s">' AND password = '</span>...
-
-<span class="c">// -- -ը մեկնաբանություն է SQL-ում։
-// Գաղտնաբառի ստուգումն ընդհանրապես չի կատարվում։</span></code></pre>
-    </div>
+Անվանափոխում → մեկ UPDATE մեկ տողում։ Տառասխալ → անհնար։</div>
 
     <div class="tip note">
-      <span class="tag">Փախցնելը լուծում չէ</span>
-      <p>Կա գայթակղություն՝ «պարզապես մաքրեմ չակերտները»։ <code>addslashes</code>, <code>str_replace</code>, ռեգուլյար արտահայտություններ — <strong>բոլորն էլ շրջանցելի են</strong>։<br><br>
-      Բազմաբայթ կոդավորումներ, թվային համատեքստեր, ներդրված հարցումներ — միշտ գտնվում է դեպք, որ բաց ես թողել։<br><br>
-      Միակ հուսալի լուծումը՝ <strong>տվյալը երբեք չդառնա հարցման տեքստի մաս</strong>։ Հենց դա են անում prepared statements-ը։</p>
+      <span class="tag">Մեկ փաստ՝ մեկ տեղում</span>
+      <p>Սա բազաների նախագծման հիմնական կանոնն է․ <strong>ամեն փաստ պահվում է մեկ անգամ</strong>, իսկ մնացած տեղերը հղվում են դրան։ Դա նույն գաղափարն է, ինչ CSS-ի փոփոխականները HTML բլոկում․ գույնը սահմանվում է մեկ տեղում, իսկ օգտագործվում՝ ամենուր։</p>
     </div>
   </section>
 
   <!-- ============ 02 ============ -->
   <section id="s2">
-    <h2><span class="num">02</span>Prepared statements</h2>
-
-    <div class="tree">Երկու առանձին ուղարկում
-
-  1. Հարցման ԿԱՌՈՒՑՎԱԾՔԸ
-     SELECT * FROM products WHERE id = ?
-     → բազան վերլուծում է և հիշում պլանը
-     → այստեղ արդեն որոշված է, որ ? -ը ՏՎՅԱԼ է
-
-  2. ՏՎՅԱԼՆԵՐԸ
-     [5]  կամ  ["5 OR 1=1"]
-     → գնում են առանձին ալիքով
-     → բազան դրանք ՉԻ վերլուծում որպես SQL
-
-  Արդյունքում "5 OR 1=1"-ը փնտրվում է
-  որպես id-ի ԱՐԺԵՔ, և ոչինչ չի գտնվում։</div>
+    <h2><span class="num">02</span>Արտաքին բանալի</h2>
 
     <div class="block">
-      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>✅ ճիշտ ձևը</div><button class="copy">Պատճենել</button></div>
-<pre><code><span class="c">// Դիրքային պարամետրեր</span>
-<span class="n">$stmt</span> = <span class="n">$pdo</span>-&gt;<span class="f">prepare</span>(<span class="s">"SELECT id, name, price FROM products WHERE id = ?"</span>);
-<span class="n">$stmt</span>-&gt;<span class="f">execute</span>([<span class="n">$id</span>]);
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>categories + կապը products-ի հետ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">USE</span> technomarket;
 
-<span class="c">// Անվանված պարամետրեր — ընթեռնելի է ⭐</span>
-<span class="n">$stmt</span> = <span class="n">$pdo</span>-&gt;<span class="f">prepare</span>(
-    <span class="s">"SELECT id, name, price
-     FROM products
-     WHERE is_active = 1
-       AND price BETWEEN :min AND :max
-     ORDER BY price
-     LIMIT :limit"</span>
-);
+<span class="k">CREATE TABLE</span> categories (
+    id    <span class="t">INT UNSIGNED</span> <span class="k">AUTO_INCREMENT PRIMARY KEY</span>,
+    name  <span class="t">VARCHAR</span>(<span class="n">100</span>) <span class="k">NOT NULL</span>,
+    slug  <span class="t">VARCHAR</span>(<span class="n">100</span>) <span class="k">NOT NULL UNIQUE</span>
+) <span class="k">ENGINE</span>=InnoDB;
 
-<span class="n">$stmt</span>-&gt;<span class="f">execute</span>([
-    <span class="s">'min'</span>   =&gt; <span class="n">$min</span>,
-    <span class="s">'max'</span>   =&gt; <span class="n">$max</span>,
-    <span class="s">'limit'</span> =&gt; <span class="n">$limit</span>,
-]);
+<span class="k">INSERT INTO</span> categories (name, slug) <span class="k">VALUES</span>
+(<span class="s">'Նոութբուքեր'</span>,  <span class="s">'noutbuqner'</span>),
+(<span class="s">'Մոնիտորներ'</span>,   <span class="s">'monitorner'</span>),
+(<span class="s">'Սմարթֆոններ'</span>,  <span class="s">'smartfonner'</span>),
+(<span class="s">'Աքսեսուարներ'</span>, <span class="s">'aqsesuarner'</span>);
 
-<span class="n">$products</span> = <span class="n">$stmt</span>-&gt;<span class="f">fetchAll</span>();</code></pre>
+<span class="c">-- Դաս 8-ի աղյուսակին ավելացնում ենք սյունակ և կապ</span>
+<span class="k">ALTER TABLE</span> products
+    <span class="k">ADD COLUMN</span> category_id <span class="t">INT UNSIGNED</span> <span class="k">NULL AFTER</span> id,
+    <span class="k">ADD CONSTRAINT</span> fk_products_category
+        <span class="k">FOREIGN KEY</span> (category_id) <span class="k">REFERENCES</span> categories(id)
+        <span class="k">ON DELETE SET NULL</span>;</code></pre>
     </div>
 
-    <div class="tip note">
-      <span class="tag">Ուշադրություն՝ ոչ մի չակերտ</span>
-      <p><code>WHERE name = :name</code> — <strong>առանց չակերտների</strong>, նույնիսկ տողերի համար։<br><br>
-      Չակերտները ավելացնում է PDO-ն։ Եթե գրես <code>'<span>:</span>name'</code>, դա կդառնա բառացի տեքստ <code>:name</code>, ոչ պարամետր։<br><br>
-      Սա հաճախակի սխալ է առաջին օրերին։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ապրանքներին տալիս ենք կատեգորիա — Դաս 8-ի UPDATE-ը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">UPDATE</span> products <span class="k">SET</span> category_id = <span class="n">1</span> <span class="k">WHERE</span> slug <span class="k">LIKE</span> <span class="s">'noutbuq-%'</span>;
+<span class="k">UPDATE</span> products <span class="k">SET</span> category_id = <span class="n">2</span> <span class="k">WHERE</span> slug <span class="k">LIKE</span> <span class="s">'monitor-%'</span>;
+<span class="k">UPDATE</span> products <span class="k">SET</span> category_id = <span class="n">3</span> <span class="k">WHERE</span> slug <span class="k">LIKE</span> <span class="s">'smartfon-%'</span> <span class="k">OR</span> slug = <span class="s">'planshet-11'</span>;
+<span class="k">UPDATE</span> products <span class="k">SET</span> category_id = <span class="n">4</span> <span class="k">WHERE</span> category_id <span class="k">IS NULL AND</span> slug &lt;&gt; <span class="s">'veb-tesaxcik-hd'</span>;
+
+<span class="c">-- Վեբ-տեսախցիկը միտումնավոր թողնում ենք առանց կատեգորիայի՝ բաժին 04-ի համար</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Փորձիր կոտրել</span>
+      <p><code>UPDATE products SET category_id = 99 WHERE id = 1;</code><br><br>
+      Արդյունքը՝ <em>Cannot add or update a child row: a foreign key constraint fails</em>։ 99 համարով կատեգորիա չկա, և բազան չի թույլ տալիս հղվել գոյություն չունեցող բանի։<br><br>
+      Սա Դաս 8-ի <code>NOT NULL</code>-ի նման պաշտպանություն է, բայց կապերի համար։ Դաս 11-ում ադմին ֆորման կստուգի նույնը PHP-ում, որպեսզի օգտագործողը տեսնի հասկանալի հաղորդագրություն, ոչ թե բազայի սխալ։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Երբ կատեգորիան ջնջվում է</th><th>Ի՞նչ է կատարվում ապրանքների հետ</th></tr>
+      <tr><td><code>ON DELETE SET NULL</code> ⭐</td><td>Ապրանքները մնում են, <code>category_id</code>-ն դառնում է <code>NULL</code></td></tr>
+      <tr><td><code>ON DELETE RESTRICT</code> (լռելյայն)</td><td>Ջնջումը արգելվում է, քանի դեռ կան ապրանքներ</td></tr>
+      <tr><td><code>ON DELETE CASCADE</code></td><td>Ապրանքները <strong>նույնպես ջնջվում են</strong> ⚠️</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչու <code>SET NULL</code></span>
+      <p>Կատեգորիան ջնջելը չպետք է ջնջի 50 ապրանք։ <code>CASCADE</code>-ը հարմար է այնտեղ, որտեղ «զավակը» առանց «ծնողի» իմաստ չունի․ օրինակ՝ պատվերի տողերը առանց պատվերի։ Ապրանքը առանց կատեգորիայի դեռ ապրանք է։</p>
     </div>
   </section>
 
   <!-- ============ 03 ============ -->
   <section id="s3">
-    <h2><span class="num">03</span>Միացում</h2>
+    <h2><span class="num">03</span>Պատվերներ</h2>
+
+    <div class="tree">categories                products
+┌────────────────┐        ┌──────────────────────┐
+│ id          PK │◀───┐   │ id                PK │
+│ name           │    └───│ category_id       FK │
+│ slug           │        │ name, slug, price …  │
+└────────────────┘        └──────────────────────┘
+                                     ▲
+orders                               │
+┌────────────────┐                   │
+│ id          PK │                   │
+│ customer_name  │                   │
+│ email, phone   │                   │
+│ total          │                   │
+│ status         │                   │
+│ created_at     │                   │
+└────────────────┘                   │
+        ▲                            │
+        │        order_items         │
+        │        ┌─────────────────┐ │
+        └────────│ order_id     FK │ │
+                 │ product_id   FK │─┘
+                 │ quantity        │
+                 │ price           │  ← գինը գնման պահին ⭐
+                 └─────────────────┘
+
+Մեկ պատվեր → շատ տողեր։ Մեկ ապրանք → շատ պատվերներում։</div>
 
     <div class="block">
-      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>config.php</div><button class="copy">Պատճենել</button></div>
-<pre><code><span class="p">&lt;?php</span>
-<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>orders և order_items</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">CREATE TABLE</span> orders (
+    id            <span class="t">INT UNSIGNED</span> <span class="k">AUTO_INCREMENT PRIMARY KEY</span>,
+    customer_name <span class="t">VARCHAR</span>(<span class="n">100</span>) <span class="k">NOT NULL</span>,
+    email         <span class="t">VARCHAR</span>(<span class="n">190</span>) <span class="k">NOT NULL</span>,
+    phone         <span class="t">VARCHAR</span>(<span class="n">30</span>)  <span class="k">NOT NULL</span>,
+    total         <span class="t">DECIMAL</span>(<span class="n">10</span>,<span class="n">2</span>) <span class="k">NOT NULL</span>,
+    status        <span class="t">ENUM</span>(<span class="s">'new'</span>, <span class="s">'paid'</span>, <span class="s">'shipped'</span>, <span class="s">'cancelled'</span>) <span class="k">NOT NULL DEFAULT</span> <span class="s">'new'</span>,
+    created_at    <span class="t">DATETIME</span> <span class="k">NOT NULL DEFAULT CURRENT_TIMESTAMP</span>
+) <span class="k">ENGINE</span>=InnoDB;
 
-<span class="k">return</span> [
-    <span class="s">'db'</span> =&gt; [
-        <span class="s">'host'</span>     =&gt; <span class="s">'127.0.0.1'</span>,
-        <span class="s">'name'</span>     =&gt; <span class="s">'technomarket'</span>,
-        <span class="s">'user'</span>     =&gt; <span class="s">'root'</span>,
-        <span class="s">'password'</span> =&gt; <span class="s">''</span>,
-        <span class="s">'charset'</span>  =&gt; <span class="s">'utf8mb4'</span>,
-    ],
-];</code></pre>
-    </div>
+<span class="k">CREATE TABLE</span> order_items (
+    id         <span class="t">INT UNSIGNED</span> <span class="k">AUTO_INCREMENT PRIMARY KEY</span>,
+    order_id   <span class="t">INT UNSIGNED</span> <span class="k">NOT NULL</span>,
+    product_id <span class="t">INT UNSIGNED</span> <span class="k">NOT NULL</span>,
+    quantity   <span class="t">INT UNSIGNED</span> <span class="k">NOT NULL</span>,
+    price      <span class="t">DECIMAL</span>(<span class="n">10</span>,<span class="n">2</span>) <span class="k">NOT NULL</span>,
 
-    <div class="block">
-      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>db.php</div><button class="copy">Պատճենել</button></div>
-<pre><code><span class="p">&lt;?php</span>
-<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+    <span class="k">FOREIGN KEY</span> (order_id)   <span class="k">REFERENCES</span> orders(id)   <span class="k">ON DELETE CASCADE</span>,
+    <span class="k">FOREIGN KEY</span> (product_id) <span class="k">REFERENCES</span> products(id) <span class="k">ON DELETE RESTRICT</span>
+) <span class="k">ENGINE</span>=InnoDB;
 
-<span class="k">function</span> <span class="f">db</span>(): <span class="f">PDO</span>
-{
-    <span class="k">static</span> <span class="n">$pdo</span> = <span class="k">null</span>;      <span class="c">// մեկ միացում մեկ հարցումի ընթացքում ⭐</span>
+<span class="c">-- Փորձնական պատվեր</span>
+<span class="k">INSERT INTO</span> orders (customer_name, email, phone, total)
+<span class="k">VALUES</span> (<span class="s">'Աննա'</span>, <span class="s">'anna@example.com'</span>, <span class="s">'+37491000000'</span>, <span class="n">253250</span>);
 
-    <span class="k">if</span> (<span class="n">$pdo</span> !== <span class="k">null</span>) {
-        <span class="k">return</span> <span class="n">$pdo</span>;
-    }
+<span class="k">INSERT INTO</span> order_items (order_id, product_id, quantity, price) <span class="k">VALUES</span>
+(<span class="n">1</span>, <span class="n">4</span>, <span class="n">1</span>, <span class="n">157250</span>),   <span class="c">-- Մոնիտոր 27 4K, 15% զեղչով</span>
+(<span class="n">1</span>, <span class="n">6</span>, <span class="n">2</span>, <span class="n">42000</span>),    <span class="c">-- Ստեղնաշար × 2</span>
+(<span class="n">1</span>, <span class="n">7</span>, <span class="n">1</span>, <span class="n">12000</span>);    <span class="c">-- Մկնիկ, 20% զեղչով</span>
 
-    <span class="n">$config</span> = <span class="k">require</span> <span class="n">__DIR__</span> . <span class="s">'/config.php'</span>;
-    <span class="n">$c</span> = <span class="n">$config</span>[<span class="s">'db'</span>];
-
-    <span class="n">$dsn</span> = <span class="s">"mysql:host={<span class="n">$c</span>['host']};dbname={<span class="n">$c</span>['name']};charset={<span class="n">$c</span>['charset']}"</span>;
-
-    <span class="k">try</span> {
-        <span class="n">$pdo</span> = <span class="k">new</span> <span class="f">PDO</span>(<span class="n">$dsn</span>, <span class="n">$c</span>[<span class="s">'user'</span>], <span class="n">$c</span>[<span class="s">'password'</span>], [
-            <span class="k">PDO::ATTR_ERRMODE</span>            =&gt; <span class="k">PDO::ERRMODE_EXCEPTION</span>,
-            <span class="k">PDO::ATTR_DEFAULT_FETCH_MODE</span> =&gt; <span class="k">PDO::FETCH_ASSOC</span>,
-            <span class="k">PDO::ATTR_EMULATE_PREPARES</span>   =&gt; <span class="k">false</span>,
-        ]);
-    } <span class="k">catch</span> (<span class="f">PDOException</span> <span class="n">$e</span>) {
-        <span class="c">// ⚠️ Օգտագործողին երբեք չցուցադրել $e-&gt;getMessage()</span>
-        <span class="k">error_log</span>(<span class="s">'DB connection failed: '</span> . <span class="n">$e</span>-&gt;<span class="f">getMessage</span>());
-        <span class="k">http_response_code</span>(<span class="n">500</span>);
-        <span class="k">exit</span>(<span class="s">'Տեխնիկական խնդիր։ Փորձեք ավելի ուշ։'</span>);
-    }
-
-    <span class="k">return</span> <span class="n">$pdo</span>;
-}</code></pre>
-    </div>
-
-    <div class="scroll">
-    <table class="tbl">
-      <tr><th>Կարգավորում</th><th>Ինչու</th></tr>
-      <tr><td><code>ERRMODE_EXCEPTION</code></td><td>Սխալները գցում են բացառություն, ոչ լուռ <code>false</code> ⭐</td></tr>
-      <tr><td><code>FETCH_ASSOC</code></td><td>Ասոցիատիվ զանգված, ոչ կրկնակի</td></tr>
-      <tr><td><code>EMULATE_PREPARES = false</code></td><td><strong>Իրական</strong> prepared statements ⭐</td></tr>
-      <tr><td><code>charset=utf8mb4</code> DSN-ում</td><td>Հայերենի համար պարտադիր</td></tr>
-    </table>
+<span class="c">-- ⚠️ id-ները կախված են Դաս 8-ում ավելացման կարգից։ Նախ ստուգիր՝
+-- SELECT id, name FROM products;</span></code></pre>
     </div>
 
     <div class="warn note">
-      <span class="tag"><code>EMULATE_PREPARES</code>-ը կարևոր է</span>
-      <p>Լռելյայն PDO-ն <strong>ձևացնում է</strong>․ ինքն է փախցնում պարամետրերը և ուղարկում մեկ տող։ Դա արագ է, բայց դա արդեն ոչ թե երկու ալիք է, այլ փախցնում — իսկ փախցնումը շրջանցելի է որոշ կոդավորումներում։<br><br>
-      <code>false</code>-ով միացնում ենք իրական երկքայլ մեխանիզմը՝ բազան ինքն է վերլուծում կառուցվածքը։<br><br>
-      Կողմնակի օգուտ՝ <code>LIMIT :limit</code>-ը սկսում է աշխատել ճիշտ որպես թիվ, ոչ տող։</p>
+      <span class="tag">Ինչու <code>order_items</code>-ում կրկնում ենք գինը</span>
+      <p>Թվում է ավելորդ է, որովհետև գինն արդեն կա <code>products</code>-ում։ Բայց գները փոխվում են։ Եթե պատվերի էջը գինը վերցնի <code>products</code>-ից, վաղը, երբ գինը բարձրանա, <strong>հին պատվերները ցույց կտան նոր գինը</strong>, և գումարները չեն համընկնի։<br><br>
+      <code>order_items.price</code>-ը գինն է <strong>գնման պահին</strong>։ Դա պատմական փաստ է։ Կանոն․ <em>պատմությունը սառեցվում է, ընթացիկ վիճակը՝ ոչ</em>։ Սա բաժին 01-ի «մեկ փաստ՝ մեկ տեղում» կանոնի բացառությունը չէ․ դրանք <strong>երկու տարբեր փաստեր են</strong>՝ «ինչ արժե հիմա» և «ինչով գնվեց»։</p>
     </div>
 
-    <div class="warn note">
-      <span class="tag">Սխալի հաղորդագրությունը օգտագործողին</span>
-      <p><code>$e-&gt;getMessage()</code>-ը պարունակում է հոսթը, բազայի անունը, երբեմն՝ օգտագործողի անունը։ Դա նվեր է հարձակվողի համար։<br><br>
-      Կանոն՝ <strong>մանրամասները՝ լոգում, օգտագործողին՝ ընդհանուր հաղորդագրություն</strong>։ Նույն սկզբունքը, ինչ Դաս 1-ի <code>display_errors</code>-ի դեպքում։</p>
-    </div>
-
-    <div class="warn note">
-      <span class="tag"><code>config.php</code>-ը Git-ում</span>
-      <p>Գաղտնաբառը կոդի պահոցում — դասական և թանկ սխալ։ GitHub-ում կան բոտեր, որոնք սկանավորում են նոր commit-ները հենց այդ նպատակով։<br><br>
-      Ավելացրու <code>.gitignore</code>-ում՝<br>
-      <code>config.php</code><br><br>
-      Իսկ պահոցում պահիր <code>config.example.php</code>՝ դատարկ արժեքներով, որ մյուսը իմանա, ինչ դաշտեր են պետք։<br><br>
-      Laravel-ում նույն դերը կատարում է <code>.env</code>-ը, և այն նույնպես <code>.gitignore</code>-ում է։</p>
+    <div class="note">
+      <span class="tag">Երկու տարբեր <code>ON DELETE</code></span>
+      <p>Պատվերը ջնջելիս նրա տողերը իմաստ չունեն → <code>CASCADE</code>։<br>
+      Ապրանքը, որը գնվել է, ջնջել չի կարելի → <code>RESTRICT</code>։ Դաս 8-ում ասացինք․ <em>թաքցրու, մի՛ ջնջիր</em>։ Հիմա բազան ինքն է ստիպում դա։</p>
     </div>
   </section>
 
   <!-- ============ 04 ============ -->
   <section id="s4">
-    <h2><span class="num">04</span>Արդյունքի ընթերցում</h2>
+    <h2><span class="num">04</span>JOIN</h2>
+    <p><code>products</code>-ում կա միայն <code>category_id = 2</code>։ Կատեգորիայի <em>անունը</em> ցույց տալու համար պետք է կարդալ երկու աղյուսակը միասին։</p>
 
     <div class="block">
-      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>չորս ձև</div><button class="copy">Պատճենել</button></div>
-<pre><code><span class="c">// Բոլոր տողերը — զանգված ասոցիատիվ զանգվածներից</span>
-<span class="n">$products</span> = <span class="n">$stmt</span>-&gt;<span class="f">fetchAll</span>();
-<span class="c">// [ ['id'=&gt;1, 'name'=&gt;'...'], ['id'=&gt;2, ...] ]</span>
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ապրանքները կատեգորիայի անունով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">SELECT</span>
+    p.name,
+    p.price,
+    c.name <span class="k">AS</span> category_name
+<span class="k">FROM</span> products p
+<span class="k">LEFT JOIN</span> categories c <span class="k">ON</span> c.id = p.category_id
+<span class="k">WHERE</span> p.is_active = <span class="n">1</span>
+<span class="k">ORDER BY</span> p.price;</code></pre>
+    </div>
 
-<span class="c">// Մեկ տող կամ false</span>
-<span class="n">$product</span> = <span class="n">$stmt</span>-&gt;<span class="f">fetch</span>();
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Մաս</th><th>Նշանակություն</th></tr>
+      <tr><td><code>products p</code></td><td>Կարճ անուն (alias)․ <code>p.name</code>-ը նշանակում է «ապրանքի անունը»</td></tr>
+      <tr><td><code>c.name AS category_name</code></td><td>Երկու աղյուսակն էլ ունեն <code>name</code>։ <code>AS</code>-ը վերանվանում է արդյունքում</td></tr>
+      <tr><td><code>ON c.id = p.category_id</code></td><td>Ինչպես են տողերը զուգակցվում ⭐</td></tr>
+    </table>
+    </div>
 
-<span class="c">// Մեկ արժեք</span>
-<span class="n">$count</span> = (<span class="k">int</span>) <span class="n">$stmt</span>-&gt;<span class="f">fetchColumn</span>();
+    <div class="tree">INNER JOIN                       LEFT JOIN
 
-<span class="c">// Ցիկլով — մեծ արդյունքների համար, հիշողությունը չի լցվում</span>
-<span class="k">while</span> (<span class="n">$row</span> = <span class="n">$stmt</span>-&gt;<span class="f">fetch</span>()) {
-    <span class="c">// ...</span>
-}</code></pre>
+products     categories          products     categories
+Air 13    ●──────● Նոութբուքեր   Air 13    ●──────● Նոութբուքեր
+Մոնիտոր   ●──────● Մոնիտորներ    Մոնիտոր   ●──────● Մոնիտորներ
+Տեսախցիկ  ●   ✗                  Տեսախցիկ  ●────── NULL
+
+Միայն զույգերը                   Բոլոր ապրանքները,
+Տեսախցիկը անհետացավ              նույնիսկ առանց կատեգորիայի</div>
+
+    <div class="warn note">
+      <span class="tag">Փորձիր երկուսն էլ</span>
+      <p>Կատարիր հարցումը <code>LEFT JOIN</code>-ով, ապա փոխիր <code>INNER JOIN</code>-ի։ Վեբ-տեսախցիկը, որը կատեգորիա չունի, <strong>կանհետանա</strong> երկրորդ արդյունքից։<br><br>
+      Կանոն․ <code>INNER JOIN</code>, երբ կապը <strong>պարտադիր է</strong>, <code>LEFT JOIN</code>, երբ կարող է բացակայել։ Մեր <code>category_id</code>-ն կարող է լինել <code>NULL</code>, ուստի կատալոգում՝ <code>LEFT JOIN</code>։ Դասական սխալ է գրել <code>INNER JOIN</code> և հետո չհասկանալ, թե ինչու մի քանի ապրանք չեն երևում կայքում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երեք աղյուսակ — պատվերի բովանդակությունը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">SELECT</span>
+    o.customer_name,
+    p.name                   <span class="k">AS</span> product_name,
+    oi.quantity,
+    oi.price,
+    oi.quantity * oi.price   <span class="k">AS</span> line_total
+<span class="k">FROM</span> orders o
+<span class="k">INNER JOIN</span> order_items oi <span class="k">ON</span> oi.order_id = o.id
+<span class="k">INNER JOIN</span> products p     <span class="k">ON</span> p.id = oi.product_id
+<span class="k">WHERE</span> o.id = <span class="n">1</span>;</code></pre>
     </div>
 
     <div class="tip note">
-      <span class="tag">Ահա այն, ինչ խոստացել էի Դաս 3-ում</span>
-      <p><code>fetchAll()</code>-ը վերադարձնում է <strong>ճիշտ նույն կառուցվածքը</strong>, ինչ <code>data.php</code>-ի <code>$products</code>-ը՝ զանգված ասոցիատիվ զանգվածներից։<br><br>
-      Դա նշանակում է, որ քո <code>foreach</code>-ը շաբլոնում <strong>ընդհանրապես չի փոխվի</strong>։ Փոխվում է միայն այն, թե որտեղից են գալիս տվյալները։<br><br>
-      Հենց դրա համար Դաս 3-ում զանգվածները գրում էինք ձեռքով այդ ձևով։</p>
-    </div>
-
-    <div class="warn note">
-      <span class="tag">Տիպերի թակարդ</span>
-      <p>MySQL-ից <code>DECIMAL</code>-ը գալիս է որպես <strong>տող</strong>՝ <code>"450000.00"</code>, ոչ թիվ։<br><br>
-      <code>strict_types</code>-ով <code>finalPrice(int $price)</code>-ը կգցի <code>TypeError</code>։<br><br>
-      Երկու լուծում՝ բացահայտ փոխարկում կոդում՝ <code>(int) $row['price']</code>, կամ SQL-ում՝ <code>CAST(price AS UNSIGNED) AS price</code>։<br><br>
-      Առաջինը նախընտրելի է — ավելի պարզ է և տեսանելի։</p>
+      <span class="tag">Այստեղ <code>INNER</code>-ը ճիշտ է</span>
+      <p>Պատվերի տողը միշտ ունի պատվեր և ապրանք (<code>NOT NULL</code> + <code>RESTRICT</code>), ուստի «անզույգ» տողեր չեն կարող լինել։ Ընտրությունը կախված է սխեմայից, ոչ սովորությունից։</p>
     </div>
   </section>
 
   <!-- ============ 05 ============ -->
   <section id="s5">
-    <h2><span class="num">05</span>Ի՞նչ չի կարելի պարամետրացնել</h2>
-
-    <div class="warn note">
-      <span class="tag">Կարևոր սահմանափակում</span>
-      <p>Պարամետրերը փոխարինում են միայն <strong>արժեքները</strong>։ Աղյուսակների անունները, դաշտերի անունները, <code>ASC</code>/<code>DESC</code>-ը՝ <strong>ոչ</strong>։<br><br>
-      <code>ORDER BY :field</code> — չի աշխատի։ Բազան կտեսնի <code>ORDER BY 'price'</code>՝ տողային հաստատունով, և տեսակավորում չի լինի։</p>
-    </div>
+    <h2><span class="num">05</span>Հաշվել</h2>
 
     <div class="block">
-      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ խոցելի</div><button class="copy">Պատճենել</button></div>
-<pre><code><span class="n">$sort</span> = <span class="n">$_GET</span>[<span class="s">'sort'</span>];
-<span class="n">$sql</span> = <span class="s">"SELECT * FROM products ORDER BY <span class="n">$sort</span>"</span>;
-
-<span class="c">// ?sort=price; DROP TABLE products--</span></code></pre>
-    </div>
-
-    <div class="block">
-      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>✅ սպիտակ ցուցակ — Դաս 6-ի օրինաչափությունը</div><button class="copy">Պատճենել</button></div>
-<pre><code><span class="n">$sortMap</span> = [
-    <span class="s">'price_asc'</span>  =&gt; <span class="s">'price ASC'</span>,
-    <span class="s">'price_desc'</span> =&gt; <span class="s">'price DESC'</span>,
-    <span class="s">'name'</span>       =&gt; <span class="s">'name ASC'</span>,
-    <span class="s">'newest'</span>     =&gt; <span class="s">'created_at DESC'</span>,
-];
-
-<span class="n">$key</span> = <span class="n">$_GET</span>[<span class="s">'sort'</span>] ?? <span class="s">'price_asc'</span>;
-<span class="n">$order</span> = <span class="n">$sortMap</span>[<span class="n">$key</span>] ?? <span class="n">$sortMap</span>[<span class="s">'price_asc'</span>];
-
-<span class="n">$sql</span> = <span class="s">"SELECT id, name, price FROM products
-        WHERE is_active = 1
-        ORDER BY {<span class="n">$order</span>}"</span>;</code></pre>
-    </div>
-
-    <div class="tip note">
-      <span class="tag">Ինչո՞ւ սա անվտանգ է</span>
-      <p>Հարցման մեջ ընկնում է <strong>միայն այն, ինչ դու ինքդ ես գրել</strong> զանգվածում։ Օգտագործողի տեքստը օգտագործվում է որպես բանալի, ոչ որպես արժեք։<br><br>
-      Անհայտ բանալին ինքնաբերաբար դառնում է լռելյայն արժեք։ Ոչ մի ստուգում չի կարող բաց թողնվել։<br><br>
-      Հիշո՞ւմ ես Դաս 6-ի <code>in_array($x, $allowed, true)</code> օրինաչափությունը։ Ահա այն նույն գաղափարը՝ ավելի հզոր տեսքով։</p>
-    </div>
-
-    <div class="block">
-      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>IN (...) — դինամիկ քանակ պարամետրերի</div><button class="copy">Պատճենել</button></div>
-<pre><code><span class="n">$ids</span> = [<span class="n">1</span>, <span class="n">5</span>, <span class="n">12</span>];
-
-<span class="c">// Գեներացնում ենք ? ? ? ըստ քանակի</span>
-<span class="n">$in</span> = <span class="f">implode</span>(<span class="s">','</span>, <span class="f">array_fill</span>(<span class="n">0</span>, <span class="f">count</span>(<span class="n">$ids</span>), <span class="s">'?'</span>));
-
-<span class="n">$stmt</span> = <span class="f">db</span>()-&gt;<span class="f">prepare</span>(<span class="s">"SELECT id, name FROM products WHERE id IN (<span class="n">$in</span>)"</span>);
-<span class="n">$stmt</span>-&gt;<span class="f">execute</span>(<span class="n">$ids</span>);</code></pre>
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հինգ ֆունկցիա</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">SELECT</span>
+    <span class="k">COUNT</span>(*)     <span class="k">AS</span> total,            <span class="c">-- քանի՞ ապրանք</span>
+    <span class="k">AVG</span>(price)   <span class="k">AS</span> avg_price,        <span class="c">-- միջին գին</span>
+    <span class="k">MIN</span>(price)   <span class="k">AS</span> cheapest,
+    <span class="k">MAX</span>(price)   <span class="k">AS</span> most_expensive,
+    <span class="k">SUM</span>(stock)   <span class="k">AS</span> total_stock       <span class="c">-- պահեստում ընդհանուր</span>
+<span class="k">FROM</span> products
+<span class="k">WHERE</span> is_active = <span class="n">1</span>;</code></pre>
     </div>
 
     <div class="note">
-      <span class="tag">Սա բացառություն չէ</span>
-      <p>Հարցման մեջ ընկնում է միայն <code>?,?,?</code> — ոչ մի օգտագործողի տվյալ։ Քանակը գալիս է <code>count()</code>-ից, որը միշտ թիվ է։<br><br>
-      Իսկ արժեքներն անցնում են սովորական ձևով <code>execute()</code>-ով։ Կանոնը պահպանված է։</p>
+      <span class="tag">Դաս 3-ի <code>count()</code> և <code>array_sum()</code></span>
+      <p>Դաս 3-ում նույնը անում էինք PHP-ում՝ <code>count($products)</code> և <code>array_sum(array_column($products, 'stock'))</code>։ Արդյունքը մեկ տող է, ոչ ցուցակ։</p>
+    </div>
+
+    <h3>GROUP BY — հաշվել ըստ խմբերի</h3>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ապրանքների քանակը ամեն կատեգորիայում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">SELECT</span>
+    c.name,
+    <span class="k">COUNT</span>(p.id)        <span class="k">AS</span> product_count,
+    <span class="k">ROUND</span>(<span class="k">AVG</span>(p.price)) <span class="k">AS</span> avg_price
+<span class="k">FROM</span> categories c
+<span class="k">LEFT JOIN</span> products p <span class="k">ON</span> p.category_id = c.id
+<span class="k">GROUP BY</span> c.id, c.name
+<span class="k">ORDER BY</span> product_count <span class="k">DESC</span>;</code></pre>
+    </div>
+
+    <div class="tree">GROUP BY-ը աշխատում է այսպես
+
+  1. Միացնում է տողերը (JOIN)
+  2. Բաժանում է կույտերի ըստ c.id-ի
+       Նոութբուքեր   [Air 13, Gamer 16]
+       Մոնիտորներ    [27 4K, 24]
+       Սմարթֆոններ   [X 128, X 256, Պլանշետ]
+       Աքսեսուարներ  [Ստեղնաշար, Մկնիկ, …]
+  3. Ամեն կույտից մեկ տող՝ COUNT(), AVG()
+
+  Արդյունքում 4 տող, ոչ թե 12</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HAVING — ֆիլտրել խմբերը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">-- Կատեգորիաներ, որտեղ 2-ից ավելի ապրանք կա</span>
+<span class="k">SELECT</span> c.name, <span class="k">COUNT</span>(p.id) <span class="k">AS</span> product_count
+<span class="k">FROM</span> categories c
+<span class="k">LEFT JOIN</span> products p <span class="k">ON</span> p.category_id = c.id
+<span class="k">GROUP BY</span> c.id, c.name
+<span class="k">HAVING</span> product_count &gt; <span class="n">2</span>;</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag"><code>WHERE</code> թե <code>HAVING</code></span>
+      <p><code>WHERE</code>-ը ֆիլտրում է <strong>տողերը</strong> խմբավորումից <em>առաջ</em>։<br>
+      <code>HAVING</code>-ը ֆիլտրում է <strong>խմբերը</strong> խմբավորումից <em>հետո</em>։<br><br>
+      <code>WHERE COUNT(p.id) &gt; 2</code>-ը սխալ է, որովհետև <code>WHERE</code>-ի պահին կույտերը դեռ չկան, և հաշվելու բան չկա։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Խորացված · <code>ON</code> թե <code>WHERE</code> LEFT JOIN-ում</span>
+      <p>Եթե ուզում ես հաշվել միայն <em>ակտիվ</em> ապրանքները, բայց ցույց տալ <em>բոլոր</em> կատեգորիաները (նաև դատարկները՝ 0-ով), պայմանը դիր <code>ON</code>-ում․<br><br>
+      <code>LEFT JOIN products p ON p.category_id = c.id AND p.is_active = 1</code><br><br>
+      Եթե այն դնես <code>WHERE p.is_active = 1</code>, դատարկ կատեգորիաները կանհետանան, որովհետև նրանց <code>p.is_active</code>-ը <code>NULL</code> է, իսկ <code>NULL = 1</code>-ը ճիշտ չէ (Դաս 8)։ Փորձիր երկուսը և համեմատիր։</p>
     </div>
   </section>
 
   <!-- ============ 06 ============ -->
   <section id="s6">
-    <h2><span class="num">06</span>Հարցումների ֆայլ</h2>
-    <p><code>data.php</code>-ը փոխարինում ենք <code>products.php</code>-ով՝ նույն ինտերֆեյսով։</p>
+    <h2><span class="num">06</span>Ինդեքսներ՝ ծանոթություն</h2>
+
+    <div class="tree">Առանց ինդեքսի              Ինդեքսով
+
+  Կարդալ 1-ին տողը           Բացել գրքի «բովանդակությունը»
+  Կարդալ 2-րդ տողը           Գտնել էջի համարը
+  ...                        Գնալ ուղիղ այնտեղ
+  Կարդալ 100 000-րդը
+
+  ~100 000 քայլ              ~17 քայլ</div>
 
     <div class="block">
-      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>products.php</div><button class="copy">Պատճենել</button></div>
-<pre><code><span class="p">&lt;?php</span>
-<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ստեղծել և ստուգել</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">CREATE INDEX</span> idx_price <span class="k">ON</span> products(price);
 
-<span class="k">const</span> <span class="n">SORT_MAP</span> = [
-    <span class="s">'price_asc'</span>  =&gt; <span class="s">'final_price ASC'</span>,
-    <span class="s">'price_desc'</span> =&gt; <span class="s">'final_price DESC'</span>,
-    <span class="s">'name'</span>       =&gt; <span class="s">'p.name ASC'</span>,
-    <span class="s">'newest'</span>     =&gt; <span class="s">'p.created_at DESC'</span>,
-];
-
-<span class="k">function</span> <span class="f">getProducts</span>(
-    ?<span class="k">int</span> <span class="n">$categoryId</span> = <span class="k">null</span>,
-    <span class="k">string</span> <span class="n">$sort</span> = <span class="s">'price_asc'</span>,
-    <span class="k">int</span> <span class="n">$limit</span> = <span class="n">12</span>,
-    <span class="k">int</span> <span class="n">$offset</span> = <span class="n">0</span>
-): <span class="k">array</span> {
-
-    <span class="n">$order</span> = <span class="n">SORT_MAP</span>[<span class="n">$sort</span>] ?? <span class="n">SORT_MAP</span>[<span class="s">'price_asc'</span>];
-
-    <span class="n">$where</span>  = [<span class="s">'p.is_active = 1'</span>];
-    <span class="n">$params</span> = [];
-
-    <span class="k">if</span> (<span class="n">$categoryId</span> !== <span class="k">null</span>) {
-        <span class="n">$where</span>[] = <span class="s">'p.category_id = :category'</span>;
-        <span class="n">$params</span>[<span class="s">'category'</span>] = <span class="n">$categoryId</span>;
-    }
-
-    <span class="n">$sql</span> = <span class="s">"
-        SELECT
-            p.id, p.name, p.slug, p.specs,
-            p.price, p.discount, p.image, p.stock,
-            c.name AS category_name,
-            ROUND(p.price * (100 - p.discount) / 100) AS final_price
-        FROM products p
-        LEFT JOIN categories c ON c.id = p.category_id
-        WHERE "</span> . <span class="f">implode</span>(<span class="s">' AND '</span>, <span class="n">$where</span>) . <span class="s">"
-        ORDER BY {<span class="n">$order</span>}
-        LIMIT :limit OFFSET :offset
-    "</span>;
-
-    <span class="n">$stmt</span> = <span class="f">db</span>()-&gt;<span class="f">prepare</span>(<span class="n">$sql</span>);
-
-    <span class="k">foreach</span> (<span class="n">$params</span> <span class="k">as</span> <span class="n">$k</span> =&gt; <span class="n">$v</span>) {
-        <span class="n">$stmt</span>-&gt;<span class="f">bindValue</span>(<span class="s">":{<span class="n">$k</span>}"</span>, <span class="n">$v</span>, <span class="k">PDO::PARAM_INT</span>);
-    }
-
-    <span class="n">$stmt</span>-&gt;<span class="f">bindValue</span>(<span class="s">':limit'</span>,  <span class="n">$limit</span>,  <span class="k">PDO::PARAM_INT</span>);
-    <span class="n">$stmt</span>-&gt;<span class="f">bindValue</span>(<span class="s">':offset'</span>, <span class="n">$offset</span>, <span class="k">PDO::PARAM_INT</span>);
-
-    <span class="n">$stmt</span>-&gt;<span class="f">execute</span>();
-
-    <span class="k">return</span> <span class="n">$stmt</span>-&gt;<span class="f">fetchAll</span>();
-}
-
-<span class="k">function</span> <span class="f">getProduct</span>(<span class="k">int</span> <span class="n">$id</span>): ?<span class="k">array</span>
-{
-    <span class="n">$stmt</span> = <span class="f">db</span>()-&gt;<span class="f">prepare</span>(<span class="s">"
-        SELECT p.*, c.name AS category_name,
-               ROUND(p.price * (100 - p.discount) / 100) AS final_price
-        FROM products p
-        LEFT JOIN categories c ON c.id = p.category_id
-        WHERE p.id = :id AND p.is_active = 1
-    "</span>);
-
-    <span class="n">$stmt</span>-&gt;<span class="f">execute</span>([<span class="s">'id'</span> =&gt; <span class="n">$id</span>]);
-
-    <span class="k">return</span> <span class="n">$stmt</span>-&gt;<span class="f">fetch</span>() ?: <span class="k">null</span>;
-}
-
-<span class="k">function</span> <span class="f">countProducts</span>(?<span class="k">int</span> <span class="n">$categoryId</span> = <span class="k">null</span>): <span class="k">int</span>
-{
-    <span class="n">$sql</span> = <span class="s">"SELECT COUNT(*) FROM products WHERE is_active = 1"</span>;
-    <span class="n">$params</span> = [];
-
-    <span class="k">if</span> (<span class="n">$categoryId</span> !== <span class="k">null</span>) {
-        <span class="n">$sql</span> .= <span class="s">" AND category_id = :category"</span>;
-        <span class="n">$params</span>[<span class="s">'category'</span>] = <span class="n">$categoryId</span>;
-    }
-
-    <span class="n">$stmt</span> = <span class="f">db</span>()-&gt;<span class="f">prepare</span>(<span class="n">$sql</span>);
-    <span class="n">$stmt</span>-&gt;<span class="f">execute</span>(<span class="n">$params</span>);
-
-    <span class="k">return</span> (<span class="k">int</span>) <span class="n">$stmt</span>-&gt;<span class="f">fetchColumn</span>();
-}
-
-<span class="k">function</span> <span class="f">getCategories</span>(): <span class="k">array</span>
-{
-    <span class="k">return</span> <span class="f">db</span>()
-        -&gt;<span class="f">query</span>(<span class="s">"SELECT id, name, slug FROM categories ORDER BY name"</span>)
-        -&gt;<span class="f">fetchAll</span>();
-}</code></pre>
-    </div>
-
-    <div class="warn note">
-      <span class="tag">Ինչո՞ւ <code>bindValue</code>, ոչ <code>execute([...])</code></span>
-      <p><code>execute()</code>-ը բոլոր պարամետրերը փոխանցում է որպես <strong>տողեր</strong>։<br><br>
-      <code>LIMIT '12'</code>-ը շարահյուսական սխալ է MySQL-ում — <code>LIMIT</code>-ը թիվ է պահանջում։<br><br>
-      <code>bindValue(':limit', $limit, PDO::PARAM_INT)</code>-ը բացահայտ նշում է տիպը։ Դա անհրաժեշտ է միայն <code>LIMIT</code>-ի և <code>OFFSET</code>-ի համար — մնացած տեղերում <code>execute()</code>-ը լիովին բավարար է։</p>
+<span class="c">-- Բազան օգտագործու՞մ է այն</span>
+<span class="k">EXPLAIN SELECT</span> name <span class="k">FROM</span> products <span class="k">WHERE</span> price &lt; <span class="n">100000</span>;
+<span class="c">-- key սյունակում՝ idx_price → այո</span></code></pre>
     </div>
 
     <div class="tip note">
-      <span class="tag">Դինամիկ <code>WHERE</code>-ի օրինաչափությունը</span>
-      <p><code>$where</code> զանգվածը և <code>implode(' AND ', $where)</code>-ը թույլ են տալիս ավելացնել պայմաններ ըստ անհրաժեշտության։<br><br>
-      Կարևորը՝ զանգվածում ընկնում են <strong>միայն մեր գրած տողերը</strong>, իսկ արժեքները՝ <code>$params</code>-ում։ Օգտագործողի տվյալը երբեք չի դառնում SQL-ի մաս։<br><br>
-      Այս օրինաչափությունը կաշխատի ցանկացած քանակի ֆիլտրի հետ՝ գնի միջակայք, որոնում, կատեգորիա, առկայություն։</p>
+      <span class="tag">Որտեղ արդեն ինդեքս կա</span>
+      <p><code>PRIMARY KEY</code>, <code>UNIQUE</code> (<code>slug</code>) և <code>FOREIGN KEY</code> սյունակները <strong>ինդեքս ունեն ինքնաբերաբար</strong>։ Ուստի <code>WHERE slug = '...'</code>-ը և <code>JOIN ... ON c.id = p.category_id</code>-ը արդեն արագ են։<br><br>
+      12 ապրանքի դեպքում տարբերությունը չես տեսնի։ Ինդեքսները կարևոր են դառնում հազարավոր տողերի դեպքում։ Կանոն՝ ինդեքս դիր այն սյունակներին, որոնցով հաճախ <code>WHERE</code> կամ <code>ORDER BY</code> ես անում, ոչ «ամեն դեպքում» ամեն սյունակին․ ամեն ինդեքս դանդաղեցնում է <code>INSERT</code>-ը և <code>UPDATE</code>-ը։</p>
     </div>
   </section>
 
@@ -476,53 +395,29 @@
   <section id="s7">
     <h2><span class="num">07</span>Դասարանական</h2>
 
-    <div class="block">
-      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.php — վերջնական տեսք</div><button class="copy">Պատճենել</button></div>
-<pre><code><span class="p">&lt;?php</span>
-<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
-
-<span class="k">require_once</span> <span class="n">__DIR__</span> . <span class="s">'/bootstrap.php'</span>;
-
-<span class="c">// Պարամետրեր URL-ից</span>
-<span class="n">$sort</span> = <span class="n">$_GET</span>[<span class="s">'sort'</span>] ?? <span class="s">'price_asc'</span>;
-<span class="n">$page</span> = <span class="f">max</span>(<span class="n">1</span>, (<span class="k">int</span>) (<span class="n">$_GET</span>[<span class="s">'page'</span>] ?? <span class="n">1</span>));
-<span class="n">$perPage</span> = <span class="n">12</span>;
-
-<span class="n">$categoryId</span> = <span class="f">filter_var</span>(<span class="n">$_GET</span>[<span class="s">'category'</span>] ?? <span class="k">null</span>, <span class="k">FILTER_VALIDATE_INT</span>) ?: <span class="k">null</span>;
-
-<span class="c">// Տվյալներ բազայից</span>
-<span class="n">$products</span> = <span class="f">getProducts</span>(<span class="n">$categoryId</span>, <span class="n">$sort</span>, <span class="n">$perPage</span>, (<span class="n">$page</span> - <span class="n">1</span>) * <span class="n">$perPage</span>);
-<span class="n">$total</span>      = <span class="f">countProducts</span>(<span class="n">$categoryId</span>);
-<span class="n">$categories</span> = <span class="f">getCategories</span>();
-
-<span class="n">$content</span> = <span class="f">render</span>(<span class="s">'pages/home'</span>, <span class="f">compact</span>(
-    <span class="s">'products'</span>, <span class="s">'categories'</span>, <span class="s">'total'</span>, <span class="s">'sort'</span>, <span class="s">'page'</span>, <span class="s">'perPage'</span>, <span class="s">'categoryId'</span>
-));
-
-<span class="k">echo</span> <span class="f">render</span>(<span class="s">'layout'</span>, [
-    <span class="s">'title'</span>   =&gt; <span class="s">'ՏեխնոՄարկետ — տեխնիկա Երևանում'</span>,
-    <span class="s">'content'</span> =&gt; <span class="n">$content</span>,
-]);</code></pre>
-    </div>
-
     <ol>
-      <li>Ստեղծիր <code>config.php</code> և ավելացրու այն <code>.gitignore</code>-ում</li>
-      <li>Ստեղծիր <code>config.example.php</code></li>
-      <li>Գրիր <code>db.php</code>-ը</li>
-      <li>Ստեղծիր <code>products.php</code>-ը հարցումներով</li>
-      <li>Փոխարինիր <code>data.php</code>-ը <code>bootstrap.php</code>-ում</li>
-      <li>Թարմացրու <code>index.php</code>-ը</li>
-      <li>Ստուգիր՝ շաբլոնը փոխվե՞ց</li>
-      <li>Ավելացրու տեսակավորման ընտրացանկ</li>
-      <li>Ավելացրու կատեգորիաների ֆիլտր</li>
-      <li>Փորձիր SQL injection՝ <code>?sort=price; DROP TABLE products--</code></li>
+      <li>Ստեղծիր <code>categories</code>-ը, ավելացրու կապը և բաշխիր ապրանքները</li>
+      <li>Փորձիր <code>category_id = 99</code> սխալը</li>
+      <li>Ստեղծիր <code>orders</code> և <code>order_items</code>, ավելացրու փորձնական պատվերը</li>
+      <li>Համեմատիր <code>LEFT</code> և <code>INNER JOIN</code>-ը վեբ-տեսախցիկի վրա</li>
+      <li>Գրիր 8 հարցումը ներքևում</li>
     </ol>
 
-    <div class="warn note">
-      <span class="tag">Յոթերորդ քայլն ամենակարևորն է</span>
-      <p><code>views/pages/home.php</code>-ը <strong>գրեթե չպիտի փոխվի</strong>։ Միայն <code>finalPrice($p)</code>-ը դառնում է <code>$p['final_price']</code>։<br><br>
-      Ամբողջ <code>foreach</code>-ը, ամբողջ HTML-ը, բոլոր <code>e()</code>-երը՝ նույնը։<br><br>
-      Դա նշանակում է, որ շերտերի բաժանումը ճիշտ էր արված։ Տվյալների աղբյուրը փոխվեց ամբողջովին, ներկայացումը՝ չշարժվեց։ Հենց այդ բանի համար են ճարտարապետական սահմանները։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>8 հարցում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">-- 1. Ակտիվ ապրանքները կատեգորիայի անունով</span>
+<span class="c">-- 2. Միայն «Մոնիտորներ» կատեգորիայի ապրանքները (JOIN + WHERE c.slug)</span>
+<span class="c">-- 3. Ապրանքները, որոնք կատեգորիա չունեն</span>
+<span class="c">-- 4. Պատվեր 1-ի բովանդակությունը՝ ապրանքների անուններով</span>
+<span class="c">-- 5. Պատվեր 1-ի ընդհանուր գումարը SUM(quantity * price)-ով</span>
+<span class="c">-- 6. Ապրանքների քանակը ամեն կատեգորիայում</span>
+<span class="c">-- 7. Ամենաթանկ ապրանքը ամեն կատեգորիայում (MAX)</span>
+<span class="c">-- 8. Կատեգորիաներ, որտեղ միջին գինը 100 000-ից բարձր է (HAVING)</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">5-րդ հարցումը ստուգում է պատվերը</span>
+      <p>Եթե <code>SUM</code>-ը հավասար չէ <code>orders.total</code>-ին, ինչ-որ բան սխալ է։ Նման ստուգումները իրական խանութներում կատարվում են կանոնավոր։ Դաս 11-ում պատվերը կստեղծենք PHP-ով, և գումարը կհաշվենք այնպես, որ այն միշտ համընկնի։</p>
     </div>
   </section>
 
@@ -530,16 +425,14 @@
   <section id="s8">
     <h2><span class="num">08</span>Տնային աշխատանք</h2>
     <ol class="hw">
-      <li>Կատարիր դասարանականի 10 քայլը։</li>
-      <li>Ցուցադրիր SQL injection-ը <strong>փորձնական</strong> խոցելի ֆայլում՝ <code>?id=1 OR 1=1</code>։ Ուղարկիր սքրինշոթ։ Ապա ուղղիր prepared statement-ով։</li>
-      <li>Ցուցադրիր մուտքի շրջանցումը <code>' OR '1'='1'--</code>-ով նույն փորձնական ֆայլում։</li>
-      <li>Փորձիր <code>ORDER BY :field</code>։ Ի՞նչ եղավ և ինչու։</li>
-      <li>Ցուցադրիր <code>LIMIT</code>-ի խնդիրը <code>execute([...])</code>-ով և <code>bindValue</code>-ով։</li>
-      <li>Ջնջիր <code>ERRMODE_EXCEPTION</code>-ը և կատարիր սխալ հարցում։ Ի՞նչ ես տեսնում։ Ինչո՞ւ դա վտանգավոր է։</li>
-      <li>Ցուցադրիր <code>DECIMAL</code>-ի տիպի թակարդը <code>strict_types</code>-ով։</li>
-      <li>Ավելացրու որոնում անվանով՝ <code>LIKE :q</code>։ Ուշադրություն՝ <code>%</code>-ը որտե՞ղ պիտի լինի։</li>
-      <li>Ավելացրու գնի միջակայքի ֆիլտր դինամիկ <code>WHERE</code>-ի օրինաչափությամբ։</li>
-      <li>Խնդրիր AI-ին վերանայել <code>products.php</code>-ը անվտանգության տեսանկյունից։ Ի՞նչ գտավ։</li>
+      <li>Ավարտիր 8 հարցումը։ Ուղարկիր SQL-ը և արդյունքների սքրինշոթները։</li>
+      <li>Ավելացրու երկրորդ պատվեր երեք ապրանքով և գրիր հարցում, որը ցույց է տալիս բոլոր պատվերները՝ ամեն մեկի տողերի քանակով և գումարով։</li>
+      <li>Փորձիր ջնջել ապրանք, որը կա պատվերում։ Ի՞նչ սխալ ստացար։ Ինչու է դա լավ։</li>
+      <li>Ջնջիր կատեգորիա և ստուգիր, թե ինչ եղավ նրա ապրանքների հետ։ Վերադարձրու կատեգորիան։</li>
+      <li>Համեմատիր <code>ON ... AND p.is_active = 1</code> և <code>WHERE p.is_active = 1</code> տարբերակները բաժին 05-ի խորացված նշումից։ Բացատրիր տարբերությունը քո բառերով։</li>
+      <li>Գրիր հարցում․ «ամենավաճառված 3 ապրանքը»՝ <code>SUM(oi.quantity)</code>-ով։</li>
+      <li>Պահիր բոլոր <code>CREATE TABLE</code> հրամանները մեկ <code>schema.sql</code> ֆայլում։ Ջնջիր բազան, կատարիր ֆայլը և ստուգիր, որ ամեն ինչ վերականգնվեց։ Այս ֆայլը պետք կլինի հաջորդ դասին։</li>
+      <li>Տուր AI-ին քո <code>schema.sql</code>-ը և խնդրիր վերանայել այն։ Ի՞նչ առաջարկեց։ Համաձա՞յն ես։ Ինչու։</li>
     </ol>
   </section>
 
@@ -548,58 +441,52 @@
     <h2><span class="num">09</span>Հիշելու թերթիկ</h2>
     <div class="scroll">
     <table class="tbl">
-      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
-      <tr><td><code>$pdo-&gt;prepare($sql)</code></td><td>Պատրաստել հարցումը ⭐</td></tr>
-      <tr><td><code>$stmt-&gt;execute(['k' =&gt; $v])</code></td><td>Կատարել պարամետրերով</td></tr>
-      <tr><td><code>bindValue(..., PDO::PARAM_INT)</code></td><td><code>LIMIT</code>-ի համար ⭐</td></tr>
-      <tr><td><code>fetchAll()</code></td><td>Բոլոր տողերը</td></tr>
-      <tr><td><code>fetch()</code></td><td>Մեկ տող կամ <code>false</code></td></tr>
-      <tr><td><code>fetchColumn()</code></td><td>Մեկ արժեք</td></tr>
-      <tr><td><code>ERRMODE_EXCEPTION</code></td><td>Բացառություններ ⭐</td></tr>
-      <tr><td><code>EMULATE_PREPARES =&gt; false</code></td><td>Իրական prepared ⭐</td></tr>
+      <tr><th>SQL</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>FOREIGN KEY ... REFERENCES</code></td><td>Կապ մյուս աղյուսակի հետ</td></tr>
+      <tr><td><code>ON DELETE SET NULL / RESTRICT / CASCADE</code></td><td>Ինչ անել ջնջելիս</td></tr>
+      <tr><td><code>ALTER TABLE ... ADD COLUMN</code></td><td>Ավելացնել սյունակ</td></tr>
+      <tr><td><code>LEFT JOIN ... ON</code></td><td>Միացնել, նույնիսկ առանց զույգի ⭐</td></tr>
+      <tr><td><code>INNER JOIN ... ON</code></td><td>Միացնել, միայն զույգերը</td></tr>
+      <tr><td><code>COUNT / SUM / AVG / MIN / MAX</code></td><td>Հաշվել</td></tr>
+      <tr><td><code>GROUP BY</code></td><td>Բաժանել խմբերի</td></tr>
+      <tr><td><code>HAVING</code></td><td>Ֆիլտրել խմբերը</td></tr>
+      <tr><td><code>EXPLAIN</code></td><td>Ստուգել ինդեքսը</td></tr>
     </table>
     </div>
 
-    <h3>Երեք կանոն</h3>
-    <div class="tree">1. Օգտագործողի ամեն արժեք → պարամետր
-2. Դաշտերի անուններ և ուղղություն → սպիտակ ցուցակ
-3. Գաղտնաբառերը → .gitignore</div>
-
-    <h3>Ի՞նչ կարելի է պարամետրացնել</h3>
-    <div class="tree">✅ WHERE id = :id
-✅ WHERE name LIKE :q
-✅ VALUES (:name, :price)
-✅ LIMIT :limit          (bindValue-ով)
-
-❌ ORDER BY :field       → սպիտակ ցուցակ
-❌ FROM :table           → սպիտակ ցուցակ
-❌ ORDER BY price :dir   → սպիտակ ցուցակ</div>
+    <h3>Հարցման լրիվ կարգը</h3>
+    <div class="tree">SELECT    ← ի՞նչ սյունակներ
+FROM      ← որտեղից
+JOIN      ← ինչի՞ հետ միացնել
+WHERE     ← ո՞ր տողերը
+GROUP BY  ← ինչպե՞ս խմբավորել
+HAVING    ← ո՞ր խմբերը
+ORDER BY  ← ինչպե՞ս դասավորել
+LIMIT     ← քանի՞սը</div>
 
     <h3>Ստուգաթերթ</h3>
     <ul class="goals">
-      <li>Ոչ մի փոփոխական հարցման տողում</li>
-      <li>Դաշտերի անունները՝ սպիտակ ցուցակից</li>
-      <li><code>ERRMODE_EXCEPTION</code> միացված է</li>
-      <li><code>EMULATE_PREPARES</code> անջատված է</li>
-      <li>Սխալի մանրամասները չեն ցուցադրվում օգտագործողին</li>
-      <li><code>config.php</code>-ը <code>.gitignore</code>-ում է</li>
-      <li>Կա <code>config.example.php</code></li>
-      <li>Շաբլոնները չեն փոխվել</li>
+      <li>Կատեգորիան պահվում է մեկ անգամ, ապրանքը պահում է <code>category_id</code></li>
+      <li>Կապերը ունեն <code>FOREIGN KEY</code></li>
+      <li><code>ON DELETE</code>-ը ընտրված է գիտակցաբար</li>
+      <li><code>order_items</code>-ը պահում է գինը գնման պահին</li>
+      <li>Կատալոգում՝ <code>LEFT JOIN</code></li>
+      <li><code>schema.sql</code>-ը վերականգնում է ամբողջ բազան</li>
     </ul>
 
     <h3>Ինքնաստուգում</h3>
     <ul class="goals">
-      <li>Կարո՞ղ եմ բացատրել, ինչու փախցնելը լուծում չէ</li>
-      <li>Հասկանո՞ւմ եմ, ինչպես են աշխատում երկու ալիքները</li>
-      <li>Գիտե՞մ, ինչու <code>EMULATE_PREPARES</code>-ը կարևոր է</li>
-      <li>Կարո՞ղ եմ բացատրել, ինչու <code>ORDER BY</code>-ը չի պարամետրացվում</li>
-      <li>Գիտե՞մ, ինչու <code>LIMIT</code>-ը պահանջում է <code>bindValue</code></li>
+      <li>Կարո՞ղ եմ բացատրել, ինչու կատեգորիան առանձին աղյուսակ է</li>
+      <li>Գիտե՞մ <code>INNER</code>-ի և <code>LEFT JOIN</code>-ի տարբերությունը օրինակով</li>
+      <li>Կարո՞ղ եմ բացատրել, ինչու <code>order_items</code>-ում կրկնվում է գինը</li>
+      <li>Գիտե՞մ <code>WHERE</code>-ի և <code>HAVING</code>-ի տարբերությունը</li>
+      <li>Հասկանո՞ւմ եմ, ինչ է անում <code>GROUP BY</code>-ը</li>
     </ul>
 
     <div class="tip note">
       <span class="tag">Հաջորդ դասին</span>
-      <p>CRUD և ադմին վահանակ։ Կսովորենք <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code> PDO-ով, <code>lastInsertId()</code>, տրանզակցիաներ։<br><br>
-      Կկառուցենք ադմին էջ, որտեղ մենեջերը կարող է ավելացնել և խմբագրել ապրանքներ — վերջապես կիրագործվի այն, ինչի համար բազա էինք ուզում։</p>
+      <p>SQL-ը պատրաստ է։ <strong>Դաս 10</strong>՝ PDO և SQL injection, անվտանգության երրորդ դասը։ Կմիացնենք PHP-ն բազային, կտեսնենք, ինչու տողերի միացումով հարցում կառուցելը ամենավտանգավոր բանն է, որ կարելի է անել, և <code>data.php</code>-ը վերջապես կանհետանա։<br><br>
+      Բեր <code>schema.sql</code>-ը։</p>
     </div>
   </section>
 
