@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHP Դաս 21 — Laravel · վալիդացիա և auth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>PHP Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">PHP Դաս 21 · 2 ժամ · Laravel 4 / 4</p>
+  <h1>Վալիդացիա և auth</h1>
+  <p class="lede">Դաս 6-ում գրեցիր <code>validateContact()</code>-ը, Դաս 16-ում՝ <code>Auth</code>, CSRF-ի և <code>/admin</code>-ի ստուգումները և <code>LoginThrottle</code>։ Այսօր դրանց Laravel-ի տարբերակն է։ Դասի վերջում ադմինը կունենա մուտք, Դաս 19-ի ժամանակավոր բացը կփակվի, իսկ <code>role</code> սյունակը կսկսի իրականում ինչ-որ բան նշանակել։</p>
+
+  <div class="facts">
+    <span>Բլոկ 3 · Դաս 21 / 24</span>
+    <span>Դաս 6 և 16-ի հայելին</span>
+    <span>Laravel-ի վերջին դասը</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li><code>$request-&gt;validate()</code>-ը և ինչ է կատարվում ձախողման դեպքում</li>
+      <li><code>old()</code>, <code>@error</code> և հասանելիությունը</li>
+      <li>Կանոններ՝ Դաս 6, 7 և 11-ի ստուգումների փոխարեն</li>
+      <li>Form Request դասեր</li>
+      <li>Ադմինի <code>store</code> և <code>update</code>՝ <code>validated()</code>-ով</li>
+      <li>Fortify՝ մուտք և ելք մեր սեփական շաբլոններով</li>
+      <li><code>auth</code> middleware և <code>intended</code></li>
+      <li>Gate-եր՝ ո՞վ ինչ կարող է անել</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Հայելին</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դու գրեցիր</th><th>Դաս</th><th>Laravel</th></tr>
+      <tr><td><code>validateContact()</code> → <code>$errors</code></td><td>6</td><td><code>$request-&gt;validate([...])</code></td></tr>
+      <tr><td><code>$old = $_POST</code></td><td>6</td><td><code>old('name')</code></td></tr>
+      <tr><td><code>if (isset($errors['name']))</code></td><td>6</td><td><code>@error('name') ... @enderror</code></td></tr>
+      <tr><td><code>in_array($x, $allowed, true)</code></td><td>6</td><td><code>Rule::in([...])</code></td></tr>
+      <tr><td>Կատեգորիան կա՞ բազայում</td><td>9, 11</td><td><code>Rule::exists('categories', 'id')</code></td></tr>
+      <tr><td><code>uniqueSlug($base, $exceptId)</code></td><td>11</td><td><code>Rule::unique(...)-&gt;ignore($product)</code></td></tr>
+      <tr><td><code>finfo</code> + չափի սահման</td><td>7</td><td><code>'image', 'mimes:jpg,png,webp', 'max:2048'</code></td></tr>
+      <tr><td><code>ValidationException</code> → 422 JSON</td><td>17</td><td>Ինքնաբերաբար՝ <code>expectsJson()</code>-ով</td></tr>
+      <tr><td><code>Auth::attempt()</code>, <code>password_verify</code></td><td>16</td><td>Fortify</td></tr>
+      <tr><td><code>LoginThrottle</code></td><td>16</td><td>Fortify-ի սահմանափակիչը</td></tr>
+      <tr><td><code>/admin</code> ստուգումը + <code>intended</code></td><td>16</td><td><code>auth</code> middleware</td></tr>
+      <tr><td><code>$auth-&gt;isAdmin()</code> (տնային)</td><td>16</td><td>Gate + <code>can:</code> middleware</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Վալիդացիա</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Դաս 6-ի կոնտակտների ֆորման՝ Laravel-ում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">use</span> <span class="t">Illuminate\Validation\Rule</span>;
+
+<span class="k">public function</span> <span class="f">submit</span>(<span class="t">Request</span> <span class="n">$request</span>)
+{
+    <span class="n">$data</span> = <span class="n">$request</span>-&gt;<span class="f">validate</span>([
+        <span class="s">'name'</span>    =&gt; [<span class="s">'required'</span>, <span class="s">'string'</span>, <span class="s">'min:2'</span>, <span class="s">'max:60'</span>],
+        <span class="s">'email'</span>   =&gt; [<span class="s">'required'</span>, <span class="s">'email'</span>, <span class="s">'max:190'</span>],
+        <span class="s">'topic'</span>   =&gt; [<span class="s">'required'</span>, <span class="t">Rule</span>::<span class="f">in</span>([<span class="s">'order'</span>, <span class="s">'support'</span>, <span class="s">'other'</span>])],
+        <span class="s">'message'</span> =&gt; [<span class="s">'required'</span>, <span class="s">'string'</span>, <span class="s">'min:10'</span>, <span class="s">'max:2000'</span>],
+    ]);
+
+    <span class="c">// Այստեղ ենք հասնում ՄԻԱՅՆ եթե ամեն ինչ վավեր է ⭐
+    // $data-ն պարունակում է ՄԻԱՅՆ այս չորս դաշտը</span>
+
+    <span class="k">return</span> <span class="f">redirect</span>()-&gt;<span class="f">route</span>(<span class="s">'contact'</span>)-&gt;<span class="f">with</span>(<span class="s">'success'</span>, <span class="s">'Շնորհակալություն'</span>);   <span class="c">// PRG — Դաս 6</span>
+}</code></pre>
+    </div>
+
+    <div class="tree">Ի՞նչ է կատարվում, երբ վալիդացիան ձախողվում է
+
+  $request->validate([...])
+        │
+        │  գցում է ValidationException
+        │  (կոնտրոլերի մնացած կոդը չի կատարվում)
+        ▼
+  Laravel-ի բացառությունների մշակիչը
+        │
+   ┌────┴──────────────────────────────┐
+   │ սովորական ֆորմա                   │ expectsJson()  (fetch, Դաս 17)
+   ▼                                   ▼
+  302 redirect ետ                      422
+  + սխալները սեսիայում (flash)         { "message": "...",
+  + լրացրածը սեսիայում (flash)           "errors": { "email": ["..."] } }
+        │
+  ֆորման նորից ցույց է տրվում
+  $errors և old() արդեն հասանելի են</div>
+
+    <div class="tip note">
+      <span class="tag">Դաս 6-ի ամբողջ կոնտրոլերը՝ մեկ կանչում</span>
+      <p>Դաս 6-ում ձեռքով գրում էինք․ ստուգել, հավաքել <code>$errors</code>, պահել <code>$old = $_POST</code>, ցույց տալ ֆորման նորից, հաջողության դեպքում՝ redirect։<br><br>
+      Այստեղ <code>validate()</code>-ը անում է առաջին չորսը, իսկ հինգերորդը՝ PRG-ն, մնում է քո գործը։ Ֆլեշ հաղորդագրությունները ապրում են ուղիղ մեկ հարցում՝ ճիշտ Դաս 7-ի <code>flash()</code>-ի պես։<br><br>
+      Եվ Դաս 17-ի երկու ձևաչափը՝ HTML redirect կամ JSON 422, որոշվում է ինքնաբերաբար։ Նույն կոնտրոլերը սպասարկում է և՛ ֆորման, և՛ <code>fetch</code>-ը։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Շաբլոնում՝ old() և @error հասանելիությամբ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"email"</span><span class="p">&gt;</span>Էլ. հասցե<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">input</span> <span class="f">id</span>=<span class="s">"email"</span> <span class="f">name</span>=<span class="s">"email"</span> <span class="f">type</span>=<span class="s">"email"</span>
+           <span class="f">value</span>=<span class="s">"{{ old('email') }}"</span>
+           <span class="k">@class</span>([<span class="s">'input'</span>, <span class="s">'input--error'</span> =&gt; <span class="n">$errors</span>-&gt;<span class="f">has</span>(<span class="s">'email'</span>)])
+           <span class="k">@error</span>(<span class="s">'email'</span>) <span class="f">aria-invalid</span>=<span class="s">"true"</span> <span class="f">aria-describedby</span>=<span class="s">"email-error"</span> <span class="k">@enderror</span><span class="p">&gt;</span>
+
+    <span class="k">@error</span>(<span class="s">'email'</span>)
+        <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"field__error"</span> <span class="f">id</span>=<span class="s">"email-error"</span><span class="p">&gt;</span>{{ <span class="n">$message</span> }}<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+    <span class="k">@enderror</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+<span class="c">{{-- Ընդհանուր հաղորդագրություն ֆորմայի վերևում — Դաս 6-ի role="alert"-ը --}}</span>
+<span class="k">@if</span> (<span class="n">$errors</span>-&gt;<span class="f">any</span>())
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"alert alert--danger"</span> <span class="f">role</span>=<span class="s">"alert"</span><span class="p">&gt;</span>
+        Ուղղեք {{ <span class="n">$errors</span>-&gt;<span class="f">count</span>() }} սխալ և փորձեք կրկին։
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="k">@endif</span></code></pre>
+    </div>
+
+        <div class="tip note">
+      <span class="tag">Դաս 6-ի հասանելիությունը չի կորչում</span>
+      <p><code>aria-invalid</code>-ը և <code>aria-describedby</code>-ն ֆրեյմվորքը <strong>ինքը չի ավելացնում</strong>։ Laravel-ը տալիս է սխալները, բայց թե ինչպես են դրանք հասնում էկրանընթերցիչին, մնում է քո որոշումը։<br><br>
+      Դաս 6-ում ասացինք․ <em>«առանց դրանց կույր օգտագործողը լսում է միայն "տեքստային դաշտ, Էլ. հասցե"։ Կարմիր շրջանակը նրա համար գոյություն չունի»</em>։ Ֆրեյմվորքը փոխվեց, իսկ այս փաստը՝ ոչ։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Գաղտնաբառը երբեք չի վերադառնում</span>
+      <p>Դաս 6-ում <code>$old = $_POST</code> պահում էր <em>ամեն ինչ</em>։ Եթե ֆորմայում գաղտնաբառ լիներ, այն կհայտնվեր HTML-ում <code>value="..."</code>-ի մեջ՝ էջի կոդում, բրաուզերի քեշում և երբեմն լոգերում։<br><br>
+      Laravel-ը <code>password</code>, <code>password_confirmation</code> և <code>current_password</code> դաշտերը <strong>երբեք չի պահում</strong> <code>old()</code>-ի համար։ Ուստի գաղտնաբառի դաշտում <code>value="{{ old('password') }}"</code> երբեք մի՛ գրիր։ Սխալի դեպքում օգտագործողը այն նորից կմուտքագրի, և դա ճիշտ է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Կանոններ</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Կանոն</th><th>Ինչ է ստուգում</th><th>Դաս</th></tr>
+      <tr><td><code>required</code></td><td>Դատարկ չէ (<code>""</code>-ը և բացատները՝ ոչ)</td><td>6</td></tr>
+      <tr><td><code>nullable</code></td><td>Կարող է դատարկ լինել</td><td>—</td></tr>
+      <tr><td><code>string</code>, <code>integer</code>, <code>boolean</code></td><td>Տիպ</td><td>2</td></tr>
+      <tr><td><code>min:2</code>, <code>max:60</code></td><td>Տողի երկարություն՝ նիշերով ⭐</td><td>2, 6</td></tr>
+      <tr><td><code>between:0,90</code></td><td>Թվի միջակայք (եթե կա <code>integer</code>)</td><td>6</td></tr>
+      <tr><td><code>email</code></td><td>Էլ. հասցեի ձևաչափ</td><td>6</td></tr>
+      <tr><td><code>Rule::in([...])</code></td><td>Սպիտակ ցուցակ</td><td>6, 15</td></tr>
+      <tr><td><code>Rule::exists('categories', 'id')</code></td><td>Գոյություն ունի բազայում</td><td>9, 11</td></tr>
+      <tr><td><code>Rule::unique('products', 'slug')</code></td><td>Եզակի է բազայում</td><td>8, 11</td></tr>
+      <tr><td><code>image</code>, <code>mimes:jpg,png,webp</code></td><td>Ֆայլի իրական տիպը՝ բովանդակությունից</td><td>7</td></tr>
+      <tr><td><code>max:2048</code> ֆայլի համար</td><td>Չափը <strong>կիլոբայթերով</strong></td><td>7</td></tr>
+      <tr><td><code>confirmed</code></td><td><code>password</code> = <code>password_confirmation</code></td><td>—</td></tr>
+    </table>
+    </div>
+
+        <div class="warn note">
+      <span class="tag">Վերին սահմանը մի՛ մոռացիր — Դաս 6-ից</span>
+      <p><code>'description' =&gt; ['nullable', 'string']</code>-ը թույլ է տալիս 50 ՄԲ տեքստ։ Laravel-ը սահմանը ինքը չի ավելացնում։<br><br>
+      Դաս 6-ի կանոնը մնում է՝ <strong>ամեն տեքստային դաշտ ունի <code>max</code></strong>։ Այն համապատասխանում է բազայի սյունակին․ <code>string('name', 200)</code> → <code>max:200</code>։ Եթե վալիդացիան թույլ տա ավելին, քան սյունակը կարող է պահել, MySQL-ը կգցի սխալ կամ կկտրի տեքստը։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Rule::unique — Դաս 11-ի $exceptId-ը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Ստեղծում</span>
+<span class="s">'email'</span> =&gt; [<span class="s">'required'</span>, <span class="s">'email'</span>, <span class="t">Rule</span>::<span class="f">unique</span>(<span class="s">'users'</span>, <span class="s">'email'</span>)],
+
+<span class="c">// Խմբագրում — բացառել ընթացիկ գրառումը ⭐</span>
+<span class="s">'email'</span> =&gt; [<span class="s">'required'</span>, <span class="s">'email'</span>, <span class="t">Rule</span>::<span class="f">unique</span>(<span class="s">'users'</span>, <span class="s">'email'</span>)-&gt;<span class="f">ignore</span>(<span class="n">$user</span>)],</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag"><code>ignore()</code>-ը Դաս 11-ի խնդիրն է</span>
+      <p>Դաս 11-ում ասացինք․ <em>«խմբագրելիս ապրանքն ունի իր սեփական slug-ը բազայում։ Առանց բացառելու՝ uniqueSlug-ը կգտնի ինքն իրեն»</em>։ Նույնը այստեղ․ առանց <code>ignore()</code>-ի օգտագործողը չի կարողանա պահպանել պրոֆիլը առանց էլ. հասցեն փոխելու։ «Այս էլ. հասցեն արդեն զբաղված է» — իր սեփական հասցեն։<br><br>
+      Եվ մեկ լավ լուր Դաս 20-ից․ <code>Rule::unique</code>-ը հարցնում է աղյուսակն ուղիղ, ուստի տեսնում է նաև <strong>ջնջված</strong> գրառումները։ Այն համընկնում է բազայի <code>UNIQUE</code> ինդեքսի հետ, ոչ Eloquent-ի ավտոմատ ֆիլտրի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Form Request</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ստեղծում</div><button class="copy">Պատճենել</button></div>
+<pre><code>php artisan make:request ProductRequest
+
+<span class="c"># → app/Http/Requests/ProductRequest.php</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Http/Requests/ProductRequest.php — Դաս 11-ի validateProduct()-ը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+
+<span class="k">namespace</span> <span class="t">App\Http\Requests</span>;
+
+<span class="k">use</span> <span class="t">Illuminate\Foundation\Http\FormRequest</span>;
+<span class="k">use</span> <span class="t">Illuminate\Validation\Rule</span>;
+
+<span class="k">class</span> <span class="t">ProductRequest</span> <span class="k">extends</span> <span class="t">FormRequest</span>
+{
+    <span class="c">/** Ո՞վ կարող է ուղարկել այս ֆորման — բաժին 08 */</span>
+    <span class="k">public function</span> <span class="f">authorize</span>(): <span class="k">bool</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="f">user</span>()?-&gt;<span class="f">can</span>(<span class="s">'manage-products'</span>) ?? <span class="k">false</span>;
+    }
+
+    <span class="c">/** Checkbox-ը չի ուղարկվում, երբ նշված չէ — Դաս 6-ի տնայինը ⭐ */</span>
+    <span class="k">protected function</span> <span class="f">prepareForValidation</span>(): <span class="k">void</span>
+    {
+        <span class="n">$this</span>-&gt;<span class="f">merge</span>([<span class="s">'is_active'</span> =&gt; <span class="n">$this</span>-&gt;<span class="f">boolean</span>(<span class="s">'is_active'</span>)]);
+    }
+
+    <span class="k">public function</span> <span class="f">rules</span>(): <span class="k">array</span>
+    {
+        <span class="k">return</span> [
+            <span class="s">'name'</span>        =&gt; [<span class="s">'required'</span>, <span class="s">'string'</span>, <span class="s">'max:200'</span>],
+            <span class="s">'category_id'</span> =&gt; [<span class="s">'nullable'</span>, <span class="s">'integer'</span>, <span class="t">Rule</span>::<span class="f">exists</span>(<span class="s">'categories'</span>, <span class="s">'id'</span>)],
+            <span class="s">'specs'</span>       =&gt; [<span class="s">'nullable'</span>, <span class="s">'string'</span>, <span class="s">'max:255'</span>],
+            <span class="s">'description'</span> =&gt; [<span class="s">'nullable'</span>, <span class="s">'string'</span>, <span class="s">'max:5000'</span>],
+            <span class="s">'price'</span>       =&gt; [<span class="s">'required'</span>, <span class="s">'integer'</span>, <span class="s">'min:1'</span>, <span class="s">'max:99999999'</span>],
+            <span class="s">'discount'</span>    =&gt; [<span class="s">'required'</span>, <span class="s">'integer'</span>, <span class="s">'between:0,90'</span>],
+            <span class="s">'stock'</span>       =&gt; [<span class="s">'required'</span>, <span class="s">'integer'</span>, <span class="s">'min:0'</span>, <span class="s">'max:100000'</span>],
+            <span class="s">'type'</span>        =&gt; [<span class="s">'required'</span>, <span class="t">Rule</span>::<span class="f">in</span>([<span class="s">'physical'</span>, <span class="s">'digital'</span>])],
+            <span class="s">'is_active'</span>   =&gt; [<span class="s">'boolean'</span>],
+        ];
+    }
+
+    <span class="c">/** Դաշտերի հայերեն անունները սխալների համար */</span>
+    <span class="k">public function</span> <span class="f">attributes</span>(): <span class="k">array</span>
+    {
+        <span class="k">return</span> [
+            <span class="s">'name'</span>        =&gt; <span class="s">'անվանումը'</span>,
+            <span class="s">'category_id'</span> =&gt; <span class="s">'կատեգորիան'</span>,
+            <span class="s">'price'</span>       =&gt; <span class="s">'գինը'</span>,
+            <span class="s">'discount'</span>    =&gt; <span class="s">'զեղչը'</span>,
+            <span class="s">'stock'</span>       =&gt; <span class="s">'քանակը'</span>,
+        ];
+    }
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ առանձին դաս</span>
+      <p>Դաս 15-ի կանոնը՝ <em>«եթե կոնտրոլերը 40 տողից երկար է, այնտեղ ընկել է մի բան, որի տեղը այնտեղ չէ»</em>։ Ինը կանոն կոնտրոլերում՝ դա հենց այդ դեպքն է։<br><br>
+      Form Request-ը վալիդացիան տեղափոխում է առանձին ֆայլ։ Կոնտրոլերը ստանում է <code>ProductRequest $request</code>, և երբ մեթոդը սկսում է կատարվել, <strong>վալիդացիան արդեն անցել է</strong>։ Autowiring-ը (Դաս 19) դա անում է ինքնաբերաբար։<br><br>
+      Եվ նույն դասը օգտագործվում է <code>store</code>-ում և <code>update</code>-ում՝ Դաս 11-ի «մեկ ֆորմա երկու գործի համար» գաղափարը վալիդացիայի մակարդակում։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag"><code>authorize()</code>-ը լռելյայն <code>false</code> է</span>
+      <p><code>make:request</code>-ը գեներացնում է <code>authorize()</code>, որը վերադարձնում է <code>false</code>։ Եթե այն չփոխես, ամեն ուղարկում կավարտվի <strong>403 Forbidden</strong>-ով, և սկզբում պարզ չի լինի ինչու։<br><br>
+      Գայթակղություն կլինի գրել <code>return true;</code> և շարունակել։ Մի՛ արա։ Այդ մեթոդը հենց այն տեղն է, որտեղ ասում ես՝ <em>ո՞վ</em> կարող է կատարել գործողությունը։ Մենք այն կապում ենք Gate-ի հետ բաժին 08-ում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հայերեն սխալների հաղորդագրություններ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># Հրապարակել լեզվի ֆայլերը</span>
+php artisan lang:publish
+
+<span class="c"># → lang/en/validation.php, auth.php, passwords.php, pagination.php
+# Պատճենիր lang/en-ը lang/hy և թարգմանիր</span>
+
+<span class="c"># .env</span>
+APP_LOCALE=hy
+APP_FALLBACK_LOCALE=en</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>lang/hy/validation.php — մի քանի տող</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">return</span> [
+    <span class="s">'required'</span> =&gt; <span class="s">'Խնդրում ենք լրացնել :attribute դաշտը։'</span>,
+    <span class="s">'email'</span>    =&gt; <span class="s">':attribute դաշտը պիտի լինի վավեր էլ. հասցե։'</span>,
+    <span class="s">'exists'</span>   =&gt; <span class="s">'Ընտրված :attribute գոյություն չունի։'</span>,
+    <span class="s">'between'</span>  =&gt; [
+        <span class="s">'numeric'</span> =&gt; <span class="s">':attribute պիտի լինի :min-ից :max։'</span>,
+    ],
+    <span class="s">'max'</span> =&gt; [
+        <span class="s">'string'</span>  =&gt; <span class="s">':attribute-ը չպիտի գերազանցի :max նիշը։'</span>,
+        <span class="s">'numeric'</span> =&gt; <span class="s">':attribute-ը չպիտի գերազանցի :max-ը։'</span>,
+        <span class="s">'file'</span>    =&gt; <span class="s">':attribute-ը չպիտի գերազանցի :max ԿԲ-ը։'</span>,
+    ],
+    <span class="c">// ...</span>
+];</code></pre>
+    </div>
+
+      </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Ադմինի store և update</h2>
+    <p>Դաս 19-ում այս մեթոդները պարունակում էին <code>dd()</code>։ Հիմա ունենք ամեն ինչ դրանք ավարտելու համար։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Models/Product.php — Դաս 11-ի uniqueSlug-ը, Դաս 20-ի ուղղմամբ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">public static function</span> <span class="f">uniqueSlugFor</span>(<span class="k">string</span> <span class="n">$name</span>, ?<span class="k">int</span> <span class="n">$exceptId</span> = <span class="k">null</span>): <span class="k">string</span>
+{
+    <span class="n">$base</span> = <span class="f">slugify</span>(<span class="n">$name</span>) ?: <span class="s">'product'</span>;   <span class="c">// Դաս 11-ի հայերեն քարտեզը app/helpers.php-ում</span>
+    <span class="n">$slug</span> = <span class="n">$base</span>;
+    <span class="n">$i</span> = <span class="n">1</span>;
+
+    <span class="k">while</span> (
+        <span class="k">static</span>::<span class="f">withTrashed</span>()                           <span class="c">// ⭐ Դաս 20-ի թակարդը</span>
+            -&gt;<span class="f">where</span>(<span class="s">'slug'</span>, <span class="n">$slug</span>)
+            -&gt;<span class="f">when</span>(<span class="n">$exceptId</span>, <span class="k">fn</span> (<span class="n">$q</span>) =&gt; <span class="n">$q</span>-&gt;<span class="f">whereKeyNot</span>(<span class="n">$exceptId</span>))   <span class="c">// ⭐ Դաս 11-ի $exceptId-ը</span>
+            -&gt;<span class="f">exists</span>()
+    ) {
+        <span class="n">$slug</span> = <span class="n">$base</span> . <span class="s">'-'</span> . (++<span class="n">$i</span>);
+    }
+
+    <span class="k">return</span> <span class="n">$slug</span>;
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ ոչ <code>Str::slug()</code></span>
+      <p>Laravel-ն ունի <code>Str::slug()</code>, և այն լավ է աշխատում լատինատառ անունների հետ։ Հայերենի դեպքում ստուգիր tinker-ում՝ <code>Str::slug('Նոութբուք Pro 14')</code>։ Եթե արդյունքը դատարկ է կամ տառերը կորել են, օգտագործիր Դաս 11-ի <code>slugify()</code>-ը՝ հայերեն քարտեզով։<br><br>
+      Կանոնը Դաս 4-ից է․ <strong>մի՛ ենթադրիր, որ ֆրեյմվորքի ֆունկցիան աշխատում է քո լեզվի հետ, ստուգիր</strong>։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Http/Controllers/Admin/ProductController.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">use</span> <span class="t">App\Http\Requests\ProductRequest</span>;
+<span class="k">use</span> <span class="t">App\Models\Product</span>;
+
+<span class="k">public function</span> <span class="f">store</span>(<span class="t">ProductRequest</span> <span class="n">$request</span>)
+{
+    <span class="n">$data</span> = <span class="n">$request</span>-&gt;<span class="f">validated</span>();       <span class="c">// ⭐ միայն rules()-ում թվարկված դաշտերը</span>
+    <span class="n">$data</span>[<span class="s">'slug'</span>] = <span class="t">Product</span>::<span class="f">uniqueSlugFor</span>(<span class="n">$data</span>[<span class="s">'name'</span>]);
+
+    <span class="t">Product</span>::<span class="f">create</span>(<span class="n">$data</span>);
+
+    <span class="k">return</span> <span class="f">redirect</span>()
+        -&gt;<span class="f">route</span>(<span class="s">'admin.products.index'</span>)
+        -&gt;<span class="f">with</span>(<span class="s">'success'</span>, <span class="s">'Ապրանքն ավելացվեց'</span>);
+}
+
+<span class="k">public function</span> <span class="f">update</span>(<span class="t">ProductRequest</span> <span class="n">$request</span>, <span class="t">Product</span> <span class="n">$product</span>)
+{
+    <span class="n">$data</span> = <span class="n">$request</span>-&gt;<span class="f">validated</span>();
+    <span class="n">$data</span>[<span class="s">'slug'</span>] = <span class="t">Product</span>::<span class="f">uniqueSlugFor</span>(<span class="n">$data</span>[<span class="s">'name'</span>], <span class="n">$product</span>-&gt;<span class="n">id</span>);
+
+    <span class="n">$product</span>-&gt;<span class="f">update</span>(<span class="n">$data</span>);
+
+    <span class="k">return</span> <span class="f">redirect</span>()
+        -&gt;<span class="f">route</span>(<span class="s">'admin.products.index'</span>)
+        -&gt;<span class="f">with</span>(<span class="s">'success'</span>, <span class="s">'Ապրանքը թարմացվեց'</span>);
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Դաս 20-ի mass assignment-ը փակվեց</span>
+      <p>Դաս 20-ում ասացինք․ <em>«<code>$fillable</code>-ը երկրորդ շերտն է։ Իրական պաշտպանությունը՝ փոխանցել միայն վավերացված դաշտերը։ Երբեք <code>$request-&gt;all()</code> մոդելի մեջ»</em>։<br><br>
+      <code>validated()</code>-ը վերադարձնում է <strong>միայն այն դաշտերը, որոնք կան <code>rules()</code>-ում</strong>։ Եթե հարձակվողը ավելացնի <code>deleted_at</code> կամ <code>id</code>, դրանք պարզապես չեն լինի <code>$data</code>-ում։ Սպիտակ ցուցակը սահմանված է երկու տեղում՝ <code>rules()</code>-ում և <code>$fillable</code>-ում, և հարձակումը պետք է անցնի երկուսից։<br><br>
+      Դաս 11-ում <code>$data</code>-ն կառուցում էինք դաշտ առ դաշտ, 12 տողով։ Գաղափարը նույնն է։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>form.blade.php — Դաս 19-ի value-ները՝ old()-ով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">{{-- Սխալից հետո՝ օգտագործողի գրածը։ Առաջին բացմանը՝ բազայի արժեքը --}}</span>
+<span class="p">&lt;</span><span class="t">input</span> <span class="f">id</span>=<span class="s">"name"</span> <span class="f">name</span>=<span class="s">"name"</span>
+       <span class="f">value</span>=<span class="s">"{{ old('name', $product-&gt;name ?? '') }}"</span>
+       <span class="k">@class</span>([<span class="s">'input'</span>, <span class="s">'input--error'</span> =&gt; <span class="n">$errors</span>-&gt;<span class="f">has</span>(<span class="s">'name'</span>)])<span class="p">&gt;</span>
+
+<span class="k">@foreach</span> (<span class="n">$categories</span> <span class="k">as</span> <span class="n">$c</span>)
+    <span class="p">&lt;</span><span class="t">option</span> <span class="f">value</span>=<span class="s">"{{ $c-&gt;id }}"</span>
+        <span class="k">@selected</span>((<span class="k">int</span>) <span class="f">old</span>(<span class="s">'category_id'</span>, <span class="n">$product</span>-&gt;<span class="n">category_id</span> ?? <span class="n">0</span>) === <span class="n">$c</span>-&gt;<span class="n">id</span>)<span class="p">&gt;</span>
+        {{ <span class="n">$c</span>-&gt;<span class="n">name</span> }}
+    <span class="p">&lt;/</span><span class="t">option</span><span class="p">&gt;</span>
+<span class="k">@endforeach</span>
+
+<span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"checkbox"</span> <span class="f">name</span>=<span class="s">"is_active"</span> <span class="f">value</span>=<span class="s">"1"</span>
+       <span class="k">@checked</span>(<span class="f">old</span>(<span class="s">'is_active'</span>, <span class="n">$product</span>-&gt;<span class="n">is_active</span> ?? <span class="k">true</span>))<span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ <code>old()</code>-ը առաջինն է</span>
+      <p>Եթե <code>value</code>-ում լիներ միայն <code>$product-&gt;name</code>, սխալից հետո օգտագործողի փոփոխությունները կկորեին․ ֆորման կվերադառնար բազայի հին արժեքին։ Դա Դաս 6-ի ամենանյարդայնացնող UX սխալն է։<br><br>
+      <code>old('name', $default)</code> նշանակում է՝ «եթե կա ուղարկված արժեք, ցույց տուր այն, հակառակ դեպքում՝ <code>$default</code>»։<br><br>
+      Եվ <code>$c-&gt;id</code>-ն այստեղ արդեն <code>int</code> է Eloquent-ի շնորհիվ, իսկ <code>old()</code>-ը տող է վերադարձնում, ուստի <code>(int)</code>-ը պետք է միայն ձախ կողմում։ Դաս 2-ի <code>===</code>-ը պահպանված է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Մուտք՝ Fortify-ով</h2>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ ոչ starter kit — ազնիվ բացատրություն</span>
+      <p>Laravel 13-ի պաշտոնական starter kit-երը չորսն են՝ React, Vue, Svelte և Livewire։ Դրանք <strong>նոր նախագծի կաղապարներ</strong> են, որ ընտրվում են <code>laravel new</code>-ի ժամանակ, և ամենը կառուցված են Tailwind-ի վրա։ Մեր նախագիծը արդեն գոյություն ունի և ունի իր սեփական CSS-ը։<br><br>
+      Կարևոր փաստ՝ բոլոր չորս kit-երը մուտքի համար օգտագործում են <strong>Laravel Fortify</strong>՝ «գլուխ չունեցող» (headless) փաթեթ, որը տալիս է ուղիները, կոնտրոլերները և տրամաբանությունը, բայց <em>ոչ մի շաբլոն</em>։<br><br>
+      Ուստի մենք տեղադրում ենք Fortify-ը ուղիղ և գրում ենք մեր շաբլոնները մեր CSS-ով։ Դա այն է, ինչ kit-երը անում են ներսում։ Դաս 19-ի էջավորման և Vite-ի որոշման նույն սկզբունքն է՝ <em>CSS-ը մերն է</em>։ Laravel-ի հին Breeze kit-ը, որ շատ ձեռնարկներում կհանդիպես, Laravel 12-ից այլևս պաշտոնական փաստաթղթերում չէ։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>տեղադրում</div><button class="copy">Պատճենել</button></div>
+<pre><code>composer require laravel/fortify
+php artisan fortify:install
+php artisan migrate
+
+<span class="c"># fortify:install-ը ստեղծում է՝
+#   config/fortify.php
+#   app/Providers/FortifyServiceProvider.php
+#   app/Actions/Fortify/...   (գրանցում, գաղտնաբառի փոփոխում)
+#   միգրացիա՝ երկքայլ նույնականացման սյունակների համար</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>config/fortify.php — ի՞նչ ենք միացնում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="s">'home'</span> =&gt; <span class="s">'/admin/products'</span>,       <span class="c">// ուր գնալ մուտքից հետո</span>
+
+<span class="s">'features'</span> =&gt; [
+    <span class="c">// Features::registration(),   ⭐ ԱՆՋԱՏՎԱԾ — ադմիններին ոչ ոք ինքնուրույն չի գրանցվում</span>
+    <span class="t">Features</span>::<span class="f">resetPasswords</span>(),
+    <span class="c">// Features::emailVerification(),</span>
+    <span class="t">Features</span>::<span class="f">updatePasswords</span>(),
+],</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Գրանցումը անջատելը՝ անվտանգության որոշում</span>
+      <p>Մեր <code>users</code> աղյուսակում ադմիններ և մենեջերներ են։ Եթե թողնես <code>Features::registration()</code>, <code>/register</code> հասցեն <strong>հրապարակային կլինի</strong>, և ցանկացած ոք կկարողանա ստեղծել հաշիվ՝ <code>role = 'manager'</code> լռելյայն արժեքով։ Իսկ մենեջերը, բաժին 08-ի համաձայն, կարող է խմբագրել ապրանքներ։<br><br>
+      Դա Դաս 20-ի mass assignment-ից էլ պարզ ճանապարհ է դեպի ադմին վահանակ։ Կանոն՝ <strong>միացրու միայն այն հնարավորությունները, որոնք իսկապես պետք են</strong>։ Նոր մենեջերին ստեղծում է ադմինը՝ seeder-ով կամ ադմին էջով։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Providers/FortifyServiceProvider.php — մեր շաբլոնը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">use</span> <span class="t">Laravel\Fortify\Fortify</span>;
+
+<span class="k">public function</span> <span class="f">boot</span>(): <span class="k">void</span>
+{
+    <span class="t">Fortify</span>::<span class="f">loginView</span>(<span class="k">fn</span> () =&gt; <span class="f">view</span>(<span class="s">'auth.login'</span>));
+
+    <span class="c">// ... մնացածը, որ գեներացրել է fortify:install-ը (սահմանափակիչները և այլն)</span>
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>resources/views/auth/login.blade.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">@extends</span>(<span class="s">'layouts.app'</span>)
+
+<span class="k">@section</span>(<span class="s">'title'</span>, <span class="s">'Մուտք'</span>)
+
+<span class="k">@section</span>(<span class="s">'content'</span>)
+<span class="p">&lt;</span><span class="t">section</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-33 w-md-100"</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">h1</span> <span class="f">class</span>=<span class="s">"mb-30"</span><span class="p">&gt;</span>Մուտք<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">form</span> <span class="f">method</span>=<span class="s">"post"</span> <span class="f">action</span>=<span class="s">"{{ route('login') }}"</span> <span class="f">novalidate</span><span class="p">&gt;</span>
+        <span class="k">@csrf</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"email"</span><span class="p">&gt;</span>Էլ. հասցե<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">input</span> <span class="f">id</span>=<span class="s">"email"</span> <span class="f">name</span>=<span class="s">"email"</span> <span class="f">type</span>=<span class="s">"email"</span>
+                   <span class="f">autocomplete</span>=<span class="s">"username"</span> <span class="f">required</span> <span class="f">autofocus</span>
+                   <span class="f">value</span>=<span class="s">"{{ old('email') }}"</span>
+                   <span class="k">@class</span>([<span class="s">'input'</span>, <span class="s">'input--error'</span> =&gt; <span class="n">$errors</span>-&gt;<span class="f">has</span>(<span class="s">'email'</span>)])
+                   <span class="k">@error</span>(<span class="s">'email'</span>) <span class="f">aria-invalid</span>=<span class="s">"true"</span> <span class="f">aria-describedby</span>=<span class="s">"email-error"</span> <span class="k">@enderror</span><span class="p">&gt;</span>
+            <span class="k">@error</span>(<span class="s">'email'</span>)
+                <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"field__error"</span> <span class="f">id</span>=<span class="s">"email-error"</span><span class="p">&gt;</span>{{ <span class="n">$message</span> }}<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+            <span class="k">@enderror</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"password"</span><span class="p">&gt;</span>Գաղտնաբառ<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+            <span class="c">{{-- ⭐ value չկա — գաղտնաբառը երբեք չի վերադառնում --}}</span>
+            <span class="p">&lt;</span><span class="t">input</span> <span class="f">id</span>=<span class="s">"password"</span> <span class="f">name</span>=<span class="s">"password"</span> <span class="f">type</span>=<span class="s">"password"</span>
+                   <span class="f">autocomplete</span>=<span class="s">"current-password"</span> <span class="f">required</span> <span class="f">class</span>=<span class="s">"input"</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">label</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"checkbox"</span> <span class="f">name</span>=<span class="s">"remember"</span> <span class="f">value</span>=<span class="s">"1"</span><span class="p">&gt;</span> Հիշել ինձ
+            <span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"btn btn--primary"</span><span class="p">&gt;</span>Մուտք<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">form</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+<span class="k">@endsection</span></code></pre>
+    </div>
+
+        <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>partials/header.blade.php — Դաս 16-ի ելքը՝ POST-ով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">@auth</span>
+    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"{{ route('admin.products.index') }}"</span>
+           <span class="k">@if</span> (<span class="f">request</span>()-&gt;<span class="f">routeIs</span>(<span class="s">'admin.*'</span>)) <span class="f">aria-current</span>=<span class="s">"page"</span> <span class="k">@endif</span><span class="p">&gt;</span>Ադմին<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">form</span> <span class="f">method</span>=<span class="s">"post"</span> <span class="f">action</span>=<span class="s">"{{ route('logout') }}"</span><span class="p">&gt;</span>
+            <span class="k">@csrf</span>
+            <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"btn btn--outline btn--sm"</span><span class="p">&gt;</span>Ելք ({{ <span class="f">auth</span>()-&gt;<span class="f">user</span>()-&gt;<span class="n">name</span> }})<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">form</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+<span class="k">@endauth</span></code></pre>
+    </div>
+
+    <h3>Ի՞նչ է անում Fortify-ը Դաս 16-ի փոխարեն</h3>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դաս 16-ում ձեռքով</th><th>Fortify / Laravel</th></tr>
+      <tr><td><code>password_hash</code> / <code>password_verify</code></td><td><code>'password' =&gt; 'hashed'</code> cast + <code>Hash::check</code> (bcrypt)</td></tr>
+      <tr><td><code>password_needs_rehash</code></td><td>Laravel-ը վերահեշավորում է մուտքի պահին, երբ ալգորիթմի պարամետրերը փոխվում են</td></tr>
+      <tr><td><code>session_regenerate_id(true)</code></td><td>Fortify-ի մուտքի շղթայի <code>PrepareAuthenticatedSession</code> քայլը</td></tr>
+      <tr><td>Ընդհանուր հաղորդագրություն</td><td><code>auth.failed</code>՝ «These credentials do not match our records» (թարգմանիր <code>lang/hy/auth.php</code>-ում)</td></tr>
+      <tr><td><code>LoginThrottle</code> սեսիայով</td><td>Սահմանափակում ըստ <strong>էլ. հասցե + IP</strong> զույգի ⭐</td></tr>
+      <tr><td><code>$_SESSION['intended']</code></td><td><code>redirect()-&gt;intended()</code></td></tr>
+      <tr><td>Ելքը՝ <code>$_SESSION = []</code> + <code>session_destroy</code></td><td>Սեսիայի անվավերացում և CSRF token-ի թարմացում</td></tr>
+      <tr><td>Մուտքի ֆորմայի CSRF</td><td><code>@csrf</code> + <code>web</code> middleware</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Դաս 16-ի ազնիվ սահմանափակումը՝ լուծված</span>
+      <p>Դաս 16-ում մեր <code>LoginThrottle</code>-ը պահում էր փորձերը սեսիայում, և ասացինք․ <em>«սեսիայի վրա հիմնված սահմանափակումը հեշտ շրջանցվում է՝ հարձակվողը պարզապես ջնջում է cookie-ն։ Իրական պաշտպանությունը հաշվում է փորձերը ըստ IP-ի և էլ. հասցեի։ Laravel-ում կա պատրաստի RateLimiter»</em>։<br><br>
+      Fortify-ը անում է հենց դա․ փորձերը հաշվվում են <strong>էլ. հասցեի և IP-ի զույգով</strong> և պահվում են քեշում (մեր դեպքում՝ <code>cache</code> աղյուսակում Դաս 20-ից), ոչ cookie-ում։ Cookie-ն ջնջելը այլևս ոչինչ չի տալիս։</p>
+    </div>
+
+      </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Ուղիների պաշտպանություն</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>routes/web.php — Դաս 19-ի բացը փակվում է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Դաս 19՝  // ⚠️ Դեռ առանց auth — Դաս 21</span>
+
+<span class="t">Route</span>::<span class="f">middleware</span>([<span class="s">'auth'</span>, <span class="s">'can:manage-products'</span>])
+    -&gt;<span class="f">prefix</span>(<span class="s">'admin'</span>)
+    -&gt;<span class="f">name</span>(<span class="s">'admin.'</span>)
+    -&gt;<span class="f">group</span>(<span class="k">function</span> () {
+        <span class="t">Route</span>::<span class="f">resource</span>(<span class="s">'products'</span>, <span class="t">AdminProductController</span>::<span class="k">class</span>)-&gt;<span class="f">except</span>([<span class="s">'show'</span>]);
+    });</code></pre>
+    </div>
+
+    <div class="tree">Չնույնականացված օգտագործողը բացում է /admin/products/5/edit
+
+  auth middleware
+        │  մուտք գործա՞ծ է → Ոչ
+        │  հիշում է հասցեն սեսիայում  (Դաս 16-ի intended)
+        ▼
+  302 → /login                    ← հիմա այն կա, Դաս 19-ի սխալը չկա
+        │
+  Մուտք գործում է
+        │
+  redirect()->intended('/admin/products')
+        ▼
+  302 → /admin/products/5/edit   ← վերադառնում է այնտեղ, ուր գնում էր ⭐</div>
+
+    <div class="tip note">
+      <span class="tag">Վեց ուղի, մեկ տող</span>
+      <p>Դաս 16-ում ասացինք․ <em>«վաղը ավելացնում ես հինգերորդը և մոռանում ես»</em>, և ստուգումը կապեցինք հասցեի հետ։ Դաս 19-ում ասացինք, որ <code>Route::resource</code>-ի խմբին կավելանա <code>-&gt;middleware('auth')</code>, և վեցն էլ կպաշտպանվեն միանգամից։<br><br>
+      Ահա այն։ Ստուգիր <code>php artisan route:list --path=admin -v</code>-ով․ ամեն տողի կողքին կտեսնես <code>auth</code> և <code>can:manage-products</code>։ Դա Դաս 18-ի «անվտանգության քարտեզն» է։</p>
+    </div>
+
+      </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Gate-եր՝ ո՞վ ինչ կարող է</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Կոդ</th><th>Նշանակություն</th><th>Ո՞վ է որոշում</th></tr>
+      <tr><td><code>401</code> / redirect <code>/login</code></td><td>Չգիտենք, թե ով ես</td><td><code>auth</code> — նույնականացում</td></tr>
+      <tr><td><code>403</code></td><td>Գիտենք ով ես, բայց չես կարող</td><td>Gate — լիազորում ⭐</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Երկու տարբեր հարց</span>
+      <p><strong>Նույնականացում</strong> (authentication) — «ո՞վ ես դու»։ Fortify-ը և <code>auth</code>-ը։<br>
+      <strong>Լիազորում</strong> (authorization) — «ի՞նչ կարող ես անել»։ Gate-երը։<br><br>
+      Դաս 17-ի կոդերի աղյուսակում 401-ը և 403-ը առանձին տողեր էին հենց այս պատճառով։ Հարցազրույցում այս տարբերությունը հաճախ է հարցվում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Providers/AppServiceProvider.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">use</span> <span class="t">App\Models\User</span>;
+<span class="k">use</span> <span class="t">Illuminate\Support\Facades\Gate</span>;
+
+<span class="k">public function</span> <span class="f">boot</span>(): <span class="k">void</span>
+{
+    <span class="c">// Մենեջերը և ադմինը՝ ստեղծել և խմբագրել</span>
+    <span class="t">Gate</span>::<span class="f">define</span>(<span class="s">'manage-products'</span>, <span class="k">fn</span> (<span class="t">User</span> <span class="n">$user</span>) =&gt;
+        <span class="f">in_array</span>(<span class="n">$user</span>-&gt;<span class="n">role</span>, [<span class="s">'admin'</span>, <span class="s">'manager'</span>], <span class="k">true</span>)
+    );
+
+    <span class="c">// Միայն ադմինը՝ ջնջել</span>
+    <span class="t">Gate</span>::<span class="f">define</span>(<span class="s">'delete-products'</span>, <span class="k">fn</span> (<span class="t">User</span> <span class="n">$user</span>) =&gt;
+        <span class="n">$user</span>-&gt;<span class="n">role</span> === <span class="s">'admin'</span>
+    );
+
+    <span class="c">// ... shouldBeStrict, View::composer</span>
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երեք տեղ, որտեղ օգտագործվում է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// 1. Ուղու վրա — բաժին 07</span>
+<span class="t">Route</span>::<span class="f">middleware</span>([<span class="s">'auth'</span>, <span class="s">'can:manage-products'</span>])-&gt;...
+
+<span class="c">// 2. Կոնտրոլերում — կոնկրետ գործողության համար ⭐</span>
+<span class="k">public function</span> <span class="f">destroy</span>(<span class="t">Product</span> <span class="n">$product</span>)
+{
+    <span class="t">Gate</span>::<span class="f">authorize</span>(<span class="s">'delete-products'</span>);      <span class="c">// չի՞ կարող → 403</span>
+
+    <span class="n">$product</span>-&gt;<span class="f">delete</span>();
+    <span class="c">// ...</span>
+}
+
+<span class="c">// 3. Շաբլոնում — միայն ցուցադրման համար</span>
+<span class="k">@can</span>(<span class="s">'delete-products'</span>)
+    <span class="p">&lt;</span><span class="t">form</span> <span class="f">method</span>=<span class="s">"post"</span> <span class="f">action</span>=<span class="s">"{{ route('admin.products.destroy', $p) }}"</span><span class="p">&gt;</span>
+        <span class="k">@csrf</span> <span class="k">@method</span>(<span class="s">'DELETE'</span>)
+        <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"btn btn--danger btn--sm"</span><span class="p">&gt;</span>Ջնջել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">form</span><span class="p">&gt;</span>
+<span class="k">@endcan</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag"><code>@can</code>-ը պաշտպանություն չէ</span>
+      <p>Եթե <code>@can('delete-products')</code>-ը թաքցնում է կոճակը, բայց <code>destroy()</code>-ում չկա <code>Gate::authorize</code>, մենեջերը կարող է ջնջել ապրանքը <code>curl</code>-ով կամ DevTools-ում ֆորմա ավելացնելով։<br><br>
+      Սա Դաս 6-ի <code>required</code>-ի, Դաս 11-ի <code>confirm()</code>-ի և Դաս 17-ի «թաքցրած կոճակի» նույն դասն է՝ չորրորդ անգամ։ <strong>Ինտերֆեյսը թաքցնում է, սերվերը արգելում է։</strong> Միշտ երկուսն էլ, և երկրորդը՝ պարտադիր։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Gate-ը կարդում է <code>role</code>-ը սերվերում</span>
+      <p><code>$user</code>-ը բեռնվում է բազայից սեսիայի ID-ով։ <code>role</code>-ը գալիս է <strong>բազայից</strong>, ոչ հարցումից։ Դա Դաս 7-ի կանոնն է՝ <em>«Cookie-ում երբեք "ես ադմին եմ"։ Սեսիայում պահվում է հղումը, ոչ տվյալները»</em>։<br><br>
+      Իսկ բազայում <code>role</code>-ը կարող է փոխվել միայն ուղիղ վերագրմամբ, որովհետև Դաս 20-ում այն <code>$fillable</code>-ից դուրս թողեցինք։ Երեք դասի որոշումները միասին են կազմում այս պաշտպանությունը։</p>
+    </div>
+
+      </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Դասարանական</h2>
+
+    <ol>
+      <li>Գործարկիր <code>php artisan lang:publish</code>, ստեղծիր <code>lang/hy/</code>, սահմանիր <code>APP_LOCALE=hy</code> և ստեղծիր <code>ProductRequest</code>-ը</li>
+      <li>Ավելացրու <code>Product::uniqueSlugFor()</code>-ը, իրագործիր <code>store</code> և <code>update</code> մեթոդները <code>validated()</code>-ով</li>
+      <li>Թարմացրու <code>admin/products/form</code>-ը՝ <code>old()</code>, <code>@error</code>, <code>aria-invalid</code></li>
+      <li>Տեղադրիր Fortify-ը, անջատիր գրանցումը, սահմանիր <code>home</code>, ստեղծիր <code>auth/login.blade.php</code>-ը և ելքի ֆորման header-ում</li>
+      <li>Ավելացրու երկու Gate-ը, փաթեթավորիր ադմին ուղիները <code>['auth', 'can:manage-products']</code>-ով և <code>destroy</code>-ում ավելացրու <code>Gate::authorize</code></li>
+    </ol>
+
+    <div class="warn note">
+      <span class="tag">Վեց պարտադիր փորձարկում</span>
+      <p><strong>1.</strong> Ադմին ֆորմայում ուղարկիր դատարկ անուն և <code>discount=150</code>։ Սխալները հայերեն են, լրացրած մյուս դաշտերը մնացե՞լ են։<br>
+      <strong>2.</strong> <code>curl</code>-ով ուղարկիր <code>category_id=99999</code>՝ Դաս 11-ի նույն փորձարկումը։ <code>Rule::exists</code>-ը բռնե՞ց։<br>
+      <strong>3.</strong> Ելք կատարիր և բացիր <code>/admin/products/1/edit</code>։ Մուտքից հետո վերադարձա՞ր հենց այդ էջը։<br>
+      <strong>4.</strong> Սխալ գաղտնաբառ վեց անգամ։ Ապա ջնջիր cookie-ները և կրկնիր։ Արգելափակումը մնա՞ց։ ⭐<br>
+      <strong>5.</strong> Բացիր <code>/register</code>։ Պիտի լինի 404։<br>
+      <strong>6.</strong> Ստեղծիր մենեջեր tinker-ում (<code>role</code>-ը ուղիղ վերագրմամբ), մուտք գործիր որպես նա։ «Ջնջել» կոճակը չկա։ Ապա ուղարկիր <code>DELETE</code> հարցումը DevTools-ով կամ <code>curl</code>-ով՝ ճիշտ token-ով։ Պիտի լինի 403։ ⭐</p>
+    </div>
+
+      </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ավարտիր դասարանականի 5 քայլը և վեց փորձարկումը։ Ուղարկիր սքրինշոթներ։</li>
+      <li>Վերաշարադրիր Դաս 6-ի կոնտակտների ֆորման Laravel-ում՝ Form Request-ով, <code>old()</code>-ով և <code>@error</code>-ով։ Համեմատիր տողերի քանակը։</li>
+      <li>Թարգմանիր <code>lang/hy/validation.php</code>-ը AI-ի օգնությամբ և ստուգիր, որ բոլոր տեղապահները (<code>:attribute</code>, <code>:max</code>…) անփոփոխ են։</li>
+      <li>Թարգմանիր <code>lang/hy/auth.php</code>-ը։ Ստուգիր, որ սխալ գաղտնաբառի և անգոյ հասցեի հաղորդագրությունները <strong>նույնն</strong> են (Դաս 16)։</li>
+      <li>Ավելացրու նկարի վերբեռնում ադմին ֆորմայում․ <code>'image' =&gt; ['nullable', 'image', 'mimes:jpg,png,webp', 'max:2048']</code>, <code>$request-&gt;file('image')-&gt;store('products', 'public')</code>, <code>php artisan storage:link</code>։ Համեմատիր Դաս 7-ի վեց քայլի հետ։</li>
+      <li>Փոխարինիր <code>CartController</code>-ի <code>abort_if(..., 422)</code>-ը <code>$request-&gt;validate()</code>-ով և տպիր <code>payload.errors</code>-ը <code>cart.js</code>-ում։</li>
+      <li><em>Խորացված․</em> ստեղծիր <code>ProductPolicy</code> (<code>php artisan make:policy ProductPolicy --model=Product</code>) և տեղափոխիր երկու Gate-երը նրա մեջ։ Ի՞նչ փոխվեց կոնտրոլերում։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Հիշելու թերթիկ</h2>
+
+    <h3>Քո կոդը → Laravel</h3>
+    <div class="tree">validateContact() + $errors   →  $request->validate([...])
+$old = $_POST                 →  old('field', $default)
+isset($errors['x'])           →  @error('x') ... @enderror
+in_array($x, $allowed, true)  →  Rule::in([...])
+կատեգորիան կա՞                →  Rule::exists('categories', 'id')
+uniqueSlug($b, $exceptId)     →  Rule::unique(...)->ignore($m)
+$data դաշտ առ դաշտ            →  $request->validated()
+validateProduct()             →  FormRequest::rules()
+Auth + LoginThrottle          →  Fortify
+/admin ստուգում + intended    →  'auth' + redirect()->intended()
+isAdmin()                     →  Gate + 'can:...'</div>
+
+    <h3>Fortify-ի հրամաններ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հրաման / կարգավորում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>composer require laravel/fortify</code></td><td>Տեղադրում</td></tr>
+      <tr><td><code>php artisan fortify:install</code></td><td>Կոնֆիգ, provider, actions, միգրացիա</td></tr>
+      <tr><td><code>'features' =&gt; [...]</code></td><td>Միայն անհրաժեշտները ⭐</td></tr>
+      <tr><td><code>'home' =&gt; '/admin/products'</code></td><td>Ուր գնալ մուտքից հետո</td></tr>
+      <tr><td><code>Fortify::loginView(...)</code></td><td>Մեր շաբլոնը</td></tr>
+      <tr><td><code>php artisan route:list --path=admin -v</code></td><td>Middleware-ների ստուգում</td></tr>
+    </table>
+    </div>
+
+    <h3>Չորս շերտ՝ մեկ գործողության համար</h3>
+    <div class="tree">DELETE /admin/products/5
+
+  1. CSRF        →  @csrf          (Դաս 16)
+  2. auth        →  ո՞վ ես          (Fortify)
+  3. can:manage  →  ադմին գոտի՞     (ուղու խումբ)
+  4. Gate        →  կարո՞ղ ես ջնջել (destroy-ում)
+
+  @can շաբլոնում  →  միայն ինտերֆեյս</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Ամեն ֆորմա վավերացվում է սերվերում</li>
+      <li>Ամեն տեքստային դաշտ ունի <code>max</code></li>
+      <li>Ընտրովի արժեքները ստուգվում են <code>Rule::in</code> կամ <code>Rule::exists</code>-ով</li>
+      <li>Մոդելներին փոխանցվում է <code>validated()</code>, ոչ <code>all()</code></li>
+      <li>Սխալից հետո լրացրածը մնում է, գաղտնաբառը՝ ոչ</li>
+      <li>Սխալները հայերեն են և հասանելի են էկրանընթերցիչին</li>
+      <li>Գրանցումը անջատված է</li>
+      <li>Բոլոր ադմին ուղիները <code>auth</code> խմբում են</li>
+      <li>Ամեն վտանգավոր գործողություն ունի <code>Gate::authorize</code></li>
+      <li><code>authorize()</code>-ը Form Request-ում <code>return true</code> չէ</li>
+      <li>Ելքը POST է</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչ է կատարվում վալիդացիայի ձախողման դեպքում ֆորմայի և JSON-ի համար</li>
+      <li>Գիտե՞մ, ինչու գաղտնաբառը չի վերադառնում <code>old()</code>-ով</li>
+      <li>Հասկանո՞ւմ եմ, ինչու ենք օգտագործում Fortify, ոչ starter kit</li>
+      <li>Կարո՞ղ եմ բացատրել նույնականացման և լիազորման տարբերությունը</li>
+      <li>Գիտե՞մ, ինչու <code>@can</code>-ը բավարար չէ</li>
+      <li>Կարո՞ղ եմ նշել, թե Fortify-ը Դաս 16-ի ո՞ր չորս բանն է փոխարինում</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Laravel-ի չորս դասը՝ ավարտված</span>
+      <p>Դաս 18–21-ում Laravel-ով վերակառուցեցիր այն, ինչ ձեռքով գրել էիր Դաս 5–17-ում․ ուղիներ, շաբլոններ, կոմպոնենտներ, մոդելներ, միգրացիաներ, վալիդացիա, մուտք և իրավունքներ։<br><br>
+      Ինչպես ասացինք Դաս 18-ում, սա <strong>ծանոթություն է, ոչ տիրապետում</strong>։ Բայց հիմա, երբ բացես Laravel-ի որևէ նախագիծ, ոչ մի ֆայլ անծանոթ չի լինի, և կիմանաս՝ <em>ինչու</em> է այն այդպես գրված։<br><br>
+      <strong>Հաջորդ դասին</strong> սկսվում է կարիերայի փուլը։ ՏեխնոՄարկետը դառնում է պորտֆոլիո՝ deploy, README, GitHub պրոֆիլ, դեմո-հղում և LinkedIn։ Նախագիծը, որ կառուցեցիր 72 դասում, պետք է ոչ միայն աշխատի, այլև երևա։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>PHP Բլոկ · Դաս 21 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

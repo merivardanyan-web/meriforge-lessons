@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHP Դաս 18 — Laravel · ներածություն</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>PHP Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">PHP Դաս 18 · 2 ժամ · Laravel 1 / 4</p>
+  <h1>Laravel · ներածություն</h1>
+  <p class="lede">Չորս դաս կառուցեցիր ֆրեյմվորք ձեռքով։ Այսօր բացում ես իսկականը և տեսնում, որ գրեթե ամեն ֆայլ ծանոթ է։ Laravel-ը կախարդանք չէ — դա նույն գաղափարների հասուն տարբերակն է։</p>
+
+  <div class="facts">
+    <span>Բլոկ 3 · Դաս 18 / 24</span>
+    <span>Laravel 13 · PHP 8.3+</span>
+    <span>«Հայելու» փուլի սկիզբը</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ինչո՞ւ ֆրեյմվորք, եթե արդեն ունենք մերը</li>
+      <li>Տեղադրում Laragon-ում</li>
+      <li>Թղթապանակների կառուցվածքը՝ քո ֆայլերի համեմատ</li>
+      <li>Artisan — հրամանի տողը</li>
+      <li>Routing՝ քո Router-ի հայելին</li>
+      <li>Request և Response Laravel-ում</li>
+      <li>Ի՞նչ է պաշտպանում Laravel-ը ինքնաբերաբար և ի՞նչ՝ ոչ</li>
+    </ul>
+
+    <div class="warn note">
+      <span class="tag">Ազնիվ նշում՝ սկզբից</span>
+      <p>Laravel-ին տրված է չորս դաս։ Դա <strong>ծանոթություն է, ոչ տիրապետում</strong>։<br><br>
+      Այս չորս դասից հետո կկարողանաս կարդալ Laravel-ի կոդը, հասկանալ ինչու է այն այդպես գրված և կառուցել պարզ նախագիծ։ Աշխատանքային մակարդակի համար պետք կլինի ևս 2–3 ամիս ինքնուրույն աշխատանք։<br><br>
+      Բայց մի առավելություն ունես, որ շատերը չունեն․ գիտես, թե <em>ինչ</em> է անում ֆրեյմվորքը ներսում։ Երբ ինչ-որ բան կոտրվի, չես մնա փակուղում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչո՞ւ ֆրեյմվորք</h2>
+
+    <p>Չորս դասում գրեցիր մոտ 1500 տող ենթակառուցվածք։ Ահա, թե ինչ է այն դառնում Laravel-ում․</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դու գրեցիր</th><th>Դաս</th><th>Laravel-ում</th></tr>
+      <tr><td><code>Router</code>, <code>routes.php</code></td><td>15</td><td><code>Route::get()</code></td></tr>
+      <tr><td><code>Request</code>, <code>Response</code></td><td>15</td><td><code>Illuminate\Http\Request</code>, <code>response()</code></td></tr>
+      <tr><td><code>render()</code> + <code>page()</code></td><td>5, 15</td><td>Blade (Դաս 19)</td></tr>
+      <tr><td><code>new ProductController(...)</code> <code>bootstrap.php</code>-ում</td><td>14, 15</td><td>Service Container՝ ավտոմատ (Դաս 19)</td></tr>
+      <tr><td><code>ProductRepository</code></td><td>14</td><td>Eloquent (Դաս 20)</td></tr>
+      <tr><td><code>validateProduct()</code></td><td>6, 11</td><td><code>$request-&gt;validate()</code> (Դաս 21)</td></tr>
+      <tr><td><code>Auth</code> + <code>/admin</code> ստուգում</td><td>16</td><td>Fortify + <code>auth</code> middleware (Դաս 21)</td></tr>
+      <tr><td><code>csrf_field()</code>, <code>csrf_verify()</code></td><td>16</td><td>Ներկառուցված՝ <code>@csrf</code></td></tr>
+      <tr><td><code>e()</code></td><td>5</td><td><code>{{ }}</code>՝ ավտոմատ</td></tr>
+      <tr><td><code>.env</code> + phpdotenv</td><td>14</td><td>Նույնը՝ ներկառուցված</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ֆրեյմվորքը վաճառում է երեք բան</span>
+      <p><strong>1. Ժամանակ։</strong> Այն, ինչ գրեցիր չորս դասում, Laravel-ը տալիս է մեկ հրամանով։<br><br>
+      <strong>2. Փորձարկված կոդ։</strong> Քո <code>Router</code>-ը ստուգվել է քո ձեռքով մեկ շաբաթ։ Laravel-ինը՝ հազարավոր նախագծերում տասը տարի։ Նրա CSRF-ում հայտնաբերված խոցելիությունը շտկվում է բոլորի համար միանգամից։<br><br>
+      <strong>3. Ընդհանուր լեզու։</strong> Laravel գիտեցող ցանկացած ծրագրավորող կբացի քո նախագիծը և անմիջապես կհասկանա, որտեղ ինչ է։ Քո սեփական ֆրեյմվորքը հասկանում ես միայն դու։ Դա ամենամեծ պատճառն է, որ ընկերությունները ֆրեյմվորք են ընտրում։</p>
+    </div>
+
+      </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Տեղադրում</h2>
+
+    <div class="warn note">
+      <span class="tag">Տարբերակների մասին — ստուգիր ընթացիկը</span>
+      <p>Այս դասը գրված է <strong>Laravel 13</strong>-ի համար (թողարկվել է 2026-ի մարտին)։ Այն պահանջում է <strong>PHP 8.3 կամ ավելի նոր</strong> — 8.2-ը այլևս չի աջակցվում։<br><br>
+      Laravel-ը նոր հիմնական տարբերակ թողարկում է տարին մեկ անգամ։ Եթե կարդում ես սա ավելի ուշ, ստուգիր <code>laravel.com/docs</code>-ում ընթացիկ տարբերակի պահանջները։ Հիմնական գաղափարները՝ routing, Blade, Eloquent, չեն փոխվում տարիներով։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>1. ստուգում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># PHP-ի տարբերակը — պիտի լինի 8.3+</span>
+php -v
+
+<span class="c"># Եթե ցածր է՝ Laragon → Menu → PHP → Version → ընտրիր 8.3 կամ նորը
+# Եթե ցանկում չկա՝ Menu → PHP → Quick add</span>
+
+<span class="c"># Composer-ը՝ Դաս 14-ից</span>
+composer --version</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>2. նոր նախագիծ — ՏեխնոՄարկետի կողքին</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># C:\laragon\www թղթապանակում</span>
+<span class="k">cd</span> C:\laragon\www
+
+composer create-project laravel/laravel technomarket-laravel
+
+<span class="c"># Laragon → Reload
+# → http://technomarket-laravel.test</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ նոր նախագիծ, ոչ փոխարինում</span>
+      <p>Հին ՏեխնոՄարկետը մնում է կողքին։ Ամեն դասում կբացես երկու պատուհան՝ <em>քո</em> <code>Router.php</code>-ը և Laravel-ի <code>routes/web.php</code>-ը, և կհամեմատես։<br><br>
+      Սա «հայելու» մեթոդն է, որ ընտրեցինք Laravel-ի չորս դասի համար։ Երկու նախագիծը օգտագործում են <strong>նույն MySQL բազան</strong>, ուստի տվյալները փոխանցել պետք չէ։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>3. .env — միացում քո բազային</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># technomarket-laravel/.env</span>
+
+APP_NAME=ՏեխնոՄարկետ
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://technomarket-laravel.test
+
+<span class="c"># Լռելյայն Laravel-ը օգտագործում է SQLite ⚠️
+# Փոխում ենք MySQL-ի</span>
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=technomarket
+DB_USERNAME=root
+DB_PASSWORD=
+
+<span class="c"># Laravel 11+-ը լռելյայն սեսիաներն ու քեշը պահում է ԲԱԶԱՅՈՒՄ ⚠️
+# Մեր հին բազայում sessions և cache աղյուսակներ չկան —
+# առայժմ ֆայլեր։ Դաս 20-ում նոր բազայով կվերադառնանք database-ին</span>
+SESSION_DRIVER=file
+CACHE_STORE=file</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">SQLite-ի թակարդը</span>
+      <p>Laravel 11-ից սկսած նոր նախագիծը լռելյայն օգտագործում է SQLite՝ ֆայլ <code>database/database.sqlite</code>։ Դա հարմար է արագ սկսելու համար, բայց <strong>քո ապրանքները այնտեղ չեն</strong>։<br><br>
+      Եթե մոռանաս փոխել <code>DB_CONNECTION</code>-ը, էջը կբացվի, բայց ցուցակը դատարկ կլինի — առանց ոչ մի սխալի։ Լուռ սխալներից ամենաշփոթեցնողն է։<br><br>
+      <strong>Երկրորդ թակարդը նույն պատճառից.</strong> նոր նախագծում <code>SESSION_DRIVER=database</code> է։ MySQL-ի փոխելուց հետո ամեն էջ կտա <em>«Table 'technomarket.sessions' doesn't exist»</em>, որովհետև այդ աղյուսակը ստեղծվել էր SQLite-ում, ոչ մեր բազայում։ Ուստի առայժմ <code>file</code>։<br><br>
+      <code>.env</code>-ը փոխելուց հետո՝ <code>php artisan config:clear</code>, եթե երբևէ կեշավորել ես կոնֆիգը։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>4. ստուգիր, որ Laravel-ը տեսնում է բազան</div><button class="copy">Պատճենել</button></div>
+<pre><code>php artisan db:show
+
+<span class="c"># Պիտի տեսնես technomarket բազան և քո աղյուսակները՝
+# categories, products, orders, order_items, users</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Եթե <code>.test</code> հասցեն չի բացվում</span>
+      <p>Laragon-ը սովորաբար ինքն է ճանաչում Laravel նախագծի <code>public/</code> թղթապանակը։ Եթե բացվում է թղթապանակների ցուցակ կամ 403 — ստուգիր DocumentRoot-ը, ինչպես Դաս 15-ում։<br><br>
+      Կամ օգտագործիր Laravel-ի ներկառուցված սերվերը՝ <code>php artisan serve</code> → <code>http://127.0.0.1:8000</code>։ Այն հարմար է արագ փորձարկման համար, բայց Դաս 1-ում ասացինք, որ իրական Apache-ին ավելի մոտ է Laragon-ը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Կառուցվածքը՝ քո ֆայլերի համեմատ</h2>
+
+    <div class="tree">technomarket-laravel/          քո technomarket/
+│
+├── app/
+│   ├── Http/
+│   │   └── Controllers/      ←  src/Controllers/
+│   ├── Models/               ←  src/Models/  (+ Repositories)
+│   └── Providers/            ←  bootstrap.php-ի «new»-երը
+│
+├── bootstrap/
+│   └── app.php               ←  bootstrap.php
+│
+├── config/                   ←  նորություն՝ բոլոր կարգավորումները
+├── database/
+│   └── migrations/           ←  schema.sql  (Դաս 20)
+│
+├── public/
+│   ├── index.php             ←  public/index.php
+│   └── .htaccess             ←  public/.htaccess
+│
+├── resources/
+│   └── views/                ←  views/
+│
+├── routes/
+│   └── web.php               ←  routes.php
+│
+├── storage/
+│   └── logs/laravel.log      ←  error_log()
+│
+├── vendor/                   ←  vendor/
+├── .env                      ←  .env
+└── composer.json             ←  composer.json</div>
+
+    <div class="tip note">
+      <span class="tag">Բացիր <code>public/index.php</code>-ը</span>
+      <p>Այն մոտ 20 տող է։ Կտեսնես ծանոթ բաներ՝ <code>require __DIR__.'/../vendor/autoload.php'</code>, բեռնում է <code>bootstrap/app.php</code>-ը, ստեղծում է <code>Request</code>-ը գլոբալներից և ուղարկում պատասխանը։<br><br>
+      Ճիշտ այն, ինչ գրեցիր Դաս 15-ի front controller-ում։ <code>Request::capture()</code>-ը քո <code>Request::fromGlobals()</code>-ն է։<br><br>
+      Սա առաջին պահն է, երբ «ֆրեյմվորքը» դադարում է սև արկղ լինել։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>bootstrap/app.php — Laravel 11+ ձևը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">return</span> <span class="t">Application</span>::<span class="f">configure</span>(<span class="n">basePath</span>: <span class="f">dirname</span>(<span class="n">__DIR__</span>))
+    -&gt;<span class="f">withRouting</span>(
+        <span class="n">web</span>: <span class="n">__DIR__</span>.<span class="s">'/../routes/web.php'</span>,
+        <span class="n">commands</span>: <span class="n">__DIR__</span>.<span class="s">'/../routes/console.php'</span>,
+        <span class="n">health</span>: <span class="s">'/up'</span>,
+    )
+    -&gt;<span class="f">withMiddleware</span>(<span class="k">function</span> (<span class="t">Middleware</span> <span class="n">$middleware</span>): <span class="k">void</span> {
+        <span class="c">// այստեղ են գրանցվում middleware-ները — քո Դաս 16-ի ստուգումները index.php-ում</span>
+    })
+    -&gt;<span class="f">withExceptions</span>(<span class="k">function</span> (<span class="t">Exceptions</span> <span class="n">$exceptions</span>): <span class="k">void</span> {
+        <span class="c">// այստեղ է բացառությունների մշակումը — քո try/catch-ը index.php-ում</span>
+    })
+    -&gt;<span class="f">create</span>();</code></pre>
+    </div>
+
+      </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Artisan</h2>
+
+    <p>Artisan-ը Laravel-ի հրամանի տողն է։ <code>php artisan</code> — ցուցակը բոլոր հրամանների։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հրաման</th><th>Ինչ է անում</th><th>Ձեռքով մենք</th></tr>
+      <tr><td><code>php artisan route:list</code></td><td>Բոլոր ուղիները աղյուսակով ⭐</td><td>Կարդում էինք <code>routes.php</code></td></tr>
+      <tr><td><code>php artisan make:controller X</code></td><td>Ստեղծում է կոնտրոլերի ֆայլ</td><td>Ֆայլ ձեռքով, namespace ձեռքով</td></tr>
+      <tr><td><code>php artisan make:model X</code></td><td>Ստեղծում է մոդել</td><td>Նույնը</td></tr>
+      <tr><td><code>php artisan migrate</code></td><td>Կատարում է միգրացիաները</td><td>phpMyAdmin-ում SQL</td></tr>
+      <tr><td><code>php artisan tinker</code></td><td>Ինտերակտիվ PHP՝ նախագծի ներսում</td><td><code>dd()</code> և վերբեռնում</td></tr>
+      <tr><td><code>php artisan key:generate</code></td><td>Գաղտնի բանալի <code>.env</code>-ում</td><td>—</td></tr>
+      <tr><td><code>php artisan config:clear</code></td><td>Մաքրել կոնֆիգի քեշը</td><td>—</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>tinker — ամենաօգտակարը սկզբում</div><button class="copy">Պատճենել</button></div>
+<pre><code>php artisan tinker
+
+&gt; <span class="t">DB</span>::<span class="f">table</span>(<span class="s">'products'</span>)-&gt;<span class="f">count</span>()
+= <span class="n">12</span>
+
+&gt; <span class="t">DB</span>::<span class="f">table</span>(<span class="s">'products'</span>)-&gt;<span class="f">where</span>(<span class="s">'discount'</span>, <span class="s">'&gt;'</span>, <span class="n">0</span>)-&gt;<span class="f">pluck</span>(<span class="s">'name'</span>)
+= [<span class="s">"Նոութբուք Pro 14"</span>, ...]
+
+&gt; <span class="f">route</span>(<span class="s">'product.show'</span>, <span class="s">'laptop-pro-14'</span>)
+= <span class="s">"http://technomarket-laravel.test/product/laptop-pro-14"</span></code></pre>
+    </div>
+
+        <div class="warn note">
+      <span class="tag"><code>APP_KEY</code> — մի՛ կիսվիր</span>
+      <p><code>composer create-project</code>-ը ինքն է գեներացնում <code>APP_KEY</code>-ը։ Laravel-ը դրանով ծածկագրում է սեսիաները և cookie-ները։<br><br>
+      Ով գիտի այդ բանալին, կարող է <strong>կեղծել ցանկացած օգտագործողի սեսիա</strong>։ Այն <code>.env</code>-ում է, իսկ <code>.env</code>-ը արդեն <code>.gitignore</code>-ում է՝ ինչպես Դաս 14-ում։ Նաև՝ մի՛ դիր այն AI-ի չաթում (Դաս 4)։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Routing՝ հայելին</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>քո routes.php — Դաս 15–16</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/'</span>,               [<span class="n">$productController</span>, <span class="s">'index'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/product/{slug}'</span>, [<span class="n">$productController</span>, <span class="s">'show'</span>]);
+
+<span class="c">// /admin-ը պաշտպանված էր public/index.php-ում</span>
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/admin'</span>, [<span class="n">$adminController</span>, <span class="s">'index'</span>]);</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Laravel-ի routes/web.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+
+<span class="k">use</span> <span class="t">App\Http\Controllers\ProductController</span>;
+<span class="k">use</span> <span class="t">App\Http\Controllers\AdminController</span>;
+<span class="k">use</span> <span class="t">Illuminate\Support\Facades\Route</span>;
+
+<span class="t">Route</span>::<span class="f">get</span>(<span class="s">'/'</span>,               [<span class="t">ProductController</span>::<span class="k">class</span>, <span class="s">'index'</span>])-&gt;<span class="f">name</span>(<span class="s">'home'</span>);
+<span class="t">Route</span>::<span class="f">get</span>(<span class="s">'/product/{slug}'</span>, [<span class="t">ProductController</span>::<span class="k">class</span>, <span class="s">'show'</span>])-&gt;<span class="f">name</span>(<span class="s">'product.show'</span>);
+
+<span class="t">Route</span>::<span class="f">middleware</span>(<span class="s">'auth'</span>)-&gt;<span class="f">group</span>(<span class="k">function</span> () {
+    <span class="t">Route</span>::<span class="f">get</span>(<span class="s">'/admin'</span>, [<span class="t">AdminController</span>::<span class="k">class</span>, <span class="s">'index'</span>])-&gt;<span class="f">name</span>(<span class="s">'admin.index'</span>);
+});</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Համեմատիր տող առ տող</span>
+      <p><code>[ProductController::class, 'index']</code>-ը համարյա նույնն է, ինչ քո <code>[$productController, 'index']</code>-ը։ Տարբերությունը մեկն է․ դու տալիս էիր <em>պատրաստի օբյեկտ</em>, իսկ Laravel-ին տալիս ես <em>դասի անունը</em>, և այն ինքն է ստեղծում օբյեկտը միայն այն ժամանակ, երբ ուղին համընկնում է (Դաս 19)։<br><br>
+      <code>{slug}</code>-ը նույն շարահյուսությունն է, ինչ քո Router-ում։ Ներսում Laravel-ը նույնպես այն վերածում է ռեգուլյար արտահայտության։ <code>Route::middleware('auth')</code>-ը քո <code>str_starts_with($path, '/admin')</code> ստուգման կազմակերպված տարբերակն է։<br><br>
+      Միակ իսկական նորությունը՝ <code>-&gt;name()</code>-ն է։</p>
+    </div>
+
+    <h3>Անվանված ուղիներ — Դաս 15-ի «երեսուն տեղի» խնդիրը</h3>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>route() — url()-ի հասուն տարբերակը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Դաս 15-ում՝</span>
+<span class="f">url</span>(<span class="s">'/product/'</span> . <span class="n">$p</span>-&gt;<span class="n">slug</span>)
+
+<span class="c">// Laravel-ում՝ ըստ ԱՆՎԱՆ, ոչ ըստ ուղու ⭐</span>
+<span class="f">route</span>(<span class="s">'product.show'</span>, <span class="n">$p</span>-&gt;<span class="n">slug</span>)
+
+<span class="c">// Query պարամետրերով</span>
+<span class="f">route</span>(<span class="s">'home'</span>, [<span class="s">'sort'</span> =&gt; <span class="s">'price_desc'</span>])
+<span class="c">// → /?sort=price_desc</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ սա ավելի լավ է, քան մեր <code>url()</code>-ը</span>
+      <p>Դաս 15-ում ասացինք․ <em>«վաղը որոշում ես, որ հասցեն պիտի լինի <code>/products/{slug}</code>։ Հիմա պիտի գտնես բոլոր երեսուն տեղը»</em>։ Մեր <code>url()</code>-ը օգնեց միայն մասամբ՝ <code>'/product/'</code> տողը դեռ կրկնվում էր ամեն տեղ։<br><br>
+      <code>route('product.show', ...)</code>-ը ուղին չի պարունակում ընդհանրապես։ Փոխում ես <code>routes/web.php</code>-ում մեկ տող, և բոլոր հղումները թարմանում են ինքնաբերաբար։<br><br>
+      Եվ բոնուս՝ եթե տառասխալ անես անվան մեջ, Laravel-ը կգցի սխալ <strong>անմիջապես</strong>, ոչ թե կստեղծի կոտրված հղում։ Նույն գաղափարը, ինչ Դաս 12-ի <code>$product-&gt;prise</code>-ը․ սխալը բարձրաձայն է, ոչ լուռ։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>php artisan route:list</div><button class="copy">Պատճենել</button></div>
+<pre><code>  GET|HEAD  /                  home          › ProductController@index
+  GET|HEAD  admin              admin.index   › AdminController@index
+  GET|HEAD  product/{slug}     product.show  › ProductController@show
+  GET|HEAD  up                 ...
+
+                                          Showing [4] routes</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Անվտանգության քարտեզ</span>
+      <p><code>route:list -v</code>-ը ցույց է տալիս նաև ամեն ուղու middleware-ները։ Մեկ հրամանով կտեսնես, որ <code>/admin</code>-ը պաշտպանված է <code>auth</code>-ով, իսկ <code>/</code>-ը՝ ոչ։ Դաս 16-ում դա պետք էր իմանալ <code>index.php</code>-ը կարդալով։ Հիմա դա հաշվետվություն է, որ կարելի է ստուգել code review-ի ժամանակ։</p>
+    </div>
+
+    <h3>404 և 405՝ ինքնաբերաբար</h3>
+
+    <div class="note">
+      <span class="tag">405-ը՝ առանց քո կոդի</span>
+      <p>Դաս 15-ում 405-ի ստուգումը թողեցինք որպես խորացված տնային։ Laravel-ը դա անում է ինքը․ <code>POST /</code>-ը կվերադարձնի <strong>405 Method Not Allowed</strong>, անհայտ ուղին՝ 404։<br><br>
+      Եվ <code>APP_DEBUG=true</code>-ի դեպքում սխալի էջը ցույց կտա ֆայլը, տողը և stack trace-ը, <code>false</code>-ի դեպքում՝ ընդհանուր էջ։ Դաս 1, 10, 15, 17-ի նույն կանոնը, հիմա ֆրեյմվորքի կողմից։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Request և Response</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Http/Controllers/ProductController.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+
+<span class="k">namespace</span> <span class="t">App\Http\Controllers</span>;
+
+<span class="k">use</span> <span class="t">Illuminate\Http\Request</span>;
+<span class="k">use</span> <span class="t">Illuminate\Support\Facades\DB</span>;
+
+<span class="k">class</span> <span class="t">ProductController</span> <span class="k">extends</span> <span class="t">Controller</span>
+{
+    <span class="k">private const</span> <span class="n">SORTS</span> = [
+        <span class="s">'price_asc'</span>  =&gt; [<span class="s">'price'</span>, <span class="s">'asc'</span>],
+        <span class="s">'price_desc'</span> =&gt; [<span class="s">'price'</span>, <span class="s">'desc'</span>],
+        <span class="s">'name'</span>       =&gt; [<span class="s">'name'</span>, <span class="s">'asc'</span>],
+        <span class="s">'newest'</span>     =&gt; [<span class="s">'created_at'</span>, <span class="s">'desc'</span>],
+    ];
+
+    <span class="k">public function</span> <span class="f">index</span>(<span class="t">Request</span> <span class="n">$request</span>)
+    {
+        <span class="c">// Դաս 10-ի սպիտակ ցուցակը — Laravel-ը քեզ չի ազատում դրանից ⭐</span>
+        <span class="n">$key</span> = <span class="n">$request</span>-&gt;<span class="f">query</span>(<span class="s">'sort'</span>, <span class="s">'price_asc'</span>);
+        [<span class="n">$column</span>, <span class="n">$direction</span>] = <span class="k">self</span>::<span class="n">SORTS</span>[<span class="n">$key</span>] ?? <span class="k">self</span>::<span class="n">SORTS</span>[<span class="s">'price_asc'</span>];
+
+        <span class="n">$products</span> = <span class="t">DB</span>::<span class="f">table</span>(<span class="s">'products'</span>)
+            -&gt;<span class="f">where</span>(<span class="s">'is_active'</span>, <span class="n">1</span>)
+            -&gt;<span class="f">orderBy</span>(<span class="n">$column</span>, <span class="n">$direction</span>)
+            -&gt;<span class="f">paginate</span>(<span class="n">12</span>);          <span class="c">// ⭐ էջավորում՝ մեկ բառով</span>
+
+        <span class="k">return</span> <span class="f">view</span>(<span class="s">'products.index'</span>, [
+            <span class="s">'products'</span> =&gt; <span class="n">$products</span>,
+            <span class="s">'sort'</span>     =&gt; <span class="n">$key</span>,
+        ]);
+    }
+
+    <span class="k">public function</span> <span class="f">show</span>(<span class="k">string</span> <span class="n">$slug</span>)
+    {
+        <span class="n">$product</span> = <span class="t">DB</span>::<span class="f">table</span>(<span class="s">'products'</span>)
+            -&gt;<span class="f">where</span>(<span class="s">'slug'</span>, <span class="n">$slug</span>)
+            -&gt;<span class="f">where</span>(<span class="s">'is_active'</span>, <span class="n">1</span>)
+            -&gt;<span class="f">first</span>();
+
+        <span class="f">abort_if</span>(<span class="n">$product</span> === <span class="k">null</span>, <span class="n">404</span>, <span class="s">'Ապրանքը չի գտնվել'</span>);
+
+        <span class="k">return</span> <span class="f">view</span>(<span class="s">'products.show'</span>, [<span class="s">'product'</span> =&gt; <span class="n">$product</span>]);
+    }
+}</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Քոնը (Դաս 15, 17)</th><th>Laravel</th></tr>
+      <tr><td><code>$request-&gt;query('sort')</code></td><td><code>$request-&gt;query('sort')</code> — նույնը</td></tr>
+      <tr><td><code>$request-&gt;int('page')</code></td><td><code>$request-&gt;integer('page')</code></td></tr>
+      <tr><td><code>$request-&gt;input('name')</code></td><td><code>$request-&gt;input('name')</code> — նույնը, JSON-ի հետ էլ</td></tr>
+      <tr><td><code>Response::html($view-&gt;page(...))</code></td><td><code>view('products.index', [...])</code></td></tr>
+      <tr><td><code>Response::json([...])</code></td><td><code>response()-&gt;json([...])</code></td></tr>
+      <tr><td><code>Response::redirect('/x')</code></td><td><code>redirect()-&gt;route('x')</code></td></tr>
+      <tr><td><code>throw new NotFoundException()</code></td><td><code>abort(404)</code></td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag"><code>abort()</code>-ը բացառություն է — ինչպես մերը</span>
+      <p>Դաս 15-ում որոշեցինք 404-ը գցել <code>NotFoundException</code>-ով, ոչ թե <code>echo</code> + <code>exit</code>-ով, որովհետև կոնտրոլերը չպետք է որոշի, թե ինչպես ցույց տալ սխալը։<br><br>
+      Laravel-ի <code>abort()</code>-ը <strong>գցում է բացառություն</strong>՝ <code>HttpException</code>։ Ճիշտ այն որոշումը, որ կայացրինք Դաս 15-ում։ Հիմա գիտես ոչ միայն ինչ է անում այն, այլ նաև ինչու է այդպես նախագծված։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Query builder-ը պաշտպանում է արժեքները, ոչ սյունակների անունները</span>
+      <p><code>-&gt;where('slug', $slug)</code>-ը ներսում օգտագործում է prepared statement — Դաս 10-ի պաշտպանությունը ինքնաբերաբար է։<br><br>
+      Բայց <code>-&gt;orderBy($request-&gt;query('sort'))</code>-ը <strong>վտանգավոր է</strong>։ Սյունակի անունը չի պարամետրացվում (Դաս 10, բաժին 05), և Laravel-ը չի կարող իմանալ, որ <code>sort</code>-ը պիտի լինի միայն չորս արժեքից մեկը։<br><br>
+      Դրա համար վերևի կոդում <code>SORTS</code>-ը մնացել է։ Ֆրեյմվորքը չի ազատում քեզ մտածելուց։</p>
+    </div>
+
+      </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Ի՞նչ է պաշտպանում Laravel-ը</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Պաշտպանություն</th><th>Մենք</th><th>Laravel</th></tr>
+      <tr><td>XSS տեքստում</td><td><code>e()</code> ամեն տեղ</td><td>✅ <code>{{ }}</code> ինքնաբերաբար</td></tr>
+      <tr><td>SQL injection արժեքներում</td><td>Prepared statements</td><td>✅ Query builder և Eloquent</td></tr>
+      <tr><td>CSRF</td><td><code>csrf_verify()</code></td><td>✅ Բոլոր <code>web</code> ուղիներում</td></tr>
+      <tr><td>Գաղտնաբառեր</td><td><code>password_hash</code></td><td>✅ <code>Hash::make()</code> — bcrypt</td></tr>
+      <tr><td>Session fixation</td><td><code>session_regenerate_id</code></td><td>✅ Fortify-ում մուտքի պահին</td></tr>
+      <tr><td><code>.env</code>-ի արտահոսք</td><td><code>public/</code> թղթապանակ</td><td>✅ Նույն կառուցվածքը</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Իսկ ի՞նչ <strong>չի</strong> պաշտպանում</span>
+      <p><strong>1. <code>{!! $x !!}</code></strong> — Blade-ի «առանց փախցնելու» ձևը։ Դաս 5-ում մեր <code>$content</code>-ի պես է․ միայն արդեն պատրաստ HTML-ի համար։ Օգտագործողի տվյալը այստեղ՝ XSS։<br><br>
+      <strong>2. <code>href="{{ $url }}"</code></strong> — <code>{{ }}</code>-ը չի փրկում <code>javascript:</code>-ից։ Դաս 5-ի <code>safeUrl()</code>-ը Laravel-ում էլ է պետք։<br><br>
+      <strong>3. <code>DB::statement("... $x")</code></strong> — հում SQL տողերի միացումով։ Prepared statement-ը աշխատում է միայն այն դեպքում, երբ արժեքը փոխանցում ես առանձին։<br><br>
+      <strong>4. <code>orderBy($request-&gt;sort)</code></strong> — սյունակների անունները (բաժին 06)։<br><br>
+      <strong>5. Mass assignment</strong> — Դաս 17-ի զգուշացումը։ Laravel-ը ունի <code>$fillable</code>, բայց եթե գրես <code>$guarded = []</code>, պաշտպանությունը անջատվում է։ Դաս 20-ում։<br><br>
+      <strong>6. Բիզնես-կանոնները</strong> — <code>qty &lt;= 99</code>, «ապրանքը առկա՞ է»։ Ֆրեյմվորքը չգիտի քո կանոնները։</p>
+    </div>
+
+        <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>CSRF-ը՝ ստուգիր, որ իսկապես աշխատում է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># routes/web.php-ում ավելացրու փորձնական ուղի</span>
+<span class="t">Route</span>::<span class="f">post</span>(<span class="s">'/test-csrf'</span>, <span class="k">fn</span>() =&gt; <span class="s">'ok'</span>);
+
+<span class="c"># Տերմինալում՝ առանց token-ի</span>
+curl -i -X POST http://technomarket-laravel.test/test-csrf
+
+<span class="c"># HTTP/1.1 419 ⭐ — նույն կոդը, ինչ մեր Դաս 16-ի ստուգումում</span></code></pre>
+    </div>
+
+      </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Դասարանական</h2>
+    <p>Տեղափոխում ենք ՏեխնոՄարկետի գլխավոր և ապրանքի էջը Laravel։ Դիզայնը՝ առայժմ պարզ. Blade-ի layout-ը Դաս 19-ում է։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>resources/views/products/index.blade.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;!DOCTYPE </span><span class="t">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">html</span> <span class="f">lang</span>=<span class="s">"hy"</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">charset</span>=<span class="s">"UTF-8"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">name</span>=<span class="s">"viewport"</span> <span class="f">content</span>=<span class="s">"width=device-width, initial-scale=1"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">title</span><span class="p">&gt;</span>{{ <span class="f">config</span>(<span class="s">'app.name'</span>) }}<span class="p">&lt;/</span><span class="t">title</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"stylesheet"</span> <span class="f">href</span>=<span class="s">"{{ asset('css/global.css') }}"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"stylesheet"</span> <span class="f">href</span>=<span class="s">"{{ asset('css/main.css') }}"</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">body</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">main</span> <span class="f">id</span>=<span class="s">"main"</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">section</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-100"</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">h1</span> <span class="f">class</span>=<span class="s">"section-title mb-30"</span><span class="p">&gt;</span>
+                Ապրանքներ ({{ <span class="n">$products</span>-&gt;<span class="f">total</span>() }})
+            <span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"grid-auto gap-20"</span><span class="p">&gt;</span>
+                <span class="k">@forelse</span> (<span class="n">$products</span> <span class="k">as</span> <span class="n">$p</span>)
+                    <span class="p">&lt;</span><span class="t">article</span> <span class="f">class</span>=<span class="s">"card"</span><span class="p">&gt;</span>
+                        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__body"</span><span class="p">&gt;</span>
+                            <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"card__title"</span><span class="p">&gt;</span>
+                                <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"{{ route('product.show', $p-&gt;slug) }}"</span><span class="p">&gt;</span>{{ <span class="n">$p</span>-&gt;<span class="n">name</span> }}<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+                            <span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+                            <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__price"</span><span class="p">&gt;</span>{{ <span class="f">number_format</span>(<span class="n">$p</span>-&gt;<span class="n">price</span>, <span class="n">0</span>, <span class="s">'.'</span>, <span class="s">' '</span>) }} ֏<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+                        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+                    <span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span>
+                <span class="k">@empty</span>
+                    <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"text-muted"</span><span class="p">&gt;</span>Ապրանքներ չեն գտնվել։<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+                <span class="k">@endforelse</span>
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+            {{ <span class="n">$products</span>-&gt;<span class="f">withQueryString</span>()-&gt;<span class="f">links</span>() }}
+
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">main</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="t">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">html</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Երեք բան այս շաբլոնում</span>
+      <p><strong><code>{{ $p-&gt;name }}</code></strong> — Դաս 2-ի <code>&lt;?= e($p['name']) ?&gt;</code>-ն է։ Փախցնումը ինքնաբերաբար է։ Վերջապես անհնար է մոռանալ <code>e()</code>-ն։<br><br>
+      <strong><code>@forelse ... @empty</code></strong> — Դաս 2-ի <code>if (empty(...)) ... else foreach</code>-ն է մեկ կառուցվածքում։<br><br>
+      <strong><code>withQueryString()-&gt;links()</code></strong> — էջավորման հղումները։ <code>withQueryString</code>-ը պահպանում է <code>?sort=</code>-ը՝ առանց դրա երկրորդ էջում տեսակավորումը կկորեր։ Դաս 10-ում էջավորումը մենք գրում էինք ձեռքով մոտ 15 տողով։</p>
+    </div>
+
+    <ol>
+      <li>Ստուգիր PHP 8.3+, ստեղծիր <code>technomarket-laravel</code> նախագիծը և կարգավորիր <code>.env</code>-ը (<code>php artisan db:show</code>)</li>
+      <li>Պատճենիր <code>css/</code> և <code>images/</code> թղթապանակները <code>public/</code>-ի մեջ</li>
+      <li>Գործարկիր <code>php artisan make:controller ProductController</code> և գրիր <code>index</code> և <code>show</code> մեթոդները</li>
+      <li>Ավելացրու ուղիները անուններով և ստեղծիր երկու Blade շաբլոնը</li>
+      <li>Գործարկիր <code>php artisan route:list</code>, ստուգիր CSRF-ը <code>curl</code>-ով և ջնջիր փորձնական ուղին</li>
+    </ol>
+
+    <div class="warn note">
+      <span class="tag">Չորս պարտադիր փորձարկում</span>
+      <p><strong>1.</strong> <code>/product/գոյություն-չունի</code> → 404, ոչ դատարկ էջ<br>
+      <strong>2.</strong> <code>/?sort=price; DROP TABLE products</code> → սովորական ցուցակ, աղյուսակը տեղում է ⭐<br>
+      <strong>3.</strong> Ավելացրու բազայում ապրանք <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> անունով → էկրանին տեքստ, ոչ <code>alert</code><br>
+      <strong>4.</strong> <code>APP_DEBUG=false</code> և բացիր անհայտ ապրանք → ընդհանուր էջ, առանց stack trace-ի</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ավարտիր դասարանականի 5 քայլը և չորս փորձարկումը։ Ուղարկիր սքրինշոթներ։</li>
+      <li>Բացիր <code>public/index.php</code>-ը և գրիր, թե ամեն տողը քո Դաս 15-ի front controller-ի որ տողին է համապատասխանում։</li>
+      <li>Ավելացրու <code>/category/{slug}</code> ուղին անունով և կոնտրոլերի մեթոդով։</li>
+      <li>Փոխիր <code>product.show</code>-ի ուղին <code>/products/{slug}</code>-ի։ Քանի՞ ֆայլ պիտի փոխեիր։ Համեմատիր Դաս 15-ի հետ։</li>
+      <li>Հանիր <code>SORTS</code> սպիտակ ցուցակը և օգտագործիր <code>orderBy($request-&gt;query('sort'))</code>։ Ի՞նչ է լինում <code>?sort=xyz</code>-ով։ Վերադարձրու ցուցակը։</li>
+      <li>Ցուցադրիր <code>{{ }}</code>-ի և <code>{!! !!}</code>-ի տարբերությունը վտանգավոր անվանով ապրանքի վրա։</li>
+      <li>Խնդրիր AI-ին գրել Laravel-ի կոնտրոլեր։ Ստուգիր՝ օգտագործո՞ւմ է հին կառուցվածքը (<code>Kernel.php</code>)։ Կա՞ <code>orderBy</code> առանց սպիտակ ցուցակի։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
+
+    <h3>Քո ֆայլը → Laravel</h3>
+    <div class="tree">routes.php            →  routes/web.php
+src/Controllers/      →  app/Http/Controllers/
+src/Models/           →  app/Models/
+views/*.php           →  resources/views/*.blade.php
+bootstrap.php         →  bootstrap/app.php
+public/index.php      →  public/index.php
+error_log()           →  storage/logs/laravel.log
+url('/product/'.$x)   →  route('product.show', $x)
+throw NotFound...     →  abort(404)
+e($x)                 →  {{ $x }}</div>
+
+    <h3>Հրամաններ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հրաման</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>composer create-project laravel/laravel x</code></td><td>Նոր նախագիծ</td></tr>
+      <tr><td><code>php artisan route:list</code></td><td>Ուղիների ցուցակ ⭐</td></tr>
+      <tr><td><code>php artisan make:controller X</code></td><td>Նոր կոնտրոլեր</td></tr>
+      <tr><td><code>php artisan tinker</code></td><td>Ինտերակտիվ PHP ⭐</td></tr>
+      <tr><td><code>php artisan db:show</code></td><td>Բազայի միացման ստուգում</td></tr>
+      <tr><td><code>php artisan config:clear</code></td><td>Կոնֆիգի քեշի մաքրում</td></tr>
+    </table>
+    </div>
+
+    <h3>Ի՞նչ չի պաշտպանում Laravel-ը</h3>
+    <div class="tree">{!! $x !!}             → XSS
+href="{{ $url }}"     → javascript:  (safeUrl)
+DB::statement(".$x.") → SQL injection
+orderBy($request->x)  → սպիտակ ցուցակ
+$guarded = []         → mass assignment
+Բիզնես-կանոններ        → քո կոդը</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>PHP-ի տարբերակը 8.3+ է</li>
+      <li><code>DB_CONNECTION=mysql</code>, ոչ sqlite</li>
+      <li><code>.env</code>-ը և <code>APP_KEY</code>-ը Git-ում չեն</li>
+      <li>Ամեն ուղի ունի անուն</li>
+      <li>Հղումները գեներացվում են <code>route()</code>-ով, ոչ ձեռքով</li>
+      <li>Տեսակավորման դաշտը ստուգվում է սպիտակ ցուցակով</li>
+      <li>Ելքը <code>{{ }}</code>-ով է, ոչ <code>{!! !!}</code>-ով</li>
+      <li>Անհայտ ապրանքը տալիս է 404</li>
+      <li>POST առանց token-ի տալիս է 419</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչ է անում Laravel-ի <code>public/index.php</code>-ը</li>
+      <li>Գիտե՞մ, ինչու <code>route()</code>-ը ավելի լավ է, քան <code>url()</code>-ը</li>
+      <li>Հասկանո՞ւմ եմ, ինչու <code>abort()</code>-ը բացառություն է</li>
+      <li>Կարո՞ղ եմ նշել երեք բան, որոնցից Laravel-ը <strong>չի</strong> պաշտպանում</li>
+      <li>Գիտե՞մ, ինչու ֆրեյմվորքը օգտակար է նույնիսկ եթե կարող եմ գրել սեփականը</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Blade և Controllers — Դաս 5-ի և 15-ի հայելին։ Կվերադառնանք <code>layout.php</code> + <code>render()</code> + <code>$content</code>-ին և կտեսնենք, որ Blade-ի <code>@extends</code> և <code>@yield</code>-ը ճիշտ նույն գաղափարն է՝ առանց <code>ob_start()</code>-ի։<br><br>
+      Կսովորենք նաև Blade կոմպոնենտները — HTML բլոկի Դաս 17-ի <code>.card</code>-ը կդառնա <code>&lt;x-product-card&gt;</code>, և resource controller-ը, որը CRUD-ի յոթ ուղին ստեղծում է մեկ տողով։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>PHP Բլոկ · Դաս 18 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>
