@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Առաջադրանք 1 — գլխավոր էջ և կատալոգ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lesson.css">
+<script src="../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .swatch{display:inline-block; width:14px; height:14px; border-radius:3px; vertical-align:middle; margin-right:6px; border:1px solid var(--rule)}
+  .lede a, .note a{color:var(--pen); text-decoration:underline}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 1 · նախագիծ</b> · առաջադրանք 1</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Առաջադրանք 1 / 3 · HTML Դաս 22 · 2 ժամ + տնային</p>
+  <h1>Գլխավոր էջ և կատալոգ</h1>
+  <p class="lede">Կառուցիր ՏեխնոՄարկետի առաջին երկու էջը համակարգչի լայնությամբ՝ գլխավորը (վեց բաժին) և կատալոգը (ֆիլտրեր, ապրանքների ցանց, էջավորում)։ Երկու էջն էլ օգտագործում են նույն CSS ֆայլերը և նույն header/footer-ը։ Ադապտիվությունը վաղվա գործն է։ Այսօր ամեն ինչ պետք է ճիշտ աշխատի 1280px-ում։ Ստուգիր քեզ՝ <a href="example-1-day1/index.html">օրինակ 1</a>-ով, բայց միայն ավարտելուց հետո։</p>
+
+  <div class="facts">
+    <span>Արդյունք՝ index.html + catalog.html + css/</span>
+    <span>Սկսիր starter/ թղթապանակից</span>
+    <span>Ստուգում՝ բաժին 05</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+
+    <figure class="shot">
+      <img src="screenshots/day1-desktop.jpg" alt="Օր 1-ի արդյունքը 1280px լայնությամբ․ սպիտակ header մենյուով, մուգ hero երկու կոճակով, 6 ապրանքի քարտ երկու շարքով, երեք առավելություն պատկերակներով, կապույտ բաժանորդագրման բաժին և մուգ footer երեք սյունակով" width="900" height="1568" loading="lazy">
+      <figcaption>Գլխավոր էջ՝ 1280px։ Հեռախոսում էջը դեռ կոտրված է, և դա նորմալ է։</figcaption>
+    </figure>
+
+    <figure class="shot">
+      <img src="screenshots/day1-catalog.jpg" alt="Կատալոգի էջը 1280px լայնությամբ․ ձախում ֆիլտրերի բլոկ չորս խմբով, աջում դասավորման ընտրություն, 9 ապրանքի քարտ երեք շարքով և էջավորում" width="900" height="1266" loading="lazy">
+      <figcaption>Կատալոգ՝ 1280px</figcaption>
+    </figure>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Բաժին</th><th>Կառուցվածք</th><th>Դաս</th></tr>
+      <tr><td colspan="3"><strong>Ընդհանուր՝ երկու էջում</strong></td></tr>
+      <tr><td><code>header</code></td><td>Լոգո, մենյու dropdown-ով, ակտիվ էջ, «Զամբյուղ» կոճակ հաշվիչով, sticky</td><td>15, 17, 18</td></tr>
+      <tr><td><code>footer</code></td><td>3 սյուն + ներքևի տող, «Կապ» սյունը՝ <code>id="contact"</code></td><td>10, 18</td></tr>
+      <tr><td colspan="3"><strong>index.html</strong></td></tr>
+      <tr><td><code>#hero</code></td><td>Մուգ ֆոն, h1, տեքստ, 2 կոճակ</td><td>10, 17</td></tr>
+      <tr><td><code>#products</code></td><td>Վերնագիր + 6 քարտ Grid-ով</td><td>16, 17, 20</td></tr>
+      <tr><td><code>#features</code></td><td>Վերնագիր + 3 առավելություն SVG պատկերակներով</td><td>16, 20</td></tr>
+      <tr><td><code>#cta</code></td><td>Տեքստ ձախում, ֆորմա աջում</td><td>4, 12</td></tr>
+      <tr><td colspan="3"><strong>catalog.html</strong></td></tr>
+      <tr><td><code>.page-head</code></td><td>Փշրանքներ, h1, տեքստ</td><td>10, 17</td></tr>
+      <tr><td><code>aside</code></td><td>Ֆիլտրերի ֆորմա՝ 4 <code>fieldset</code></td><td>4, 12</td></tr>
+      <tr><td><code>#catalog</code></td><td>Գործիքագոտի, 9 քարտ Grid-ով, էջավորում</td><td>18, 20</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+
+    <div class="tree">starter/
+├── content.md          ← բոլոր 7 էջի տեքստերը, գները, alt-երը
+└── images/
+    ├── laptop.jpg  laptop.webp        ← 9 ապրանք, ամեն մեկը 600 × 400
+    ├── monitor.*  keyboard.*  smartphone.*  headphones.*  tablet.*
+    ├── mouse.*  speaker.*  smartwatch.*
+    ├── laptop-2.*  laptop-3.*  laptop-4.*  ← ապրանքի էջի պատկերասրահը (Առաջադրանք 3)
+    ├── og.jpg                         ← նկարը սոցցանցերում կիսվելիս
+    ├── favicon.svg
+    └── icons/
+        ├── truck.svg  shield.svg  refresh.svg</div>
+
+    <div class="note">
+      <span class="tag">Ինչու տեքստերը պատրաստ են</span>
+      <p>Այս առաջադրանքը CSS և HTML կառուցվածքի մասին է, ոչ տեքստ գրելու։ Այսօր պետք են <code>content.md</code>-ի «Ընդհանուր», «Գլխավոր էջ» և «Կատալոգ» բաժինները։ Պատճենիր ամեն ինչ, և ժամանակդ ծախսիր դասավորության վրա։ Ոչ մի <em>lorem ipsum</em>։</p>
+    </div>
+
+    <h3>Դիզայնի արժեքները՝ մակետից չափված</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ի՞նչ</th><th>Արժեք</th><th>Տոկեն</th></tr>
+      <tr><td><span class="swatch" style="background:#253237"></span>Մուգ ֆոն</td><td><code>#253237</code></td><td><code>--dark</code></td></tr>
+      <tr><td><span class="swatch" style="background:#003459"></span>Ակցենտ</td><td><code>#003459</code></td><td><code>--accent</code></td></tr>
+      <tr><td><span class="swatch" style="background:#00253f"></span>Ակցենտ hover</td><td><code>#00253F</code></td><td><code>--accent-hover</code></td></tr>
+      <tr><td><span class="swatch" style="background:#9db4c0"></span>Բաց ակցենտ</td><td><code>#9DB4C0</code></td><td><code>--accent-light</code></td></tr>
+      <tr><td><span class="swatch" style="background:#f5f5f5"></span>Էջի ֆոն</td><td><code>#F5F5F5</code></td><td><code>--bg</code></td></tr>
+      <tr><td><span class="swatch" style="background:#ffffff"></span>Քարտի ֆոն</td><td><code>#FFFFFF</code></td><td><code>--surface</code></td></tr>
+      <tr><td><span class="swatch" style="background:#1a1a1a"></span>Տեքստ</td><td><code>#1A1A1A</code></td><td><code>--text</code></td></tr>
+      <tr><td><span class="swatch" style="background:#6b6b6b"></span>Երկրորդական տեքստ</td><td><code>#6B6B6B</code></td><td><code>--text-muted</code></td></tr>
+      <tr><td><span class="swatch" style="background:#c9d4d9"></span>Երկրորդական տեքստ մուգի վրա</td><td><code>#C9D4D9</code></td><td><code>--text-on-dark-muted</code></td></tr>
+      <tr><td><span class="swatch" style="background:#c62828"></span>Զեղչ</td><td><code>#C62828</code></td><td><code>--danger</code></td></tr>
+      <tr><td><span class="swatch" style="background:#0f7b4f"></span>Նոր</td><td><code>#0F7B4F</code></td><td><code>--success</code></td></tr>
+      <tr><td>Hero վերնագիր</td><td>36px / 700</td><td><code>h1</code>, <code>clamp()</code></td></tr>
+      <tr><td>Բաժնի վերնագիր</td><td>26px / 700</td><td><code>h2</code>, <code>clamp()</code></td></tr>
+      <tr><td>Հիմնական տեքստ</td><td>14px / 1.6</td><td><code>body</code></td></tr>
+      <tr><td>Պատեր / սյուների բացակ</td><td>60px / 10px</td><td><code>--wall</code> / <code>--gap</code></td></tr>
+      <tr><td>Կլորացում՝ կոճակ / քարտ</td><td>6px / 12px</td><td><code>--radius-sm</code> / <code>--radius-md</code></td></tr>
+      <tr><td>Բաժինների ուղղահայաց padding</td><td>60px</td><td><code>section</code></td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <p>Կատարիր հերթականությամբ։ Ամեն քայլից հետո կա ստուգում․ մի՛ անցիր հաջորդին, մինչև այն չի անցնում։</p>
+
+    <h3>Քայլ 1 · Ֆայլերի կառուցվածք</h3>
+    <div class="tree">technomarket/
+├── index.html
+├── catalog.html
+├── components.html        ← ոճերի ուղեցույց (Դաս 17)
+├── css/
+│   ├── global.css         ← վարքագիծ, չի փոխվում նախագծից նախագիծ
+│   └── main.css           ← այս նախագծի արժեքները
+└── images/                ← պատճենիր starter/images-ից</div>
+    <div class="tip note"><span class="tag">Ստուգում</span><p>Բոլոր անունները փոքրատառ են, առանց բացատների և հայերեն տառերի։ Windows-ը ներում է <code>Images/Laptop.JPG</code>-ը, GitHub Pages-ը՝ ոչ (Դաս 2, 23)։</p></div>
+
+    <h3>Քայլ 2 · <code>global.css</code></h3>
+    <p>Հավաքիր այն, ինչ ավելացրել ենք 1–21 դասերում։ Ֆայլը պետք է պարունակի․</p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Բլոկ</th><th>Դաս</th></tr>
+      <tr><td>Reset՝ <code>*</code>, <code>box-sizing: border-box</code></td><td>6, 8</td></tr>
+      <tr><td>Հղումներ, ցուցակներ, ֆորմայի տարրեր (<code>font: inherit</code>)</td><td>4, 6</td></tr>
+      <tr><td><code>:focus-visible</code> բոլոր ինտերակտիվ տարրերի համար</td><td>18</td></tr>
+      <tr><td><code>img</code>, <code>picture</code>, <code>.img-cover</code>, <code>.ratio-3-2</code></td><td>16</td></tr>
+      <tr><td><code>.row</code>, <code>.wrapper</code>, flex օգնականներ</td><td>10–12</td></tr>
+      <tr><td><code>.grid-auto</code></td><td>20</td></tr>
+      <tr><td><code>.w-*</code>, <code>.w-md-*</code>, <code>.w-sm-*</code></td><td>10, 14</td></tr>
+      <tr><td><code>.skip-link</code>, <code>.visually-hidden</code></td><td>5, 6</td></tr>
+    </table>
+    </div>
+    <div class="tip note"><span class="tag">Ստուգում</span><p><code>global.css</code>-ում <strong>չկա ոչ մի գույն</strong> այս նախագծից։ Եթե կա <code>#003459</code>, այն պետք է տեղափոխվի <code>main.css</code>։ Դա է երկու ֆայլի բաժանման իմաստը։</p></div>
+
+    <h3>Քայլ 3 · <code>main.css</code>, բաժիններ 1–5</h3>
+    <div class="tree">1. Տոկեններ           :root — երկու շերտ․ գունապնակ → իմաստային (Դաս 19)
+2. Բազա               body — տառատեսակ, չափ, line-height, գույն, ֆոն
+3. Կմախք              section { padding }  .row { padding }  .col { padding }
+4. Տիպոգրաֆիա         h1–h4 clamp()-ով (Դաս 14), .text-muted
+5. Հեռավորություններ  .mb-10/20/30  .gap-10/20 — միայն սանդղակի արժեքներ</div>
+    <div class="tip note"><span class="tag">Ստուգում</span><p>Առաջին 30 րոպեն՝ ոչ մի HTML։ Դաս 13-ի հոսքը․ <em>չափել → main.css → HTML</em>։ Եթե HTML-ից սկսես, ամեն բաժնի համար նորից կմտածես չափերի մասին, և վերջում կունենաս 14 տարբեր տառաչափ։</p></div>
+
+    <h3>Քայլ 4 · HTML կմախք</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>body-ի կառուցվածքը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#main"</span> <span class="f">class</span>=<span class="s">"skip-link"</span><span class="p">&gt;</span>Անցնել բովանդակությանը<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">header</span> <span class="f">class</span>=<span class="s">"header"</span><span class="p">&gt;</span> ... <span class="p">&lt;/</span><span class="t">header</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">main</span> <span class="f">id</span>=<span class="s">"main"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">section</span> <span class="f">id</span>=<span class="s">"hero"</span><span class="p">&gt;</span> ... <span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">section</span> <span class="f">id</span>=<span class="s">"products"</span><span class="p">&gt;</span> ... <span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">section</span> <span class="f">id</span>=<span class="s">"features"</span><span class="p">&gt;</span> ... <span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">section</span> <span class="f">id</span>=<span class="s">"cta"</span><span class="p">&gt;</span> ... <span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">main</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">footer</span> <span class="f">class</span>=<span class="s">"footer"</span><span class="p">&gt;</span> ... <span class="p">&lt;/</span><span class="t">footer</span><span class="p">&gt;</span></code></pre>
+    </div>
+    <div class="tip note"><span class="tag">Ստուգում</span><p>Մեկ <code>h1</code> ամբողջ էջում (hero-ում)։ Բաժինների վերնագրերը՝ <code>h2</code>, քարտերի անունները՝ <code>h3</code>։ Ամեն բաժնի ներսում՝ <code>.row &gt; .col &gt; .wrapper</code>։ <code>head</code>-ում՝ <code>lang="hy"</code>, <code>title</code>, <code>description</code>, OG թեգեր, favicon (Դաս 1, 5)։</p></div>
+
+    <h3>Քայլ 5 · Header և hero</h3>
+    <ul class="goals">
+      <li>Header-ը <code>position: sticky</code> է, ոլորելիս մնում է վերևում (Դաս 15)</li>
+      <li>Մենյուն <code>nav</code>-ի մեջ է՝ <code>aria-label="Գլխավոր մենյու"</code>-ով։ Կետերը՝ Գլխավոր, Կատալոգ, Կապ, Զամբյուղ</li>
+      <li>«Կատալոգ»-ի տակ՝ dropdown 5 կատեգորիայով։ Բացվում է <code>:hover</code>-ով և <code>:focus-within</code>-ով, թաքնվում է <code>visibility</code>-ով, ոչ <code>display: none</code>-ով (Դաս 18)</li>
+      <li>Ընթացիկ էջի հղումը նշված է <code>aria-current="page"</code>-ով, և ոճը կախված է հենց այդ ատրիբուտից, ոչ <code>.active</code> դասից (Դաս 18)</li>
+      <li>Header-ը նույնն է երկու էջում։ Պատճենիր այն ամբողջությամբ և փոխիր միայն <code>aria-current</code>-ը</li>
+      <li>Hero-ի սյունը՝ <code>w-70</code>, որպեսզի տողերը չլինեն չափազանց երկար</li>
+      <li>Hero-ի երկրորդական տեքստը մուգ ֆոնի վրա՝ <code>--text-on-dark-muted</code>, ոչ թե <code>opacity</code></li>
+    </ul>
+
+    <h3>Քայլ 6 · Կոճակներ</h3>
+    <p>Մեկ <code>.btn</code> դաս՝ պարամետրերով (<code>--btn-bg</code>, <code>--btn-color</code>, <code>--btn-border</code>), և մոդիֆիկատորներ, որոնք փոխում են միայն պարամետրերը (Դաս 19)․ <code>.btn--primary</code>, <code>.btn--light</code>, <code>.btn--outline-light</code>, <code>.btn--sm</code>։ Չորս վիճակ՝ սովորական, <code>:hover</code>, <code>:focus-visible</code>, <code>:active</code>։ Նվազագույն բարձրությունը՝ 44px։</p>
+
+    <h3>Քայլ 7 · Ապրանքների ցանց</h3>
+    <ul class="goals">
+      <li>6 քարտ՝ <code>article.card</code>, Grid-ով (<code>.grid-auto</code>), ոչ <code>.col w-33</code> (Դաս 20)</li>
+      <li>Նկարը՝ <code>picture</code>, <code>webp</code> + <code>jpg</code>, <code>width</code>/<code>height</code>, <code>loading="lazy"</code>, իմաստալից <code>alt</code> (Դաս 16)</li>
+      <li>Պիտակները՝ <code>.card__badge</code> և <code>.card__badge--new</code> (Դաս 15, 17)</li>
+      <li>Գինը և կոճակը քարտի ներքևում են, նույնիսկ երբ անվանումը երկար է (<code>margin-top: auto</code>, Դաս 12)</li>
+      <li>Հին գինը՝ <code>&lt;del&gt;</code>-ով, ոչ <code>text-decoration</code>-ով <code>span</code>-ի վրա. էկրանընթերցիչը պետք է իմանա, որ այն հին է</li>
+    </ul>
+
+    <h3>Քայլ 8 · Առավելություններ</h3>
+    <p>Երեք սյուն Grid-ով։ Պատկերակների SVG կոդը տեղադրիր ուղիղ HTML-ում, <code>aria-hidden="true"</code>-ով, իսկ գույնը տուր CSS-ից <code>currentColor</code>-ով (Դաս 16)։</p>
+
+    <h3>Քայլ 9 · CTA</h3>
+    <p>Ֆորման՝ էլ. հասցեով և կոճակով մեկ տողում։ <code>label</code>-ը պարտադիր է, նույնիսկ եթե տեսողականորեն թաքնված է (<code>.visually-hidden</code>)։ Input-ը ունի <code>min-width: 0</code>, կոճակը՝ <code>flex-shrink: 0</code> (Դաս 12)։</p>
+
+    <h3>Քայլ 10 · Footer</h3>
+    <p>Երեք սյուն (<code>w-40</code>, <code>w-25</code>, <code>w-25</code>) և ներքևի տող։ Ստորին մենյուն՝ առանձին <code>nav</code> իր <code>aria-label</code>-ով։ Հեռախոսը՝ <code>tel:</code>, էլ. հասցեն՝ <code>mailto:</code> հղումով։ Մուգ ֆոն → բաց տեքստ, նաև լոգոյի համար։ «Կապ» սյանը տուր <code>id="contact"</code>, որ մենյուի «Կապ» հղումն աշխատի ամեն էջից։</p>
+
+    <h3>Քայլ 11 · Կատալոգի էջ</h3>
+    <p>Ստեղծիր <code>catalog.html</code>՝ պատճենելով <code>index.html</code>-ի <code>head</code>-ը, header-ը և footer-ը։ <code>main</code>-ի ներսում երեք մաս է․</p>
+    <ul class="goals">
+      <li><strong>Էջի գլուխ</strong>․ <code>section.page-head</code>, փշրանքներ <code>nav &gt; ol.crumbs</code>-ով (բաժանարարը՝ <code>li + li::before</code>, Դաս 17), h1 «Կատալոգ» և տեքստ</li>
+      <li><strong>Երկու սյուն</strong>․ <code>aside.col.w-25</code> ֆիլտրերի համար և <code>.col.w-75</code> արդյունքների համար։ ֆոնը և ստվերը տուր ներսի <code>form</code>-ին, ոչ սյանը (Դաս 10․ <code>.col</code>-ը ֆոն չունի)</li>
+      <li><strong>Ֆիլտրեր</strong>․ մեկ <code>form</code> (<code>action="catalog.html"</code>, <code>method="get"</code>), չորս <code>fieldset</code>՝ իրենց <code>legend</code>-ով։ Ամեն checkbox և radio՝ <code>label</code>-ի ներսում։ Գնի դաշտերը՝ <code>type="number"</code> (Դաս 4)</li>
+      <li><strong>Գործիքագոտի</strong>․ «Ցուցադրված է 1–9՝ 24 ապրանքից» ձախում, դասավորման <code>select</code>-ը իր <code>label</code>-ով աջում (<code>justify-between</code>, Դաս 11)</li>
+      <li><strong>Ցանց</strong>․ 9 քարտ՝ նույն <code>.card</code> կոմպոնենտով, ինչ գլխավոր էջում։ Նոր CSS պետք չէ, միայն սյան նվազագույն լայնությունը՝ 240px</li>
+      <li><strong>Էջավորում</strong>․ <code>nav aria-label="Էջավորում"</code>, ընթացիկ էջը՝ <code>aria-current="page"</code>-ով, ամեն հղում՝ առնվազն 44 × 44px</li>
+    </ul>
+    <div class="tip note"><span class="tag">Ստուգում</span><p>Սեղմիր «Կիրառել»։ Հասցեում պետք է հայտնվի <code>?cat=laptops&amp;stock=all</code>-ի նման տող։ Սա նշանակում է, որ ֆորման ճիշտ է կառուցված․ ամեն դաշտ ունի <code>name</code>։ Ապրանքները չեն փոխվի․ դա կանի JS-ը։</p></div>
+    <div class="tip note"><span class="tag">Կրկնություն չկա</span><p>Եթե կատալոգի համար գրում ես քարտի նոր ոճեր, կանգ առ։ Քարտը կոմպոնենտ է (Դաս 17) և պետք է աշխատի ցանկացած էջում առանց փոփոխության։ Նոր են միայն <code>.page-head</code>, <code>.crumbs</code>, <code>.filters</code>, <code>.toolbar</code>, <code>.pagination</code> և dropdown-ը։ Ավելացրու դրանք նաև <code>components.html</code>-ում։</p></div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Հաճախ հանդիպող սխալներ</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Քարտերի կոճակները տարբեր բարձրության վրա են</td><td><code>.card__body</code>-ը flex column է, <code>.card__footer</code>-ը՝ <code>margin-top: auto</code></td></tr>
+      <tr><td>Նկարները ձգված են կամ տարբեր բարձրության</td><td><code>aspect-ratio</code> <code>picture</code>-ի վրա և <code>object-fit: cover</code> <code>img</code>-ի վրա</td></tr>
+      <tr><td>CTA-ի input-ը դուրս է գալիս բլոկից</td><td><code>min-width: 0</code> input-ին</td></tr>
+      <tr><td>Մենյուի հղումը տանում է բաժին, բայց վերնագիրը թաքնվում է header-ի տակ</td><td>Վաղը՝ <code>scroll-padding-top</code> (Առաջադրանք 2)</td></tr>
+      <tr><td>Dropdown-ը անհետանում է, երբ մկնիկը տանում ես դեպի կետերը</td><td>Ենթամենյուի և հղման միջև բացակ կա։ <code>top: 100%</code> և առանց <code>margin-top</code>-ի</td></tr>
+      <tr><td>Ֆիլտրերի սպիտակ բլոկը ձգվում է արդյունքների ամբողջ բարձրությամբ</td><td>Ֆոնը դրված է <code>.col</code>-ի վրա, որը ձգվում է <code>.row</code>-ի ներսում։ Տեղափոխիր ֆոնը ներսի <code>form</code>-ին (Դաս 10)</td></tr>
+      <tr><td>Ֆորման ուղարկելուց հետո հասցեում ոչինչ չի հայտնվում</td><td>Դաշտերից պակասում է <code>name</code> ատրիբուտը (Դաս 4)</td></tr>
+      <tr><td>Տեքստը մուգ ֆոնի վրա վատ է կարդացվում</td><td>Ամեն ֆոն իր տեքստի գույնի հետ․ ստուգիր կոնտրաստը DevTools-ով (≥ 4.5:1)</td></tr>
+      <tr><td>Նույն 16px-ը գրված է 5 տեղում</td><td>Ստեղծիր տոկեն կամ օգտագործիր սանդղակի դասը</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Ինչպես համեմատել օրինակի հետ</h2>
+
+    <div class="warn note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 05-ի բոլոր կետերը նշված են, բացիր <a href="example-1-day1/index.html">example-1-day1/index.html</a>-ը և <a href="example-1-day1/catalog.html">catalog.html</a>-ը բրաուզերում, իսկ քոնը՝ կողքի պատուհանում։ Համեմատիր երեք բան․<br><br>
+      <strong>1. Տեսքը.</strong> նույն լայնությամբ (1280px) երկուսը կողք կողքի։ Որտե՞ղ են տարբերվում հեռավորությունները։<br>
+      <strong>2. HTML-ը.</strong> DevTools → Elements։ Կմախքը նույնն է՞։ Քանի՞ <code>h1</code> ունես։<br>
+      <strong>3. CSS-ը.</strong> բացիր օրինակի <code>css/main.css</code>-ը։ Ամեն որոշման կողքին նշված է դասը։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի լավ և ինչու։<br><br>
+      Քո լուծումը պարտադիր չէ, որ նույնը լինի։ Պարտադիր է, որ այն անցնի ստուգաթերթը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Ընդունման ստուգաթերթ</h2>
+
+    <h3>Կառուցվածք</h3>
+    <ul class="goals">
+      <li>Ամեն <code>section</code> ունի <code>id</code></li>
+      <li>Կմախքը պահպանված է՝ <code>.row &gt; .col &gt; .wrapper</code></li>
+      <li>Grid-ը օգտագործվում է միատեսակ ցանցերի համար</li>
+      <li>Կա skip-link, և այն հայտնվում է առաջին <code>Tab</code>-ով</li>
+      <li>Ամեն էջում կա մեկ <code>h1</code>, վերնագրերի հերթականությունը ճիշտ է</li>
+      <li>Header-ը և footer-ը նույնն են երկու էջում, ակտիվ էջը նշված է <code>aria-current</code>-ով</li>
+      <li>Dropdown-ը բացվում է և մկնիկով, և <code>Tab</code>-ով</li>
+      <li>Ֆիլտրերի ամեն դաշտ ունի <code>label</code> և <code>name</code>, խմբերը՝ <code>fieldset</code> + <code>legend</code></li>
+    </ul>
+
+    <h3>CSS</h3>
+    <ul class="goals">
+      <li><code>:root</code>-ից դուրս HEX գույն չկա</li>
+      <li>Բոլոր հեռավորությունները սանդղակի վրա են</li>
+      <li>Ամեն ֆոն ունի իր <code>color</code>-ը</li>
+      <li>Կոնտրաստները ստուգված են</li>
+      <li>Կոճակներն ունեն չորս վիճակ</li>
+    </ul>
+
+    <h3>Բովանդակություն</h3>
+    <ul class="goals">
+      <li>Բոլոր նկարներն ունեն իմաստալից <code>alt</code>, <code>width</code> և <code>height</code></li>
+      <li>Ֆորմայի դաշտն ունի <code>label</code></li>
+      <li>Ոչ մի lorem ipsum չի մնացել</li>
+      <li>Երկու էջն էլ ճիշտ են 1280px-ում և չունեն հորիզոնական սքրոլ այդ լայնությամբ</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հանձնում</span>
+      <p>Ուղարկիր երկու էջի ամբողջական սքրինշոթները 1280px-ում (DevTools → Ctrl+Shift+P → «Capture full size screenshot») և <code>technomarket/</code> թղթապանակը zip-ով։ Վաղը շարունակում ենք հենց այս ֆայլերից՝ <a href="task-2.html">Առաջադրանք 2</a>։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 1 · նախագիծ · Առաջադրանք 1 / 3</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

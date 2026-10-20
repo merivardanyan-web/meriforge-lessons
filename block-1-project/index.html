@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Բլոկ 1 · Նախագիծ — ՏեխնոՄարկետ կայք</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lesson.css">
+<script src="../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:2fr 1fr; gap:16px; align-items:start}
+  .shots-3{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; align-items:start}
+  @media (max-width:700px){.shots, .shots-3{grid-template-columns:1fr}}
+  .steps-map a{color:var(--pen); text-decoration:underline}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 1 · HTML/CSS</b> · նախագիծ</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Բլոկ 1-ի նախագիծ · HTML Դաս 22–24</p>
+  <h1>ՏեխնոՄարկետ · 7 էջանոց կայք</h1>
+  <p class="lede">HTML/CSS բլոկի ամբողջ գիտելիքը մեկ կայքում․ սեմանտիկ կմախք, աղյուսակներ, ֆորմաներ, քո կառուցվածքային համակարգը, տոկեններ, կոմպոնենտներ, Grid, անիմացիաներ, ադապտիվություն և հրապարակում։ Նախագիծը բաժանված է երեք առաջադրանքի։ Ամեն առաջադրանքից հետո կա պատրաստի օրինակ՝ համեմատելու համար։ Նախագիծն օգտագործում է միայն 01–23 դասերում անցած թեմաները։</p>
+
+  <div class="facts">
+    <span>3 առաջադրանք · 2 օրինակ · 7 էջ</span>
+    <span>0 գրադարան · 0 տող JavaScript</span>
+    <span>Արդյունքը՝ GitHub Pages-ում</span>
+  </div>
+
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչպես աշխատել այս թղթապանակի հետ</h2>
+
+    <div class="tree">block-1-project/
+│
+├── index.html            ← դու այստեղ ես
+│
+├── task-1.html           ← Առաջադրանք 1 · գլխավոր էջ և կատալոգ (HTML Դաս 22)
+├── starter/              ← ինչ ես ստանում․ նկարներ, պատկերակներ, բոլոր 7 էջի տեքստերը
+│   ├── content.md
+│   └── images/
+├── example-1-day1/       ← Օրինակ 1 · index + catalog, Առաջադրանք 1-ից հետո
+│
+├── task-2.html           ← Առաջադրանք 2 · ադապտիվություն, հղկում, հրապարակում (HTML Դաս 23)
+├── task-3.html           ← Առաջադրանք 3 · ապրանք, զամբյուղ, պատվեր, 404 (տնային, 1 շաբաթ)
+├── example-2-final/      ← Օրինակ 2 · ավարտուն կայքը, 7 էջ
+│   ├── index.html  catalog.html  product.html
+│   ├── cart.html  checkout.html  thanks.html  404.html
+│   └── components.html  README.md  css/  images/
+│
+└── screenshots/          ← սքրինշոթներ առաջադրանքների էջերի համար</div>
+
+    <div class="warn note">
+      <span class="tag">Կանոն․ նախ առաջադրանքը, հետո օրինակը</span>
+      <p>Օրինակը պատասխանների գիրք չէ, որ պատճենես։ Եթե բացես այն նախքան սկսելը, կսովորես կարդալ ուրիշի կոդը, ոչ գրել քոնը։<br><br>
+      Աշխատիր այսպես․ <strong>1.</strong> կատարիր առաջադրանքը ինքդ, <strong>2.</strong> անցիր ստուգաթերթով, <strong>3.</strong> միայն հետո բացիր օրինակը և համեմատիր․ ի՞նչն է այլ կերպ, և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։ Տարբերությունները քննարկիր դասին։</p>
+    </div>
+  </section>
+
+  <section id="s1">
+    <h2><span class="num">01</span>Երեք քայլ</h2>
+
+    <div class="scroll">
+    <table class="tbl steps-map">
+            <tr><th>Երբ</th><th>Առաջադրանք</th><th>Օրինակ</th><th>Ինչ ես կառուցում</th></tr>
+      <tr><td>Դաս 22</td><td><a href="task-1.html">task-1.html</a></td><td><a href="example-1-day1/index.html">example-1-day1</a></td><td>Ֆայլերի կառուցվածք, <code>global.css</code>, տոկեններ, header dropdown-ով, գլխավոր էջ և կատալոգ՝ համակարգչի լայնությամբ</td></tr>
+      <tr><td>Դաս 23</td><td><a href="task-2.html">task-2.html</a></td><td><a href="example-2-final/index.html">example-2-final</a> (index, catalog)</td><td>Ադապտիվություն 320–1920px, բուրգեր-մենյու, հղկում, հասանելիության աուդիտ, GitHub Pages, README</td></tr>
+      <tr><td>Դաս 23 → 24, տնային</td><td><a href="task-3.html">task-3.html</a></td><td><a href="example-2-final/product.html">example-2-final</a> (մնացած էջերը)</td><td>Ապրանքի էջ, զամբյուղ, պատվերի ձևակերպում, շնորհակալություն, 404, բոնուս՝ մուգ թեմա</td></tr>
+      <tr><td>Դաս 24</td><td colspan="2"><a href="task-3.html#s6">Պաշտպանություն</a></td><td>5 րոպե ներկայացում, 3 րոպե հարցեր, 100 միավոր</td></tr>
+    </table>
+    </div>
+
+    <div class="shots">
+      <figure class="shot">
+        <img src="screenshots/final-desktop.jpg" alt="Ավարտուն ՏեխնոՄարկետ էջը համակարգչի էկրանին․ header, մուգ hero, 6 ապրանքի քարտ, առավելություններ, բաժանորդագրություն և footer" width="900" height="1615" loading="lazy">
+        <figcaption>Գլխավոր էջ՝ 1280px</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="screenshots/final-mobile.jpg" alt="Նույն էջը հեռախոսում՝ մեկ սյունակով և բուրգեր-մենյուով" width="375" height="4538" loading="lazy">
+        <figcaption>Գլխավոր էջ՝ 375px</figcaption>
+      </figure>
+    </div>
+
+    <div class="shots-3">
+      <figure class="shot">
+        <img src="screenshots/final-catalog.jpg" alt="Կատալոգ՝ ֆիլտրեր ձախում և 9 ապրանք" width="900" height="1266" loading="lazy">
+        <figcaption>Կատալոգ</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="screenshots/final-product.jpg" alt="Ապրանքի էջ՝ պատկերասրահ, գին և բնութագրերի աղյուսակ" width="900" height="1577" loading="lazy">
+        <figcaption>Ապրանքի էջ</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="screenshots/final-checkout.jpg" alt="Պատվերի ձևակերպում՝ երեք քարտ և ամփոփում" width="900" height="1310" loading="lazy">
+        <figcaption>Պատվերի ձևակերպում</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="s2">
+    <h2><span class="num">02</span>Դասախոսի համար</h2>
+    <div class="note">
+      <span class="tag">Ինչպես օգտագործել դասին</span>
+      <p><strong>Դաս 22-ի սկզբում</strong> տուր <code>task-1.html</code>-ը և <code>starter/</code> թղթապանակը։ Դասարանում իրատեսական է գլխավոր էջը, կատալոգը մնում է տնային։ <code>example-1-day1</code>-ը բաց արա հաջորդ դասի սկզբում՝ ընդհանուր քննարկման համար։<br><br>
+      <strong>Դաս 23-ի սկզբում</strong> ուսանողը շարունակում է իր արդյունքից։ Եթե նա չի հասցրել, թող սկսի <code>example-1-day1</code>-ից, որպեսզի օր 2-ի թեմաները բաց չթողնի։ Դասի վերջում տուր <code>task-3.html</code>-ը մեկ շաբաթով։<br><br>
+      <strong>Դաս 24</strong>՝ պաշտպանություն։ <code>example-2-final</code>-ը ամբողջությամբ բաց արա պաշտպանությունից հետո։ Մինչ այդ ուսանողները կարող են նայել միայն այն էջերը, որոնք արդեն հանձնել են։<br><br>
+      Օրինակների կոդում ամեն որոշման կողքին մեկնաբանություն կա՝ որ դասից է այն։ Դրանք կարող ես օգտագործել որպես կրկնության ցուցակ։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 1 · HTML/CSS · նախագիծ</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>
