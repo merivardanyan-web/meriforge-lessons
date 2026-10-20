@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Վերջնական նախագիծ — 72 դաս</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Վերջնական նախագիծ</b> · 72 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Վերջնական նախագիծ · 4 շաբաթ · պաշտպանություն</p>
+  <h1>Քո սեփական full-stack հավելվածը</h1>
+  <p class="lede">72 դասում ՏեխնոՄարկետը կառուցեցիր քայլ առ քայլ՝ ուղեցույցով։ Վերջնական նախագիծը նույն ճանապարհն է, բայց <strong>առանց ուղեցույցի</strong>․ նոր թեմա, քո սխեման, քո որոշումները։ Դա ապացուցում է, որ սովորածը կարող ես կիրառել նոր խնդրի վրա, և քո պորտֆոլիոյում կլինի մի բան, որ ուրիշ ոչ ոք չունի։</p>
+
+  <div class="facts">
+    <span>HTML/CSS + JavaScript + PHP/Laravel</span>
+    <span>4 շաբաթ, 4 ստուգակետ</span>
+    <span>100 միավոր + պաշտպանություն</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչու նոր նախագիծ</h2>
+
+    <div class="tip note">
+      <span class="tag">ՏեխնոՄարկետը սովորելու համար էր, սա՝ ցույց տալու</span>
+      <p>PHP Դաս 22-ում ասացինք․ <em>«ձեր խմբում 15 ՏեխնոՄարկետ կա»</em>։ Ռեկրուտերը, որ տեսնում է նույն նախագիծը երեք շրջանավարտի մոտ, չի կարող տարբերել նրանց։<br><br>
+      Վերջնական նախագիծը լուծում է դա։ Այն կառուցված է նույն տեխնոլոգիաներով և նույն կանոններով, բայց թեման, աղյուսակները, դերերը և «դժվար ֆունկցիան» քոնն են։ Հարցազրույցում (PHP Դաս 24) կարող ես պատմել երկու նախագծի մասին․ մեկը՝ որտեղ սովորեցիր, մյուսը՝ որտեղ ինքնուրույն որոշեցիր։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ինչ է նույնը</th><th>Ինչ է նորը</th></tr>
+      <tr><td>Laravel, Blade, Eloquent, Fortify, Gate-եր</td><td>Թեման և սխեման</td></tr>
+      <tr><td>Քո CSS-ը՝ <code>.row</code> / <code>.col</code> / <code>.wrapper</code>, տոկեններ</td><td>Դիզայնը</td></tr>
+      <tr><td>JS-ը՝ <code>fetch</code> դեպի քո API</td><td>Որ ֆունկցիաներն են աշխատում առանց վերբեռնման</td></tr>
+      <tr><td>Անվտանգության կանոնները</td><td>Որտեղ են դրանք կիրառվում</td></tr>
+      <tr><td>Deploy, README, Git</td><td>Մեկ «դժվար ֆունկցիա», որ դասընթացում չկար</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ընտրիր թեման</h2>
+    <p>Ընտրիր մեկը կամ առաջարկիր քոնը։ Ամեն տարբերակ ունի նույն բարդությունը․ առնվազն չորս աղյուսակ, երկու դեր և մեկ «դժվար ֆունկցիա»։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Տարբերակ</th><th>Հիմնական աղյուսակներ</th><th>Դերեր</th><th>Դժվար ֆունկցիա ⭐</th></tr>
+      <tr><td><strong>Ա · Ռեստորանի պատվերներ</strong></td><td>categories, dishes, orders, order_items</td><td>Ադմին, աշխատող, հաճախորդ</td><td>Պատվերի կարգավիճակներ (new → cooking → ready → delivered), որոնք փոխում է միայն աշխատողը</td></tr>
+      <tr><td><strong>Բ · Գրադարան</strong></td><td>authors, books, members, loans</td><td>Գրադարանավար, անդամ</td><td>Վարձույթ վերադարձման ժամկետով, ուշացածների ցուցակ, մեկ անդամին՝ առավելագույնը 3 գիրք</td></tr>
+      <tr><td><strong>Գ · Դասընթացների գրանցում</strong></td><td>courses, lessons, teachers, enrollments</td><td>Ադմին, դասախոս, ուսանող</td><td>Տեղերի սահմանափակում․ լրացած դասընթացին գրանցվել հնարավոր չէ, նույնիսկ միաժամանակյա հարցումներով</td></tr>
+      <tr><td><strong>Դ · Ծառայությունների ամրագրում</strong> (վարսավիրանոց, ավտոսպասարկում)</td><td>services, staff, time_slots, bookings</td><td>Ադմին, աշխատակից, հաճախորդ</td><td>Ազատ ժամերի ցուցադրում և կրկնակի ամրագրման արգելք</td></tr>
+      <tr><td><strong>Ե · Հայտարարությունների կայք</strong></td><td>categories, listings, images, messages</td><td>Մոդերատոր, օգտատեր</td><td>Հայտարարությունը երևում է միայն մոդերատորի հաստատումից հետո, օգտատերը խմբագրում է միայն իրենը</td></tr>
+      <tr><td><strong>Զ · Քո գաղափարը</strong></td><td>Առնվազն 4, կապերով</td><td>Առնվազն 2</td><td>Համաձայնեցրու դասախոսի հետ առաջին շաբաթում</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">«Դժվար ֆունկցիան» ամենակարևոր մասն է</span>
+      <p>Դա այն մասն է, որը հնարավոր չէ պատճենել ՏեխնոՄարկետից։ Այն պահանջում է մտածել․ ինչպե՞ս արգելել կրկնակի ամրագրումը, եթե երկու հաճախորդ սեղմում են «Ամրագրել» նույն վայրկյանին։ Ինչպե՞ս ստուգել «միայն իր հայտարարությունը»։<br><br>
+      Գրեթե ամեն «դժվար ֆունկցիա» ունի իր հիմքը դասընթացում․ տրանզակցիաներ (PHP Դաս 11), <code>UNIQUE</code> ինդեքս (PHP Դաս 8–9), Gate-եր (PHP Դաս 21), վալիդացիա սերվերում (PHP Դաս 6, 21)։ Պաշտպանության ժամանակ այս ֆունկցիայի մասին կհարցնեն ամենաշատը։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ընտրիր այն, ինչ հասկանում ես</span>
+      <p>Եթե քո ընտանիքն ունի փոքր բիզնես, կամ գիտես, թե ինչպես է աշխատում գրադարանը կամ վարսավիրանոցը, ընտրիր այդ թեման։ Դու կիմանաս, թե ինչ է պետք օգտագործողին, և պաշտպանության ժամանակ կարող ես պատմել իրական խնդրի մասին։ Իրական խնդիրը միշտ ավելի լավ է հնչում, քան «ուսումնական նախագիծը»։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Պարտադիր պահանջներ</h2>
+
+    <h3>HTML և CSS</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Պահանջ</th><th>Դաս</th></tr>
+      <tr><td>Սեմանտիկ կառուցվածք՝ <code>header</code>, <code>nav</code>, <code>main</code>, <code>section</code>, <code>footer</code></td><td>HTML 5</td></tr>
+      <tr><td>Սեփական CSS՝ <code>global.css</code> + <code>main.css</code>, առանց Tailwind-ի և Bootstrap-ի</td><td>HTML 6, 10, 13</td></tr>
+      <tr><td>Դիզայն-տոկեններ CSS փոփոխականներով</td><td>HTML 19</td></tr>
+      <tr><td>Կոմպոնենտներ BEM-ով (քարտ, կոճակ, ալերտ)</td><td>HTML 17</td></tr>
+      <tr><td>Ադապտիվ՝ աշխատում է 360px լայնությամբ</td><td>HTML 14, 23</td></tr>
+      <tr><td>Հասանելի ֆորմաներ՝ <code>label</code>, <code>aria-invalid</code>, <code>aria-describedby</code></td><td>HTML 4 · PHP 6, 21</td></tr>
+      <tr><td>Lighthouse Accessibility՝ առնվազն 90</td><td>HTML 23</td></tr>
+    </table>
+    </div>
+
+    <h3>JavaScript</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Պահանջ</th><th>Դաս</th></tr>
+      <tr><td>Առնվազն <strong>երկու</strong> ֆունկցիա, որ աշխատում են <code>fetch</code>-ով քո API-ի հետ (օր.՝ որոնում debounce-ով, ավելացնել ընտրյալներում, կարգավիճակի փոփոխում)</td><td>JS 14, 20 · PHP 17</td></tr>
+      <tr><td>Progressive enhancement․ առանց JS-ի հիմնական գործողությունները աշխատում են ֆորմաներով</td><td>PHP 17, 19</td></tr>
+      <tr><td><code>response.ok</code>-ի ստուգում, 422-ի սխալների ցուցադրում դաշտերի կողքին</td><td>JS 20 · PHP 17, 21</td></tr>
+      <tr><td>JS-ով թարմացվող տեքստը հայտարարվում է <code>role="status"</code>-ով</td><td>PHP 17</td></tr>
+      <tr><td>ES մոդուլներ, իրադարձությունների դելեգացիա</td><td>JS 12, 18</td></tr>
+    </table>
+    </div>
+
+    <h3>Laravel և բազա</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Պահանջ</th><th>Դաս</th></tr>
+      <tr><td>Առնվազն 4 աղյուսակ միգրացիաներով, foreign key-երով և գիտակցված <code>ON DELETE</code>-ով</td><td>PHP 9, 20</td></tr>
+      <tr><td>Seeder և factory-ներ՝ իրատեսական demo տվյալներով</td><td>PHP 20, 22</td></tr>
+      <tr><td>Eloquent կապեր, <code>with()</code>, <code>Model::shouldBeStrict()</code>, ոչ մի N+1</td><td>PHP 20</td></tr>
+      <tr><td>Վալիդացիա Form Request-ներով, հայերեն հաղորդագրություններ</td><td>PHP 21</td></tr>
+      <tr><td>Մուտք Fortify-ով, հրապարակային գրանցում՝ միայն եթե թեման պահանջում է</td><td>PHP 21</td></tr>
+      <tr><td>Առնվազն 2 դեր և Gate-եր (կամ Policy), ստուգում՝ կոնտրոլերում, ոչ միայն <code>@can</code>-ում</td><td>PHP 21</td></tr>
+      <tr><td>Blade layout և առնվազն 2 կոմպոնենտ</td><td>PHP 19</td></tr>
+      <tr><td>Route model binding, resource controller ադմինի համար</td><td>PHP 19, 20</td></tr>
+      <tr><td>Առնվազն մեկ JSON endpoint API Resource-ով</td><td>PHP 17, 20</td></tr>
+      <tr><td>Soft delete այնտեղ, որտեղ պատմությունը կարևոր է</td><td>PHP 11, 20</td></tr>
+    </table>
+    </div>
+
+    <h3>Անվտանգություն</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Պահանջ</th><th>Դաս</th></tr>
+      <tr><td>Ոչ մի <code>{!! !!}</code> օգտագործողի տվյալով, արտաքին հղումները՝ <code>safeUrl()</code>-ով</td><td>PHP 5, 19</td></tr>
+      <tr><td>Ոչ մի raw SQL փոփոխականով, տեսակավորումը՝ սպիտակ ցուցակով</td><td>PHP 10, 18</td></tr>
+      <tr><td><code>@csrf</code> ամեն ֆորմայում, ելքը՝ POST</td><td>PHP 16, 21</td></tr>
+      <tr><td>Մոդելներին փոխանցվում է միայն <code>validated()</code>, <code>role</code>-ը <code>$fillable</code>-ում չէ</td><td>PHP 20, 21</td></tr>
+      <tr><td>Ֆայլերի վերբեռնում (եթե կա)՝ <code>image</code>, <code>mimes</code>, <code>max</code></td><td>PHP 7, 21</td></tr>
+      <tr><td>Գաղտնիքներ Git-ում չկան, ոչ էլ պատմության մեջ</td><td>PHP 22</td></tr>
+    </table>
+    </div>
+
+    <h3>Deploy, Git, ներկայացում</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Պահանջ</th><th>Դաս</th></tr>
+      <tr><td>Հրապարակված է HTTPS-ով, <code>APP_DEBUG=false</code>, <code>/.env</code> → 404</td><td>PHP 22</td></tr>
+      <tr><td>Demo հաշիվ սահմանափակ դերով, որը չի կարող ջնջել տվյալներ</td><td>PHP 22</td></tr>
+      <tr><td>README՝ PHP Դաս 22-ի կաղապարով, ներառյալ «Security decisions» և «How I used AI»</td><td>PHP 4, 22</td></tr>
+      <tr><td>Առնվազն 25 իմաստալից commit 4 շաբաթվա ընթացքում, ոչ մեկ օրում</td><td>JS 17 · PHP 22</td></tr>
+      <tr><td>Առնվազն 3 feature ճյուղ, merge-ով</td><td>JS 17</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ժամանակացույց</h2>
+
+    <div class="tree">Շաբաթ 1 · Հիմք
+  · Թեմայի ընտրություն և «դժվար ֆունկցիայի» նկարագրություն (5 նախադասություն)
+  · Սխեմայի գծապատկեր՝ աղյուսակներ, սյունակներ, կապեր (PHP Դաս 9-ի ձևով)
+  · Laravel նախագիծ, միգրացիաներ, մոդելներ, seeder-ներ
+  · Layout և CSS-ի հիմքը
+  ✓ Ստուգակետ 1․ սխեման և migrate:fresh --seed-ը աշխատում են
+
+Շաբաթ 2 · Հանրային մաս և ադմին
+  · Ցուցակի և մանրամասների էջեր, էջավորում, ֆիլտր
+  · Ադմինի CRUD՝ Form Request-ներով
+  · Blade կոմպոնենտներ
+  ✓ Ստուգակետ 2․ ադմինը ավելացնում և խմբագրում է, սխալները հայերեն են
+
+Շաբաթ 3 · Մուտք, դերեր, JS
+  · Fortify, դերեր, Gate-եր, ուղիների պաշտպանություն
+  · «Դժվար ֆունկցիան» ⭐
+  · API endpoint և երկու JS ֆունկցիա
+  ✓ Ստուգակետ 3․ ամեն դեր տեսնում և անում է միայն իրենը, curl-ով ստուգված
+
+Շաբաթ 4 · Հրապարակում և հղկում
+  · Deploy, smoke test (PHP Դաս 22)
+  · README, GIF, demo հաշիվ
+  · Անվտանգության և հասանելիության ստուգում, Lighthouse
+  ✓ Ստուգակետ 4․ հանձնում և պաշտպանություն</div>
+
+    <div class="tip note">
+      <span class="tag">Ստուգակետերը՝ 10 րոպեանոց</span>
+      <p>Ամեն շաբաթվա վերջում դասախոսի հետ 10 րոպե․ ցույց ես տալիս, թե ինչ է աշխատում, և ասում ես, թե որտեղ ես խրված։ Սա ոչ թե գնահատում է, այլ վաղ նախազգուշացում․ սխալ սխեման առաջին շաբաթում ուղղվում է մեկ ժամում, չորրորդ շաբաթում՝ մեկ շաբաթում։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ամենատարածված ձախողումը</span>
+      <p>Երեք շաբաթ դիզայնի վրա, մեկ շաբաթ ամեն ինչի։ Արդյունքում գեղեցիկ էջեր, որոնք ոչինչ չեն անում, և deploy-ը վերջին գիշերը։<br><br>
+      Կանոն․ <strong>նախ աշխատող, հետո գեղեցիկ</strong>։ Առաջին երկու շաբաթում բավական է պարզ, մաքուր CSS։ Դիզայնը հղկվում է չորրորդ շաբաթում, երբ գիտես, թե ինչ էջեր ունես։ Եվ առաջին deploy-ը արա <strong>երրորդ շաբաթում</strong>, ոչ վերջին օրը, որպեսզի hosting-ի խնդիրները չհամընկնեն պաշտպանության հետ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Գնահատման չափանիշները</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Բաժին</th><th>Ինչ է ստուգվում</th><th>Միավոր</th></tr>
+      <tr><td>Ֆունկցիոնալություն</td><td>Բոլոր սցենարները աշխատում են demo-ում, «դժվար ֆունկցիան» ներառյալ</td><td>20</td></tr>
+      <tr><td>Անվտանգություն</td><td>Բաժին 02-ի անվտանգության աղյուսակը, դերերի ստուգումը սերվերում</td><td>20</td></tr>
+      <tr><td>Բազա և Eloquent</td><td>Սխեմա, կապեր, N+1-ի բացակայություն, միգրացիաներ, seeder-ներ</td><td>15</td></tr>
+      <tr><td>Կոդի կառուցվածք</td><td>Բարակ կոնտրոլերներ, Form Request-ներ, կոմպոնենտներ, կրկնություն չկա</td><td>10</td></tr>
+      <tr><td>HTML/CSS և հասանելիություն</td><td>Սեմանտիկա, ադապտիվություն, ֆորմաներ, Lighthouse</td><td>10</td></tr>
+      <tr><td>JavaScript և API</td><td>Երկու fetch ֆունկցիա, սխալների մշակում, progressive enhancement</td><td>10</td></tr>
+      <tr><td>Deploy, README, Git</td><td>Production կարգավորում, README, commit-ների պատմություն</td><td>10</td></tr>
+      <tr><td>Պաշտպանություն</td><td>Բացատրում ես քո կոդը և որոշումները</td><td>5</td></tr>
+      <tr><td><strong>Ընդամենը</strong></td><td></td><td><strong>100</strong></td></tr>
+    </table>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ինչ է իջեցնում գնահատականը</th><th>Ինչու</th></tr>
+      <tr><td><code>APP_DEBUG=true</code> production-ում</td><td>PHP Դաս 18, 22</td></tr>
+      <tr><td>Գործողություն, որ պաշտպանված է միայն <code>@can</code>-ով</td><td>PHP Դաս 21</td></tr>
+      <tr><td><code>$request-&gt;all()</code> մոդելի մեջ</td><td>PHP Դաս 20</td></tr>
+      <tr><td>N+1 ցուցակի էջում</td><td>PHP Դաս 20</td></tr>
+      <tr><td>Տեքստային դաշտ առանց <code>max</code>-ի</td><td>PHP Դաս 6, 21</td></tr>
+      <tr><td>Կոտրված դասավորություն հեռախոսում</td><td>HTML Դաս 14</td></tr>
+      <tr><td>Բոլոր commit-ները վերջին օրը</td><td>PHP Դաս 22</td></tr>
+      <tr><td>README-ում պնդում, որ կոդում չկա</td><td>PHP Դաս 22</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երկու դեպք, երբ նախագիծը չի ընդունվում</span>
+      <p><strong>1. Չես կարողանում բացատրել քո կոդը։</strong> Եթե պաշտպանության ժամանակ չես կարող ասել, թե ինչ է անում քո կոնտրոլերի կամ Gate-ի որևէ տող, նախագիծը վերադարձվում է՝ անկախ նրանից, թե որքան լավ է աշխատում։<br><br>
+      <strong>2. Իրական գաղտնիքներ հրապարակային պահոցում։</strong> Գաղտնաբառը կամ <code>APP_KEY</code>-ը պահոցում կամ նրա պատմության մեջ։ Ուղղումից (գաղտնիքը փոխելուց) հետո նախագիծը կարող ես հանձնել կրկին։<br><br>
+      Երկուսն էլ նույն պատճառով են․ աշխատանքում հենց սրանք են այն սխալները, որոնց համար աշխատանքից ազատում են։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>AI-ն նախագծում</h2>
+
+    <div class="tip note">
+      <span class="tag">Թույլատրված է, բայց բացահայտ</span>
+      <p>AI-ն կարող ես օգտագործել այնպես, ինչպես սովորեցինք PHP Դաս 4-ից․ բացատրել, վերանայել, գեներացնել ձևանմուշ, գտնել սխալը։ Պայմանը մեկն է․ README-ում «How I used AI» բաժնում գրիր, <strong>ինչի համար</strong> ես օգտագործել։ Օրինակ․ «Generated the Armenian validation translations and reviewed placeholders», «Asked for a review of my BookingRequest; it found a missing max rule»։<br><br>
+      «Դժվար ֆունկցիան» գրիր ինքդ։ AI-ին կարող ես հարցնել գաղափարի մասին, բայց կոդը պետք է լինի քոնը։ Պաշտպանության ժամանակ այդ մասը կխնդրեն բացատրել տող առ տող։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>README.md — How I used AI</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">## How I used AI</span>
+
+- Explained Laravel Fortify configuration options when the docs were unclear to me
+- Generated factory data for 30 realistic Armenian service names; I edited them
+- Reviewed my BookingController for security issues: found a missing Gate check
+  on cancel(), which I fixed (commit a1b2c3d)
+- Did NOT use AI for the double-booking logic — see BookingService::book()</code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Պաշտպանություն</h2>
+
+    <div class="tree">10–12 րոպե
+
+  1. Ցուցադրություն (3 րոպե)     բացիր demo-ն, անցիր հիմնական սցենարը տարբեր դերերով
+  2. Սխեմա (2 րոպե)             աղյուսակներ և կապեր, մեկ ON DELETE որոշում և ինչու
+  3. Դժվար ֆունկցիա ⭐ (3 րոպե)  ինչ խնդիր, ինչ լուծում, ինչպես ես ստուգել
+  4. Անվտանգություն (2 րոպե)    ցույց տուր մեկ հարձակում, որ քո կայքը կանգնեցնում է
+  5. Հարցեր (2–3 րոպե)</div>
+
+    <div class="note">
+      <span class="tag">Չորրորդ մասը՝ ապրիլ, ոչ պատմել</span>
+      <p>Մի՛ ասա «իմ կայքը պաշտպանված է CSRF-ից»։ Ցույց տուր․ <code>curl</code> առանց token-ի և 419, կամ demo հաշվով <code>DELETE</code> հարցում և 403։ Դա նույն փորձարկումներն են, որ արել ես PHP Դաս 16-ում և 21-ում, հիմա՝ քո նախագծում։</p>
+    </div>
+
+    <h3>Հարցեր, որոնք կարող են տալ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հարց</th><th>Ինչ է ստուգում</th></tr>
+      <tr><td>Ցույց տուր, որտեղ է ստուգվում, որ օգտատերը կարող է անել այս գործողությունը</td><td>Լիազորումը սերվերում</td></tr>
+      <tr><td>Ինչ կլինի, եթե երկու հոգի միաժամանակ ուղարկեն նույն հարցումը</td><td>Դժվար ֆունկցիայի եզրային դեպքերը</td></tr>
+      <tr><td>Ինչու այս սյունակը <code>nullable</code> է</td><td>Սխեմայի որոշումները</td></tr>
+      <tr><td>Քանի SQL հարցում է կատարվում այս էջում</td><td>N+1, <code>with()</code></td></tr>
+      <tr><td>Ինչ կլինի, եթե ջնջես այս կատեգորիան</td><td><code>ON DELETE</code>, soft delete</td></tr>
+      <tr><td>Ինչու այստեղ Form Request, ոչ <code>$request-&gt;validate()</code></td><td>Կառուցվածքի որոշումները</td></tr>
+      <tr><td>Ինչ կփոխեիր, եթե սկսեիր նորից</td><td>Ինքնագնահատում ⭐</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Պաշտպանությունը փորձնական հարցազրույց է</span>
+      <p>Այս հարցերը շատ նման են PHP Դաս 24-ի տեխնիկական հարցերին, միայն թե ամենը քո կոդի մասին են։ Պաշտպանությունից հետո դու ունես պատրաստի պատասխան «Tell me about a project you're proud of» հարցին։ Ձայնագրիր քո ներկայացման փորձը մեկ անգամ, նախքան իրականը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Մեկնարկ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>առաջին օրվա հրամանները</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># Նախագիծ — PHP Դաս 18</span>
+composer create-project laravel/laravel my-project
+cd my-project
+git init &amp;&amp; git add . &amp;&amp; git commit -m "chore: new Laravel project"
+
+<span class="c"># .env՝ MySQL, APP_LOCALE=hy, SESSION_DRIVER=database — PHP Դաս 18, 20, 21</span>
+
+<span class="c"># Մոդելներ միգրացիաներով, factory-ներով և seeder-ներով — PHP Դաս 20</span>
+php artisan make:model Service -mfs
+php artisan make:model Booking -mfs
+
+<span class="c"># Մուտք — PHP Դաս 21</span>
+composer require laravel/fortify
+php artisan fortify:install
+
+<span class="c"># Ստուգում</span>
+php artisan migrate:fresh --seed
+php artisan route:list -v</code></pre>
+    </div>
+
+    <div class="tree">Օրինակ․ տարբերակ Դ-ի սխեման (ծառայությունների ամրագրում)
+
+users                services             time_slots
+┌──────────────┐     ┌──────────────┐     ┌────────────────────┐
+│ id           │     │ id           │◀────│ service_id      FK │
+│ name, email  │     │ name, slug   │     │ staff_id   FK→users│
+│ role         │     │ duration_min │     │ starts_at          │
+└──────────────┘     │ price        │     │ UNIQUE(staff_id,   │
+       ▲             └──────────────┘     │        starts_at) ⭐│
+       │                                  └────────────────────┘
+       │             bookings                       ▲
+       │             ┌───────────────────────┐      │
+       └─────────────│ user_id            FK │      │
+                     │ time_slot_id  FK UNIQUE ⭐ ───┘
+                     │ status (booked/cancelled)
+                     │ price  ← գինը ամրագրման պահին (PHP Դաս 9)
+                     └───────────────────────┘
+
+UNIQUE(time_slot_id)-ը բազայի մակարդակում արգելում է կրկնակի ամրագրումը,
+նույնիսկ եթե երկու հարցում գան միաժամանակ։</div>
+
+    <div class="note">
+      <span class="tag">Ինչու օրինակը ունի <code>UNIQUE</code></span>
+      <p>«Դժվար ֆունկցիայի» ամենահուսալի պաշտպանությունը հաճախ բազայում է, ոչ PHP-ում։ PHP-ում «ստուգիր, ապա ավելացրու» կոդը ունի պահ, երբ երկու հարցում միասին անցնում են ստուգումը։ <code>UNIQUE</code> ինդեքսը (PHP Դաս 8) դա անհնար է դարձնում։ Կոդը միայն պետք է բռնի սխալը և ցույց տա հասկանալի հաղորդագրություն։ Սա այն պատասխանն է, որ սպասում են «ինչ կլինի, եթե երկու հոգի միաժամանակ...» հարցին։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Հանձնելուց առաջ</h2>
+
+    <h3>Ֆունկցիոնալություն</h3>
+    <ul class="goals">
+      <li>Ամեն դերով մուտք եմ գործել և անցել հիմնական սցենարը</li>
+      <li>«Դժվար ֆունկցիան» փորձարկել եմ եզրային դեպքերով</li>
+      <li>Դատարկ ցուցակները ունեն հաղորդագրություն</li>
+      <li>Աշխատում է 360px լայնությամբ և առանց JS-ի</li>
+    </ul>
+
+    <h3>Անվտանգություն</h3>
+    <ul class="goals">
+      <li>Վտանգավոր անունով գրառում (<code>&lt;script&gt;</code>) → տեքստ, ոչ alert</li>
+      <li><code>curl</code> POST առանց token-ի → 419</li>
+      <li>Ցածր դերով <code>DELETE</code> հարցում → 403</li>
+      <li>Ադմին էջ առանց մուտքի → <code>/login</code></li>
+      <li>Սխալ գաղտնաբառ վեց անգամ → արգելափակում</li>
+      <li><code>/.env</code> → 404, անհայտ էջ → ընդհանուր 404, առանց stack trace-ի</li>
+      <li><code>git log --all -- .env</code> → դատարկ</li>
+    </ul>
+
+    <h3>Կոդ</h3>
+    <ul class="goals">
+      <li>Կոնտրոլերները կարճ են, վալիդացիան՝ Form Request-ներում</li>
+      <li><code>shouldBeStrict()</code>-ը միացված է և սխալ չի գցում</li>
+      <li>Ոչ մի <code>dd()</code>, <code>dump()</code>, <code>console.log</code></li>
+      <li>Ամեն տեքստային դաշտ ունի <code>max</code></li>
+    </ul>
+
+    <h3>Ներկայացում</h3>
+    <ul class="goals">
+      <li>README-ն ունի demo, GIF, demo հաշիվ, Security decisions, How I used AI</li>
+      <li>Commit-ները բաշխված են չորս շաբաթի վրա</li>
+      <li>Պահոցը ամրացված է GitHub պրոֆիլում, LinkedIn-ի Featured-ում կա հղում</li>
+      <li>Ներկայացումը փորձել եմ ժամացույցով</li>
+    </ul>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Վերջում</h2>
+
+    <div class="tip note">
+      <span class="tag">Սա քո առաջին իրական նախագիծն է</span>
+      <p>ՏեխնոՄարկետում ամեն քայլից առաջ կար դաս, որ ասում էր՝ ինչ անել։ Այստեղ դաս չկա։ Կա խնդիր, և կա այն ամենը, ինչ սովորել ես 72 դասում։ Հենց այդպես է աշխատանքը․ ոչ ոք չի տալիս քայլ առ քայլ ուղեցույց, և ամեն օր հանդիպում ես մի բանի, որ դեռ չգիտես։<br><br>
+      Երբ խրվես, վերադարձիր դասերին․ ամեն պահանջի կողքին նշված է, թե որտեղ նայել։ Երբ չգտնես պատասխանը, օգտագործիր այն, ինչ սովորեցիր PHP Դաս 24-ում․ փորձիր, փնտրիր, ապա հարցրու՝ նշելով, թե ինչ ես արդեն փորձել։<br><br>
+      Չորս շաբաթ հետո կունենաս նախագիծ, որը կարող ես ցույց տալ ցանկացած գործատուի և պատմել դրա մասին ցանկացած հարցազրույցում։ Հաջողություն։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>Վերջնական նախագիծ · HTML/CSS + JavaScript + PHP/Laravel</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>
