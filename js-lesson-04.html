@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 04 — Ֆունկցիաներ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 04 · 2 ժամ</p>
+  <h1>Ֆունկցիաներ</h1>
+  <p class="lede">Մինչ այժմ կոդը գրում էինք վերևից ներքև՝ մեկ երկար ցուցակով։ Այսօր սովորում ենք այն փաթեթավորել՝ մեկ անգամ գրիր, հազար անգամ կանչիր։ Սա ամենակարևոր դասն է առաջին բլոկում։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 01–03</span>
+    <span>Բլոկ 1 · Լեզվի հիմքերը</span>
+    <span>Տնային՝ 10 առաջադրանք</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ինչո՞ւ են պետք ֆունկցիաները</li>
+      <li>Ֆունկցիա ստեղծել և կանչել</li>
+      <li>Պարամետրեր և արգումենտներ</li>
+      <li><code>return</code> — արժեք վերադարձնելը</li>
+      <li>Լռելյայն արժեքներ պարամետրերի համար</li>
+      <li>Տեսանելիության տիրույթ (scope)՝ գլոբալ և լոկալ</li>
+      <li>Ֆունկցիա-արտահայտություն և arrow ֆունկցիաներ</li>
+      <li>Ֆունկցիա՝ ֆունկցիայի ներսում</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչո՞ւ են պետք ֆունկցիաները</h2>
+    <p>Ենթադրենք՝ ծրագրում երեք տեղ պիտի հաշվես ուղղանկյան մակերեսը։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>վատ եղանակ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> area1 = <span class="n">5</span> * <span class="n">3</span>;
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">`Մակերեսը՝ </span>${area1}<span class="s"> սմ²`</span>);
+
+<span class="k">const</span> area2 = <span class="n">10</span> * <span class="n">7</span>;
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">`Մակերեսը՝ </span>${area2}<span class="s"> սմ²`</span>);
+
+<span class="k">const</span> area3 = <span class="n">2</span> * <span class="n">8</span>;
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">`Մակերեսը՝ </span>${area3}<span class="s"> սմ²`</span>);</code></pre>
+    </div>
+
+    <p>Նույն կոդը երեք անգամ։ Իսկ եթե վաղը որոշես, որ «սմ²»-ի փոխարեն պիտի գրի «քառ. սմ»։ Պիտի փոխես երեք տեղում։ Իսկ եթե 50 տեղ լինե՞ր։ Մի տեղ անպայման կմոռանաս։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ֆունկցիայով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">showArea</span>(width, height) {
+  <span class="k">const</span> area = width * height;
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">`Մակերեսը՝ </span>${area}<span class="s"> սմ²`</span>);
+}
+
+<span class="f">showArea</span>(<span class="n">5</span>, <span class="n">3</span>);
+<span class="f">showArea</span>(<span class="n">10</span>, <span class="n">7</span>);
+<span class="f">showArea</span>(<span class="n">2</span>, <span class="n">8</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Մակերեսը՝ 15 սմ²</span>
+<span class="r">Մակերեսը՝ 70 սմ²</span>
+<span class="r">Մակերեսը՝ 16 սմ²</span></pre>
+    </div>
+
+    <p>Հիմա տեքստը փոխելու համար բավական է ուղղել <strong>մեկ տեղում</strong>։</p>
+
+    <div class="note">
+      <span class="tag">DRY</span>
+      <p>Ծրագրավորման գլխավոր սկզբունքներից է՝ <strong>Don't Repeat Yourself</strong> («մի՛ կրկնիր ինքդ քեզ»)։ Երբ նույն կոդը գրում ես երկրորդ անգամ — կանգ առ և մտածիր ֆունկցիայի մասին։</p>
+    </div>
+
+    <h3>Ֆունկցիան նման է խոհանոցային մեքենայի</h3>
+    <ul>
+      <li><strong>Ներս ես դնում</strong> միրգը (պարամետրեր)</li>
+      <li><strong>Ներսում</strong> ինչ-որ բան է կատարվում (կոդը)</li>
+      <li><strong>Դուրս է գալիս</strong> հյութը (<code>return</code>)</li>
+    </ul>
+    <p>Կարևորը՝ քեզ պետք չէ իմանալ, թե ինչպես է այն աշխատում ներսում։ Դու պարզապես օգտվում ես։</p>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Ստեղծել և կանչել</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>կառուցվածքը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">անուն</span>(պարամետրեր) {
+  <span class="c">// ֆունկցիայի մարմինը</span>
+}
+
+<span class="f">անուն</span>();   <span class="c">// կանչ</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ամենապարզ օրինակը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">sayHello</span>() {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Բարև բոլորին։"</span>);
+}
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">"Սկիզբ"</span>);
+<span class="f">sayHello</span>();
+<span class="f">sayHello</span>();
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">"Վերջ"</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Սկիզբ</span>
+<span class="r">Բարև բոլորին։</span>
+<span class="r">Բարև բոլորին։</span>
+<span class="r">Վերջ</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ամենահաճախ սխալը</span>
+      <p>Ֆունկցիան <strong>հայտարարելը</strong> և <strong>կանչելը</strong> տարբեր բաներ են։ Առանց <code>()</code>-ի ֆունկցիան չի աշխատում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>փակագծերի կախարդանքը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">sayHello</span>() {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Բարև։"</span>);
+}
+
+<span class="f">sayHello</span>;     <span class="c">// ← ոչինչ չի լինում</span>
+<span class="f">sayHello</span>();   <span class="c">// ← աշխատում է</span>
+
+<span class="f">console</span>.<span class="f">log</span>(sayHello);        <span class="c">// տպում է ինքը ֆունկցիան</span>
+<span class="f">console</span>.<span class="f">log</span>(<span class="k">typeof</span> sayHello);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Բարև։</span>
+<span class="m">ƒ sayHello() { console.log("Բարև։"); }</span>
+<span class="g">function</span></pre>
+    </div>
+
+    <h3>Անվանման կանոն</h3>
+    <p>Ֆունկցիան <em>գործողություն</em> է անում, ուստի անունը սկսում ենք <strong>բայով</strong>՝ <code>getUser</code>, <code>calculateTotal</code>, <code>showModal</code>, <code>isValid</code>, <code>renderCards</code>։ camelCase, անգլերեն։</p>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Պարամետրեր և արգումենտներ</h2>
+    <p>Ֆունկցիան դառնում է իսկապես օգտակար, երբ նրան կարելի է <strong>տվյալներ փոխանցել</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>մեկ պարամետր</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">greet</span>(name) {          <span class="c">// name — ՊԱՐԱՄԵՏՐ</span>
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">`Բարև, </span>${name}<span class="s">։`</span>);
+}
+
+<span class="f">greet</span>(<span class="s">"Անի"</span>);                    <span class="c">// "Անի" — ԱՐԳՈՒՄԵՆՏ</span>
+<span class="f">greet</span>(<span class="s">"Դավիթ"</span>);
+<span class="f">greet</span>(<span class="s">"Մարիամ"</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Բարև, Անի։</span>
+<span class="r">Բարև, Դավիթ։</span>
+<span class="r">Բարև, Մարիամ։</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Տերմիններ</span>
+      <p><strong>Պարամետր</strong> — անունը, որ գրում ես ֆունկցիան <em>ստեղծելիս</em> (դատարկ տուփ)։<br>
+      <strong>Արգումենտ</strong> — իրական արժեքը, որ ուղարկում ես ֆունկցիան <em>կանչելիս</em>։</p>
+    </div>
+
+    <h3>Մի քանի պարամետր</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հերթականությունը կարևոր է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">introduce</span>(name, age, city) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">`</span>${name}<span class="s">, </span>${age}<span class="s"> տարեկան, </span>${city}<span class="s">ից`</span>);
+}
+
+<span class="f">introduce</span>(<span class="s">"Արամ"</span>, <span class="n">17</span>, <span class="s">"Գյումրի"</span>);
+<span class="f">introduce</span>(<span class="n">17</span>, <span class="s">"Արամ"</span>, <span class="s">"Գյումրի"</span>);  <span class="c">// շփոթեցինք հերթականությունը</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Արամ, 17 տարեկան, Գյումրիից</span>
+<span class="r">17, Արամ տարեկան, Գյումրիից</span>   <span class="m">← անհեթեթություն</span></pre>
+    </div>
+
+    <h3>Ի՞նչ է լինում, եթե արգումենտ չուղարկես</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>undefined</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">greet</span>(name) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">`Բարև, </span>${name}<span class="s">։`</span>);
+}
+
+<span class="f">greet</span>();</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Բարև, undefined։</span></pre>
+    </div>
+
+    <h3>Լռելյայն արժեքներ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>default parameters</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">greet</span>(name = <span class="s">"հյուր"</span>, greeting = <span class="s">"Բարև"</span>) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">`</span>${greeting}<span class="s">, </span>${name}<span class="s">։`</span>);
+}
+
+<span class="f">greet</span>();
+<span class="f">greet</span>(<span class="s">"Անի"</span>);
+<span class="f">greet</span>(<span class="s">"Անի"</span>, <span class="s">"Բարի լույս"</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Բարև, հյուր։</span>
+<span class="r">Բարև, Անի։</span>
+<span class="r">Բարի լույս, Անի։</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>return — արժեք վերադարձնելը</h2>
+    <p>Մինչ այժմ ֆունկցիաները միայն <em>տպում</em> էին։ Բայց շատ ավելի հաճախ մեզ պետք է, որ ֆունկցիան <strong>արդյունք տա</strong>, որպեսզի հետո այն օգտագործենք։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>console.log vs return</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Տարբերակ 1 — միայն տպում է</span>
+<span class="k">function</span> <span class="f">printSum</span>(a, b) {
+  <span class="f">console</span>.<span class="f">log</span>(a + b);
+}
+
+<span class="c">// Տարբերակ 2 — վերադարձնում է արժեքը</span>
+<span class="k">function</span> <span class="f">getSum</span>(a, b) {
+  <span class="k">return</span> a + b;
+}
+
+<span class="f">printSum</span>(<span class="n">3</span>, <span class="n">4</span>);
+<span class="k">const</span> result = <span class="f">getSum</span>(<span class="n">3</span>, <span class="n">4</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(result);
+<span class="f">console</span>.<span class="f">log</span>(result * <span class="n">10</span>);          <span class="c">// արդյունքի հետ կարող ենք աշխատել</span>
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">getSum</span>(<span class="n">1</span>, <span class="f">getSum</span>(<span class="n">2</span>, <span class="n">3</span>)));  <span class="c">// նույնիսկ իրար մեջ</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">7</span>
+<span class="r">7</span>
+<span class="r">70</span>
+<span class="r">6</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Շատ կարևոր</span>
+      <p><code>console.log()</code>-ը ցույց է տալիս <strong>մարդուն</strong>։ <code>return</code>-ը արժեքը տալիս է <strong>ծրագրին</strong>։ Եթե ֆունկցիան միայն տպում է, նրա արդյունքը հետո չես կարող օգտագործել։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ինչ է լինում առանց return-ի</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">printSum</span>(a, b) {
+  <span class="f">console</span>.<span class="f">log</span>(a + b);
+}
+
+<span class="k">const</span> x = <span class="f">printSum</span>(<span class="n">3</span>, <span class="n">4</span>);
+<span class="f">console</span>.<span class="f">log</span>(x);
+<span class="f">console</span>.<span class="f">log</span>(x * <span class="n">10</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">7</span>
+<span class="m">undefined</span>   <span class="m">← ֆունկցիան ոչինչ չվերադարձրեց</span>
+<span class="e">NaN</span>         <span class="m">← undefined × 10 = թիվ չէ</span></pre>
+    </div>
+
+    <h3><code>return</code>-ը կանգնեցնում է ֆունկցիան</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>return-ից հետո ոչինչ չի աշխատում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">check</span>(age) {
+  <span class="k">if</span> (age &lt; <span class="n">18</span>) {
+    <span class="k">return</span> <span class="s">"Մուտքն արգելված է"</span>;
+  }
+
+  <span class="k">return</span> <span class="s">"Բարի գալուստ"</span>;
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Այս տողը երբեք չի աշխատի"</span>);
+}
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">check</span>(<span class="n">15</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">check</span>(<span class="n">25</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Մուտքն արգելված է</span>
+<span class="r">Բարի գալուստ</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Օգտակար հնարք</span>
+      <p>Քանի որ <code>return</code>-ը ընդհատում է ֆունկցիան, հաճախ <code>else</code> գրելն ավելորդ է դառնում։ Կոդն ավելի հարթ ու ընթեռնելի է դառնում։</p>
+    </div>
+
+    <h3>Ֆունկցիա, որը վերադարձնում է boolean</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ստուգող ֆունկցիաներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">isEven</span>(number) {
+  <span class="k">return</span> number % <span class="n">2</span> === <span class="n">0</span>;
+}
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">isEven</span>(<span class="n">10</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">isEven</span>(<span class="n">7</span>));
+
+<span class="k">if</span> (<span class="f">isEven</span>(<span class="n">24</span>)) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"24-ը զույգ է"</span>);
+}
+
+<span class="c">// Օգտագործենք ցիկլում</span>
+<span class="k">for</span> (<span class="k">let</span> i = <span class="n">1</span>; i &lt;= <span class="n">6</span>; i++) {
+  <span class="f">console</span>.<span class="f">log</span>(i, <span class="f">isEven</span>(i) ? <span class="s">"զույգ"</span> : <span class="s">"կենտ"</span>);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="g">true</span>
+<span class="e">false</span>
+<span class="r">24-ը զույգ է</span>
+<span class="r">1 կենտ</span>
+<span class="r">2 զույգ</span>
+<span class="r">3 կենտ</span>
+<span class="r">4 զույգ</span>
+<span class="r">5 կենտ</span>
+<span class="r">6 զույգ</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Տեսանելիության տիրույթ (scope)</h2>
+    <p>Ֆունկցիայի ներսում ստեղծված փոփոխականը <strong>գոյություն ունի միայն այնտեղ</strong>։ Դրսից նրան հասնել չի լինի։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>լոկալ փոփոխական</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">calculate</span>() {
+  <span class="k">const</span> secret = <span class="n">42</span>;    <span class="c">// լոկալ — ապրում է միայն այստեղ</span>
+  <span class="f">console</span>.<span class="f">log</span>(secret);
+}
+
+<span class="f">calculate</span>();
+<span class="f">console</span>.<span class="f">log</span>(secret);       <span class="c">// ← փորձում ենք դրսից</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">42</span>
+<span class="e">Uncaught ReferenceError: secret is not defined</span></pre>
+    </div>
+
+    <p>Ֆունկցիան նման է <strong>փակ սենյակի</strong>․ ներսից պատուհանից երևում է դուրսը, բայց դրսից ներսը՝ ոչ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>գլոբալ և լոկալ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> siteName = <span class="s">"Իմ կայքը"</span>;   <span class="c">// գլոբալ</span>
+
+<span class="k">function</span> <span class="f">showHeader</span>() {
+  <span class="k">const</span> title = <span class="s">"Գլխավոր"</span>;    <span class="c">// լոկալ</span>
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">`</span>${siteName}<span class="s"> — </span>${title}<span class="s">`</span>);  <span class="c">// ներսից երկուսն էլ երևում են</span>
+}
+
+<span class="f">showHeader</span>();
+<span class="f">console</span>.<span class="f">log</span>(siteName);   <span class="c">// գլոբալը երևում է ամենուր</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Իմ կայքը — Գլխավոր</span>
+<span class="r">Իմ կայքը</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ է սա լավ</span>
+      <p>Երկու տարբեր ֆունկցիա կարող են ունենալ <code>i</code> կամ <code>result</code> անունով փոփոխականներ, և դրանք իրար չեն խանգարի։ Առանց scope-ի մեծ նախագծերում ամեն ինչ իրար կխառնվեր։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Կանոն</span>
+      <p>Ֆունկցիան պիտի ստանա ամեն ինչ <strong>պարամետրերով</strong> և տա արդյունքը <strong>return-ով</strong>։ Գլոբալ փոփոխականներից կախված ֆունկցիաները դժվար է փորձարկել և վերաօգտագործել։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Ֆունկցիա գրելու երեք ձև</h2>
+
+    <h3>1. Function declaration — հայտարարում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>declaration</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">sayHi</span>();   <span class="c">// աշխատում է ՆՈՒՅՆԻՍԿ մինչև հայտարարումը</span>
+
+<span class="k">function</span> <span class="f">sayHi</span>() {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Բարև"</span>);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Բարև</span></pre>
+    </div>
+    <p>JS-ը ֆայլը կարդալուց առաջ «հավաքում» է բոլոր <code>function</code>-ները և բարձրացնում վերև։ Այս երևույթը կոչվում է <strong>hoisting</strong>։</p>
+
+    <h3>2. Function expression — արտահայտություն</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>expression</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> sayHi = <span class="k">function</span>() {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Բարև"</span>);
+};
+
+<span class="f">sayHi</span>();</code></pre>
+    </div>
+    <p>Ֆունկցիան պարզապես դրվում է փոփոխականի մեջ՝ ինչպես թիվ կամ տեքստ։ Այստեղ <strong>hoisting չկա</strong>՝ մինչև հայտարարումը կանչելը սխալ կտա։</p>
+
+    <h3>3. Arrow function — սլաքով ✅</h3>
+    <p>Ժամանակակից և ամենակարճ ձևը։ Հաջորդ դասերին այս ձևը կդառնա հիմնականը։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>քայլ առ քայլ կարճացնում ենք</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// 1. սովորական</span>
+<span class="k">const</span> double1 = <span class="k">function</span>(n) {
+  <span class="k">return</span> n * <span class="n">2</span>;
+};
+
+<span class="c">// 2. function բառը փոխարինում ենք => սլաքով</span>
+<span class="k">const</span> double2 = (n) =&gt; {
+  <span class="k">return</span> n * <span class="n">2</span>;
+};
+
+<span class="c">// 3. մեկ պարամետր → փակագծերն ավելորդ են</span>
+<span class="k">const</span> double3 = n =&gt; {
+  <span class="k">return</span> n * <span class="n">2</span>;
+};
+
+<span class="c">// 4. մեկ տող → {} և return-ն էլ ավելորդ են</span>
+<span class="k">const</span> double4 = n =&gt; n * <span class="n">2</span>;
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">double1</span>(<span class="n">5</span>), <span class="f">double2</span>(<span class="n">5</span>), <span class="f">double3</span>(<span class="n">5</span>), <span class="f">double4</span>(<span class="n">5</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">10 10 10 10</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ուշադրություն</span>
+      <p>Երբ ձևավոր փակագծերը բացակայում են, <code>return</code>-ը <strong>ենթադրվում է ինքնաբերաբար</strong>։ Իսկ երբ <code>{ }</code> գրում ես — <code>return</code>-ը պարտադիր է։ Սա շատ հաճախ շփոթում են։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>դասական սխալ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> triple = n =&gt; { n * <span class="n">3</span>; };   <span class="c">// { } կա, return չկա</span>
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">triple</span>(<span class="n">5</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="m">undefined</span></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>arrow՝ մի քանի պարամետրով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> add      = (a, b) =&gt; a + b;
+<span class="k">const</span> isAdult  = age =&gt; age &gt;= <span class="n">18</span>;
+<span class="k">const</span> getNow   = () =&gt; <span class="s">"հիմա"</span>;        <span class="c">// առանց պարամետրի → դատարկ ()</span>
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">add</span>(<span class="n">4</span>, <span class="n">6</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">isAdult</span>(<span class="n">16</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">getNow</span>());</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">10</span>
+<span class="e">false</span>
+<span class="r">հիմա</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Ֆունկցիա ֆունկցիայի ներսում</h2>
+    <p>Ֆունկցիաները կարող են կանչել միմյանց։ Այսպես մեծ խնդիրը բաժանում ենք փոքր, հասկանալի կտորների։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>զամբյուղի հաշվարկ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> getSubtotal = (price, qty) =&gt; price * qty;
+
+<span class="k">const</span> getDiscount = subtotal =&gt; {
+  <span class="k">if</span> (subtotal &gt;= <span class="n">50000</span>) <span class="k">return</span> <span class="n">0.2</span>;
+  <span class="k">if</span> (subtotal &gt;= <span class="n">20000</span>) <span class="k">return</span> <span class="n">0.1</span>;
+  <span class="k">return</span> <span class="n">0</span>;
+};
+
+<span class="k">function</span> <span class="f">getTotal</span>(price, qty) {
+  <span class="k">const</span> subtotal = <span class="f">getSubtotal</span>(price, qty);
+  <span class="k">const</span> discount = <span class="f">getDiscount</span>(subtotal);
+  <span class="k">return</span> subtotal - subtotal * discount;
+}
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">getTotal</span>(<span class="n">3000</span>, <span class="n">2</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">getTotal</span>(<span class="n">3000</span>, <span class="n">10</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">getTotal</span>(<span class="n">3000</span>, <span class="n">20</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">6000</span>
+<span class="r">27000</span>
+<span class="r">48000</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ոսկե կանոն</span>
+      <p>Մեկ ֆունկցիա = <strong>մեկ գործ</strong>։ Եթե ֆունկցիայի անունում պիտի գրես «և» (<code>saveAndSendEmail</code>), ուրեմն այն պիտի բաժանվի երկուսի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Դասարանական աշխատանք</h2>
+    <p>Կառուցում ենք մեր առաջին <strong>ֆունկցիաների գրադարանը</strong>՝ ֆայլ, որտեղ ամեն ֆունկցիա մեկ փոքր գործ է անում։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>utils.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// --- Թվեր ---</span>
+<span class="k">const</span> isEven = n =&gt; n % <span class="n">2</span> === <span class="n">0</span>;
+
+<span class="k">const</span> max = (a, b) =&gt; a &gt; b ? a : b;
+
+<span class="k">function</span> <span class="f">factorial</span>(n) {
+  <span class="k">let</span> result = <span class="n">1</span>;
+  <span class="k">for</span> (<span class="k">let</span> i = <span class="n">2</span>; i &lt;= n; i++) {
+    result *= i;
+  }
+  <span class="k">return</span> result;
+}
+
+<span class="c">// --- Տեքստ ---</span>
+<span class="k">function</span> <span class="f">reverseString</span>(text) {
+  <span class="k">let</span> reversed = <span class="s">""</span>;
+  <span class="k">for</span> (<span class="k">let</span> i = text.length - <span class="n">1</span>; i &gt;= <span class="n">0</span>; i--) {
+    reversed += text[i];
+  }
+  <span class="k">return</span> reversed;
+}
+
+<span class="c">// --- Երկրաչափություն ---</span>
+<span class="k">const</span> circleArea = r =&gt; <span class="f">Math</span>.PI * r ** <span class="n">2</span>;
+
+<span class="c">// --- Ստուգում ---</span>
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">isEven</span>(<span class="n">14</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">max</span>(<span class="n">17</span>, <span class="n">42</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">factorial</span>(<span class="n">5</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">reverseString</span>(<span class="s">"JavaScript"</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">circleArea</span>(<span class="n">3</span>).<span class="f">toFixed</span>(<span class="n">2</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="g">true</span>
+<span class="r">42</span>
+<span class="r">120</span>
+<span class="r">tpircSavaJ</span>
+<span class="r">28.27</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Նոր բաներ այս կոդում</span>
+      <p><code>text.length</code> — տեքստի երկարությունը։<br>
+      <code>text[i]</code> — <code>i</code>-երորդ տառը (հաշվարկը սկսվում է <strong>0-ից</strong>)։<br>
+      <code>Math.PI</code> — π թիվը։ <code>.toFixed(2)</code> — երկու նիշ ստորակետից հետո։<br>
+      Տողերի մասին մանրամասն կսովորենք Դաս 8-ում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Խաղահրապարակ</h2>
+    <p>Փոխիր արգումենտները, ավելացրու քո ֆունկցիաները։ Փորձիր arrow ձևով վերագրել։</p>
+
+    <div class="pg">
+      <textarea id="pgCode" spellcheck="false">function greet(name = "հյուր") {
+  return `Բարև, ${name}։`;
+}
+
+const isEven = n => n % 2 === 0;
+const max = (a, b) => (a > b ? a : b);
+
+function factorial(n) {
+  let result = 1;
+  for (let i = 2; i <= n; i++) result *= i;
+  return result;
+}
+
+console.log(greet());
+console.log(greet("Անի"));
+console.log(isEven(10), isEven(7));
+console.log(max(17, 42));
+console.log(factorial(6));
+
+// Ֆունկցիա ցիկլի ներսում
+for (let i = 1; i <= 5; i++) {
+  console.log(i, isEven(i) ? "զույգ" : "կենտ");
+}</textarea>
+      <div class="pg__actions">
+        <button class="run" id="runBtn">Կատարել</button>
+        <button class="clr" id="clrBtn">Մաքրել</button>
+      </div>
+<pre class="out" id="pgOut"><span class="m">Console</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Տնային աշխատանք</h2>
+    <p>Ամեն ֆունկցիա գրիր <strong>և՛</strong> <code>function</code> ձևով, <strong>և՛</strong> arrow ձևով։ Ամեն մեկը ստուգիր առնվազն 3 տարբեր արգումենտով։</p>
+    <ol class="hw">
+      <li><code>getSum(a, b)</code> — վերադարձնում է երկու թվի գումարը։</li>
+      <li><code>getRectangleArea(w, h)</code> — մակերես։ Եթե պարամետր չուղարկեն, լռելյայն երկուսն էլ 1։</li>
+      <li><code>isPositive(n)</code> — վերադարձնում է <code>true</code> կամ <code>false</code>։</li>
+      <li><code>maxOfThree(a, b, c)</code> — երեք թվից ամենամեծը։</li>
+      <li><code>celsiusToFahrenheit(c)</code> — բանաձևը՝ <code>c * 9 / 5 + 32</code>։</li>
+      <li><code>getGrade(mark)</code> — վերադարձնում է «Գերազանց», «Լավ», «Բավարար» կամ «Անբավարար»։ Օգտագործիր <code>return</code>-ը առանց <code>else</code>-ի։</li>
+      <li><code>sumTo(n)</code> — 1-ից <code>n</code> թվերի գումարը (ցիկլով)։</li>
+      <li><code>countDigits(n)</code> — քանի՞ թվանշան ունի թիվը։</li>
+      <li><code>isPrime(n)</code> — պարզ թիվ է թե ոչ։ Օգտագործիր Դաս 3-ի դրոշակի հնարքը։</li>
+      <li>Գրիր <code>getTicketPrice(age, isStudent)</code>․ մինչև 6 տարեկան՝ 0, ուսանող՝ 1000, մինչև 65՝ 2500, 65-ից բարձր՝ 1000։ Ստուգիր 5 տարբեր դեպք։</li>
+    </ol>
+
+    <div class="warn note">
+      <span class="tag">Պահանջ</span>
+      <p>Բոլոր ֆունկցիաները պիտի օգտագործեն <code>return</code>, ոչ թե <code>console.log</code>։ Տպելը արա <strong>ֆունկցիայից դուրս</strong>՝ <code>console.log(getSum(3, 4))</code>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>function name() { }</code></td><td>Հայտարարում (hoisting կա)</td></tr>
+      <tr><td><code>const f = function() { };</code></td><td>Ֆունկցիա-արտահայտություն</td></tr>
+      <tr><td><code>const f = () =&gt; { };</code></td><td>Arrow ֆունկցիա</td></tr>
+      <tr><td><code>const f = n =&gt; n * 2;</code></td><td>Կարճ arrow — <code>return</code>-ը ենթադրվում է</td></tr>
+      <tr><td><code>name();</code></td><td>Կանչ։ Առանց <code>()</code> չի աշխատում</td></tr>
+      <tr><td><code>function f(a, b)</code></td><td><code>a</code>, <code>b</code> — պարամետրեր</td></tr>
+      <tr><td><code>f(3, 5)</code></td><td><code>3</code>, <code>5</code> — արգումենտներ</td></tr>
+      <tr><td><code>function f(x = 10)</code></td><td>Լռելյայն արժեք</td></tr>
+      <tr><td><code>return x;</code></td><td>Վերադարձնում է արժեքը և կանգնեցնում ֆունկցիան</td></tr>
+      <tr><td>առանց <code>return</code>-ի</td><td>Ֆունկցիան վերադարձնում է <code>undefined</code></td></tr>
+      <tr><td>լոկալ փոփոխական</td><td>Ապրում է միայն ֆունկցիայի ներսում</td></tr>
+    </table>
+    </div>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել <code>return</code>-ի և <code>console.log</code>-ի տարբերությունը</li>
+      <li>Գիտե՞մ՝ ինչու <code>n =&gt; { n * 2 }</code>-ը տալիս է <code>undefined</code></li>
+      <li>Հասկանո՞ւմ եմ, թե ինչու ֆունկցիայի ներսի փոփոխականը դրսում չի երևում</li>
+      <li>Կարո՞ղ եմ նույն ֆունկցիան գրել երեք ձևով</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Զանգվածներ։ Կսովորենք մեկ փոփոխականում պահել <strong>շատ</strong> արժեք՝ ապրանքների ցուցակ, օգտագործողներ, գնահատականներ։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 04 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

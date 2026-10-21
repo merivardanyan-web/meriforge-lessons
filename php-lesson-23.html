@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHP Դաս 23 — CV, ATS և աշխատաշուկա</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>PHP Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">PHP Դաս 23 · 2 ժամ · Կարիերա 2 / 3</p>
+  <h1>CV, ATS և աշխատաշուկա</h1>
+  <p class="lede">Դաս 22-ում նախագիծը դարձավ պորտֆոլիո։ Այսօր գրում ենք CV, որը անցնում է ATS համակարգը և կարդացվում է 30 վայրկյանում։ Ապա սովորում ենք այն AI-ով հարմարեցնել ամեն հայտարարության՝ առանց մի տող հորինելու։ Վերջում՝ որտեղ փնտրել աշխատանք Հայաստանում, remote և freelance, և ինչպես ստանալ վճարումը։</p>
+
+  <div class="facts">
+    <span>Բլոկ 3 · Դաս 23 / 24</span>
+    <span>Բեր Դաս 22-ի երեք հայտարարությունը</span>
+    <span>Տեղեկությունները ստուգված են 2026-ի հոկտեմբերին</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ինչ է կատարվում CV-ի հետ ուղարկելուց հետո</li>
+      <li>Junior-ի CV-ի կառուցվածքը՝ մեկ էջ</li>
+      <li>Ինչն է կոտրում ATS-ը և ինչը՝ ոչ</li>
+      <li>CV-ի հարմարեցում AI-ով՝ չորս քայլ, զրո հորինվածք</li>
+      <li>Ուղեկցող նամակ՝ հինգ նախադասություն</li>
+      <li>Հայաստանի աշխատաշուկան, remote և freelance</li>
+      <li>Վճարումներ և ԱՁ՝ ծանոթություն</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>CV-ի ճանապարհը</h2>
+
+    <div class="tree">Դու ուղարկում ես CV
+      │
+      ▼
+ATS (Applicant Tracking System)
+      │  կարդում է ֆայլը, բաժանում դաշտերի․ անուն, փորձ, հմտություններ
+      │  պահում է բազայում ⭐
+      ▼
+Ռեկրուտեր
+      │  ֆիլտրում և որոնում է բանալի բառերով՝ «Laravel», «MySQL», «Yerevan»
+      │  բացում է CV-ն․ 10–30 վայրկյան
+      ▼
+Թիմլիդ / մշակող
+      │  բացում է GitHub-ը և demo-ն (Դաս 22)
+      ▼
+Հարցազրույց (Դաս 24)</div>
+
+    <div class="tip note">
+      <span class="tag">ATS-ի մասին ազնիվ պատկերը</span>
+      <p>Համացանցում կհանդիպես պնդումների, թե «ATS-ը մերժում է CV-ների 75%-ը»։ Իրականում մեծ ընկերություններում ATS-ը հիմնականում <strong>բազա է</strong>, իսկ ֆիլտրում են մարդիկ։ Այնուամենայնիվ որոշ փոքր ընկերություններ օգտագործում են ավտոմատ գնահատում։<br><br>
+      ATS-ը կարևոր է երկու պատճառով․ <strong>1.</strong> եթե ֆայլը սխալ կարդացվի, փորձդ կհայտնվի սխալ դաշտում, և ռեկրուտերի որոնումը քեզ չի գտնի։ <strong>2.</strong> Ռեկրուտերը որոնում է հայտարարության բառերով։ Եթե CV-ում գրված է «PHP framework», իսկ որոնում են «Laravel», չես հայտնվի։<br><br>
+      Ուստի նպատակը «ATS-ին խաբելը» չէ, այլ <strong>ֆայլը ճիշտ կարդացվի և ճիշտ բառերը լինեն ճիշտ տեղում</strong>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Կառուցվածքը</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Բաժին</th><th>Ինչ գրել</th><th>Junior-ի սխալ</th></tr>
+      <tr><td>Վերնագիր</td><td>Անուն, դեր, քաղաք, email, հեռախոս, GitHub, LinkedIn, demo</td><td>Լուսանկար, ծննդյան տարեթիվ, ամուսնական կարգավիճակ</td></tr>
+      <tr><td>Summary</td><td>2–3 տող․ ով ես, ինչ ես կառուցել, ինչ ես փնտրում</td><td>«Motivated, hardworking, team player»</td></tr>
+      <tr><td>Skills</td><td>Խմբավորված․ Backend, Frontend, Tools</td><td>30 տեխնոլոգիա, որոնցից 20-ը մեկ անգամ ես տեսել</td></tr>
+      <tr><td>Projects ⭐</td><td>ՏեխնոՄարկետ + քո ընդլայնումը (Դաս 22)</td><td>«Created a website»</td></tr>
+      <tr><td>Experience</td><td>Ցանկացած աշխատանք, նաև ոչ IT, մեկ-երկու տողով</td><td>Բացակայություն կամ կեղծ «Freelance Developer»</td></tr>
+      <tr><td>Education</td><td>Համալսարան, DiGi School-ի դասընթացը</td><td>Դպրոց</td></tr>
+      <tr><td>Languages</td><td>Հայերեն, ռուսերեն, անգլերեն՝ մակարդակով</td><td>«English — fluent», երբ դա այդպես չէ</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Junior-ի համար Projects-ը փորձն է</span>
+      <p>Առանց աշխատանքային փորձի ամենաուժեղ բաժինը նախագծերն են։ Դրանք դիր Experience-ից <strong>վերև</strong>։ Ռեկրուտերը պետք է տեսնի ՏեխնոՄարկետը, մինչև կհասնի «Cashier, 2023–2024» տողին։<br><br>
+      Ոչ IT աշխատանքը մի՛ ջնջիր։ Մեկ տողով այն ցույց է տալիս պատասխանատվություն և հաճախորդների հետ աշխատանք։ Բաց թողած տարիներն ավելի շատ հարցեր են առաջացնում, քան խանութի վաճառողի աշխատանքը։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>CV — մեկ սյունակ, անգլերեն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">ANNA PETROSYAN</span>
+Junior PHP / Laravel Developer · Yerevan, Armenia (open to remote)
+anna@example.com · +374 91 000 000 · github.com/annap · linkedin.com/in/anna-petrosyan
+Portfolio: technomarket.example.am
+
+<span class="k">SUMMARY</span>
+Junior full-stack developer focused on PHP and Laravel. Built an Armenian-language
+e-commerce app twice — on a hand-written MVC framework and then in Laravel 13 —
+with authentication, role-based access and a JSON API. Looking for a junior backend
+or full-stack role.
+
+<span class="k">SKILLS</span>
+Backend:   PHP 8.3, Laravel 13 (Eloquent, Blade, Fortify), MySQL, REST APIs
+Frontend:  JavaScript (ES modules, fetch), HTML5, CSS3, accessibility basics
+Tools:     Git, GitHub, Composer, Laragon, Linux shell basics
+Security:  XSS, CSRF, SQL injection prevention, password hashing, rate limiting
+
+<span class="k">PROJECTS</span>
+TechnoMarket — online electronics store · Laravel 13, MySQL, JS    2026
+Live demo · Source code
+- Built product catalog, cart and admin panel with soft deletes and Armenian slugs
+- Implemented login with Laravel Fortify, rate-limited by email + IP, no public registration
+- Added role-based authorization with Gates; managers can edit, only admins delete
+- Fixed N+1 queries with eager loading; enabled strict mode to catch them in development
+- Rebuilt from a custom MVC framework I wrote first (router, controllers, auth, REST API)
+
+[Your own extension from Lesson 22] · Laravel                          2026
+- One or two bullets about what you added and why
+
+<span class="k">EXPERIENCE</span>
+Sales Assistant — Store Name, Yerevan                               2023 – 2025
+- Handled customer orders and returns; trained two new colleagues
+
+<span class="k">EDUCATION</span>
+Full-Stack Web Development (72 lessons) — DiGi School, Yerevan        2025 – 2026
+B.Sc. ... — University name                                         20XX – 20XX
+
+<span class="k">LANGUAGES</span>
+Armenian (native) · Russian (B2) · English (B1)</code></pre>
+    </div>
+
+    <h3>Bullet-ի բանաձևը</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>❌ Թույլ</th><th>✅ Ուժեղ</th></tr>
+      <tr><td>Worked on login</td><td>Implemented login with Laravel Fortify, rate-limited by email + IP</td></tr>
+      <tr><td>Used MySQL</td><td>Designed a MySQL schema with foreign keys and order prices frozen at purchase time</td></tr>
+      <tr><td>Made it secure</td><td>Prevented XSS, CSRF and SQL injection; verified with curl and DevTools tests</td></tr>
+      <tr><td>Responsible for the API</td><td>Built a JSON API with consistent error envelopes and 422 validation errors</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Գործողություն + ինչով + ինչ արդյունք</span>
+      <p>Ամեն bullet սկսվում է անցյալ ժամանակի բայով (<em>Built, Implemented, Designed, Fixed</em>), անվանում է տեխնոլոգիան և ասում, թե ինչ փոխվեց։ «Worked on» և «Responsible for» բառերը ոչինչ չեն ասում քո դերի մասին։<br><br>
+      Եվ ամենակարևորը․ <strong>ամեն bullet հարցազրույցի հարց է</strong>։ «Rate-limited by email + IP»-ի կողքին պատրաստ եղիր բացատրել, ինչու ոչ միայն սեսիայով (Դաս 16, 21)։ Եթե չես կարող բացատրել, հանիր bullet-ը։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Լուսանկար, տարիք, ամուսնական կարգավիճակ</span>
+      <p>Եվրոպական և ամերիկյան ընկերությունների շատ ռեկրուտերներ նախընտրում են CV առանց լուսանկարի և անձնական տվյալների, որովհետև դրանք կարող են անգիտակցաբար ազդել որոշման վրա։ Հայաստանյան որոշ գործատուներ դեռ սովոր են լուսանկարին։ Կանոն՝ <strong>միջազգային դիմումների համար՝ առանց լուսանկարի</strong>, տեղականի համար՝ ըստ հայտարարության։ Լավ լուսանկարը LinkedIn-ում է (Դաս 22)։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ինչն է կոտրում ATS-ը</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Կոտրում է</th><th>Չի կոտրում</th></tr>
+      <tr><td>Երկու և ավելի սյունակ (sidebar)</td><td>Bullet-ներ</td></tr>
+      <tr><td>Աղյուսակներ և text box-եր</td><td>Թավ և շեղ տեքստ</td></tr>
+      <tr><td>Կոնտակտները header/footer-ում</td><td>Երկու էջ (բայց junior-ին բավական է մեկը)</td></tr>
+      <tr><td>Նկարներ, պատկերակներ, «հմտությունների գծեր»</td><td>Հղումներ</td></tr>
+      <tr><td>Նկարի տեսքով PDF (սկան)</td><td>Տեքստային PDF</td></tr>
+      <tr><td>Անսովոր տառատեսակներ և դեկորատիվ նշաններ</td><td>Սովորական տառատեսակներ</td></tr>
+      <tr><td>«Summer 2025» տիպի ամսաթվեր</td><td><code>06/2025</code> կամ <code>Jun 2025</code></td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Canva-ի գեղեցիկ կաղապարը</span>
+      <p>Երկու սյունակ, լուսանկար շրջանակում, հմտություններ աստղիկներով՝ «PHP ★★★★☆»։ Սա ամենատարածված junior CV-ն է, և ATS-ի համար ամենավատը․ սյունակները խառնվում են, իսկ աստղիկները ոչինչ չեն նշանակում։ «4 աստղ PHP» բացարձակ ոչինչ չի ասում ռեկրուտերին։<br><br>
+      Մեկ սյունակ, սովորական վերնագրեր (<em>Summary, Skills, Projects, Experience, Education</em>), և դիզայնը թող լինի քո պորտֆոլիոն, ոչ CV-ն։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ATS թեստ՝ երկու րոպեում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">1. Բացիր քո CV.pdf-ը բրաուզերում
+2. Ctrl+A → Ctrl+C
+3. Տեղադրիր Notepad-ում
+
+Ստուգիր․
+  · Տեքստը նույն հերթականությամբ է՞, ինչ էջում
+  · Email-ը և հեռախոսը ամբողջական են՞
+  · Ամսաթվերը իրենց տեղում են՞
+  · Չկա՞ն տարօրինակ նշաններ (□, ?, Ø)
+
+Եթե Notepad-ում խառնաշփոթ է, ATS-ում էլ խառնաշփոթ կլինի։</span></code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Հարմարեցում AI-ով</h2>
+    <p>Մեկ CV բոլոր հայտարարությունների համար աշխատում է վատ։ Բայց ամեն անգամ զրոյից գրելը երկար է։ Լուծումը՝ <strong>մեկ հիմնական CV</strong> և ամեն հայտարարության համար 10 րոպե հարմարեցում AI-ի օգնությամբ։</p>
+
+    <div class="warn note">
+      <span class="tag">Կանոն թիվ մեկ՝ AI-ն չի ավելացնում փաստեր</span>
+      <p>Եթե հայտարարությունում կա «Docker, Redis, Vue.js», իսկ դու դրանց հետ չես աշխատել, AI-ն ուրախությամբ կավելացնի դրանք քո CV-ում։ Այն կանցնի ATS-ը և կհասնի հարցազրույցի։ Իսկ այնտեղ առաջին հարցը կլինի հենց Docker-ի մասին։<br><br>
+      Դա Դաս 4-ի կանոնն է՝ <em>«AI-ն խմբագրում է ձևը, փաստերը քոնն են»</em>։ CV-ում սուտը չի ձախողվում ATS-ում։ Այն ձախողվում է հարցազրույցում, կամ ավելի վատ՝ աշխատանքի առաջին շաբաթում։</p>
+    </div>
+
+    <div class="tree">Չորս քայլ
+
+  1. Բանալի բառեր    →  AI-ն հանում է հայտարարությունից
+  2. Համեմատություն  →  ինչ կա իմ CV-ում, ինչ չկա, ինչ կա, բայց այլ բառով
+  3. Վերաձևակերպում  →  միայն այն, ինչ իրականում արել եմ, հայտարարության բառերով
+  4. Մարդկային ստուգում ⭐ →  ամեն տող՝ «կարո՞ղ եմ բացատրել հարցազրույցում»</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>քայլ 1–2 — բանալի բառեր և համեմատություն</div><button class="copy">Պատճենել</button></div>
+<pre><code>You are helping me apply for a junior developer job.
+
+JOB POSTING:
+[paste the full posting]
+
+MY CV:
+[paste your CV as plain text — remove phone number and address]
+
+Do the following and nothing else:
+1. List the 10–15 most important skills and keywords from the posting,
+   marked MUST-HAVE or NICE-TO-HAVE.
+2. For each keyword, say: FOUND (quote my CV line), SYNONYM (I have it
+   under a different word — quote it), or MISSING.
+3. Do NOT rewrite my CV yet. Do NOT suggest adding anything marked MISSING.</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>քայլ 3 — վերաձևակերպում սահմաններով</div><button class="copy">Պատճենել</button></div>
+<pre><code>Now rewrite only my SUMMARY and PROJECTS bullets so they use the posting's
+wording for items marked FOUND or SYNONYM.
+
+Rules:
+- Do not add any technology, tool, number or responsibility that is not
+  already in my CV.
+- Keep each bullet under 20 words, starting with a past-tense verb.
+- Keep the single-column plain-text format.
+- After the rewrite, list every change you made as: old → new.</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչու «old → new» ցուցակը</span>
+      <p>Առանց դրա պետք է համեմատել երկու տեքստը աչքով, և հորինված բառը հեշտ է բաց թողնել։ Ցուցակով ամեն փոփոխություն երևում է առանձին, և դու որոշում ես՝ ընդունել, թե ոչ։ Դա Դաս 4-ի «վերանայման» ռեժիմն է՝ շրջված․ այս անգամ AI-ն է գրում, իսկ դու ես վերանայում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>օրինակ — SYNONYM, որ արժե փոխել</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">Հայտարարություն․  "Experience with RESTful APIs and JSON"
+Իմ CV-ում․       "Built endpoints that return data to JavaScript"
+
+Արդյունք․        "Built a REST-style JSON API consumed by vanilla JS (fetch)"
+                 ✅ իրական է (Դաս 17), բառերը՝ հայտարարությունից
+
+Հայտարարություն․  "Docker"
+Իմ CV-ում․       —
+Արդյունք․        ոչինչ ❌  MISSING-ը չի ավելացվում։
+                 Եթե ուզում ես, սովորիր Docker-ը և ավելացրու երկու շաբաթ հետո։</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">MISSING ցուցակը արժեքավոր է</span>
+      <p>Եթե երեք հայտարարությունից երեքում էլ կա «Git workflow (pull requests)» կամ «PHPUnit/Pest», իսկ քո մոտ դա MISSING է, դա քո հաջորդ ամսվա ուսումնական պլանն է։ AI-ն այստեղ օգնում է ոչ թե թաքցնել բացը, այլ <strong>գտնել այն</strong>։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Անձնական տվյալները AI-ում</span>
+      <p>CV-ում կա քո անունը, հեռախոսը, երբեմն հասցեն։ Նախքան AI գործիքում տեղադրելը, <strong>հանիր հեռախոսը և հասցեն</strong>, որովհետև դրանք պետք չեն հարմարեցման համար։ Ստուգիր նաև գործիքի կարգավորումները․ արդյո՞ք զրույցները օգտագործվում են ուսուցման համար։ Դա Դաս 4-ի գաղտնիության կանոնն է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Ուղեկցող նամակ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հինգ նախադասություն</div><button class="copy">Պատճենել</button></div>
+<pre><code>Hi [name / Hiring team],
+
+1. I'm applying for the Junior Laravel Developer role at [Company].
+2. I recently built TechnoMarket, an e-commerce app in Laravel 13 with Fortify
+   auth, role-based Gates and a JSON API: [demo link].
+3. Your posting mentions [one specific requirement]; in my project I [one
+   concrete thing you did that matches it].
+4. [One sentence about why this company — something you actually read on their
+   site, product or blog.]
+5. I'd be glad to walk you through the code. My CV is attached.
+
+Anna Petrosyan · github.com/annap</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Երրորդ և չորրորդ նախադասությունները</span>
+      <p>Դրանք են տարբերում քո նամակը հարյուր նույնանման նամակներից։ Երրորդը ցույց է տալիս, որ կարդացել ես հայտարարությունը, չորրորդը՝ որ կարդացել ես ընկերության մասին։<br><br>
+      Եթե չորրորդի համար ոչինչ չես գտնում ընկերության կայքում, հավանաբար այնտեղ դիմելը շտապ չէ։ Եվ եթե նամակը գրում է AI-ն, երրորդն ու չորրորդը առաջինն են դառնում ընդհանուր և կեղծ։ Դրանք գրիր ինքդ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Հայաստանի աշխատաշուկա</h2>
+
+    <div class="warn note">
+      <span class="tag">Ստուգված է 2026-ի հոկտեմբերին</span>
+      <p>Կայքերը, ալիքները և ընկերությունների պահանջները փոխվում են։ Ստորև ներկայացված են այն տեղերը, որոնք գործում էին դասի գրման պահին։ Նախքան օգտագործելը ստուգիր, որ դրանք դեռ ակտիվ են, և հարցրու ավելի վաղ շրջանավարտներին, թե որտեղ են իրենք գտել աշխատանք։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Որտեղ</th><th>Ինչ կա այնտեղ</th></tr>
+      <tr><td><strong>staff.am</strong>, <strong>job.am</strong></td><td>Տեղական հայտարարություններ, ներառյալ IT, junior և internship</td></tr>
+      <tr><td>LinkedIn Jobs</td><td>Միջազգային ընկերությունների գրասենյակներ Երևանում, remote</td></tr>
+      <tr><td>Telegram ալիքներ</td><td>Հայկական IT աշխատանքների ալիքներ․ արագ են, բայց ստուգիր գործատուին</td></tr>
+      <tr><td>Ընկերությունների կայքեր</td><td>«Careers» էջեր, trainee և internship ծրագրեր</td></tr>
+      <tr><td>Միջոցառումներ</td><td>Meetup-ներ, hackathon-ներ, IT համաժողովներ</td></tr>
+      <tr><td>Խորհուրդ (referral)</td><td>Շրջանավարտներ, դասընկերներ, դասախոսներ ⭐</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Որտեղ են junior-ներին ամենից հաճախ ընդունում</span>
+      <p><strong>Վեբ-ստուդիաներ և գործակալություններ</strong>, որոնք կառուցում են կայքեր և e-commerce տեղական և արտասահմանյան հաճախորդների համար։ Այնտեղ PHP, Laravel և WordPress շատ են, և ՏեխնոՄարկետը ուղիղ համապատասխանում է նրանց աշխատանքին։<br><br>
+      <strong>Trainee և internship ծրագրեր</strong> մեծ ընկերություններում։ Դրանք հաճախ ունեն մրցութային թեստ և սահմանափակ տեղեր, բայց սովորեցնում են շատ։<br><br>
+      <strong>Խորհուրդը</strong> (referral) շատ դեպքերում ավելի արդյունավետ է, քան հարյուր դիմումը։ Հայաստանի IT համայնքը փոքր է, և մարդիկ ճանաչում են միմյանց։ Հայտնիր դասընկերներիդ և դասախոսներիդ, որ փնտրում ես աշխատանք։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Լեզուները՝ առավելություն</span>
+      <p>Անգլերենը պետք է գրեթե ամենուր․ փաստաթղթեր, կոդ, հաճախորդներ։ Ռուսերենը օգնում է այն ընկերություններում, որոնց հաճախորդները կամ թիմը ռուսալեզու են։ CV-ում մակարդակը նշիր ազնվորեն․ «B1» և «B2» ավելի շատ բան են ասում, քան «good»։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Remote</h2>
+
+    <div class="warn note">
+      <span class="tag">Ազնիվ փաստ առաջին աշխատանքի մասին</span>
+      <p>Remote junior հաստատիքների համար մրցակցությունը համաշխարհային է․ նույն հայտարարությանը դիմում են հարյուրավոր մարդիկ տարբեր երկրներից։ Շատ ընկերություններ junior-ներին նախընտրում են գրասենյակում, որտեղ նրանց ավելի հեշտ է սովորեցնել։<br><br>
+      Սա չի նշանակում «մի՛ դիմիր»։ Սա նշանակում է՝ <strong>մի՛ դիմիր միայն remote</strong>։ Շատ մշակողներ առաջին մեկ-երկու տարին աշխատում են տեղում և հետո անցնում remote՝ արդեն փորձով։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Որտեղ փնտրել</th><th>Նշում</th></tr>
+      <tr><td>LinkedIn Jobs</td><td>Ֆիլտրեր՝ Remote, Entry level, «Armenia» կամ «EMEA»</td></tr>
+      <tr><td>Wellfound (նախկին AngelList Talent)</td><td>Startup-ներ, հաճախ փոքր թիմեր</td></tr>
+      <tr><td>We Work Remotely, Remote OK</td><td>Միայն remote աշխատանքներ, քիչ junior</td></tr>
+      <tr><td>Ընկերությունների կայքեր</td><td>Ստուգիր, որ Armenia-ն թույլատրված երկրների ցանկում է</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ժամային գոտին՝ առավելություն</span>
+      <p>Երևանը UTC+4 է։ Եվրոպայի հետ տարբերությունը 2–3 ժամ է, ինչը նշանակում է աշխատանքային օրվա մեծ մասի համընկնում։ Եվրոպական ընկերություններին դիմելիս սա արժե նշել ուղեկցող նամակում։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Խաբեություններ — և մեկը, որ հատուկ մշակողների համար է</span>
+      <p><strong>1.</strong> «Վճարիր ուսուցման կամ սարքավորման համար, որպեսզի սկսես»։ Իրական գործատուն երբեք չի խնդրում քեզնից գումար։<br>
+      <strong>2.</strong> Հարցազրույց միայն Telegram-ով կամ WhatsApp-ով, առանց ընկերության կայքի և email դոմենի։<br>
+      <strong>3.</strong> ⭐ <strong>«Թեստային առաջադրանք․ clone արա այս repo-ն և գործարկիր»</strong>։ Վերջին տարիներին լայնորեն հաղորդվել է կեղծ «հարցազրույցների» մասին, որտեղ թեստային նախագիծը պարունակում է վնասակար կոդ՝ օրինակ <code>package.json</code>-ի <code>postinstall</code> սկրիպտում կամ <code>composer.json</code>-ի <code>scripts</code>-ում։ <code>npm install</code>-ը կամ <code>composer install</code>-ը գործարկում է այն քո համակարգչում։<br><br>
+      Պաշտպանություն․ <strong>նախ կարդա</strong> <code>package.json</code>-ը և <code>composer.json</code>-ը, ստուգիր ընկերությունը և հարցազրուցավարին LinkedIn-ում, իսկ անհայտ նախագիծը գործարկիր առանձին միջավայրում (վիրտուալ մեքենա կամ cloud sandbox), ոչ այնտեղ, որտեղ պահում ես գաղտնաբառերը և բանկային տվյալները։ Դաս 22-ի կանոնը՝ <em>գաղտնիքները ապրում են միայն այնտեղ, որտեղ պետք է</em>, վերաբերում է նաև քո համակարգչին։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Freelance</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հարթակ</th><th>Ինչպես է աշխատում (2026-ի հոկտեմբեր)</th></tr>
+      <tr><td><strong>Upwork</strong></td><td>Դու գրում ես առաջարկ (proposal) հաճախորդի հայտարարությանը։ Ամեն առաջարկ արժե «Connects»՝ $0.15 հատը, սովորաբար մի քանի Connect մեկ առաջարկի համար։ Միջնորդավճարը 0–15% է՝ կախված պայմանագրից (2025-ի մայիսից)։</td></tr>
+      <tr><td><strong>Fiverr</strong></td><td>Դու ստեղծում ես «gig»՝ պատրաստի ծառայություն ֆիքսված գնով, և հաճախորդը գտնում է քեզ։ Հարթակը պահում է վաճառողի եկամտի մի մասը։</td></tr>
+      <tr><td>Տեղական</td><td>Ծանոթներ, փոքր բիզնեսներ, Facebook և Telegram խմբեր</td></tr>
+    </table>
+    </div>
+
+    <div class="tree">Առաջին պատվերը՝ փոքր և ճշգրիտ
+
+  ❌ «I can build any website for you»
+  ✅ «I will fix bugs in your Laravel app» · «Add a contact form with validation
+      and email to your PHP site» · «Build a product admin panel in Laravel»
+
+  Առաջին 3–5 պատվեր  →  ակնարկներ (reviews)  →  հետո ավելի մեծ նախագծեր</div>
+
+    <div class="tip note">
+      <span class="tag">Առաջարկը (proposal) գրում ես դու, ոչ AI-ն</span>
+      <p>Հաճախորդները ստանում են տասնյակ առաջարկներ, և AI-ով գրվածները հեշտ է ճանաչել․ «I hope this message finds you well. I am excited to help you with your project»։<br><br>
+      Լավ առաջարկը կարճ է․ <strong>1.</strong> ցույց տուր, որ հասկացել ես խնդիրը՝ քո բառերով, <strong>2.</strong> նշիր նման բան, որ արել ես (ՏեխնոՄարկետի հղումով), <strong>3.</strong> տուր մեկ կոնկրետ հարց նախագծի մասին։ Երրորդը ցույց է տալիս, որ իսկապես կարդացել ես։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երեք կանոն, որ պաշտպանում են քեզ</span>
+      <p><strong>1. Աշխատանքի ծավալը՝ գրավոր</strong>, նախքան սկսելը․ ինչ է ներառված, ինչ՝ ոչ, քանի ուղղում։ «Մի փոքր էլ փոխիր» պատմությունը սկսվում է ծավալի բացակայությունից։<br>
+      <strong>2. Վճարումը՝ հարթակի ներսում</strong>։ Եթե հաճախորդը առաջարկում է «վճարել ուղիղ, որպեսզի միջնորդավճար չտանք», հարթակի պաշտպանությունը կորչում է, իսկ հարթակների մեծ մասի կանոնները դա արգելում են։<br>
+      <strong>3. Մի՛ իջեցրու գինը մինչև զրո</strong>։ Ցածր գինը առաջին ակնարկների համար ընդունելի է, բայց $3/ժամով աշխատելը սովորեցնում է հաճախորդներին, որ դու այդքան արժես։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Վճարումներ և ԱՁ</h2>
+
+    <div class="warn note">
+      <span class="tag">Սա իրավական կամ հարկային խորհուրդ չէ</span>
+      <p>Ստորև ընդհանուր ծանոթություն է՝ ստուգված 2026-ի հոկտեմբերին։ Վճարային համակարգերի հասանելիությունը Հայաստանում և հարկային կանոնները փոխվում են։ Նախքան որոշում կայացնելը ստուգիր պաշտոնական աղբյուրները (Պետական եկամուտների կոմիտե՝ <code>src.am</code>, քո բանկը) և խորհրդակցիր հաշվապահի հետ։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Եղանակ</th><th>Ինչ իմանալ</th></tr>
+      <tr><td>Բանկային փոխանցում (SWIFT)</td><td>Ամենաունիվերսալը։ Պետք է արտարժութային (USD/EUR) հաշիվ հայկական բանկում։ Ստուգիր բանկի միջնորդավճարները։</td></tr>
+      <tr><td>Payoneer</td><td>Օգտագործվում է freelance հարթակների հետ։ 2025-ի վերջին հայկական բանկերից մեկը ավելացրել էր Payoneer-ի ինտեգրացիա իր հավելվածում։</td></tr>
+      <tr><td>PayPal</td><td>Հայաստանում երկար ժամանակ հնարավոր չէր <strong>ստանալ</strong> վճարումներ։ Ստուգիր ընթացիկ վիճակը, նախքան հաճախորդին PayPal առաջարկելը։</td></tr>
+      <tr><td>Upwork-ից դուրս բերում</td><td>Մի քանի եղանակ՝ wire transfer, Payoneer, տեղական բանկ (կախված երկրից)։ Համեմատիր միջնորդավճարները։</td></tr>
+      <tr><td>Contractor հարթակներ</td><td>Deel, Mellow, Solar Staff և նմանատիպ ծառայություններ, որոնց միջոցով արտասահմանյան ընկերությունները վճարում են կապալառուներին։</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Անհատ ձեռնարկատեր (ԱՁ)</span>
+      <p>Եթե կանոնավոր եկամուտ ես ստանում արտասահմանյան հաճախորդներից կամ աշխատում ես որպես կապալառու, սովորաբար անհրաժեշտ է գրանցվել որպես <strong>ԱՁ</strong>։ Գրանցումը հիմնականում պարզ է և արագ։ Գոյություն ունեն մի քանի հարկային ռեժիմներ (միկրոձեռնարկատիրություն, շրջանառության հարկ, ընդհանուր), որոնք տարբերվում են եկամտի շեմերով և դրույքներով։<br><br>
+      Ո՞ր ռեժիմն է քեզ համար, կախված է եկամտից և գործունեության տեսակից, և կանոնները պարբերաբար փոխվում են։ Սա այն որոշումն է, որ արժե կայացնել <strong>հաշվապահի հետ</strong>, ոչ AI-ի կամ ֆորումի։ Ինչպես Դաս 22-ի hosting-ը, այս թեման նույնպես պետք է ստուգել ամեն տարի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Դասարանական</h2>
+
+    <ol>
+      <li>Գրիր հիմնական CV-ն կաղապարով՝ մեկ սյունակ, անգլերեն, մեկ էջ</li>
+      <li>Արտահանիր PDF և անցիր ATS թեստը Notepad-ով</li>
+      <li>Վերցրու Դաս 22-ի հայտարարություններից մեկը և անցիր հարմարեցման չորս քայլը</li>
+      <li>Ստուգիր «old → new» ցուցակը․ մերժիր ամեն փոփոխություն, որ չես կարող բացատրել</li>
+      <li>Գրիր ուղեկցող նամակ նույն հայտարարության համար</li>
+    </ol>
+
+    <div class="warn note">
+      <span class="tag">Զույգերով՝ 30 վայրկյանի թեստ</span>
+      <p>Տուր քո CV-ն հարևանիդ 30 վայրկյանով, ապա վերցրու այն ետ։ Նա պետք է պատասխանի․<br><br>
+      <strong>1.</strong> Ի՞նչ դեր ես փնտրում։<br>
+      <strong>2.</strong> Ո՞րն է քո ամենաուժեղ նախագիծը և ինչ տեխնոլոգիաներով։<br>
+      <strong>3.</strong> Ո՞ր մեկ bullet-ի մասին կհարցներ հարցազրույցում։<br><br>
+      Ապա դու բացատրիր երրորդ հարցի bullet-ը 60 վայրկյանում։ Եթե չստացվեց, այն պետք է կամ վերաձևակերպել, կամ հանել։ Սա նաև Դաս 24-ի նախավարժանքն է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ավարտիր հիմնական CV-ն և ուղարկիր PDF-ը և Notepad թեստի սքրինշոթը։</li>
+      <li>Հարմարեցրու CV-ն մյուս երկու հայտարարությունների համար։ Ուղարկիր երեք «old → new» ցուցակները և նշիր, որ փոփոխություններն ես մերժել և ինչու։</li>
+      <li>Կազմիր MISSING ցուցակ երեք հայտարարություններից։ Ո՞ր հմտությունը կա երեքում էլ։ Գրիր, թե ինչպես ես սովորելու այն հաջորդ ամսում։</li>
+      <li>Գտիր հինգ իրական junior հայտարարություն staff.am-ում, job.am-ում կամ LinkedIn-ում և գրանցիր դրանք աղյուսակում․ ընկերություն, դեր, պահանջներ, հղում։</li>
+      <li>Գրիր Fiverr gig-ի կամ Upwork պրոֆիլի նկարագրություն՝ մեկ կոնկրետ ծառայության համար (օր.՝ «Laravel bug fixing»)։ Մի՛ հրապարակիր, եթե պատրաստ չես։</li>
+      <li>Գտիր մեկ կասկածելի «աշխատանքային առաջարկ» (կամ վերցրու բաժին 07-ի ցուցակից) և գրիր, թե որ նշաններով կճանաչեիր այն։</li>
+      <li>Պատրաստիր Դաս 24-ի համար․ քո CV-ի ամեն bullet-ի համար գրիր մեկ հարց, որ կարող են տալ, և քո պատասխանը երկու նախադասությամբ։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 12 ============ -->
+  <section id="s12">
+    <h2><span class="num">12</span>Հիշելու թերթիկ</h2>
+
+    <h3>CV-ի կառուցվածքը</h3>
+    <div class="tree">Header      →  անուն, դեր, քաղաք, կոնտակտներ, GitHub, LinkedIn, demo
+Summary     →  2–3 տող
+Skills      →  խմբավորված, միայն իրականները
+Projects ⭐ →  ՏեխնոՄարկետ + քո ընդլայնումը
+Experience  →  ցանկացած աշխատանք, կարճ
+Education   →  համալսարան, DiGi School
+Languages   →  մակարդակով (B1, B2…)</div>
+
+    <h3>Հարմարեցման չորս քայլ</h3>
+    <div class="tree">1. Բանալի բառեր      MUST-HAVE / NICE-TO-HAVE
+2. Համեմատություն    FOUND / SYNONYM / MISSING
+3. Վերաձևակերպում    միայն FOUND և SYNONYM · old → new
+4. Ստուգում          «կբացատրե՞մ հարցազրույցում»</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Մեկ էջ, մեկ սյունակ, առանց աղյուսակների և նկարների</li>
+      <li>Կոնտակտները էջի մեջ են, ոչ header-ում</li>
+      <li>Կա demo-ի և GitHub-ի հղում</li>
+      <li>Projects-ը Experience-ից վերև է</li>
+      <li>Ամեն bullet սկսվում է բայով և անվանում է տեխնոլոգիան</li>
+      <li>CV-ում չկա ոչ մի հմտություն, որ չեմ կարող բացատրել</li>
+      <li>Notepad թեստը անցնում է</li>
+      <li>AI-ին տալուց առաջ հեռախոսը և հասցեն հանված են</li>
+      <li>Անհայտ թեստային նախագծի <code>package.json</code>/<code>composer.json</code>-ը կարդացել եմ, նախքան գործարկելը</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչ է անում ATS-ը իրականում</li>
+      <li>Գիտե՞մ, ինչու երկու սյունակը վատ է</li>
+      <li>Կարո՞ղ եմ անցնել հարմարեցման չորս քայլը առանց որևէ բան հորինելու</li>
+      <li>Գիտե՞մ առնվազն երեք տեղ, որտեղ փնտրել աշխատանք Հայաստանում</li>
+      <li>Կարո՞ղ եմ ճանաչել կեղծ աշխատանքային առաջարկը</li>
+      <li>Գիտե՞մ, ինչու ԱՁ-ի ռեժիմի հարցը լուծվում է հաշվապահի հետ</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին՝ վերջինը</span>
+      <p>CV-ն ուղարկված է, և զանգեցին։ <strong>Դաս 24</strong>՝ հարցազրույց։ Տեխնիկական հարցերի ցանկ բոլոր երեք բլոկից (HTML/CSS, JavaScript, PHP/Laravel), վարքագծային հարցեր և STAR մեթոդը, ինչ անել, երբ չգիտես պատասխանը, աշխատավարձի հարցը և առաջին աշխատանքային շաբաթը։ Եվ 72 դասի եզրափակիչը։<br><br>
+      Բեր տնայինի 7-րդ կետի հարցերը։ Դրանցով ենք սկսելու։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>PHP Բլոկ · Դաս 23 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

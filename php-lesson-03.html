@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHP Դաս 3 — Զանգվածներ և ֆունկցիաներ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>PHP Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">PHP Դաս 3 · 2 ժամ</p>
+  <h1>Զանգվածներ և ֆունկցիաներ</h1>
+  <p class="lede">Ասոցիատիվ զանգվածը PHP-ի ամենակարևոր կառուցվածքն է։ Բազայի ամեն տող, ֆորմայի ամեն դաշտ, կոնֆիգուրացիայի ամեն կարգավորում — բոլորը զանգված են։</p>
+
+  <div class="facts">
+    <span>Բլոկ 3 · Դաս 3 / 24</span>
+    <span>Նախապայման՝ JS Դաս 5–7</span>
+    <span>Տիպերի հայտարարում</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ինդեքսավորված և ասոցիատիվ զանգվածներ</li>
+      <li>Ներդրված զանգվածներ՝ բազայի նմանակ</li>
+      <li><code>array_map</code>, <code>array_filter</code>, <code>usort</code></li>
+      <li>Ֆունկցիաներ և <strong>տիպերի հայտարարում</strong></li>
+      <li>Տեսանելիության տիրույթ — JS-ից տարբեր</li>
+      <li><code>include</code> և <code>require</code></li>
+      <li>Ապրանքների ֆիլտր և տեսակավորում</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Երկու տեսակի զանգված</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>իրականում մեկն է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Ինդեքսավորված — բանալիները 0, 1, 2...</span>
+<span class="n">$colors</span> = [<span class="s">"կարմիր"</span>, <span class="s">"կապույտ"</span>, <span class="s">"կանաչ"</span>];
+<span class="k">echo</span> <span class="n">$colors</span>[<span class="n">0</span>];        <span class="c">// կարմիր</span>
+
+<span class="c">// Ասոցիատիվ — բանալիները տողեր են</span>
+<span class="n">$product</span> = [
+    <span class="s">'name'</span>  =&gt; <span class="s">'Նոութբուք Pro 14'</span>,
+    <span class="s">'price'</span> =&gt; <span class="n">450000</span>,
+    <span class="s">'stock'</span> =&gt; <span class="n">12</span>,
+];
+<span class="k">echo</span> <span class="n">$product</span>[<span class="s">'name'</span>];</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Կարևոր տարբերություն JS-ից</span>
+      <p>JS-ում զանգվածը և օբյեկտը <strong>երկու տարբեր բան են</strong>՝ <code>[1,2,3]</code> և <code>{a: 1}</code>։<br><br>
+      PHP-ում դա <strong>մեկ տիպ է</strong> — <code>array</code>։ Ինդեքսավորվածը պարզապես ասոցիատիվ է, որտեղ բանալիները թվեր են։<br><br>
+      Ուստի PHP-ի զանգվածը միաժամանակ JS-ի <code>Array</code>-ը և <code>Object</code>-ն է։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հիմնական գործողություններ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="n">$colors</span>[] = <span class="s">"դեղին"</span>;              <span class="c">// ավելացնել վերջում (JS՝ push)</span>
+<span class="n">$product</span>[<span class="s">'brand'</span>] = <span class="s">"TechPro"</span>;   <span class="c">// նոր բանալի</span>
+
+<span class="f">count</span>(<span class="n">$colors</span>);                    <span class="c">// քանակը (JS՝ .length)</span>
+<span class="f">in_array</span>(<span class="s">"կապույտ"</span>, <span class="n">$colors</span>);      <span class="c">// կա՞ արժեքը</span>
+<span class="f">array_key_exists</span>(<span class="s">'price'</span>, <span class="n">$product</span>);
+<span class="f">array_keys</span>(<span class="n">$product</span>);               <span class="c">// ['name','price','stock']</span>
+<span class="f">array_values</span>(<span class="n">$product</span>);
+<span class="f">array_search</span>(<span class="s">"կանաչ"</span>, <span class="n">$colors</span>);    <span class="c">// ինդեքսը կամ false</span>
+
+<span class="f">unset</span>(<span class="n">$colors</span>[<span class="n">1</span>]);                <span class="c">// ջնջել</span>
+<span class="n">$colors</span> = <span class="f">array_values</span>(<span class="n">$colors</span>);   <span class="c">// վերահամարակալել ⭐</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag"><code>unset</code>-ը բացեր է թողնում</span>
+      <p><code>unset($colors[1])</code>-ից հետո զանգվածն ունի բանալիներ <code>0, 2, 3</code> — երկուսը բացակայում է։<br><br>
+      <code>foreach</code>-ը կաշխատի նորմալ, բայց <code>for ($i=0; $i&lt;count(...); $i++)</code>-ը կկոտրվի, և JSON-ի փոխարկելիս զանգվածը կդառնա օբյեկտ։<br><br>
+      Ուստի ջնջելուց հետո՝ <code>array_values()</code>։ Դա Դաս 17-ի API-ում կրիտիկական կդառնա։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Ներդրված զանգվածներ</h2>
+    <p>Այս կառուցվածքը կհանդիպի ամեն օր մինչև դասընթացի վերջ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>զանգված զանգվածներից</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="n">$products</span> = [
+    [<span class="s">'id'</span> =&gt; <span class="n">1</span>, <span class="s">'name'</span> =&gt; <span class="s">'Նոութբուք'</span>, <span class="s">'price'</span> =&gt; <span class="n">450000</span>],
+    [<span class="s">'id'</span> =&gt; <span class="n">2</span>, <span class="s">'name'</span> =&gt; <span class="s">'Մոնիտոր'</span>,  <span class="s">'price'</span> =&gt; <span class="n">120000</span>],
+    [<span class="s">'id'</span> =&gt; <span class="n">3</span>, <span class="s">'name'</span> =&gt; <span class="s">'Ստեղնաշար'</span>, <span class="s">'price'</span> =&gt; <span class="n">25000</span>],
+];
+
+<span class="k">echo</span> <span class="n">$products</span>[<span class="n">0</span>][<span class="s">'name'</span>];    <span class="c">// Նոութբուք</span>
+
+<span class="k">foreach</span> (<span class="n">$products</span> <span class="k">as</span> <span class="n">$p</span>) {
+    <span class="k">echo</span> <span class="n">$p</span>[<span class="s">'name'</span>] . <span class="s">" — "</span> . <span class="n">$p</span>[<span class="s">'price'</span>];
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ սա այդքան կարևոր է</span>
+      <p><strong>MySQL-ի ամեն հարցում վերադարձնում է հենց այս ձևը։</strong> Դաս 9-ում <code>$stmt-&gt;fetchAll()</code>-ը կտա ճիշտ նույն կառուցվածքը՝ զանգված ասոցիատիվ զանգվածներից։<br><br>
+      Այսինքն՝ քո <code>foreach</code>-ը այսօր և Դաս 9-ի <code>foreach</code>-ը կլինեն նույնական։ Փոխվում է միայն տվյալների աղբյուրը։<br><br>
+      Դա նաև պատճառն է, որ այսօր զանգվածները գրում ենք ձեռքով — որ վաղը բազան զարմանք չլինի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Զանգվածների ֆունկցիաներ</h2>
+    <p>JS Դաս 6-ի ուղիղ համապատասխանությունները — բայց ուշադրություն արգումենտների կարգին։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>JavaScript</th><th>PHP</th></tr>
+      <tr><td><code>arr.map(fn)</code></td><td><code>array_map(fn, $arr)</code> ⚠️ հակառակ կարգ</td></tr>
+      <tr><td><code>arr.filter(fn)</code></td><td><code>array_filter($arr, fn)</code></td></tr>
+      <tr><td><code>arr.reduce(fn, 0)</code></td><td><code>array_reduce($arr, fn, 0)</code></td></tr>
+      <tr><td><code>arr.sort(fn)</code></td><td><code>usort($arr, fn)</code></td></tr>
+      <tr><td><code>arr.find(fn)</code></td><td>Չկա — <code>array_filter</code> + <code>reset</code></td></tr>
+      <tr><td><code>arr.includes(x)</code></td><td><code>in_array($x, $arr)</code></td></tr>
+      <tr><td><code>arr.slice()</code></td><td><code>array_slice($arr, 0, 3)</code></td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Արգումենտների կարգը անհետևողական է</span>
+      <p><code>array_map(<strong>fn</strong>, $arr)</code> — ֆունկցիան առաջ<br>
+      <code>array_filter($arr, <strong>fn</strong>)</code> — զանգվածն առաջ<br><br>
+      Դա PHP-ի հայտնի թերությունն է՝ ստանդարտ գրադարանը կառուցվել է տարիների ընթացքում առանց միասնական կանոնի։<br><br>
+      Չկա տրամաբանություն, որ հիշես — խմբագրիչի ավտոլրացումը այստեղ լավագույն ընկերն է։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>գործնականում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Ֆիլտր՝ միայն մատչելի ապրանքները</span>
+<span class="n">$cheap</span> = <span class="f">array_filter</span>(<span class="n">$products</span>, <span class="k">fn</span>(<span class="n">$p</span>) =&gt; <span class="n">$p</span>[<span class="s">'price'</span>] &lt; <span class="n">100000</span>);
+
+<span class="c">// Միայն անունները</span>
+<span class="n">$names</span> = <span class="f">array_map</span>(<span class="k">fn</span>(<span class="n">$p</span>) =&gt; <span class="n">$p</span>[<span class="s">'name'</span>], <span class="n">$products</span>);
+
+<span class="c">// Ընդհանուր գումարը</span>
+<span class="n">$total</span> = <span class="f">array_reduce</span>(<span class="n">$products</span>, <span class="k">fn</span>(<span class="n">$sum</span>, <span class="n">$p</span>) =&gt; <span class="n">$sum</span> + <span class="n">$p</span>[<span class="s">'price'</span>], <span class="n">0</span>);
+
+<span class="c">// fn() =&gt; ... կարճ ձևը PHP 7.4+ է, նման JS-ի arrow-ին
+// Հին ձևը՝</span>
+<span class="n">$names</span> = <span class="f">array_map</span>(<span class="k">function</span> (<span class="n">$p</span>) {
+    <span class="k">return</span> <span class="n">$p</span>[<span class="s">'name'</span>];
+}, <span class="n">$products</span>);</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">array_filter-ը պահպանում է բանալիները ⭐</span>
+      <p>Ֆիլտրից հետո զանգվածն ունի բանալիներ <code>0, 2, 5</code> — բացերով։<br><br>
+      <code>foreach</code>-ի համար խնդիր չէ։ Բայց <code>json_encode()</code>-ը այդպիսի զանգվածը կվերածի <strong>օբյեկտի</strong>, ոչ ցուցակի — և JS-ի կողմում <code>.map()</code>-ը կկոտրվի։<br><br>
+      Կանոն՝ <code>array_filter</code>-ից հետո միշտ <code>array_values()</code>, եթե արդյունքը գնում է JSON կամ ինդեքսավորված ցիկլ։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>տեսակավորում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Ըստ գնի՝ աճման կարգով</span>
+<span class="f">usort</span>(<span class="n">$products</span>, <span class="k">fn</span>(<span class="n">$a</span>, <span class="n">$b</span>) =&gt; <span class="n">$a</span>[<span class="s">'price'</span>] &lt;=&gt; <span class="n">$b</span>[<span class="s">'price'</span>]);
+
+<span class="c">// Նվազման կարգով — պարզապես փոխիր տեղերով</span>
+<span class="f">usort</span>(<span class="n">$products</span>, <span class="k">fn</span>(<span class="n">$a</span>, <span class="n">$b</span>) =&gt; <span class="n">$b</span>[<span class="s">'price'</span>] &lt;=&gt; <span class="n">$a</span>[<span class="s">'price'</span>]);
+
+<span class="c">// Ըստ անվան</span>
+<span class="f">usort</span>(<span class="n">$products</span>, <span class="k">fn</span>(<span class="n">$a</span>, <span class="n">$b</span>) =&gt; <span class="f">strcmp</span>(<span class="n">$a</span>[<span class="s">'name'</span>], <span class="n">$b</span>[<span class="s">'name'</span>]));</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag"><code>&lt;=&gt;</code> — «տիեզերանավը»</span>
+      <p>Վերադարձնում է <code>-1</code>, <code>0</code> կամ <code>1</code>՝ կախված համեմատությունից։<br><br>
+      Առանց դրա պիտի գրեիր՝ <code>$a['price'] &lt; $b['price'] ? -1 : ($a['price'] &gt; $b['price'] ? 1 : 0)</code>։<br><br>
+      Նաև ուշադրություն՝ <code>usort</code>-ը փոխում է <strong>բուն զանգվածը</strong> և չի վերադարձնում նորը։ Դա JS-ի <code>.sort()</code>-ի պես է, ոչ <code>.map()</code>-ի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Ֆունկցիաներ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հիմնականը ծանոթ է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">formatPrice</span>(<span class="n">$price</span>) {
+    <span class="k">return</span> <span class="f">number_format</span>(<span class="n">$price</span>, <span class="n">0</span>, <span class="s">"."</span>, <span class="s">" "</span>) . <span class="s">" ֏"</span>;
+}
+
+<span class="k">echo</span> <span class="f">formatPrice</span>(<span class="n">450000</span>);    <span class="c">// 450 000 ֏</span></code></pre>
+    </div>
+
+    <h3>Տիպերի հայտարարում — JS-ում սա չկար</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>նույն ֆունկցիան, ամրագրված</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);   <span class="c">// ֆայլի ամենասկզբում ⭐</span>
+
+<span class="k">function</span> <span class="f">formatPrice</span>(<span class="k">int</span> <span class="n">$price</span>): <span class="k">string</span>
+{
+    <span class="k">return</span> <span class="f">number_format</span>(<span class="n">$price</span>, <span class="n">0</span>, <span class="s">"."</span>, <span class="s">" "</span>) . <span class="s">" ֏"</span>;
+}
+
+<span class="f">formatPrice</span>(<span class="n">450000</span>);     <span class="c">// ✅ 450 000 ֏</span>
+<span class="f">formatPrice</span>(<span class="s">"շատ"</span>);      <span class="c">// ❌ TypeError — անմիջապես, հստակ սխալ</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ սա արժեքավոր է</span>
+      <p>JS-ում <code>formatPrice("շատ")</code> կվերադարձներ <code>NaN</code> կամ <code>"շատ ֏"</code>, և սխալը կհայտնվեր ինչ-որ տեղ էջում՝ առանց բացատրության։<br><br>
+      PHP-ն <code>strict_types</code>-ով անմիջապես ասում է․ «այս ֆունկցիան <code>int</code> է ուզում, դու տվեցիր <code>string</code>, տողը՝ 42»։<br><br>
+      Դա TypeScript-ի գաղափարն է՝ ներկառուցված լեզվի մեջ։ <strong>Դիր <code>declare(strict_types=1)</code> ամեն նոր ֆայլում։</strong></p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>տիպերի տեսականին</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">f</span>(<span class="k">int</span> <span class="n">$a</span>, <span class="k">string</span> <span class="n">$b</span>, <span class="k">float</span> <span class="n">$c</span>, <span class="k">bool</span> <span class="n">$d</span>, <span class="k">array</span> <span class="n">$e</span>): <span class="k">void</span> {}
+
+<span class="c">// Կարող է լինել null</span>
+<span class="k">function</span> <span class="f">findProduct</span>(<span class="k">int</span> <span class="n">$id</span>): ?<span class="k">array</span> { ... }
+
+<span class="c">// Լռելյայն արժեք</span>
+<span class="k">function</span> <span class="f">getProducts</span>(<span class="k">int</span> <span class="n">$limit</span> = <span class="n">10</span>): <span class="k">array</span> { ... }
+
+<span class="c">// Անվանված արգումենտներ (PHP 8+)</span>
+<span class="f">createUser</span>(<span class="n">name</span>: <span class="s">"Անի"</span>, <span class="n">isAdmin</span>: <span class="k">true</span>);</code></pre>
+    </div>
+
+    <h3>Տեսանելիության տիրույթ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>այստեղ PHP-ն խիստ տարբերվում է JS-ից ⚠️</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="n">$siteName</span> = <span class="s">"ՏեխնոՄարկետ"</span>;
+
+<span class="k">function</span> <span class="f">showTitle</span>() {
+    <span class="k">echo</span> <span class="n">$siteName</span>;   <span class="c">// ❌ Warning: Undefined variable</span>
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ֆունկցիաները չեն տեսնում արտաքին փոփոխականները</span>
+      <p>JS-ում ֆունկցիան տեսնում է ամեն ինչ իր վերևում (closure)։ <strong>PHP-ում՝ ոչ։</strong><br><br>
+      Ֆունկցիայի ներսում աշխարհն ամբողջովին փակ է — կան միայն պարամետրերը։<br><br>
+      Դա սկզբում անհարմար է թվում, բայց իրականում <em>լավ</em> է․ ֆունկցիան չի կարող գաղտնի կախված լինել գլոբալ վիճակից։ Կարդալով ստորագրությունը՝ գիտես, ինչից է կախված։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երեք ելք</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ✅ 1. Փոխանցել պարամետրով — ՃԻՇՏ ձևը</span>
+<span class="k">function</span> <span class="f">showTitle</span>(<span class="k">string</span> <span class="n">$name</span>): <span class="k">void</span> {
+    <span class="k">echo</span> <span class="n">$name</span>;
+}
+<span class="f">showTitle</span>(<span class="n">$siteName</span>);
+
+<span class="c">// ⚠️ 2. global — աշխատում է, բայց խուսափիր</span>
+<span class="k">function</span> <span class="f">showTitle2</span>(): <span class="k">void</span> {
+    <span class="k">global</span> <span class="n">$siteName</span>;
+    <span class="k">echo</span> <span class="n">$siteName</span>;
+}
+
+<span class="c">// ✅ 3. Հաստատուն — կոնֆիգուրացիայի համար</span>
+<span class="k">const</span> <span class="n">SITE_NAME</span> = <span class="s">"ՏեխնոՄարկետ"</span>;
+<span class="k">function</span> <span class="f">showTitle3</span>(): <span class="k">void</span> {
+    <span class="k">echo</span> <span class="n">SITE_NAME</span>;   <span class="c">// հաստատունները գլոբալ են</span>
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ խուսափել <code>global</code>-ից</span>
+      <p>Ֆունկցիան դառնում է կախված արտաքին վիճակից, որը ստորագրության մեջ չի երևում։ Փորձարկելը դժվարանում է, տեղափոխելը՝ անհնար։<br><br>
+      Դաս 11-ում կտեսնենք ավելի լավ լուծում՝ դասեր, որտեղ վիճակը պահվում է օբյեկտի ներսում։ Մինչ այդ՝ պարամետրեր և հաստատուններ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>include և require</h2>
+    <p>Առաջին քայլը դեպի կոդի կազմակերպում։ Դաս 5-ում սա կդառնա շաբլոնների համակարգ։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ձև</th><th>Ֆայլը չկա</th><th>Ե՞րբ</th></tr>
+      <tr><td><code>include</code></td><td>Warning, շարունակում է</td><td>Ոչ կրիտիկական մաս</td></tr>
+      <tr><td><code>require</code></td><td><strong>Fatal error, կանգնում է</strong></td><td>Կրիտիկական ⭐</td></tr>
+      <tr><td><code>include_once</code></td><td>Warning</td><td>Կրկնությունից պաշտպանված</td></tr>
+      <tr><td><code>require_once</code></td><td>Fatal error</td><td>Ֆունկցիաներ, դասեր ⭐</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>գործնականում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Կոնֆիգ և ֆունկցիաներ — առանց դրանց էջն անիմաստ է</span>
+<span class="k">require_once</span> <span class="s">'config.php'</span>;
+<span class="k">require_once</span> <span class="s">'functions.php'</span>;
+
+<span class="c">// Շաբլոնի մասեր</span>
+<span class="k">require</span> <span class="s">'partials/header.php'</span>;
+<span class="k">require</span> <span class="s">'partials/footer.php'</span>;</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ <code>_once</code> ֆունկցիաների համար</span>
+      <p>Եթե <code>functions.php</code>-ը միանա երկու անգամ, PHP-ն կփորձի հայտարարել նույն ֆունկցիան կրկին → <strong>Fatal error: Cannot redeclare</strong>։<br><br>
+      Իսկ շաբլոնի մասերի համար <code>_once</code> պետք չէ — երբեմն նույն բլոկը պիտի կրկնվի էջում մի քանի անգամ։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ուղիների խնդիրը ⭐</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ❌ Հարաբերական ուղին կախված է նրանից,
+//    ՈՐՏԵՂԻՑ է կանչվել ֆայլը</span>
+<span class="k">require</span> <span class="s">'partials/header.php'</span>;
+
+<span class="c">// ✅ Բացարձակ ուղի ընթացիկ ֆայլից</span>
+<span class="k">require</span> <span class="n">__DIR__</span> . <span class="s">'/partials/header.php'</span>;</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Սա ժամեր է խլում, երբ չգիտես</span>
+      <p><code>__DIR__</code>-ը այն թղթապանակն է, որտեղ գտնվում է <strong>ընթացիկ ֆայլը</strong>։<br><br>
+      Առանց դրա՝ <code>index.php</code>-ից <code>require 'partials/header.php'</code>-ն աշխատում է։ Բայց երբ <code>admin/products.php</code>-ից կանչում ես նույն <code>functions.php</code>-ը, որն իր հերթին ինչ-որ բան է միացնում — ուղին հաշվվում է <code>admin/</code>-ից, և ամեն ինչ փլվում է։<br><br>
+      Դաս 14-ում, երբ ամեն հարցում կանցնի մեկ <code>index.php</code>-ով, <code>__DIR__</code>-ը կդառնա պարտադիր։ Սովորիր հիմա։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ռեգիստրի հիշեցում</span>
+      <p>Windows-ում <code>require 'Functions.php'</code>-ը կաշխատի, նույնիսկ եթե ֆայլը <code>functions.php</code> է։ Հրապարակելուց հետո Linux սերվերում՝ <strong>ոչ</strong>։<br><br>
+      Նույն սխալը, ինչ HTML բլոկի Դաս 23-ի GitHub Pages-ում։ Կանոն՝ բոլոր ֆայլերի անունները փոքրատառ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Դասարանական</h2>
+    <p>Ապրանքների ֆիլտր և տեսակավորում — առանց բազայի, զուտ զանգվածներով։</p>
+
+    <div class="tree">technomarket/
+├── index.php
+├── data.php           ← Դաս 2-ից
+├── functions.php      ← նոր
+└── partials/
+    ├── header.php     ← նոր
+    └── footer.php     ← նոր</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>functions.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">function</span> <span class="f">formatPrice</span>(<span class="k">int</span> <span class="n">$price</span>): <span class="k">string</span>
+{
+    <span class="k">return</span> <span class="f">number_format</span>(<span class="n">$price</span>, <span class="n">0</span>, <span class="s">"."</span>, <span class="s">"&amp;nbsp;"</span>) . <span class="s">"&amp;nbsp;֏"</span>;
+}
+
+<span class="k">function</span> <span class="f">finalPrice</span>(<span class="k">array</span> <span class="n">$product</span>): <span class="k">int</span>
+{
+    <span class="n">$discount</span> = <span class="n">$product</span>[<span class="s">'discount'</span>] ?? <span class="n">0</span>;
+    <span class="k">return</span> (<span class="k">int</span>) <span class="f">round</span>(<span class="n">$product</span>[<span class="s">'price'</span>] * (<span class="n">100</span> - <span class="n">$discount</span>) / <span class="n">100</span>);
+}
+
+<span class="k">function</span> <span class="f">filterByMaxPrice</span>(<span class="k">array</span> <span class="n">$products</span>, <span class="k">int</span> <span class="n">$max</span>): <span class="k">array</span>
+{
+    <span class="n">$result</span> = <span class="f">array_filter</span>(
+        <span class="n">$products</span>,
+        <span class="k">fn</span>(<span class="k">array</span> <span class="n">$p</span>): <span class="k">bool</span> =&gt; <span class="f">finalPrice</span>(<span class="n">$p</span>) &lt;= <span class="n">$max</span>
+    );
+
+    <span class="k">return</span> <span class="f">array_values</span>(<span class="n">$result</span>);   <span class="c">// ⭐ վերահամարակալում</span>
+}
+
+<span class="k">function</span> <span class="f">sortProducts</span>(<span class="k">array</span> <span class="n">$products</span>, <span class="k">string</span> <span class="n">$by</span> = <span class="s">'price_asc'</span>): <span class="k">array</span>
+{
+    <span class="k">match</span> (<span class="n">$by</span>) {
+        <span class="s">'price_asc'</span>  =&gt; <span class="f">usort</span>(<span class="n">$products</span>, <span class="k">fn</span>(<span class="n">$a</span>, <span class="n">$b</span>) =&gt; <span class="f">finalPrice</span>(<span class="n">$a</span>) &lt;=&gt; <span class="f">finalPrice</span>(<span class="n">$b</span>)),
+        <span class="s">'price_desc'</span> =&gt; <span class="f">usort</span>(<span class="n">$products</span>, <span class="k">fn</span>(<span class="n">$a</span>, <span class="n">$b</span>) =&gt; <span class="f">finalPrice</span>(<span class="n">$b</span>) &lt;=&gt; <span class="f">finalPrice</span>(<span class="n">$a</span>)),
+        <span class="s">'name'</span>       =&gt; <span class="f">usort</span>(<span class="n">$products</span>, <span class="k">fn</span>(<span class="n">$a</span>, <span class="n">$b</span>) =&gt; <span class="f">strcmp</span>(<span class="n">$a</span>[<span class="s">'name'</span>], <span class="n">$b</span>[<span class="s">'name'</span>])),
+        <span class="k">default</span>      =&gt; <span class="k">null</span>,
+    };
+
+    <span class="k">return</span> <span class="n">$products</span>;
+}
+
+<span class="k">function</span> <span class="f">totalValue</span>(<span class="k">array</span> <span class="n">$products</span>): <span class="k">int</span>
+{
+    <span class="k">return</span> <span class="f">array_reduce</span>(
+        <span class="n">$products</span>,
+        <span class="k">fn</span>(<span class="k">int</span> <span class="n">$sum</span>, <span class="k">array</span> <span class="n">$p</span>): <span class="k">int</span> =&gt; <span class="n">$sum</span> + <span class="f">finalPrice</span>(<span class="n">$p</span>),
+        <span class="n">0</span>
+    );
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">require_once</span> <span class="n">__DIR__</span> . <span class="s">'/data.php'</span>;
+<span class="k">require_once</span> <span class="n">__DIR__</span> . <span class="s">'/functions.php'</span>;
+
+<span class="n">$visible</span> = <span class="f">sortProducts</span>(<span class="n">$products</span>, <span class="s">'price_asc'</span>);
+<span class="p">?&gt;</span>
+<span class="p">&lt;?php</span> <span class="k">require</span> <span class="n">__DIR__</span> . <span class="s">'/partials/header.php'</span>; <span class="p">?&gt;</span>
+
+<span class="p">&lt;</span><span class="t">section</span> <span class="f">id</span>=<span class="s">"products"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-100"</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">h2</span> <span class="f">class</span>=<span class="s">"section-title mb-30"</span><span class="p">&gt;</span>
+                Ապրանքներ (&lt;?= <span class="f">count</span>(<span class="n">$visible</span>) ?&gt;)
+            <span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"grid-auto gap-20"</span><span class="p">&gt;</span>
+            <span class="p">&lt;?php</span> <span class="k">foreach</span> (<span class="n">$visible</span> <span class="k">as</span> <span class="n">$p</span>): <span class="p">?&gt;</span>
+
+                <span class="p">&lt;</span><span class="t">article</span> <span class="f">class</span>=<span class="s">"card"</span><span class="p">&gt;</span>
+                    <span class="p">&lt;?php</span> <span class="k">if</span> (<span class="n">$p</span>[<span class="s">'discount'</span>] &gt; <span class="n">0</span>): <span class="p">?&gt;</span>
+                        <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"card__badge"</span><span class="p">&gt;</span>-&lt;?= <span class="n">$p</span>[<span class="s">'discount'</span>] ?&gt;%<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+                    <span class="p">&lt;?php</span> <span class="k">endif</span>; <span class="p">?&gt;</span>
+
+                    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__body"</span><span class="p">&gt;</span>
+                        <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"card__title"</span><span class="p">&gt;</span>&lt;?= <span class="n">$p</span>[<span class="s">'name'</span>] ?&gt;<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+                        <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__meta"</span><span class="p">&gt;</span>&lt;?= <span class="n">$p</span>[<span class="s">'specs'</span>] ?&gt;<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+                        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__footer"</span><span class="p">&gt;</span>
+                            <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__price"</span><span class="p">&gt;</span>&lt;?= <span class="f">formatPrice</span>(<span class="f">finalPrice</span>(<span class="n">$p</span>)) ?&gt;<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+                            <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"btn btn--primary btn--sm"</span><span class="p">&gt;</span>Գնել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+                        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+                    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+                <span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;?php</span> <span class="k">endforeach</span>; <span class="p">?&gt;</span>
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+
+<span class="p">&lt;?php</span> <span class="k">require</span> <span class="n">__DIR__</span> . <span class="s">'/partials/footer.php'</span>; <span class="p">?&gt;</span></code></pre>
+    </div>
+
+    <ol>
+      <li>Ստեղծիր <code>functions.php</code>-ը <code>declare(strict_types=1)</code>-ով</li>
+      <li>Տեղափոխիր <code>&lt;head&gt;</code>-ը և header-ը <code>partials/header.php</code></li>
+      <li>Տեղափոխիր footer-ը <code>partials/footer.php</code></li>
+      <li>Միացրու դրանք <code>__DIR__</code>-ով</li>
+      <li>Օգտագործիր <code>finalPrice()</code>-ը զեղչը հաշվելու համար</li>
+      <li>Փորձարկիր <code>sortProducts</code>-ի երեք ռեժիմը</li>
+      <li>Ցուցադրիր ապրանքների քանակը վերնագրում</li>
+      <li>Փորձիր <code>formatPrice("շատ")</code> — տես TypeError-ը</li>
+    </ol>
+
+    <div class="tip note">
+      <span class="tag">Երկրորդ և երրորդ քայլերի արժեքը</span>
+      <p>Header-ը և footer-ը հիմա <strong>մեկ տեղում են</strong>։ Երբ ավելացնես երկրորդ էջ (Դաս 6-ում՝ կոնտակտների ֆորմա), դրանք չես կրկնօրինակի։<br><br>
+      Իսկ երբ պիտի փոխես մենյուն, կփոխես մեկ ֆայլում, ոչ քսանում։ Դա նույն սկզբունքն է, ինչ <code>global.css</code>-ի դեպքում՝ <em>մեկ աղբյուր ճշմարտության</em>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Կատարիր դասարանականի 8 քայլը։</li>
+      <li>Ավելացրու <code>data.php</code>-ում <code>category</code> դաշտ և գրիր <code>filterByCategory()</code>։</li>
+      <li>Գրիր <code>findProduct(array $products, int $id): ?array</code>։ Ի՞նչ է վերադարձնում, երբ չի գտնում։</li>
+      <li>Ցուցադրիր, ինչ է լինում <code>array_filter</code>-ից հետո առանց <code>array_values</code>-ի։ Օգտագործիր <code>var_dump</code>։</li>
+      <li>Համեմատիր <code>json_encode</code>-ի արդյունքը <code>array_values</code>-ով և առանց դրա։</li>
+      <li>Փորձարկիր <code>strict_types</code>-ը՝ միացրած և անջատած։ Ի՞նչ տարբերություն։</li>
+      <li>Ցուցադրիր տեսանելիության տիրույթի խնդիրը և ուղղիր երեք ձևով։</li>
+      <li>Ջնջիր <code>__DIR__</code>-ը <code>require</code>-ից և կանչիր էջը ենթաթղթապանակից։ Նկարագրիր սխալը։</li>
+      <li>Գրիր <code>groupByCategory()</code>, որը վերադարձնում է զանգված, որտեղ բանալին կատեգորիան է։</li>
+      <li>Հաշվիր միջին գինը, ամենաթանկը և ամենաէժանը՝ երեք ֆունկցիայով տիպերի հայտարարմամբ։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>$arr[] = $x</code></td><td>Ավելացնել վերջում</td></tr>
+      <tr><td><code>count($arr)</code></td><td>Քանակ</td></tr>
+      <tr><td><code>array_map(fn, $arr)</code></td><td>Ֆունկցիան առաջ ⚠️</td></tr>
+      <tr><td><code>array_filter($arr, fn)</code></td><td>Զանգվածն առաջ ⚠️</td></tr>
+      <tr><td><code>array_values($arr)</code></td><td>Վերահամարակալում ⭐</td></tr>
+      <tr><td><code>usort($arr, fn)</code></td><td>Փոխում է բուն զանգվածը</td></tr>
+      <tr><td><code>&lt;=&gt;</code></td><td>Համեմատություն տեսակավորման համար</td></tr>
+      <tr><td><code>declare(strict_types=1)</code></td><td>Խիստ տիպեր ⭐</td></tr>
+      <tr><td><code>function f(int $a): string</code></td><td>Տիպերի հայտարարում</td></tr>
+      <tr><td><code>?array</code></td><td>Կարող է լինել <code>null</code></td></tr>
+      <tr><td><code>require_once __DIR__ . '/x.php'</code></td><td>Ապահով միացում ⭐</td></tr>
+    </table>
+    </div>
+
+    <h3>Երեք թակարդ</h3>
+    <div class="tree">1. array_filter → բանալիները մնում են բացերով
+       → array_values() JSON-ից և ցիկլերից առաջ
+
+2. Ֆունկցիաները չեն տեսնում արտաքին փոփոխականները
+       → փոխանցիր պարամետրով
+
+3. require առանց __DIR__-ի
+       → կոտրվում է, երբ կանչում ես այլ թղթապանակից</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Ամեն ֆայլ սկսվում է <code>declare(strict_types=1)</code>-ով</li>
+      <li>Բոլոր ֆունկցիաներն ունեն տիպերի հայտարարում</li>
+      <li><code>require</code>-ը միշտ <code>__DIR__</code>-ով է</li>
+      <li>Ֆայլերի անունները փոքրատառ են</li>
+      <li>Չկա <code>global</code></li>
+      <li>Header-ը և footer-ը առանձին ֆայլերում են</li>
+      <li><code>array_filter</code>-ից հետո կա <code>array_values</code></li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչու PHP-ում զանգվածը և օբյեկտը մեկ տիպ են</li>
+      <li>Գիտե՞մ, ինչու <code>array_values</code>-ը կարևոր է</li>
+      <li>Հասկանո՞ւմ եմ, ինչու ֆունկցիաները չեն տեսնում գլոբալ փոփոխականները</li>
+      <li>Կարո՞ղ եմ բացատրել <code>strict_types</code>-ի արժեքը</li>
+      <li>Գիտե՞մ, ինչու <code>__DIR__</code></li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p><strong>AI որպես աշխատանքային գործիք։</strong> Դիտավորյալ դնում ենք այս դասը հենց հիմա — որ մնացած 20 դասն ու վերջնական նախագիծը անես դրանով։<br><br>
+      Կսովորենք պրոմպտների կառուցվածքը, արդյունքի ստուգումը, հալյուցինացիաների ճանաչումը, և կխոսենք սահմանների մասին՝ ի՞նչ երբեք չդնել չաթում և ինչո՞ւ հարցազրույցում AI-ի օգտագործումը ավտոմատ մերժում է։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>PHP Բլոկ · Դաս 3 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

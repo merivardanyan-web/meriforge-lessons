@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 12 — Փուչիկացում և դելեգացիա</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 12 · 2 ժամ</p>
+  <h1>Փուչիկացում և դելեգացիա</h1>
+  <p class="lede">Անցյալ դասի վերջին տնայինը չաշխատեց՝ render-ից հետո կոճակները մեռան։ Այսօր հասկանում ենք՝ ինչու, և սովորում ենք այն հնարքը, որով մեկ listener-ը կարող է սպասարկել հազար կոճակ։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 09–11</span>
+    <span>Բլոկ 2 · DOM և իրադարձություններ</span>
+    <span>Դասարանում՝ ամբողջական to-do</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ինչո՞ւ են կորչում մշակիչները render-ից հետո</li>
+      <li>Փուչիկացում (bubbling) — իրադարձությունը բարձրանում է վեր</li>
+      <li>Որսման փուլը (capturing)</li>
+      <li><code>stopPropagation</code> և ե՞րբ չօգտագործել այն</li>
+      <li>Դելեգացիա — մեկ listener բոլորի համար</li>
+      <li><code>e.target.closest()</code> — ճիշտ ձևը</li>
+      <li>Ամբողջական to-do ցուցակ՝ ավելացում, ջնջում, խմբագրում</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Խնդիրը</h2>
+    <p>Վերցնենք Դաս 10-ի կատալոգը և ավելացնենք կոճակների մշակիչներ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>թվում է՝ ամեն ինչ ճիշտ է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">render</span>(list) {
+  container.innerHTML = list.<span class="f">map</span>(<span class="f">createCard</span>).<span class="f">join</span>(<span class="s">""</span>);
+}
+
+<span class="f">render</span>(products);
+
+<span class="c">// Կախում ենք մշակիչները</span>
+document.<span class="f">querySelectorAll</span>(<span class="s">".btn"</span>).<span class="f">forEach</span>(btn =&gt; {
+  btn.<span class="f">addEventListener</span>(<span class="s">"click"</span>, () =&gt; {
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Ավելացվեց՝"</span>, btn.dataset.id);
+  });
+});
+
+<span class="c">// Աշխատում է։ Բայց հիմա ֆիլտրենք․</span>
+<span class="f">render</span>(products.<span class="f">filter</span>(p =&gt; p.inStock));</code></pre>
+<pre class="out"><span class="m">Console  (սեղմում ենք կոճակին ֆիլտրից հետո)</span>
+<span class="m">(ոչինչ չի կատարվում)</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ</span>
+      <p><code>innerHTML = ...</code>-ը <strong>ջնջում է հին էլեմենտները</strong> և ստեղծում բոլորովին նորերը։ Հին կոճակների վրա կախված մշակիչները ջնջվեցին նրանց հետ միասին։ Նոր կոճակները տեսքով նույնն են, բայց դրանք <em>ուրիշ</em> օբյեկտներ են՝ առանց մշակիչների։</p>
+    </div>
+
+    <p>Կարելի է ամեն <code>render</code>-ից հետո նորից կախել բոլոր մշակիչները։ Բայց դա անարդյունավետ է․ 100 ապրանք = 100 listener, և ամեն ֆիլտրից հետո՝ նորից 100։ Կա շատ ավելի լավ լուծում։</p>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Փուչիկացում (bubbling)</h2>
+    <p>Երբ սեղմում ես էլեմենտի վրա, իրադարձությունը <strong>չի կանգնում</strong> այնտեղ։ Այն բարձրանում է դեպի վեր՝ ծնողից ծնող, մինչև <code>document</code>։ Ինչպես ջրի պղպջակը ներքևից վեր։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>փորձենք</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// &lt;div class="row"&gt;</span>
+<span class="c">//   &lt;div class="col"&gt;</span>
+<span class="c">//     &lt;button class="btn"&gt;Գնել&lt;/button&gt;</span>
+<span class="c">//   &lt;/div&gt;</span>
+<span class="c">// &lt;/div&gt;</span>
+
+document.<span class="f">querySelector</span>(<span class="s">".row"</span>)
+  .<span class="f">addEventListener</span>(<span class="s">"click"</span>, () =&gt; <span class="f">console</span>.<span class="f">log</span>(<span class="s">"3. row"</span>));
+
+document.<span class="f">querySelector</span>(<span class="s">".col"</span>)
+  .<span class="f">addEventListener</span>(<span class="s">"click"</span>, () =&gt; <span class="f">console</span>.<span class="f">log</span>(<span class="s">"2. col"</span>));
+
+document.<span class="f">querySelector</span>(<span class="s">".btn"</span>)
+  .<span class="f">addEventListener</span>(<span class="s">"click"</span>, () =&gt; <span class="f">console</span>.<span class="f">log</span>(<span class="s">"1. btn"</span>));</code></pre>
+<pre class="out"><span class="m">Console  (սեղմեցինք ՄԻԱՅՆ կոճակին)</span>
+<span class="r">1. btn</span>
+<span class="r">2. col</span>
+<span class="r">3. row</span></pre>
+    </div>
+
+    <p>Մեկ սեղմում — երեք մշակիչ։ Իրադարձությունն անցավ ամբողջ ճանապարհը ներքևից վեր։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ամբողջ ճանապարհը</div><button class="copy">Պատճենել</button></div>
+<pre><code>document
+  ↑
+ html
+  ↑
+ body
+  ↑
+ main
+  ↑
+section
+  ↑
+ .row        ← 3
+  ↑
+ .col        ← 2
+  ↑
+ button      ← 1  ՍԵՂՄԵՑԻՆ ԱՅՍՏԵՂ</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Այժմ պարզ է</span>
+      <p>Հիշիր Դաս 11-ի մոդալը՝ <code>if (e.target === modal)</code>։ Առանց այդ ստուգման ներսի տեքստին սեղմելիս իրադարձությունը կբարձրանար մինչև <code>.modal</code>, և պատուհանը կփակվեր։ Հիմա հասկանում ես՝ ինչու։</p>
+    </div>
+
+    <h3>Ամեն մշակիչում <code>target</code>-ը նույնն է</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>target չի փոխվում, currentTarget-ը՝ այո</div><button class="copy">Պատճենել</button></div>
+<pre><code>document.<span class="f">querySelector</span>(<span class="s">".row"</span>).<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"target:"</span>, e.target.tagName);
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"currentTarget:"</span>, e.currentTarget.className);
+});</code></pre>
+<pre class="out"><span class="m">Console  (սեղմեցինք կոճակին)</span>
+<span class="r">target: BUTTON</span>
+<span class="r">currentTarget: row</span></pre>
+    </div>
+
+    <p><strong>Ահա ամբողջ գաղտնիքը։</strong> Listener-ը կախված է <code>.row</code>-ի վրա, բայց <code>e.target</code>-ը ասում է՝ իսկապես որտեղ սեղմեցին։ Սա հենց դելեգացիայի հիմքն է։</p>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>stopPropagation</h2>
+    <p>Փուչիկացումը կարելի է կանգնեցնել։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>կանգնեցնում ենք</div><button class="copy">Պատճենել</button></div>
+<pre><code>document.<span class="f">querySelector</span>(<span class="s">".btn"</span>).<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+  e.<span class="f">stopPropagation</span>();
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"1. btn — և վերջ"</span>);
+});</code></pre>
+<pre class="out"><span class="m">Console  (սեղմեցինք կոճակին)</span>
+<span class="r">1. btn — և վերջ</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Զգուշությամբ</span>
+      <p><code>stopPropagation</code>-ը հաճախ սկսնակների «համընդհանուր դեղամիջոցն» է։ Բայց այն կարող է կոտրել այլ ֆունկցիոնալություն՝ մոդալի փակումը, վերլուծական սկրիպտները, դելեգացիան։ Առաջին լուծումը <strong>չպիտի</strong> լինի <code>stopPropagation</code>։ Նախ մտածիր՝ կարո՞ղ ես խնդիրը լուծել <code>e.target</code>-ի ստուգումով։</p>
+    </div>
+
+    <h3>Որսման փուլը</h3>
+    <p>Իրականում իրադարձությունն անցնում է <strong>երկու փուլ</strong>․ նախ վերևից ներքև (որսում), հետո ներքևից վեր (փուչիկացում)։ Լռելյայն մենք աշխատում ենք երկրորդ փուլում։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>capture: true</div><button class="copy">Պատճենել</button></div>
+<pre><code>row.<span class="f">addEventListener</span>(<span class="s">"click"</span>, () =&gt; <span class="f">console</span>.<span class="f">log</span>(<span class="s">"row — որսում"</span>), <span class="k">true</span>);
+row.<span class="f">addEventListener</span>(<span class="s">"click"</span>, () =&gt; <span class="f">console</span>.<span class="f">log</span>(<span class="s">"row — փուչիկ"</span>));
+btn.<span class="f">addEventListener</span>(<span class="s">"click"</span>, () =&gt; <span class="f">console</span>.<span class="f">log</span>(<span class="s">"btn"</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">row — որսում</span>
+<span class="r">btn</span>
+<span class="r">row — փուչիկ</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Գործնականում</span>
+      <p>Որսման փուլը օգտագործվում է շատ հազվադեպ։ Պիտի իմանաս, որ այն կա, բայց 99% դեպքերում աշխատում ես փուչիկացման հետ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դելեգացիա</h2>
+    <p>Գաղափարը՝ listener-ը կախում ենք <strong>ծնողի</strong> վրա, որը <em>միշտ</em> կա էջում։ Երբ սեղմում են երեխաներից որևէ մեկին, իրադարձությունը բարձրանում է ծնողի մոտ, և մենք <code>e.target</code>-ով պարզում ենք՝ ում սեղմեցին։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հին ձև — 100 listener</div><button class="copy">Պատճենել</button></div>
+<pre><code>document.<span class="f">querySelectorAll</span>(<span class="s">".btn"</span>).<span class="f">forEach</span>(btn =&gt; {
+  btn.<span class="f">addEventListener</span>(<span class="s">"click"</span>, () =&gt; { ... });
+});
+<span class="c">// ❌ չի աշխատում նոր էլեմենտների վրա</span>
+<span class="c">// ❌ ամեն render-ից հետո պիտի կրկնել</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>դելեգացիա — 1 listener ✅</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> container = document.<span class="f">querySelector</span>(<span class="s">"#products"</span>);
+
+container.<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+  <span class="k">const</span> btn = e.target.<span class="f">closest</span>(<span class="s">".btn"</span>);
+
+  <span class="k">if</span> (!btn) <span class="k">return</span>;              <span class="c">// սեղմեցին ուրիշ տեղ — անտեսում ենք</span>
+
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Ավելացվեց՝"</span>, btn.dataset.id);
+});</code></pre>
+    </div>
+
+    <p>Հիմա կարող ես <code>render</code> անել քանի անգամ ուզես՝ listener-ը մնում է <code>container</code>-ի վրա, որը երբեք չի ջնջվում։ Նոր կոճակները ինքնաբերաբար «աշխատում են»։</p>
+
+    <h3>Ինչո՞ւ <code>closest</code>, ոչ թե ուղիղ ստուգում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>փխրուն ձև</div><button class="copy">Պատճենել</button></div>
+<pre><code>container.<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+  <span class="k">if</span> (e.target.classList.<span class="f">contains</span>(<span class="s">"btn"</span>)) {   <span class="c">// ❌ փխրուն</span>
+    <span class="f">console</span>.<span class="f">log</span>(e.target.dataset.id);
+  }
+});
+
+<span class="c">// Աշխատում է, մինչև կոճակի ներսում թեգ ավելացնես․</span>
+<span class="c">// &lt;button class="btn"&gt;&lt;span&gt;Գնել&lt;/span&gt;&lt;/button&gt;</span>
+<span class="c">// Հիմա e.target-ը SPAN է, ոչ BUTTON → պայմանը false է</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ոսկե օրինաչափություն</span>
+      <p><code>const el = e.target.closest(".selector"); if (!el) return;</code><br>
+      Այս երկու տողը կգրես հարյուրավոր անգամ։ <code>closest</code>-ը բարձրանում է վեր՝ սկսած հենց <code>e.target</code>-ից, ուստի աշխատում է անկախ նրանից՝ ինչ կա կոճակի ներսում։</p>
+    </div>
+
+    <h3>Մի քանի գործողություն մեկ մշակիչում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>data-action օրինաչափություն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// &lt;button data-action="edit"   data-id="3"&gt;✎&lt;/button&gt;</span>
+<span class="c">// &lt;button data-action="delete" data-id="3"&gt;✕&lt;/button&gt;</span>
+
+list.<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+  <span class="k">const</span> btn = e.target.<span class="f">closest</span>(<span class="s">"[data-action]"</span>);
+  <span class="k">if</span> (!btn) <span class="k">return</span>;
+
+  <span class="k">const</span> { action, id } = btn.dataset;   <span class="c">// Դաս 7</span>
+
+  <span class="k">switch</span> (action) {                     <span class="c">// Դաս 2</span>
+    <span class="k">case</span> <span class="s">"edit"</span>:
+      <span class="f">editItem</span>(id);
+      <span class="k">break</span>;
+    <span class="k">case</span> <span class="s">"delete"</span>:
+      <span class="f">deleteItem</span>(id);
+      <span class="k">break</span>;
+  }
+});</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Առավելությունները</span>
+      <p><strong>1.</strong> Աշխատում է դինամիկ ստեղծված էլեմենտների վրա։<br>
+      <strong>2.</strong> Մեկ listener հազարի փոխարեն — ավելի քիչ հիշողություն։<br>
+      <strong>3.</strong> Ամբողջ տրամաբանությունը մեկ տեղում է։<br>
+      <strong>4.</strong> Ոչ մի <code>removeEventListener</code>-ի կարիք։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Դասարանական · To-do ցուցակ</h2>
+    <p>Ամբողջական հավելված՝ ավելացում, նշում, խմբագրում, ջնջում։ Ամեն ինչ՝ <strong>մեկ</strong> click listener-ով։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.html</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">main</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">section</span> <span class="f">class</span>=<span class="s">"todo"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+
+          <span class="p">&lt;</span><span class="t">h2</span><span class="p">&gt;</span>Իմ գործերը<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+
+          <span class="p">&lt;</span><span class="t">form</span> <span class="f">class</span>=<span class="s">"todo__form"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"text"</span> <span class="f">class</span>=<span class="s">"todo__input"</span>
+                   <span class="f">placeholder</span>=<span class="s">"Նոր գործ..."</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">button</span> <span class="f">type</span>=<span class="s">"submit"</span><span class="p">&gt;</span>Ավելացնել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+          <span class="p">&lt;/</span><span class="t">form</span><span class="p">&gt;</span>
+
+          <span class="p">&lt;</span><span class="t">ul</span> <span class="f">class</span>=<span class="s">"todo__list"</span><span class="p">&gt;&lt;/</span><span class="t">ul</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"todo__stats"</span><span class="p">&gt;&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">main</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.js — տվյալներ և render</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">let</span> todos = [
+  { id: <span class="n">1</span>, text: <span class="s">"Տնային գրել"</span>, done: <span class="k">false</span> },
+  { id: <span class="n">2</span>, text: <span class="s">"Հաց գնել"</span>,    done: <span class="k">true</span>  }
+];
+
+<span class="k">const</span> form  = document.<span class="f">querySelector</span>(<span class="s">".todo__form"</span>);
+<span class="k">const</span> input = document.<span class="f">querySelector</span>(<span class="s">".todo__input"</span>);
+<span class="k">const</span> list  = document.<span class="f">querySelector</span>(<span class="s">".todo__list"</span>);
+<span class="k">const</span> stats = document.<span class="f">querySelector</span>(<span class="s">".todo__stats"</span>);
+
+<span class="k">function</span> <span class="f">createItem</span>({ id, text, done }) {
+  <span class="k">return</span> <span class="s">`
+    &lt;li class="todo__item </span>${done ? <span class="s">"is-done"</span> : <span class="s">""</span>}<span class="s">" data-id="</span>${id}<span class="s">"&gt;
+      &lt;input type="checkbox" data-action="toggle" </span>${done ? <span class="s">"checked"</span> : <span class="s">""</span>}<span class="s">&gt;
+      &lt;span class="todo__text"&gt;</span>${text}<span class="s">&lt;/span&gt;
+      &lt;button data-action="edit"&gt;✎&lt;/button&gt;
+      &lt;button data-action="delete"&gt;✕&lt;/button&gt;
+    &lt;/li&gt;
+  `</span>;
+}
+
+<span class="k">function</span> <span class="f">render</span>() {
+  <span class="k">if</span> (todos.length === <span class="n">0</span>) {
+    list.innerHTML = <span class="s">`&lt;li class="todo__empty"&gt;Ցուցակը դատարկ է։&lt;/li&gt;`</span>;
+  } <span class="k">else</span> {
+    list.innerHTML = todos.<span class="f">map</span>(<span class="f">createItem</span>).<span class="f">join</span>(<span class="s">""</span>);
+  }
+
+  <span class="k">const</span> done = todos.<span class="f">filter</span>(t =&gt; t.done).length;
+  stats.textContent = <span class="s">`</span>${done}<span class="s"> / </span>${todos.length}<span class="s"> կատարված`</span>;
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.js — գործողություններ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">addTodo</span>(text) {
+  todos.<span class="f">push</span>({
+    id: <span class="f">Date</span>.<span class="f">now</span>(),        <span class="c">// պարզ ձև՝ եզակի id ստանալու</span>
+    text,                    <span class="c">// կարճ գրելաձև՝ text: text</span>
+    done: <span class="k">false</span>
+  });
+  <span class="f">render</span>();
+}
+
+<span class="k">function</span> <span class="f">deleteTodo</span>(id) {
+  todos = todos.<span class="f">filter</span>(t =&gt; t.id !== id);   <span class="c">// Դաս 6</span>
+  <span class="f">render</span>();
+}
+
+<span class="k">function</span> <span class="f">toggleTodo</span>(id) {
+  <span class="k">const</span> todo = todos.<span class="f">find</span>(t =&gt; t.id === id);
+  <span class="k">if</span> (todo) todo.done = !todo.done;
+  <span class="f">render</span>();
+}
+
+<span class="k">function</span> <span class="f">editTodo</span>(id) {
+  <span class="k">const</span> todo = todos.<span class="f">find</span>(t =&gt; t.id === id);
+  <span class="k">if</span> (!todo) <span class="k">return</span>;
+
+  <span class="k">const</span> newText = <span class="f">prompt</span>(<span class="s">"Խմբագրել գործը՝"</span>, todo.text);
+  <span class="k">if</span> (newText === <span class="k">null</span>) <span class="k">return</span>;          <span class="c">// սեղմեցին Cancel</span>
+
+  <span class="k">const</span> trimmed = newText.<span class="f">trim</span>();          <span class="c">// Դաս 8</span>
+  <span class="k">if</span> (trimmed === <span class="s">""</span>) <span class="k">return</span>;
+
+  todo.text = trimmed;
+  <span class="f">render</span>();
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.js — մեկ listener բոլորի համար</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Ֆորմա</span>
+form.<span class="f">addEventListener</span>(<span class="s">"submit"</span>, (e) =&gt; {
+  e.<span class="f">preventDefault</span>();                      <span class="c">// Դաս 11</span>
+
+  <span class="k">const</span> text = input.value.<span class="f">trim</span>();
+  <span class="k">if</span> (text === <span class="s">""</span>) <span class="k">return</span>;
+
+  <span class="f">addTodo</span>(text);
+  input.value = <span class="s">""</span>;
+  input.<span class="f">focus</span>();
+});
+
+<span class="c">// ★ Դելեգացիա — ամբողջ ցուցակի համար մեկ մշակիչ</span>
+list.<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+  <span class="k">const</span> btn = e.target.<span class="f">closest</span>(<span class="s">"[data-action]"</span>);
+  <span class="k">if</span> (!btn) <span class="k">return</span>;
+
+  <span class="k">const</span> item = btn.<span class="f">closest</span>(<span class="s">".todo__item"</span>);
+  <span class="k">const</span> id = <span class="f">Number</span>(item.dataset.id);       <span class="c">// dataset-ը միշտ տող է</span>
+
+  <span class="k">switch</span> (btn.dataset.action) {
+    <span class="k">case</span> <span class="s">"toggle"</span>: <span class="f">toggleTodo</span>(id); <span class="k">break</span>;
+    <span class="k">case</span> <span class="s">"edit"</span>:   <span class="f">editTodo</span>(id);   <span class="k">break</span>;
+    <span class="k">case</span> <span class="s">"delete"</span>: <span class="f">deleteTodo</span>(id); <span class="k">break</span>;
+  }
+});
+
+<span class="f">render</span>();</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ուշադրություն ճարտարապետությանը</span>
+      <p>Կա <strong>մեկ ճշմարտության աղբյուր</strong>՝ <code>todos</code> զանգվածը։ Ամեն գործողություն փոխում է զանգվածը և կանչում <code>render()</code>-ը։ DOM-ը երբեք ուղիղ չենք խմբագրում։<br><br>
+      Սա հենց այն սկզբունքն է, որի վրա կառուցված են React-ը, Vue-ն և բոլոր ժամանակակից ֆրեյմվորքերը՝ <strong>տվյալները փոխվում են → ինտերֆեյսը վերագծվում է</strong>։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Կարևոր մանրուք</span>
+      <p><code>item.dataset.id</code>-ն <strong>տող</strong> է, իսկ <code>todo.id</code>-ն՝ <strong>թիվ</strong>։ Առանց <code>Number()</code>-ի <code>t.id === id</code> համեմատությունը միշտ <code>false</code> կլիներ (Դաս 2՝ <code>===</code>)։ Սա ամենահաճախ հանդիպող սխալն է այս խնդրում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Խաղահրապարակ</h2>
+    <p>Կառուցում ենք ներդրված կառուցվածք հիշողությունում և հետևում՝ ինչպես է իրադարձությունը բարձրանում։</p>
+
+    <div class="pg">
+      <textarea id="pgCode" spellcheck="false">// Կառուցում ենք row > col > button > span
+const row = document.createElement("div");
+row.className = "row";
+
+const col = document.createElement("div");
+col.className = "col";
+
+const btn = document.createElement("button");
+btn.className = "btn";
+btn.dataset.action = "buy";
+btn.dataset.id = "42";
+
+const span = document.createElement("span");
+span.textContent = "Գնել";
+
+btn.append(span);
+col.append(btn);
+row.append(col);
+
+// Երեք մշակիչ
+row.addEventListener("click", () => console.log("3. row"));
+col.addEventListener("click", () => console.log("2. col"));
+btn.addEventListener("click", () => console.log("1. btn"));
+
+console.log("--- Սեղմում ենք span-ին ---");
+span.click();
+
+// Դելեգացիա
+console.log("--- Դելեգացիա ---");
+row.addEventListener("click", (e) => {
+  console.log("e.target:", e.target.tagName);
+  console.log("e.currentTarget:", e.currentTarget.className);
+
+  const b = e.target.closest("[data-action]");
+  if (!b) return console.log("Կոճակ չէ");
+
+  console.log("action:", b.dataset.action, "id:", b.dataset.id);
+});
+
+span.click();</textarea>
+      <div class="pg__actions">
+        <button class="run" id="runBtn">Կատարել</button>
+        <button class="clr" id="clrBtn">Մաքրել</button>
+      </div>
+<pre class="out" id="pgOut"><span class="m">Console</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Կառուցիր ներդրված երեք բլոկ և ամեն մեկին կախիր մշակիչ։ Սեղմիր ամենաներքինին և գրիր մեկնաբանության մեջ՝ ինչ հերթականությամբ աշխատեցին։</li>
+      <li>Նույն կոդում ավելացրու <code>stopPropagation</code> միջինին։ Նկարագրիր՝ ինչ փոխվեց։</li>
+      <li>Ցուցակ 5 էլեմենտով։ Մեկ դելեգացված listener-ով՝ սեղմած էլեմենտին ավելացրու <code>is-selected</code> դաս, մյուսներից հանիր։</li>
+      <li>Նույն ցուցակին ավելացրու «Ավելացնել» կոճակ։ Համոզվիր, որ նոր էլեմենտների վրա էլ ընտրությունն աշխատում է։</li>
+      <li>Ամբողջական to-do ցուցակ դասարանական օրինակի հիման վրա։ Գրիր զրոյից՝ առանց նայելու, հետո համեմատիր։</li>
+      <li>To-do-ին ավելացրու ֆիլտրի կոճակներ՝ «Բոլորը», «Ակտիվ», «Կատարված»։ Ֆիլտրը պահիր փոփոխականում և հաշվի առ <code>render()</code>-ում։</li>
+      <li>To-do-ին ավելացրու «Ջնջել կատարվածները» կոճակ։</li>
+      <li>Ավելացրու հաստատում ջնջելուց առաջ՝ <code>confirm("Վստա՞հ եք")</code>։</li>
+      <li>Վերցրու Դաս 11-ի 10-րդ տնայինը (կատալոգի ֆիլտրերը) և վերաշարադրիր դելեգացիայով։ Համոզվիր, որ «Գնել» կոճակներն այժմ աշխատում են ֆիլտրից հետո։</li>
+      <li>Կատալոգին ավելացրու զամբյուղ․ առանձին զանգված, «Գնել» սեղմելիս ապրանքն ավելանում է, էկրանին ցուցադրվում է քանակը և ընդհանուր գումարը։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td>bubbling</td><td>Իրադարձությունը բարձրանում է ներքևից վեր</td></tr>
+      <tr><td>capturing</td><td>Առաջին փուլը՝ վերևից ներքև (հազվադեպ)</td></tr>
+      <tr><td><code>e.target</code></td><td>Որտեղ իսկապես սեղմեցին</td></tr>
+      <tr><td><code>e.currentTarget</code></td><td>Որտեղ կախված է listener-ը</td></tr>
+      <tr><td><code>e.stopPropagation()</code></td><td>Կանգնեցնում է բարձրացումը (զգույշ)</td></tr>
+      <tr><td><code>addEventListener(t, fn, true)</code></td><td>Որսման փուլում</td></tr>
+      <tr><td><code>e.target.closest(".x")</code></td><td>Դելեգացիայի հիմքը</td></tr>
+      <tr><td><code>if (!el) return;</code></td><td>Ելք, եթե սեղմեցին ուրիշ տեղ</td></tr>
+      <tr><td><code>data-action</code></td><td>Մեկ մշակիչում մի քանի գործողություն</td></tr>
+      <tr><td><code>Number(el.dataset.id)</code></td><td>dataset-ը միշտ տող է</td></tr>
+      <tr><td><code>Date.now()</code></td><td>Պարզ եզակի id</td></tr>
+    </table>
+    </div>
+
+    <h3>Երբ ի՞նչ օգտագործել</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Իրավիճակ</th><th>Մոտեցում</th></tr>
+      <tr><td>Մեկ ստատիկ կոճակ (բուրգեր, մոդալ)</td><td>Ուղիղ <code>addEventListener</code></td></tr>
+      <tr><td>Ցուցակ, որը վերագծվում է</td><td><strong>Դելեգացիա</strong></td></tr>
+      <tr><td>Դինամիկ ստեղծվող էլեմենտներ</td><td><strong>Դելեգացիա</strong></td></tr>
+      <tr><td>Շատ նույնատիպ էլեմենտներ</td><td><strong>Դելեգացիա</strong></td></tr>
+    </table>
+    </div>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել՝ ինչու են կորչում մշակիչները <code>innerHTML</code>-ից հետո</li>
+      <li>Հասկանո՞ւմ եմ, ինչու է <code>e.target</code>-ը տարբերվում <code>e.currentTarget</code>-ից</li>
+      <li>Գիտե՞մ, ինչու <code>closest</code>-ը <code>classList.contains</code>-ից լավն է</li>
+      <li>Կարո՞ղ եմ գրել դելեգացված մշակիչ առանց նայելու</li>
+      <li>Հասկանո՞ւմ եմ «տվյալները փոխվում են → render» սկզբունքը</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Ֆորմաներ և վալիդացիա։ <code>input.value</code>, <code>checked</code>, <code>FormData</code>, ռեգուլյար արտահայտությունների հիմունքներ և իրական ժամանակի ստուգում սխալի հաղորդագրություններով։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 12 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

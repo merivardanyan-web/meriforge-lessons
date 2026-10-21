@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 21 — API-ների հետ խորը աշխատանք</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 21 · 2 ժամ</p>
+  <h1>API-ների հետ խորը աշխատանք</h1>
+  <p class="lede">Բեռնել 10 օգտագործող՝ հեշտ է։ Իսկ եթե 10 000 են։ Այսօր սովորում ենք էջավորում, արագ որոնում և այն նուրբ սխալը, որը գրեթե բոլոր սկսնակ որոնումներն ունեն։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 14, 19, 20</span>
+    <span>Բլոկ 3 · Ժամանակակից JS</span>
+    <span>Դասարանում՝ որոնման հավելված</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Հարցման պարամետրեր և <code>URLSearchParams</code></li>
+      <li>Էջավորում՝ <code>_page</code>, <code>_limit</code></li>
+      <li>Պատասխանի վերնագրերի կարդալը</li>
+      <li>Որոնում debounce-ով</li>
+      <li>Մրցավազքի խնդիրը (race condition)</li>
+      <li><code>AbortController</code> — հարցումների չեղարկում</li>
+      <li>CORS — ինչո՞ւ է բրաուզերն արգելում</li>
+      <li>API շերտի կազմակերպում</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Հարցման պարամետրեր</h2>
+    <p>Սերվերին կարելի է լրացուցիչ պայմաններ ասել՝ ուղիղ հասցեի մեջ, <code>?</code>-ից հետո։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հասցեի կառուցվածքը</div><button class="copy">Պատճենել</button></div>
+<pre><code>https://api.example.com/posts?userId=1&amp;_limit=5&amp;_sort=title
+└────────┬────────┘└──┬──┘ └──────────┬───────────────────┘
+      դոմեն         ուղի            պարամետրեր
+
+  ?  — պարամետրերի սկիզբ
+  &amp;  — բաժանարար
+  =  — անուն և արժեք</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ ձեռքով կպցնելը վտանգավոր է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> query = <span class="s">"նոութբուք &amp; մկնիկ"</span>;
+
+<span class="c">// Բացատներն ու &amp;-ը կփչացնեն հասցեն</span>
+<span class="k">const</span> url = <span class="s">`</span>${API}<span class="s">/search?q=</span>${query}<span class="s">`</span>;
+<span class="f">console</span>.<span class="f">log</span>(url);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="e">.../search?q=նոութբուք &amp; մկնիկ</span>   <span class="m">← կոտրված հասցե</span></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>✅ URLSearchParams</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> params = <span class="k">new</span> <span class="f">URLSearchParams</span>({
+  q: <span class="s">"նոութբուք &amp; մկնիկ"</span>,
+  _limit: <span class="n">5</span>,
+  _page: <span class="n">2</span>
+});
+
+<span class="f">console</span>.<span class="f">log</span>(params.<span class="f">toString</span>());
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">`</span>${API}<span class="s">/search?</span>${params}<span class="s">`</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">q=%D5%B6%D5%B8%D6%82...+%26+...&amp;_limit=5&amp;_page=2</span>
+<span class="r">https://api.example.com/search?q=...&amp;_limit=5&amp;_page=2</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչ արեց այն</span>
+      <p>Բացատները դարձրեց <code>+</code>, հայերեն տառերն ու <code>&amp;</code>-ը՝ անվտանգ կոդեր (<code>%D5%B6</code>)։ Սերվերը դրանք հետ կվերծանի ճիշտ։ <strong>Երբեք ձեռքով մի՛ կպցրու պարամետրերը։</strong></p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>օգտակար ֆունկցիա</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> API = <span class="s">"https://jsonplaceholder.typicode.com"</span>;
+
+<span class="k">function</span> <span class="f">buildUrl</span>(path, params = {}) {
+  <span class="c">// Հանում ենք դատարկ արժեքները</span>
+  <span class="k">const</span> clean = <span class="f">Object</span>.<span class="f">fromEntries</span>(
+    <span class="f">Object</span>.<span class="f">entries</span>(params).<span class="f">filter</span>(([, v]) =&gt; v !== <span class="s">""</span> &amp;&amp; v != <span class="k">null</span>)
+  );
+
+  <span class="k">const</span> query = <span class="k">new</span> <span class="f">URLSearchParams</span>(clean).<span class="f">toString</span>();
+  <span class="k">return</span> query ? <span class="s">`</span>${API}${path}<span class="s">?</span>${query}<span class="s">`</span> : <span class="s">`</span>${API}${path}<span class="s">`</span>;
+}
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">buildUrl</span>(<span class="s">"/posts"</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">buildUrl</span>(<span class="s">"/posts"</span>, { userId: <span class="n">1</span>, _limit: <span class="n">5</span> }));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">buildUrl</span>(<span class="s">"/posts"</span>, { q: <span class="s">""</span>, _limit: <span class="n">5</span> }));   <span class="c">// դատարկը դուրս է մնում</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">https://jsonplaceholder.typicode.com/posts</span>
+<span class="r">https://jsonplaceholder.typicode.com/posts?userId=1&amp;_limit=5</span>
+<span class="r">https://jsonplaceholder.typicode.com/posts?_limit=5</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Էջավորում</h2>
+    <p>10 000 գրառում մեկ հարցումով բերելը վատ գաղափար է․ դանդաղ է, ծանր է, և օգտագործողին միևնույն է պետք են առաջին 20-ը։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>_page և _limit</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">async</span> <span class="k">function</span> <span class="f">getPosts</span>(page = <span class="n">1</span>, limit = <span class="n">10</span>) {
+  <span class="k">const</span> url = <span class="f">buildUrl</span>(<span class="s">"/posts"</span>, { _page: page, _limit: limit });
+  <span class="k">const</span> response = <span class="k">await</span> <span class="f">fetch</span>(url);
+
+  <span class="k">if</span> (!response.ok) <span class="k">throw</span> <span class="k">new</span> <span class="f">Error</span>(<span class="s">`Կարգավիճակ </span>${response.status}<span class="s">`</span>);
+
+  <span class="c">// Ընդհանուր քանակը գալիս է ՎԵՐՆԱԳՐՈՎ, ոչ մարմնում</span>
+  <span class="k">const</span> total = <span class="f">Number</span>(response.headers.<span class="f">get</span>(<span class="s">"X-Total-Count"</span>));
+  <span class="k">const</span> items = <span class="k">await</span> response.<span class="f">json</span>();
+
+  <span class="k">return</span> {
+    items,
+    total,
+    totalPages: <span class="f">Math</span>.<span class="f">ceil</span>(total / limit)     <span class="c">// Դաս 8</span>
+  };
+}
+
+<span class="k">const</span> { items, total, totalPages } = <span class="k">await</span> <span class="f">getPosts</span>(<span class="n">2</span>, <span class="n">10</span>);
+<span class="f">console</span>.<span class="f">log</span>(items.length, total, totalPages);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">10 100 10</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Վերնագրերը</span>
+      <p>Սերվերը պատասխանի հետ ուղարկում է նաև <strong>վերնագրեր</strong>՝ լրացուցիչ տեղեկություն։ <code>X-Total-Count</code>-ը այնտեղ է, ոչ տվյալների մեջ։ Առանց դրա չէիր իմանա՝ քանի էջ կա։<br><br>
+      Ուշադրություն՝ <code>headers.get()</code>-ը միշտ վերադարձնում է <strong>տող</strong>, ուստի <code>Number()</code>։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>էջավորման կոճակների render</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">renderPagination</span>(current, totalPages) {
+  <span class="k">if</span> (totalPages &lt;= <span class="n">1</span>) {
+    pagination.innerHTML = <span class="s">""</span>;
+    <span class="k">return</span>;
+  }
+
+  <span class="k">const</span> pages = <span class="f">Array</span>.<span class="f">from</span>({ length: totalPages }, (_, i) =&gt; i + <span class="n">1</span>);
+
+  pagination.innerHTML = <span class="s">`
+    &lt;button data-page="</span>${current - <span class="n">1</span>}<span class="s">" </span>${current === <span class="n">1</span> ? <span class="s">"disabled"</span> : <span class="s">""</span>}<span class="s">&gt;←&lt;/button&gt;
+    </span>${pages.<span class="f">map</span>(p =&gt; <span class="s">`
+      &lt;button data-page="</span>${p}<span class="s">" class="</span>${p === current ? <span class="s">"is-active"</span> : <span class="s">""</span>}<span class="s">"&gt;</span>${p}<span class="s">&lt;/button&gt;
+    `</span>).<span class="f">join</span>(<span class="s">""</span>)}<span class="s">
+    &lt;button data-page="</span>${current + <span class="n">1</span>}<span class="s">" </span>${current === totalPages ? <span class="s">"disabled"</span> : <span class="s">""</span>}<span class="s">&gt;→&lt;/button&gt;
+  `</span>;
+}
+
+<span class="c">// Դելեգացիա (Դաս 12)</span>
+pagination.<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+  <span class="k">const</span> btn = e.target.<span class="f">closest</span>(<span class="s">"[data-page]"</span>);
+  <span class="k">if</span> (!btn || btn.disabled) <span class="k">return</span>;
+
+  state.page = <span class="f">Number</span>(btn.dataset.page);
+  <span class="f">load</span>();
+});</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Array.from</span>
+      <p><code>Array.from({ length: 5 }, (_, i) =&gt; i + 1)</code> → <code>[1, 2, 3, 4, 5]</code>։ Հարմար ձև՝ թվերի հաջորդականություն ստանալու։ <code>_</code>-ը նշանակում է «այս արգումենտը պետք չէ»։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Մրցավազքի խնդիրը</h2>
+    <p>Ահա այն սխալը, որը կա գրեթե բոլոր սկսնակ որոնումներում։ Այն նենգ է, որովհետև հայտնվում է <em>երբեմն</em>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>թվում է՝ ամեն ինչ ճիշտ է</div><button class="copy">Պատճենել</button></div>
+<pre><code>searchInput.<span class="f">addEventListener</span>(<span class="s">"input"</span>, <span class="f">debounce</span>(<span class="k">async</span> () =&gt; {
+  <span class="k">const</span> query = searchInput.value.<span class="f">trim</span>();
+  <span class="k">const</span> results = <span class="k">await</span> <span class="f">search</span>(query);
+  <span class="f">render</span>(results);
+}, <span class="n">300</span>));</code></pre>
+    </div>
+
+    <p>Օգտագործողը գրում է «նո», հետո արագ ավելացնում «ութբուք»։ Երկու հարցում է ուղարկվում։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ինչ է կատարվում իրականում</div><button class="copy">Պատճենել</button></div>
+<pre><code>t=0    ուղարկվեց հարցում «նո»        (սերվերը դանդաղ է — 800 մլվրկ)
+t=300  ուղարկվեց հարցում «նոութբուք»  (սերվերը արագ է — 100 մլվրկ)
+
+t=400  ◄── եկավ «նոութբուք»-ի պատասխանը  →  render()  ✅
+t=800  ◄── եկավ «նո»-ի պատասխանը        →  render()  ❌
+
+Արդյունք՝ դաշտում գրված է «նոութբուք»,
+          էկրանին՝ «նո»-ի արդյունքները</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ է սա դժվար նկատել</span>
+      <p>Քո համակարգչում, արագ ինտերնետով, դա գրեթե երբեք չի պատահի։ Բայց հեռախոսով, դանդաղ կապով՝ անընդհատ։ Հենց այսպիսի սխալները հասնում են արտադրություն։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>AbortController</h2>
+    <p>Լուծումը՝ նոր հարցում ուղարկելուց առաջ <strong>չեղարկել հինը</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ինչպես է աշխատում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> controller = <span class="k">new</span> <span class="f">AbortController</span>();
+
+<span class="f">fetch</span>(url, { signal: controller.signal })
+  .<span class="f">then</span>(r =&gt; r.<span class="f">json</span>())
+  .<span class="f">then</span>(data =&gt; <span class="f">console</span>.<span class="f">log</span>(data))
+  .<span class="f">catch</span>(err =&gt; {
+    <span class="k">if</span> (err.name === <span class="s">"AbortError"</span>) {
+      <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Հարցումը չեղարկվեց"</span>);
+    }
+  });
+
+<span class="c">// Չեղարկում</span>
+controller.<span class="f">abort</span>();</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>✅ ճիշտ որոնում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">let</span> controller = <span class="k">null</span>;
+
+<span class="k">async</span> <span class="k">function</span> <span class="f">search</span>(query) {
+  <span class="c">// Չեղարկում ենք նախորդը, եթե դեռ ընթացքում է</span>
+  <span class="k">if</span> (controller) controller.<span class="f">abort</span>();
+
+  controller = <span class="k">new</span> <span class="f">AbortController</span>();
+
+  <span class="k">try</span> {
+    <span class="k">const</span> url = <span class="f">buildUrl</span>(<span class="s">"/posts"</span>, { q: query, _limit: <span class="n">10</span> });
+    <span class="k">const</span> response = <span class="k">await</span> <span class="f">fetch</span>(url, { signal: controller.signal });
+
+    <span class="k">if</span> (!response.ok) <span class="k">throw</span> <span class="k">new</span> <span class="f">Error</span>(<span class="s">`Կարգավիճակ </span>${response.status}<span class="s">`</span>);
+
+    <span class="k">const</span> data = <span class="k">await</span> response.<span class="f">json</span>();
+    <span class="f">render</span>(data);
+
+  } <span class="k">catch</span> (error) {
+    <span class="c">// Չեղարկումը սխալ չէ — լուռ անտեսում ենք</span>
+    <span class="k">if</span> (error.name === <span class="s">"AbortError"</span>) <span class="k">return</span>;
+
+    <span class="f">showError</span>(<span class="s">"Որոնումը չհաջողվեց"</span>);
+  }
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Երկու պաշտպանության շերտ</span>
+      <p><strong>debounce</strong> (Դաս 14) — նվազեցնում է հարցումների <em>քանակը</em>։ Առանց դրա 9 տառ = 9 հարցում։<br>
+      <strong>AbortController</strong> — երաշխավորում է, որ կցուցադրվի <em>վերջին</em> հարցման արդյունքը։<br><br>
+      Երկուսն էլ պետք են։ Դրանք տարբեր խնդիրներ են լուծում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>բոնուս՝ ժամանակի սահմանափակում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">async</span> <span class="k">function</span> <span class="f">fetchWithTimeout</span>(url, ms = <span class="n">5000</span>) {
+  <span class="k">const</span> controller = <span class="k">new</span> <span class="f">AbortController</span>();
+  <span class="k">const</span> timer = <span class="f">setTimeout</span>(() =&gt; controller.<span class="f">abort</span>(), ms);
+
+  <span class="k">try</span> {
+    <span class="k">return</span> <span class="k">await</span> <span class="f">fetch</span>(url, { signal: controller.signal });
+  } <span class="k">finally</span> {
+    <span class="f">clearTimeout</span>(timer);
+  }
+}</code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>CORS</h2>
+    <p>Վաղ թե ուշ կտեսնես այս սխալը։ Այն շփոթեցնում է բոլորին։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>դասական սխալ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">fetch</span>(<span class="s">"https://some-api.com/data"</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="e">Access to fetch at 'https://some-api.com/data' from origin</span>
+<span class="e">'http://localhost:5500' has been blocked by CORS policy</span></pre>
+    </div>
+
+    <h3>Ինչո՞ւ է սա գոյություն ունի</h3>
+    <p>Պատկերացրու՝ մուտք ես գործել բանկի կայք։ Հետո բացում ես վնասակար կայք։ Եթե սահմանափակում չլիներ, նրա JS-ը կարող էր հարցում ուղարկել բանկին <em>քո անունից</em>՝ քո cookie-ներով։</p>
+
+    <p>Դրա համար բրաուզերն ասում է․ <em>«Դու <code>site-a.com</code>-ից ես։ Ուզում ես դիմել <code>site-b.com</code>-ին։ Թող <code>site-b</code>-ն ինքը թույլ տա»</em>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>թույլտվությունը գալիս է վերնագրով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># Սերվերի պատասխանի վերնագրերում</span>
+Access-Control-Allow-Origin: *                        <span class="c"># բոլորին</span>
+Access-Control-Allow-Origin: https://mysite.am        <span class="c"># միայն մեկին</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ամենակարևորը</span>
+      <p>CORS-ը <strong>սերվերի կողմն է</strong>։ Դու JS-ով այն շրջանցել <em>չես կարող</em> — ոչ մի հնարք չկա։ Եթե API-ն թույլ չի տալիս, ուրեմն այն նախատեսված չէ բրաուզերից ուղիղ օգտագործելու համար։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Իրավիճակ</th><th>Լուծում</th></tr>
+      <tr><td>Հրապարակային API (jsonplaceholder)</td><td>Ամեն ինչ արդեն աշխատում է</td></tr>
+      <tr><td>Քո սեփական սերվերը</td><td>Ավելացրու վերնագիրը — PHP-ի բլոկում կսովորենք</td></tr>
+      <tr><td>Ուրիշի API՝ առանց CORS-ի</td><td>Հարցումն արա սերվերից, ոչ բրաուզերից</td></tr>
+      <tr><td>API բանալի պահանջող API</td><td>Բանալին <strong>երբեք</strong> չդնես ֆրոնտենդում</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Հիշիր Դաս 18-ը</span>
+      <p>Նույն CORS-ի պատճառով մոդուլները չեն աշխատում <code>file://</code>-ով։ Բրաուզերի համար ամեն տեղական ֆայլ առանձին «ծագում» է։ Live Server-ը լուծում է հենց այդ խնդիրը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>API շերտ</h2>
+    <p>Երբ հարցումները շատանում են, դրանք պիտի հավաքվեն մեկ տեղում։ Դա կոչվում է <strong>API շերտ</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/api.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> BASE_URL = <span class="s">"https://jsonplaceholder.typicode.com"</span>;
+
+<span class="k">function</span> <span class="f">buildUrl</span>(path, params = {}) {
+  <span class="k">const</span> clean = <span class="f">Object</span>.<span class="f">fromEntries</span>(
+    <span class="f">Object</span>.<span class="f">entries</span>(params).<span class="f">filter</span>(([, v]) =&gt; v !== <span class="s">""</span> &amp;&amp; v != <span class="k">null</span>)
+  );
+  <span class="k">const</span> query = <span class="k">new</span> <span class="f">URLSearchParams</span>(clean).<span class="f">toString</span>();
+  <span class="k">return</span> query ? <span class="s">`</span>${BASE_URL}${path}<span class="s">?</span>${query}<span class="s">`</span> : <span class="s">`</span>${BASE_URL}${path}<span class="s">`</span>;
+}
+
+<span class="c">// Ընդհանուր ֆունկցիա — բոլոր հարցումները անցնում են այստեղով</span>
+<span class="k">async</span> <span class="k">function</span> <span class="f">request</span>(path, { params, signal, ...options } = {}) {
+  <span class="k">const</span> response = <span class="k">await</span> <span class="f">fetch</span>(<span class="f">buildUrl</span>(path, params), { signal, ...options });
+
+  <span class="k">if</span> (!response.ok) {
+    <span class="k">throw</span> <span class="k">new</span> <span class="f">Error</span>(<span class="s">`</span>${response.status}<span class="s"> </span>${response.statusText}<span class="s">`</span>);
+  }
+
+  <span class="k">return</span> {
+    data: <span class="k">await</span> response.<span class="f">json</span>(),
+    total: <span class="f">Number</span>(response.headers.<span class="f">get</span>(<span class="s">"X-Total-Count"</span>)) || <span class="n">0</span>
+  };
+}
+
+<span class="c">// Հրապարակային մեթոդներ — պարզ և ընթեռնելի</span>
+<span class="k">export</span> <span class="k">const</span> api = {
+  <span class="f">getPosts</span>(params, signal) {
+    <span class="k">return</span> <span class="f">request</span>(<span class="s">"/posts"</span>, { params, signal });
+  },
+
+  <span class="f">getPost</span>(id, signal) {
+    <span class="k">return</span> <span class="f">request</span>(<span class="s">`/posts/</span>${id}<span class="s">`</span>, { signal });
+  },
+
+  <span class="f">getUsers</span>(signal) {
+    <span class="k">return</span> <span class="f">request</span>(<span class="s">"/users"</span>, { signal });
+  },
+
+  <span class="f">createPost</span>(post) {
+    <span class="k">return</span> <span class="f">request</span>(<span class="s">"/posts"</span>, {
+      method: <span class="s">"POST"</span>,
+      headers: { <span class="s">"Content-Type"</span>: <span class="s">"application/json"</span> },
+      body: <span class="f">JSON</span>.<span class="f">stringify</span>(post)
+    });
+  }
+};</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>օգտագործում — մաքուր և կարճ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">import</span> { api } <span class="k">from</span> <span class="s">"./api.js"</span>;
+
+<span class="k">const</span> { data: posts, total } = <span class="k">await</span> api.<span class="f">getPosts</span>({ _page: <span class="n">1</span>, _limit: <span class="n">10</span> });
+<span class="k">const</span> { data: users } = <span class="k">await</span> api.<span class="f">getUsers</span>();</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ է սա արժեքավոր</span>
+      <p>Վաղը API-ի հասցեն կփոխվի — կուղղես <strong>մեկ տողում</strong>։ Կպահանջվի ավելացնել authorization վերնագիր — <strong>մեկ տեղում</strong>։ Կուզես գրանցել բոլոր սխալները — <strong>մեկ տեղում</strong>։<br><br>
+      Առանց API շերտի այս փոփոխությունները կպահանջեին 30 ֆայլ բացել։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Դասարանական · որոնման հավելված</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/main.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">import</span> { api } <span class="k">from</span> <span class="s">"./api.js"</span>;
+<span class="k">import</span> { debounce } <span class="k">from</span> <span class="s">"./utils.js"</span>;
+
+<span class="k">const</span> state = {
+  query: <span class="s">""</span>,
+  page: <span class="n">1</span>,
+  limit: <span class="n">10</span>,
+  total: <span class="n">0</span>
+};
+
+<span class="k">let</span> controller = <span class="k">null</span>;
+
+<span class="k">const</span> searchInput = document.<span class="f">querySelector</span>(<span class="s">".search"</span>);
+<span class="k">const</span> container   = document.<span class="f">querySelector</span>(<span class="s">"#results"</span>);
+<span class="k">const</span> pagination  = document.<span class="f">querySelector</span>(<span class="s">".pagination"</span>);
+<span class="k">const</span> statusEl    = document.<span class="f">querySelector</span>(<span class="s">".status"</span>);
+
+<span class="c">// ---------- Բեռնում ----------</span>
+<span class="k">async</span> <span class="k">function</span> <span class="f">load</span>() {
+  <span class="k">if</span> (controller) controller.<span class="f">abort</span>();
+  controller = <span class="k">new</span> <span class="f">AbortController</span>();
+
+  <span class="f">showLoading</span>();
+
+  <span class="k">try</span> {
+    <span class="k">const</span> { data, total } = <span class="k">await</span> api.<span class="f">getPosts</span>({
+      q: state.query,
+      _page: state.page,
+      _limit: state.limit
+    }, controller.signal);
+
+    state.total = total;
+    <span class="f">renderResults</span>(data);
+    <span class="f">renderPagination</span>();
+
+  } <span class="k">catch</span> (error) {
+    <span class="k">if</span> (error.name === <span class="s">"AbortError"</span>) <span class="k">return</span>;   <span class="c">// չեղարկումը սխալ չէ</span>
+    <span class="f">showError</span>(<span class="s">"Չհաջողվեց բեռնել արդյունքները"</span>);
+  }
+}
+
+<span class="c">// ---------- Ցուցադրում ----------</span>
+<span class="k">function</span> <span class="f">showLoading</span>() {
+  statusEl.textContent = <span class="s">"Բեռնվում է..."</span>;
+}
+
+<span class="k">function</span> <span class="f">showError</span>(message) {
+  statusEl.textContent = <span class="s">""</span>;
+  pagination.innerHTML = <span class="s">""</span>;
+  container.innerHTML = <span class="s">`
+    &lt;div class="col"&gt;&lt;div class="wrapper error"&gt;
+      &lt;p&gt;</span>${message}<span class="s">&lt;/p&gt;
+      &lt;button data-action="retry"&gt;Կրկին փորձել&lt;/button&gt;
+    &lt;/div&gt;&lt;/div&gt;
+  `</span>;
+}
+
+<span class="k">function</span> <span class="f">renderResults</span>(posts) {
+  <span class="k">if</span> (posts.length === <span class="n">0</span>) {
+    statusEl.textContent = <span class="s">""</span>;
+    container.innerHTML = <span class="s">`&lt;div class="col"&gt;&lt;div class="wrapper empty"&gt;
+      &lt;p&gt;Ոչինչ չգտնվեց «</span>${state.query}<span class="s">» հարցումով&lt;/p&gt;
+    &lt;/div&gt;&lt;/div&gt;`</span>;
+    <span class="k">return</span>;
+  }
+
+  statusEl.textContent = <span class="s">`Գտնվեց </span>${state.total}<span class="s"> արդյունք`</span>;
+
+  container.innerHTML = posts.<span class="f">map</span>(p =&gt; <span class="s">`
+    &lt;div class="col"&gt;
+      &lt;div class="wrapper"&gt;
+        &lt;h3&gt;</span>${p.title}<span class="s">&lt;/h3&gt;
+        &lt;p&gt;</span>${p.body.<span class="f">slice</span>(<span class="n">0</span>, <span class="n">100</span>)}<span class="s">...&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  `</span>).<span class="f">join</span>(<span class="s">""</span>);
+}
+
+<span class="k">function</span> <span class="f">renderPagination</span>() {
+  <span class="k">const</span> totalPages = <span class="f">Math</span>.<span class="f">ceil</span>(state.total / state.limit);
+
+  <span class="k">if</span> (totalPages &lt;= <span class="n">1</span>) {
+    pagination.innerHTML = <span class="s">""</span>;
+    <span class="k">return</span>;
+  }
+
+  <span class="k">const</span> pages = <span class="f">Array</span>.<span class="f">from</span>({ length: totalPages }, (_, i) =&gt; i + <span class="n">1</span>);
+
+  pagination.innerHTML = pages.<span class="f">map</span>(p =&gt; <span class="s">`
+    &lt;button data-page="</span>${p}<span class="s">" class="</span>${p === state.page ? <span class="s">"is-active"</span> : <span class="s">""</span>}<span class="s">"&gt;</span>${p}<span class="s">&lt;/button&gt;
+  `</span>).<span class="f">join</span>(<span class="s">""</span>);
+}
+
+<span class="c">// ---------- Իրադարձություններ ----------</span>
+searchInput.<span class="f">addEventListener</span>(<span class="s">"input"</span>, <span class="f">debounce</span>(() =&gt; {
+  state.query = searchInput.value.<span class="f">trim</span>();
+  state.page = <span class="n">1</span>;              <span class="c">// նոր որոնում → առաջին էջ</span>
+  <span class="f">load</span>();
+}, <span class="n">400</span>));
+
+pagination.<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+  <span class="k">const</span> btn = e.target.<span class="f">closest</span>(<span class="s">"[data-page]"</span>);
+  <span class="k">if</span> (!btn) <span class="k">return</span>;
+
+  state.page = <span class="f">Number</span>(btn.dataset.page);
+  <span class="f">load</span>();
+  window.<span class="f">scrollTo</span>({ top: <span class="n">0</span>, behavior: <span class="s">"smooth"</span> });   <span class="c">// Դաս 14</span>
+});
+
+container.<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+  <span class="k">if</span> (e.target.<span class="f">closest</span>(<span class="s">'[data-action="retry"]'</span>)) <span class="f">load</span>();
+});
+
+<span class="c">// ---------- Գործարկում ----------</span>
+<span class="f">load</span>();</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Կարևոր մանրուք</span>
+      <p>Նոր որոնման ժամանակ <strong>պարտադիր</strong> վերադարձրու <code>state.page = 1</code>։ Հակառակ դեպքում օգտագործողը 5-րդ էջում է, գրում է նոր հարցում, և տեսնում է դատարկ էջ, որովհետև նոր արդյունքներն ընդամենը 2 էջ են։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Խաղահրապարակ</h2>
+
+    <div class="pg">
+      <textarea id="pgCode" spellcheck="false">const BASE_URL = "https://jsonplaceholder.typicode.com";
+
+function buildUrl(path, params = {}) {
+  const clean = Object.fromEntries(
+    Object.entries(params).filter(([, v]) => v !== "" && v != null)
+  );
+  const query = new URLSearchParams(clean).toString();
+  return query ? `${BASE_URL}${path}?${query}` : `${BASE_URL}${path}`;
+}
+
+console.log(buildUrl("/posts"));
+console.log(buildUrl("/posts", { userId: 1, _limit: 5 }));
+console.log(buildUrl("/posts", { q: "", userId: null, _page: 2 }));
+console.log(buildUrl("/search", { q: "նոութբուք & մկնիկ" }));
+
+// Էջավորման հաշվարկ
+function paginate(total, limit, page) {
+  const totalPages = Math.ceil(total / limit);
+  const from = (page - 1) * limit + 1;
+  const to = Math.min(page * limit, total);
+  return {
+    totalPages,
+    text: `${from}–${to} / ${total}`,
+    hasPrev: page > 1,
+    hasNext: page < totalPages
+  };
+}
+
+console.log("--- էջավորում ---");
+console.log(paginate(100, 10, 1));
+console.log(paginate(100, 10, 5));
+console.log(paginate(100, 10, 10));
+console.log(paginate(7, 10, 1));
+
+// Էջերի ցուցակ
+const pages = Array.from({ length: 5 }, (_, i) => i + 1);
+console.log(pages);
+
+// Մրցավազքի նմանակում
+console.log("--- race condition ---");
+const responses = [
+  { query: "նո", arrivedAt: 800 },
+  { query: "նոութբուք", arrivedAt: 400 }
+];
+const order = [...responses].sort((a, b) => a.arrivedAt - b.arrivedAt);
+console.log("Ժամանման հերթականություն:", order.map(r => r.query));
+console.log("Վերջինը կցուցադրվի:", order.at(-1).query);
+console.log("Իսկ դաշտում գրված է: նոութբուք");</textarea>
+      <div class="pg__actions">
+        <button class="run" id="runBtn">Կատարել</button>
+        <button class="clr" id="clrBtn">Մաքրել</button>
+      </div>
+<pre class="out" id="pgOut"><span class="m">Console</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Գրիր <code>buildUrl(path, params)</code> ֆունկցիան։ Ստուգիր 5 տարբեր դեպքով, ներառյալ դատարկ և հայերեն արժեքներով։</li>
+      <li>Բեռնիր <code>/posts?_page=1&amp;_limit=10</code>։ Կարդա <code>X-Total-Count</code> վերնագիրը և տպիր էջերի քանակը։</li>
+      <li>Կառուցիր էջավորում կոճակներով։ Ակտիվ էջը նշիր <code>is-active</code> դասով։</li>
+      <li>Ավելացրու «←» և «→» կոճակներ՝ ճիշտ <code>disabled</code> վիճակներով եզրային էջերում։</li>
+      <li>Ավելացրու որոնման դաշտ debounce-ով (400 մլվրկ)։ Նոր որոնման դեպքում վերադարձիր առաջին էջ։</li>
+      <li>Ավելացրու <code>AbortController</code>։ Ստուգիր՝ DevTools → Network-ում պիտի տեսնես <code>canceled</code> հարցումներ։</li>
+      <li>Ավելացրու select՝ էջում 5 / 10 / 20 արդյունք։ Փոփոխելիս վերադարձիր առաջին էջ։</li>
+      <li>Կազմակերպիր <code>api.js</code> մոդուլ՝ <code>getPosts</code>, <code>getPost</code>, <code>getUsers</code>, <code>createPost</code> մեթոդներով։</li>
+      <li>Ցուցադրիր՝ «Ցուցադրված է 21–30 / 100»։ Օգտագործիր խաղահրապարակի <code>paginate</code> ֆունկցիան։</li>
+      <li>Ավելացրու պարզ քեշ․ <code>Map</code> օբյեկտում պահիր արդեն բեռնված էջերը և կրկնակի հարցում մի՛ ուղարկիր։ Ցույց տուր Console-ում՝ «քեշից» թե «սերվերից»։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>new URLSearchParams({a: 1})</code></td><td>Անվտանգ պարամետրեր</td></tr>
+      <tr><td><code>params.toString()</code></td><td><code>"a=1&amp;b=2"</code></td></tr>
+      <tr><td><code>response.headers.get("X-Total-Count")</code></td><td>Վերնագրի արժեքը (տող է)</td></tr>
+      <tr><td><code>_page</code>, <code>_limit</code></td><td>Էջավորման պարամետրեր</td></tr>
+      <tr><td><code>Math.ceil(total / limit)</code></td><td>Էջերի քանակը</td></tr>
+      <tr><td><code>Array.from({length: n}, (_, i) =&gt; i + 1)</code></td><td>[1..n] ցուցակ</td></tr>
+      <tr><td><code>new AbortController()</code></td><td>Ստեղծում է կառավարիչ</td></tr>
+      <tr><td><code>fetch(url, { signal })</code></td><td>Կապում է հարցումը կառավարչին</td></tr>
+      <tr><td><code>controller.abort()</code></td><td>Չեղարկում է</td></tr>
+      <tr><td><code>error.name === "AbortError"</code></td><td>Ստուգում՝ չեղարկվե՞ց</td></tr>
+    </table>
+    </div>
+
+    <h3>Որոնման ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Կա՞ debounce (նվազեցնում է հարցումների քանակը)</li>
+      <li>Կա՞ <code>AbortController</code> (ապահովում է ճիշտ արդյունքը)</li>
+      <li>Նոր որոնման դեպքում էջը վերադառնո՞ւմ է 1-ի</li>
+      <li>Մշակվա՞ծ է «ոչինչ չգտնվեց» վիճակը</li>
+      <li>Ցուցադրվո՞ւմ է ընդհանուր արդյունքների քանակը</li>
+      <li>Դատարկ հարցման դեպքում ի՞նչ է լինում</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել մրցավազքի խնդիրը</li>
+      <li>Գիտե՞մ տարբերությունը debounce-ի և AbortController-ի միջև</li>
+      <li>Հասկանո՞ւմ եմ, ինչու CORS-ը JS-ով շրջանցելի չէ</li>
+      <li>Կարո՞ղ եմ բացատրել, ինչու է պետք API շերտը</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>OOP JavaScript-ում՝ <code>this</code>, կոնստրուկտորներ, <code>class</code>, ժառանգում, <code>#private</code>։ Զամբյուղը կվերածենք դասի, և միաժամանակ կնախապատրաստվենք PHP-ի բլոկին, որտեղ OOP-ն կլինի հիմնականը։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 21 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 02 — Օպերատորներ և պայմաններ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 02 · 2 ժամ</p>
+  <h1>Օպերատորներ և պայմաններ</h1>
+  <p class="lede">Անցյալ դասին սովորեցինք տվյալներ պահել։ Այսօր սովորում ենք դրանք <em>հաշվել</em> ու <em>համեմատել</em>, և ամենակարևորը՝ ծրագրին սովորեցնում ենք որոշում կայացնել։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 01</span>
+    <span>Բլոկ 1 · Լեզվի հիմքերը</span>
+    <span>Տնային՝ 9 առաջադրանք</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Թվաբանական օպերատորներ՝ <code>+ - * / % **</code></li>
+      <li>Կարճ գրելաձև՝ <code>+=</code>, <code>++</code>, <code>--</code></li>
+      <li>Համեմատման օպերատորներ և <code>boolean</code> արդյունք</li>
+      <li><code>if</code> / <code>else if</code> / <code>else</code></li>
+      <li>Truthy և falsy արժեքներ</li>
+      <li>Տրամաբանական <code>&amp;&amp;</code>, <code>||</code>, <code>!</code></li>
+      <li>Կարճ գրելաձև պայմանի համար՝ ternary <code>? :</code></li>
+      <li><code>switch</code> և ե՞րբ է այն ավելի հարմար</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Թվաբանական օպերատորներ</h2>
+    <p>Չորսը դու արդեն գիտես դպրոցից։ Երկուսը՝ նոր են։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> a = <span class="n">17</span>;
+<span class="k">const</span> b = <span class="n">5</span>;
+
+<span class="f">console</span>.<span class="f">log</span>(a + b);   <span class="c">// գումարում</span>
+<span class="f">console</span>.<span class="f">log</span>(a - b);   <span class="c">// հանում</span>
+<span class="f">console</span>.<span class="f">log</span>(a * b);   <span class="c">// բազմապատկում</span>
+<span class="f">console</span>.<span class="f">log</span>(a / b);   <span class="c">// բաժանում</span>
+<span class="f">console</span>.<span class="f">log</span>(a % b);   <span class="c">// մնացորդ  ← նոր</span>
+<span class="f">console</span>.<span class="f">log</span>(a ** <span class="n">2</span>);  <span class="c">// աստիճան  ← նոր</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">22</span>
+<span class="r">12</span>
+<span class="r">85</span>
+<span class="r">3.4</span>
+<span class="r">2</span>
+<span class="r">289</span></pre>
+    </div>
+
+    <h3>Ի՞նչ է <code>%</code>-ը (մնացորդ)</h3>
+    <p>Պատկերացրու՝ ունես <strong>17 կոնֆետ</strong> և ուզում ես բաժանել <strong>5 երեխայի</strong> հավասար։ Ամեն երեխա կստանա 3 կոնֆետ (17 / 5 = 3, ամբողջը), իսկ ձեռքիդ կմնա <strong>2 կոնֆետ</strong>։ Ահա այդ 2-ը հենց <code>17 % 5</code>-ն է։</p>
+
+    <div class="tip note">
+      <span class="tag">Ամենակարևոր կիրառությունը</span>
+      <p>Զույգ թիվը միշտ 2-ի բաժանվում է առանց մնացորդի։ Ուրեմն՝ եթե <code>x % 2 === 0</code>, թիվը <strong>զույգ</strong> է։ Եթե <code>x % 2 === 1</code> — <strong>կենտ</strong>։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>զույգ թե՞ կենտ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">console</span>.<span class="f">log</span>(<span class="n">10</span> % <span class="n">2</span>);
+<span class="f">console</span>.<span class="f">log</span>(<span class="n">7</span> % <span class="n">2</span>);
+<span class="f">console</span>.<span class="f">log</span>(<span class="n">100</span> % <span class="n">10</span>);
+<span class="f">console</span>.<span class="f">log</span>(<span class="n">3</span> % <span class="n">10</span>);   <span class="c">// փոքրը մեծի վրա → ինքն իրեն</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">0</span>
+<span class="r">1</span>
+<span class="r">0</span>
+<span class="r">3</span></pre>
+    </div>
+
+    <h3>Գործողությունների հերթականություն</h3>
+    <p>Ճիշտ ինչպես մաթեմատիկայում՝ նախ <code>*</code> և <code>/</code>, հետո <code>+</code> և <code>-</code>։ Փակագծերը ամեն ինչից առաջ են։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>փակագծերի ուժը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">console</span>.<span class="f">log</span>(<span class="n">2</span> + <span class="n">3</span> * <span class="n">4</span>);
+<span class="f">console</span>.<span class="f">log</span>((<span class="n">2</span> + <span class="n">3</span>) * <span class="n">4</span>);
+
+<span class="c">// Միջին գնահատականը</span>
+<span class="k">const</span> m1 = <span class="n">8</span>, m2 = <span class="n">9</span>, m3 = <span class="n">10</span>;
+<span class="f">console</span>.<span class="f">log</span>(m1 + m2 + m3 / <span class="n">3</span>);      <span class="c">// ← սխալ</span>
+<span class="f">console</span>.<span class="f">log</span>((m1 + m2 + m3) / <span class="n">3</span>);    <span class="c">// ← ճիշտ</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">14</span>
+<span class="r">20</span>
+<span class="r">20.333333333333332</span>
+<span class="r">9</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Կարճ գրելաձևեր</h2>
+    <p>Շատ հաճախ ենք գրում «վերցրու փոփոխականը, ինչ-որ բան արա և դիր հետ»։ Դրա համար կա կարճ ձև։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>+= -= *= /=</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">let</span> score = <span class="n">100</span>;
+
+score = score + <span class="n">50</span>;   <span class="c">// երկար ձև</span>
+<span class="f">console</span>.<span class="f">log</span>(score);
+
+score += <span class="n">50</span>;          <span class="c">// կարճ ձև — նույն բանն է</span>
+<span class="f">console</span>.<span class="f">log</span>(score);
+
+score -= <span class="n">100</span>;
+<span class="f">console</span>.<span class="f">log</span>(score);
+
+score *= <span class="n">2</span>;
+<span class="f">console</span>.<span class="f">log</span>(score);
+
+score /= <span class="n">4</span>;
+<span class="f">console</span>.<span class="f">log</span>(score);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">150</span>
+<span class="r">200</span>
+<span class="r">100</span>
+<span class="r">200</span>
+<span class="r">50</span></pre>
+    </div>
+
+    <h3><code>++</code> և <code>--</code></h3>
+    <p>Երբ ուզում ենք ուղիղ 1-ով ավելացնել կամ պակասեցնել։ Շատ կհանդիպի հաջորդ դասին՝ ցիկլերում։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հաշվիչ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">let</span> likes = <span class="n">0</span>;
+
+likes++;   <span class="c">// հավանեց մեկը</span>
+likes++;   <span class="c">// հավանեց երկրորդը</span>
+likes++;
+<span class="f">console</span>.<span class="f">log</span>(likes);
+
+likes--;   <span class="c">// մեկը հետ վերցրեց</span>
+<span class="f">console</span>.<span class="f">log</span>(likes);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">3</span>
+<span class="r">2</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ուշադրություն</span>
+      <p><code>++</code>-ը <strong>փոխում է</strong> փոփոխականը։ Ուրեմն <code>const</code>-ի հետ չի աշխատի՝ միայն <code>let</code>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Համեմատման օպերատորներ</h2>
+    <p>Համեմատությունը միշտ վերադարձնում է միայն երկու հնարավոր արժեքից մեկը՝ <code>true</code> կամ <code>false</code>։ Ուրիշ բան լինել չի կարող։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Օպերատոր</th><th>Նշանակություն</th><th>Օրինակ</th><th>Արդյունք</th></tr>
+      <tr><td><code>&gt;</code></td><td>մեծ է</td><td><code>10 &gt; 5</code></td><td><code>true</code></td></tr>
+      <tr><td><code>&lt;</code></td><td>փոքր է</td><td><code>10 &lt; 5</code></td><td><code>false</code></td></tr>
+      <tr><td><code>&gt;=</code></td><td>մեծ է կամ հավասար</td><td><code>5 &gt;= 5</code></td><td><code>true</code></td></tr>
+      <tr><td><code>&lt;=</code></td><td>փոքր է կամ հավասար</td><td><code>4 &lt;= 3</code></td><td><code>false</code></td></tr>
+      <tr><td><code>===</code></td><td>խիստ հավասար է</td><td><code>5 === "5"</code></td><td><code>false</code></td></tr>
+      <tr><td><code>!==</code></td><td>խիստ հավասար չէ</td><td><code>5 !== "5"</code></td><td><code>true</code></td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>արդյունքը միշտ boolean է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> age = <span class="n">16</span>;
+
+<span class="f">console</span>.<span class="f">log</span>(age &gt;= <span class="n">18</span>);
+<span class="f">console</span>.<span class="f">log</span>(age &lt; <span class="n">18</span>);
+<span class="f">console</span>.<span class="f">log</span>(<span class="k">typeof</span> (age &gt;= <span class="n">18</span>));
+
+<span class="c">// արդյունքը կարելի է պահել փոփոխականում</span>
+<span class="k">const</span> isAdult = age &gt;= <span class="n">18</span>;
+<span class="f">console</span>.<span class="f">log</span>(isAdult);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="e">false</span>
+<span class="g">true</span>
+<span class="g">boolean</span>
+<span class="e">false</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Անվանման սովորույթ</span>
+      <p><code>boolean</code> պահող փոփոխականների անունը սկսում ենք <code>is</code>, <code>has</code> կամ <code>can</code> բառով՝ <code>isAdult</code>, <code>hasDiscount</code>, <code>canEdit</code>։ Կոդը կարդացվում է ինչպես նախադասություն։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>if / else — ծրագիրը որոշում է կայացնում</h2>
+    <p>Ամեն օր դու ինքդ էլ այսպես ես մտածում․ <em>«ԵԹԵ անձրև է, հովանոց վերցնեմ, ԱՅԼԱՊԵՍ արևային ակնոց»</em>։ JS-ում նույն բանն է։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>կառուցվածքը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">if</span> (պայման) {
+  <span class="c">// այս կոդն աշխատում է, եթե պայմանը true է</span>
+} <span class="k">else</span> {
+  <span class="c">// այս կոդն աշխատում է, եթե պայմանը false է</span>
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>իրական օրինակ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> age = <span class="n">16</span>;
+
+<span class="k">if</span> (age &gt;= <span class="n">18</span>) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Կարող ես մեքենա վարել։"</span>);
+} <span class="k">else</span> {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Դեռ վաղ է։ Սպասիր մի քիչ։"</span>);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Դեռ վաղ է։ Սպասիր մի քիչ։</span></pre>
+    </div>
+
+    <h3><code>else if</code> — երբ տարբերակները մեկից շատ են</h3>
+    <p>JS-ը ստուգում է պայմանները <strong>վերևից ներքև</strong> և կանգ է առնում <strong>առաջին ճշմարիտի</strong> վրա։ Մնացածը նույնիսկ չի նայում։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>գնահատականի ստուգում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> mark = <span class="n">17</span>;
+
+<span class="k">if</span> (mark &gt;= <span class="n">18</span>) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Գերազանց"</span>);
+} <span class="k">else</span> <span class="k">if</span> (mark &gt;= <span class="n">14</span>) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Լավ"</span>);
+} <span class="k">else</span> <span class="k">if</span> (mark &gt;= <span class="n">10</span>) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Բավարար"</span>);
+} <span class="k">else</span> {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Անբավարար"</span>);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Լավ</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Հերթականությունը կարևոր է</span>
+      <p>Եթե վերևում գրես <code>mark &gt;= 10</code>, ապա 17-ը կընկնի <em>այնտեղ</em> և կտպի «Բավարար»։ Միշտ սկսիր <strong>ամենախիստ</strong> պայմանից և գնա դեպի ամենաթույլը։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ոճ</span>
+      <p>Ձևավոր փակագծերը <code>{ }</code> գրիր <strong>միշտ</strong>, նույնիսկ եթե ներսում մեկ տող է։ Այսօր մեկ տող է, վաղը կավելացնես երկրորդը և կսկսվեն դժվար գտնվող սխալները։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Truthy և falsy</h2>
+    <p><code>if</code>-ի փակագծերում պարտադիր չէ համեմատություն գրել։ Կարելի է դնել ցանկացած արժեք, և JS-ը ինքը կորոշի՝ դա «այո» է, թե «ոչ»։</p>
+
+    <p><strong>Falsy</strong> են ընդամենը <strong>6 արժեք</strong>։ Հիշիր դրանք, և կիմանաս ամեն ինչ․</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>6 falsy արժեքները</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">false</span>
+<span class="n">0</span>
+<span class="s">""</span>          <span class="c">// դատարկ տեքստ</span>
+<span class="k">null</span>
+<span class="k">undefined</span>
+<span class="f">NaN</span>         <span class="c">// Not a Number — «թիվ չէ»</span></code></pre>
+    </div>
+
+    <p><strong>Մնացած ամեն ինչ truthy է։</strong> Այո՛, նույնիսկ <code>"0"</code> տեքստը և <code>"false"</code> տեքստը՝ որովհետև դրանք դատարկ չեն։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ստուգենք</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> userName = <span class="s">""</span>;
+
+<span class="k">if</span> (userName) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">`Բարև, </span>${userName}<span class="s">։`</span>);
+} <span class="k">else</span> {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Անունը լրացված չէ։"</span>);
+}
+
+<span class="k">const</span> basket = <span class="n">0</span>;
+<span class="k">if</span> (basket) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Զամբյուղում ապրանք կա։"</span>);
+} <span class="k">else</span> {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Զամբյուղը դատարկ է։"</span>);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Անունը լրացված չէ։</span>
+<span class="r">Զամբյուղը դատարկ է։</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչի՞ համար է սա</span>
+      <p><code>if (userName)</code>-ը շատ ավելի կարճ է, քան <code>if (userName !== "" &amp;&amp; userName !== undefined &amp;&amp; userName !== null)</code>։ Նույն բանն է անում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Տրամաբանական օպերատորներ</h2>
+    <p>Երբ մեկ պայմանը քիչ է։ Երեքն են՝ <code>&amp;&amp;</code> (ԵՎ), <code>||</code> (ԿԱՄ), <code>!</code> (ՈՉ)։</p>
+
+    <h3><code>&amp;&amp;</code> — ԵՎ · բոլորը պիտի ճիշտ լինեն</h3>
+    <p><em>«Կինո կգնամ, ԵԹԵ փող ունեմ ԵՎ ազատ եմ»</em>։ Եթե թեկուզ մեկը չկա — կինո չկա։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>&&</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> hasMoney = <span class="k">true</span>;
+<span class="k">const</span> isFree   = <span class="k">false</span>;
+
+<span class="f">console</span>.<span class="f">log</span>(hasMoney &amp;&amp; isFree);
+
+<span class="k">if</span> (hasMoney &amp;&amp; isFree) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Գնում ենք կինո։"</span>);
+} <span class="k">else</span> {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Այսօր չի ստացվի։"</span>);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="e">false</span>
+<span class="r">Այսօր չի ստացվի։</span></pre>
+    </div>
+
+    <h3><code>||</code> — ԿԱՄ · գոնե մեկը բավական է</h3>
+    <p><em>«Տանը կմնամ, ԵԹԵ անձրև է ԿԱՄ հիվանդ եմ»</em>։ Մեկը բավական է։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>||</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> isRaining = <span class="k">true</span>;
+<span class="k">const</span> isSick    = <span class="k">false</span>;
+
+<span class="k">if</span> (isRaining || isSick) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Մնում եմ տանը։"</span>);
+} <span class="k">else</span> {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Դուրս եմ գնում։"</span>);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Մնում եմ տանը։</span></pre>
+    </div>
+
+    <h3><code>!</code> — ՈՉ · շրջում է</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>!</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> isLoggedIn = <span class="k">false</span>;
+
+<span class="f">console</span>.<span class="f">log</span>(isLoggedIn);
+<span class="f">console</span>.<span class="f">log</span>(!isLoggedIn);
+
+<span class="k">if</span> (!isLoggedIn) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Խնդրում ենք մուտք գործել։"</span>);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="e">false</span>
+<span class="g">true</span>
+<span class="r">Խնդրում ենք մուտք գործել։</span></pre>
+    </div>
+
+    <h3>Ճշմարտության աղյուսակ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>A</th><th>B</th><th>A &amp;&amp; B</th><th>A || B</th></tr>
+      <tr><td><code>true</code></td><td><code>true</code></td><td><code>true</code></td><td><code>true</code></td></tr>
+      <tr><td><code>true</code></td><td><code>false</code></td><td><code>false</code></td><td><code>true</code></td></tr>
+      <tr><td><code>false</code></td><td><code>true</code></td><td><code>false</code></td><td><code>true</code></td></tr>
+      <tr><td><code>false</code></td><td><code>false</code></td><td><code>false</code></td><td><code>false</code></td></tr>
+    </table>
+    </div>
+
+    <h3>Մի քանի պայման միասին</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ֆորմայի ստուգում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> age = <span class="n">25</span>;
+<span class="k">const</span> hasTicket = <span class="k">true</span>;
+<span class="k">const</span> isBanned  = <span class="k">false</span>;
+
+<span class="k">if</span> (age &gt;= <span class="n">18</span> &amp;&amp; hasTicket &amp;&amp; !isBanned) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Բարի գալուստ համերգ։"</span>);
+} <span class="k">else</span> {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Մուտքն արգելված է։"</span>);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Բարի գալուստ համերգ։</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Կարճ միացում (short-circuit)</span>
+      <p><code>&amp;&amp;</code>-ը ծույլ է․ եթե առաջին պայմանը <code>false</code> է, նա <strong>մնացածը նույնիսկ չի կարդում</strong> — արդյունքն արդեն պարզ է։ Նույնը <code>||</code>-ի դեպքում՝ եթե առաջինը <code>true</code> է, մնացածին չի նայում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>?? — լռելյայն արժեք</h2>
+    <p>Շատ հաճախ մեզ պետք է․ <em>«վերցրու այս արժեքը, իսկ եթե չկա — վերցրու պահեստայինը»</em>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>?? nullish coalescing</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">let</span> nickname = <span class="k">null</span>;
+
+<span class="k">const</span> displayName = nickname ?? <span class="s">"Հյուր"</span>;
+<span class="f">console</span>.<span class="f">log</span>(displayName);
+
+nickname = <span class="s">"Ani_2010"</span>;
+<span class="f">console</span>.<span class="f">log</span>(nickname ?? <span class="s">"Հյուր"</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Հյուր</span>
+<span class="r">Ani_2010</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">?? ընդդեմ ||</span>
+      <p><code>||</code>-ը փոխարինում է <strong>բոլոր falsy</strong> արժեքները (նաև <code>0</code> և <code>""</code>)։ <code>??</code>-ը փոխարինում է <strong>միայն</strong> <code>null</code>-ը և <code>undefined</code>-ը։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>տարբերությունը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> messages = <span class="n">0</span>;   <span class="c">// իսկապես 0 նամակ կա</span>
+
+<span class="f">console</span>.<span class="f">log</span>(messages || <span class="s">"տվյալ չկա"</span>);
+<span class="f">console</span>.<span class="f">log</span>(messages ?? <span class="s">"տվյալ չկա"</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">տվյալ չկա</span>   <span class="m">← սխալ, 0-ը իրական արժեք էր</span>
+<span class="r">0</span>            <span class="m">← ճիշտ</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Ternary — պայմանը մեկ տողով</h2>
+    <p>Երբ <code>if / else</code>-ը շատ պարզ է, կարելի է գրել մեկ տողով։ Կառուցվածքը՝</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ձևը</div><button class="copy">Պատճենել</button></div>
+<pre><code>պայման <span class="k">?</span> եթե_true <span class="k">:</span> եթե_false</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>համեմատենք</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> age = <span class="n">20</span>;
+
+<span class="c">// երկար ձևը</span>
+<span class="k">let</span> status;
+<span class="k">if</span> (age &gt;= <span class="n">18</span>) {
+  status = <span class="s">"չափահաս"</span>;
+} <span class="k">else</span> {
+  status = <span class="s">"անչափահաս"</span>;
+}
+<span class="f">console</span>.<span class="f">log</span>(status);
+
+<span class="c">// նույնը ternary-ով</span>
+<span class="k">const</span> status2 = age &gt;= <span class="n">18</span> ? <span class="s">"չափահաս"</span> : <span class="s">"անչափահաս"</span>;
+<span class="f">console</span>.<span class="f">log</span>(status2);
+
+<span class="c">// շատ հարմար է template literal-ի ներսում</span>
+<span class="k">const</span> count = <span class="n">1</span>;
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">`Զամբյուղում </span>${count}<span class="s"> ապրանք </span>${count === <span class="n">1</span> ? <span class="s">"է"</span> : <span class="s">"են"</span>}<span class="s">`</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">չափահաս</span>
+<span class="r">չափահաս</span>
+<span class="r">Զամբյուղում 1 ապրանք է</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Չափի զգացում</span>
+      <p>Ternary-ն օգտագործիր <strong>միայն պարզ դեպքերում</strong>։ Ternary-ի մեջ ternary գրելը կոդը դարձնում է անընթեռնելի։ Երբ դժվարանում ես կարդալ — վերադարձիր <code>if / else</code>-ին։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>switch</h2>
+    <p>Երբ <strong>մեկ</strong> փոփոխականը համեմատում ենք <strong>շատ կոնկրետ արժեքների</strong> հետ, <code>switch</code>-ը ավելի մաքուր է, քան երկար <code>else if</code> շղթան։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>շաբաթվա օրը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> day = <span class="n">3</span>;
+
+<span class="k">switch</span> (day) {
+  <span class="k">case</span> <span class="n">1</span>:
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Երկուշաբթի"</span>);
+    <span class="k">break</span>;
+  <span class="k">case</span> <span class="n">2</span>:
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Երեքշաբթի"</span>);
+    <span class="k">break</span>;
+  <span class="k">case</span> <span class="n">3</span>:
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Չորեքշաբթի"</span>);
+    <span class="k">break</span>;
+  <span class="k">default</span>:
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Անհայտ օր"</span>);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Չորեքշաբթի</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Մի՛ մոռացիր break-ը</span>
+      <p>Առանց <code>break</code>-ի JS-ը շարունակում է կատարել <strong>հաջորդ բոլոր</strong> <code>case</code>-երը՝ առանց պայմանը ստուգելու։ Սա ամենահաճախ հանդիպող սխալն է <code>switch</code>-ում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ինչ է լինում առանց break-ի</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> day = <span class="n">1</span>;
+
+<span class="k">switch</span> (day) {
+  <span class="k">case</span> <span class="n">1</span>:
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Երկուշաբթի"</span>);
+  <span class="k">case</span> <span class="n">2</span>:
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Երեքշաբթի"</span>);
+  <span class="k">case</span> <span class="n">3</span>:
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Չորեքշաբթի"</span>);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Երկուշաբթի</span>
+<span class="r">Երեքշաբթի</span>
+<span class="r">Չորեքշաբթի</span>   <span class="m">← ամեն ինչ թափվեց ներքև</span></pre>
+    </div>
+
+    <h3>Երբեմն այդ «թափվելը» օգտակար է</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>մի քանի case միասին</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> day = <span class="s">"շաբաթ"</span>;
+
+<span class="k">switch</span> (day) {
+  <span class="k">case</span> <span class="s">"շաբաթ"</span>:
+  <span class="k">case</span> <span class="s">"կիրակի"</span>:
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Հանգստյան օր է։"</span>);
+    <span class="k">break</span>;
+  <span class="k">default</span>:
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Աշխատանքային օր է։"</span>);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Հանգստյան օր է։</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ե՞րբ ինչ օգտագործել</span>
+      <p><code>switch</code> — երբ ստուգում ես <strong>ճշգրիտ արժեքներ</strong> («շաբաթ», 3, "admin")։<br>
+      <code>if / else if</code> — երբ ստուգում ես <strong>միջակայքեր</strong> կամ բարդ պայմաններ (<code>mark &gt;= 14 &amp;&amp; mark &lt; 18</code>)։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Դասարանական աշխատանք</h2>
+
+    <h3>Առաջադրանք A — Նահանջ տարի</h3>
+    <p>Տարին նահանջ է, եթե բաժանվում է 4-ի, բայց ոչ 100-ի — <em>կամ</em> եթե բաժանվում է 400-ի։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>leap-year.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> year = <span class="n">2024</span>;
+
+<span class="k">if</span> ((year % <span class="n">4</span> === <span class="n">0</span> &amp;&amp; year % <span class="n">100</span> !== <span class="n">0</span>) || year % <span class="n">400</span> === <span class="n">0</span>) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">`</span>${year}<span class="s">-ը նահանջ տարի է։ Փետրվարը 29 օր ունի։`</span>);
+} <span class="k">else</span> {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">`</span>${year}<span class="s">-ը սովորական տարի է։`</span>);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">2024-ը նահանջ տարի է։ Փետրվարը 29 օր ունի։</span></pre>
+    </div>
+
+    <h3>Առաջադրանք B — Տոմսի գին</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ticket.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> age = <span class="f">Number</span>(<span class="f">prompt</span>(<span class="s">"Ձեր տարիքը"</span>));
+<span class="k">let</span> price;
+
+<span class="k">if</span> (age &lt; <span class="n">6</span>) {
+  price = <span class="n">0</span>;
+} <span class="k">else</span> <span class="k">if</span> (age &lt; <span class="n">18</span>) {
+  price = <span class="n">1500</span>;
+} <span class="k">else</span> <span class="k">if</span> (age &lt; <span class="n">65</span>) {
+  price = <span class="n">2500</span>;
+} <span class="k">else</span> {
+  price = <span class="n">1000</span>;
+}
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">`Տոմսի գինը՝ </span>${price}<span class="s"> դրամ`</span>);</code></pre>
+<pre class="out"><span class="m">Console  (օգտագործողը գրեց 14)</span>
+<span class="r">Տոմսի գինը՝ 1500 դրամ</span></pre>
+    </div>
+
+    <h3>Առաջադրանք C — Եռանկյան ստուգում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>triangle.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> a = <span class="n">3</span>, b = <span class="n">4</span>, c = <span class="n">5</span>;
+
+<span class="k">if</span> (a + b &gt; c &amp;&amp; a + c &gt; b &amp;&amp; b + c &gt; a) {
+  <span class="k">if</span> (a === b &amp;&amp; b === c) {
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Հավասարակողմ եռանկյուն"</span>);
+  } <span class="k">else</span> <span class="k">if</span> (a === b || b === c || a === c) {
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Հավասարասրուն եռանկյուն"</span>);
+  } <span class="k">else</span> {
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Տարբերակողմ եռանկյուն"</span>);
+  }
+} <span class="k">else</span> {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Այսպիսի եռանկյուն գոյություն չունի։"</span>);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Տարբերակողմ եռանկյուն</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Խաղահրապարակ</h2>
+    <p>Փոխիր <code>mark</code>-ի արժեքը և տես, թե ինչպես է փոխվում արդյունքը։ Հետո ավելացրու քո պայմանները։</p>
+
+    <div class="pg">
+      <textarea id="pgCode" spellcheck="false">const mark = 15;
+
+if (mark >= 18) {
+  console.log("Գերազանց");
+} else if (mark >= 14) {
+  console.log("Լավ");
+} else if (mark >= 10) {
+  console.log("Բավարար");
+} else {
+  console.log("Անբավարար");
+}
+
+console.log(mark % 2 === 0 ? "Զույգ թիվ" : "Կենտ թիվ");
+console.log(mark >= 10 && mark <= 20);</textarea>
+      <div class="pg__actions">
+        <button class="run" id="runBtn">Կատարել</button>
+        <button class="clr" id="clrBtn">Մաքրել</button>
+      </div>
+<pre class="out" id="pgOut"><span class="m">Console</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 12 ============ -->
+  <section id="s12">
+    <h2><span class="num">12</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li><code>prompt</code>-ով վերցրու թիվ և տպիր՝ դրական է, բացասական, թե զրո։</li>
+      <li>Վերցրու թիվ և տպիր՝ զույգ է թե կենտ։ Օգտագործիր <code>%</code>։</li>
+      <li>Երեք թիվ՝ <code>a</code>, <code>b</code>, <code>c</code>։ Գտիր և տպիր ամենամեծը (միայն <code>if</code>-երով, առանց <code>Math.max</code>)։</li>
+      <li>Ջրի ջերմաստիճանը՝ փոփոխական։ 0-ից ցածր՝ «սառույց», 0–99՝ «հեղուկ», 100 և ավելի՝ «գոլորշի»։</li>
+      <li>Խանութում գնումը 20 000 դրամից բարձր է — 10% զեղչ։ 50 000-ից բարձր — 20%։ Հաշվիր և տպիր վերջնական գումարը։</li>
+      <li>Օգտագործողից վերցրու օրվա համարը (1–7) և <code>switch</code>-ով տպիր օրվա անունը։ Սխալ թվի դեպքում՝ «Սխալ մուտք»։</li>
+      <li>Մուտքի ստուգում․ <code>login === "admin"</code> ԵՎ <code>password === "1234"</code> → «Բարի գալուստ», այլապես՝ «Սխալ տվյալներ»։</li>
+      <li>Գրիր ternary-ով․ եթե տարիքը 18-ից մեծ է — «մուտքն ազատ է», այլապես — «մուտքն արգելված է»։</li>
+      <li>Բացատրիր մեկնաբանության մեջ՝ ինչո՞ւ է <code>0 || "պահեստային"</code>-ը տալիս «պահեստային», իսկ <code>0 ?? "պահեստային"</code>-ը՝ <code>0</code>։</li>
+    </ol>
+
+    <div class="note">
+      <span class="tag">Հանձնում</span>
+      <p>Թղթապանակ՝ <code>hw-02-anun-azganun</code>, ամեն առաջադրանք առանձին ֆայլում։ Կոդը գրիր մեկնաբանություններով։</p>
+    </div>
+  </section>
+
+  <!-- ============ 13 ============ -->
+  <section id="s13">
+    <h2><span class="num">13</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>a % b</code></td><td>Բաժանման մնացորդ</td></tr>
+      <tr><td><code>a ** b</code></td><td>a-ն b աստիճան</td></tr>
+      <tr><td><code>x += 5</code></td><td>Կարճ ձև <code>x = x + 5</code>-ի</td></tr>
+      <tr><td><code>x++</code> / <code>x--</code></td><td>Ավելացնում / պակասեցնում է 1-ով</td></tr>
+      <tr><td><code>===</code> / <code>!==</code></td><td>Խիստ համեմատում (արժեք + տիպ)</td></tr>
+      <tr><td><code>if () { } else { }</code></td><td>Պայման</td></tr>
+      <tr><td><code>else if () { }</code></td><td>Լրացուցիչ պայման</td></tr>
+      <tr><td><code>&amp;&amp;</code></td><td>ԵՎ — բոլորը պիտի true լինեն</td></tr>
+      <tr><td><code>||</code></td><td>ԿԱՄ — գոնե մեկը true</td></tr>
+      <tr><td><code>!</code></td><td>ՈՉ — շրջում է</td></tr>
+      <tr><td><code>a ?? b</code></td><td>Եթե a-ն null/undefined է → b</td></tr>
+      <tr><td><code>a ? b : c</code></td><td>Ternary՝ պայման մեկ տողով</td></tr>
+      <tr><td><code>switch / case / break</code></td><td>Ճշգրիտ արժեքների ստուգում</td></tr>
+      <tr><td>Falsy 6-ը</td><td><code>false 0 "" null undefined NaN</code></td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Ցիկլեր՝ <code>for</code>, <code>while</code>, <code>do..while</code>։ Կսովորենք, թե ինչպես ծրագիրը կարող է նույն գործողությունը կրկնել 1000 անգամ՝ առանց 1000 տող գրելու։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 02 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHP Դաս 6 — Ֆորմաներ և վալիդացիա</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>PHP Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">PHP Դաս 6 · 2 ժամ · Անվտանգություն 2 / 4</p>
+  <h1>Ֆորմաներ և վալիդացիա</h1>
+  <p class="lede">HTML Դաս 4-ում սովորեցինք <code>required</code>-ը և ասացինք՝ «սա անվտանգություն չէ»։ Այսօր տեսնում ենք, թե ինչու՝ 30 վայրկյանում շրջանցելով այն։</p>
+
+  <div class="facts">
+    <span>Բլոկ 3 · Դաս 6 / 24</span>
+    <span>Անվտանգության երկրորդ դասը</span>
+    <span>POST/Redirect/GET</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ինչպես շրջանցել բրաուզերի վալիդացիան</li>
+      <li><code>$_GET</code>, <code>$_POST</code>, <code>$_REQUEST</code></li>
+      <li>Տվյալների մաքրում և ստուգում</li>
+      <li><code>filter_var</code> և վալիդացիայի ֆունկցիա</li>
+      <li>Սխալների ցուցադրում դաշտերի կողքին</li>
+      <li>Լրացրած արժեքների պահպանում</li>
+      <li>POST/Redirect/GET օրինաչափությունը</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>30 վայրկյան, որ ամեն ինչ պարզ դառնա</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>«պաշտպանված» ֆորմա</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">form</span> <span class="f">method</span>=<span class="s">"post"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"email"</span> <span class="f">name</span>=<span class="s">"email"</span> <span class="f">required</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"number"</span> <span class="f">name</span>=<span class="s">"qty"</span> <span class="f">min</span>=<span class="s">"1"</span> <span class="f">max</span>=<span class="s">"10"</span> <span class="f">required</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">button</span><span class="p">&gt;</span>Ուղարկել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">form</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>շրջանցում 1 · DevTools, 5 վայրկյան</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Console-ում</span>
+<span class="t">document</span>.<span class="f">querySelector</span>(<span class="s">'form'</span>).<span class="f">noValidate</span> = <span class="k">true</span>;
+
+<span class="c">// Կամ պարզապես ջնջիր required-ը Elements ներդիրում</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>շրջանցում 2 · ընդհանրապես առանց բրաուզերի</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># Տերմինալում</span>
+curl -X POST https://technomarket.test/contact.php \
+     -d "email=ոչ-էլ-հասցե" \
+     -d "qty=-9999"
+
+<span class="c"># Քո HTML-ը այստեղ ընդհանրապես չկա։
+# Ոչ մի required, ոչ մի min/max։</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ահա գլխավոր միտքը</span>
+      <p><strong>HTML-ի վալիդացիան օգտագործողի հարմարության համար է, ոչ անվտանգության։</strong><br><br>
+      Այն ասում է բարեխիղճ օգտագործողին․ «մոռացել ես դաշտը»։ Դա արժեքավոր է — բայց հարձակվողին այն ընդհանրապես չի վերաբերում։<br><br>
+      Սերվերը <strong>երբեք չի կարող վստահել</strong> այն ամենին, ինչ գալիս է բրաուզերից։ Ոչ ֆորմայի դաշտերին, ոչ cookie-ներին, ոչ <code>hidden</code> դաշտերին, ոչ URL-ի պարամետրերին։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Երկուսն էլ պետք են</span>
+      <p>Սա չի նշանակում՝ հրաժարվել <code>required</code>-ից։<br><br>
+      <strong>Բրաուզերի վալիդացիա</strong> → արագ արձագանք, առանց էջի վերբեռնման, լավ UX<br>
+      <strong>Սերվերային վալիդացիա</strong> → իրական պաշտպանություն<br><br>
+      Գրիր երկուսն էլ։ Բայց երբեք մի՛ ապավինիր միայն առաջինին։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Superglobals</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Փոփոխական</th><th>Ի՞նչ է պարունակում</th></tr>
+      <tr><td><code>$_GET</code></td><td>URL-ի պարամետրերը՝ <code>?page=2</code></td></tr>
+      <tr><td><code>$_POST</code></td><td>Ֆորմայի տվյալները <code>method="post"</code>-ով</td></tr>
+      <tr><td><code>$_FILES</code></td><td>Վերբեռնված ֆայլերը (Դաս 7)</td></tr>
+      <tr><td><code>$_SERVER</code></td><td>Հարցումի մասին տեղեկություն</td></tr>
+      <tr><td><code>$_SESSION</code></td><td>Սեսիայի տվյալները (Դաս 7)</td></tr>
+      <tr><td><code>$_COOKIE</code></td><td>Cookie-ները</td></tr>
+      <tr><td><code>$_REQUEST</code></td><td><strong>Չօգտագործես</strong> ⚠️</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ ոչ <code>$_REQUEST</code></span>
+      <p>Այն միավորում է <code>$_GET</code>, <code>$_POST</code> և <code>$_COOKIE</code>։ Կարդալով կոդը՝ չգիտես, որտեղից է եկել արժեքը։<br><br>
+      Ավելի վատ՝ հարձակվողը կարող է URL-ով վերագրել այն, ինչ սպասում էիր POST-ից։ Եղել են իրական խոցելիություններ հենց այս պատճառով։<br><br>
+      <strong>Միշտ նշիր բացահայտ՝ <code>$_GET</code> կամ <code>$_POST</code>։</strong></p>
+    </div>
+
+    <h3>GET թե՞ POST</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th></th><th>GET</th><th>POST</th></tr>
+      <tr><td>Որտեղ են տվյալները</td><td>URL-ում</td><td>Հարցումի մարմնում</td></tr>
+      <tr><td>Հղումով կիսվե՞լ</td><td>✅</td><td>❌</td></tr>
+      <tr><td>Պահվում է պատմությունում</td><td>✅</td><td>❌</td></tr>
+      <tr><td>Երկարության սահման</td><td>~2000 նիշ</td><td>Գործնականում չկա</td></tr>
+      <tr><td>Ֆայլեր</td><td>❌</td><td>✅</td></tr>
+      <tr><td>Ե՞րբ</td><td>Որոնում, ֆիլտր, էջավորում</td><td>Ստեղծել, փոխել, ջնջել</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Պարզ կանոն</span>
+      <p><strong>GET</strong> — երբ պարզապես <em>կարդում</em> ես։ Կրկնելը անվնաս է։<br>
+      <strong>POST</strong> — երբ ինչ-որ բան <em>փոխվում</em> է։ Կրկնելը վտանգավոր է։<br><br>
+      Ֆիլտրը GET է, որովհետև հղումով պիտի կարողանաս կիսվել։ Պատվերը POST է, որովհետև երկու անգամ չպիտի ուղարկվի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Մաքրում և ստուգում</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երկու տարբեր բան</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ՄԱՔՐՈՒՄ — բերում ենք ընդունելի տեսքի</span>
+<span class="n">$name</span> = <span class="f">trim</span>(<span class="n">$_POST</span>[<span class="s">'name'</span>] ?? <span class="s">''</span>);
+<span class="n">$qty</span>  = (<span class="k">int</span>) (<span class="n">$_POST</span>[<span class="s">'qty'</span>] ?? <span class="n">0</span>);
+
+<span class="c">// ՍՏՈՒԳՈՒՄ — որոշում ենք՝ ընդունելի՞ է</span>
+<span class="k">if</span> (<span class="n">$name</span> === <span class="s">''</span>) {
+    <span class="n">$errors</span>[<span class="s">'name'</span>] = <span class="s">'Անունը պարտադիր է'</span>;
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>filter_var — ներկառուցված ստուգումներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Էլ. հասցե</span>
+<span class="f">filter_var</span>(<span class="n">$email</span>, <span class="k">FILTER_VALIDATE_EMAIL</span>);    <span class="c">// տողը կամ false</span>
+
+<span class="c">// Ամբողջ թիվ՝ միջակայքով</span>
+<span class="f">filter_var</span>(<span class="n">$qty</span>, <span class="k">FILTER_VALIDATE_INT</span>, [
+    <span class="s">'options'</span> =&gt; [<span class="s">'min_range'</span> =&gt; <span class="n">1</span>, <span class="s">'max_range'</span> =&gt; <span class="n">100</span>]
+]);
+
+<span class="f">filter_var</span>(<span class="n">$url</span>, <span class="k">FILTER_VALIDATE_URL</span>);
+<span class="f">filter_var</span>(<span class="n">$ip</span>, <span class="k">FILTER_VALIDATE_IP</span>);</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Զգույշ՝ <code>false</code>-ի հետ</span>
+      <p><code>filter_var</code>-ը վերադարձնում է <code>false</code>, երբ արժեքը վավեր չէ։ Բայց <code>FILTER_VALIDATE_INT</code>-ի դեպքում <strong><code>0</code>-ն էլ է վավեր</strong>։<br><br>
+      <code>if (!filter_var($qty, FILTER_VALIDATE_INT))</code> → <code>0</code>-ի դեպքում կնշվի սխալ, թեև զրոն կարող է վավեր լինել։<br><br>
+      Ճիշտ ձևը՝ <code>if (filter_var(...) === false)</code>։ Ահա ևս մեկ դեպք, որտեղ Դաս 2-ի <code>===</code>-ի կանոնը կարևոր է։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ի՞նչ ստուգել</th><th>Ինչպես</th></tr>
+      <tr><td>Դատարկ չէ՞</td><td><code>$x === ''</code> — ոչ <code>empty()</code> ⭐</td></tr>
+      <tr><td>Երկարությունը</td><td><code>mb_strlen($x)</code></td></tr>
+      <tr><td>Էլ. հասցե</td><td><code>filter_var</code></td></tr>
+      <tr><td>Թիվ միջակայքում</td><td><code>filter_var</code> + <code>options</code></td></tr>
+      <tr><td>Ցուցակից մեկը</td><td><code>in_array($x, $allowed, true)</code> ⭐</td></tr>
+      <tr><td>Հեռախոս</td><td><code>preg_match</code></td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ամենակարևոր օրինաչափությունը՝ ցուցակից մեկը</span>
+      <p>Երբ արժեքը պիտի լինի սահմանափակ բազմությունից՝ կատեգորիա, տեսակավորման ձև, կարգավիճակ — <strong>միշտ ստուգիր ցուցակով</strong>․<br><br>
+      <code>$allowed = ['price_asc', 'price_desc', 'name'];</code><br>
+      <code>$sort = in_array($_GET['sort'] ?? '', $allowed, true) ? $_GET['sort'] : 'price_asc';</code><br><br>
+      Երրորդ արգումենտը՝ <code>true</code>, խիստ համեմատում է։ Առանց դրա <code>in_array(0, ['a','b'])</code> վերադարձնում է... անսպասելի արդյունքներ։<br><br>
+      Այս օրինաչափությունը Դաս 9-ում կփրկի SQL injection-ից, երբ տեսակավորման դաշտը գնա ուղիղ հարցման մեջ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Վալիդացիայի ֆունկցիա</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>validate.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="c">/**
+ * Վերադարձնում է սխալների զանգված։
+ * Դատարկ զանգված = ամեն ինչ կարգին է։
+ */</span>
+<span class="k">function</span> <span class="f">validateContact</span>(<span class="k">array</span> <span class="n">$data</span>): <span class="k">array</span>
+{
+    <span class="n">$errors</span> = [];
+
+    <span class="c">// --- Անուն ---</span>
+    <span class="n">$name</span> = <span class="f">trim</span>(<span class="n">$data</span>[<span class="s">'name'</span>] ?? <span class="s">''</span>);
+
+    <span class="k">if</span> (<span class="n">$name</span> === <span class="s">''</span>) {
+        <span class="n">$errors</span>[<span class="s">'name'</span>] = <span class="s">'Խնդրում ենք նշել ձեր անունը'</span>;
+    } <span class="k">elseif</span> (<span class="f">mb_strlen</span>(<span class="n">$name</span>) &lt; <span class="n">2</span>) {
+        <span class="n">$errors</span>[<span class="s">'name'</span>] = <span class="s">'Անունը շատ կարճ է'</span>;
+    } <span class="k">elseif</span> (<span class="f">mb_strlen</span>(<span class="n">$name</span>) &gt; <span class="n">60</span>) {
+        <span class="n">$errors</span>[<span class="s">'name'</span>] = <span class="s">'Անունը շատ երկար է (առավելագույնը 60 նիշ)'</span>;
+    }
+
+    <span class="c">// --- Էլ. հասցե ---</span>
+    <span class="n">$email</span> = <span class="f">trim</span>(<span class="n">$data</span>[<span class="s">'email'</span>] ?? <span class="s">''</span>);
+
+    <span class="k">if</span> (<span class="n">$email</span> === <span class="s">''</span>) {
+        <span class="n">$errors</span>[<span class="s">'email'</span>] = <span class="s">'Խնդրում ենք նշել էլ. հասցեն'</span>;
+    } <span class="k">elseif</span> (<span class="f">filter_var</span>(<span class="n">$email</span>, <span class="k">FILTER_VALIDATE_EMAIL</span>) === <span class="k">false</span>) {
+        <span class="n">$errors</span>[<span class="s">'email'</span>] = <span class="s">'Էլ. հասցեն վավեր չէ'</span>;
+    }
+
+    <span class="c">// --- Թեմա՝ ցուցակից ---</span>
+    <span class="n">$allowed</span> = [<span class="s">'order'</span>, <span class="s">'support'</span>, <span class="s">'other'</span>];
+    <span class="n">$topic</span> = <span class="n">$data</span>[<span class="s">'topic'</span>] ?? <span class="s">''</span>;
+
+    <span class="k">if</span> (!<span class="f">in_array</span>(<span class="n">$topic</span>, <span class="n">$allowed</span>, <span class="k">true</span>)) {
+        <span class="n">$errors</span>[<span class="s">'topic'</span>] = <span class="s">'Ընտրեք թեման'</span>;
+    }
+
+    <span class="c">// --- Հաղորդագրություն ---</span>
+    <span class="n">$message</span> = <span class="f">trim</span>(<span class="n">$data</span>[<span class="s">'message'</span>] ?? <span class="s">''</span>);
+    <span class="n">$len</span> = <span class="f">mb_strlen</span>(<span class="n">$message</span>);
+
+    <span class="k">if</span> (<span class="n">$len</span> &lt; <span class="n">10</span>) {
+        <span class="n">$errors</span>[<span class="s">'message'</span>] = <span class="s">'Հաղորդագրությունը պիտի լինի առնվազն 10 նիշ'</span>;
+    } <span class="k">elseif</span> (<span class="n">$len</span> &gt; <span class="n">2000</span>) {
+        <span class="n">$errors</span>[<span class="s">'message'</span>] = <span class="s">'Հաղորդագրությունը շատ երկար է'</span>;
+    }
+
+    <span class="k">return</span> <span class="n">$errors</span>;
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ վերադարձնում ենք զանգված, ոչ <code>bool</code></span>
+      <p><code>true</code>/<code>false</code>-ը ասում է միայն «սխալ կա»։ Օգտագործողը պիտի կռահի, թե որտեղ։<br><br>
+      Զանգվածը՝ <code>['email' =&gt; 'Էլ. հասցեն վավեր չէ']</code>, թույլ է տալիս ցույց տալ սխալը <strong>հենց այդ դաշտի կողքին</strong>։<br><br>
+      Բանալիները համընկնում են դաշտերի <code>name</code>-երին — դա հեշտացնում է ցուցադրումը և հետագայում կհեշտացնի Laravel-ին անցումը, որտեղ ճիշտ նույն կառուցվածքն է։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Առավելագույն երկարությունը մի՛ մոռացիր</span>
+      <p><code>&lt;textarea&gt;</code>-ում կարելի է տեղադրել 50 ՄԲ տեքստ։ Առանց վերին սահմանի՝<br><br>
+      · Բազայի դաշտը կլցվի կամ կկտրվի<br>
+      · Էջը կդանդաղի ցուցադրելիս<br>
+      · Հեշտ է կազմակերպել ծանրաբեռնում<br><br>
+      Ամեն տեքստային դաշտ պիտի ունենա վերին սահման։ Միշտ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Ֆորման սխալներով</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>views/pages/contact.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">section</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-50 w-md-100"</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">h1</span> <span class="f">class</span>=<span class="s">"section-title mb-30"</span><span class="p">&gt;</span>Կապ մեզ հետ<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;?php</span> <span class="k">if</span> (<span class="n">$success</span> ?? <span class="k">false</span>): <span class="p">?&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"alert alert--success"</span> <span class="f">role</span>=<span class="s">"status"</span><span class="p">&gt;</span>
+            Շնորհակալություն։ Կպատասխանենք մեկ աշխատանքային օրվա ընթացքում։
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;?php</span> <span class="k">endif</span>; <span class="p">?&gt;</span>
+
+    <span class="p">&lt;?php</span> <span class="k">if</span> (!<span class="f">empty</span>(<span class="n">$errors</span>)): <span class="p">?&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"alert alert--danger"</span> <span class="f">role</span>=<span class="s">"alert"</span><span class="p">&gt;</span>
+            Ուղղեք &lt;?= <span class="f">count</span>(<span class="n">$errors</span>) ?&gt; սխալ և փորձեք կրկին։
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;?php</span> <span class="k">endif</span>; <span class="p">?&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">form</span> <span class="f">method</span>=<span class="s">"post"</span> <span class="f">action</span>=<span class="s">"/contact.php"</span> <span class="f">novalidate</span><span class="p">&gt;</span>
+
+        <span class="c">&lt;!-- Անուն --&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"name"</span><span class="p">&gt;</span>Անուն<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"text"</span> <span class="f">id</span>=<span class="s">"name"</span> <span class="f">name</span>=<span class="s">"name"</span>
+                   <span class="f">class</span>=<span class="s">"input &lt;?= isset($errors['name']) ? 'input--error' : '' ?&gt;"</span>
+                   <span class="f">value</span>=<span class="s">"&lt;?= e($old['name'] ?? '') ?&gt;"</span>
+                   <span class="p">&lt;?php</span> <span class="k">if</span> (<span class="f">isset</span>(<span class="n">$errors</span>[<span class="s">'name'</span>])): <span class="p">?&gt;</span>
+                       aria-invalid="true" aria-describedby="name-error"
+                   <span class="p">&lt;?php</span> <span class="k">endif</span>; <span class="p">?&gt;</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;?php</span> <span class="k">if</span> (<span class="f">isset</span>(<span class="n">$errors</span>[<span class="s">'name'</span>])): <span class="p">?&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"field__error"</span> <span class="f">id</span>=<span class="s">"name-error"</span><span class="p">&gt;</span>
+                    &lt;?= <span class="f">e</span>(<span class="n">$errors</span>[<span class="s">'name'</span>]) ?&gt;
+                <span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+            <span class="p">&lt;?php</span> <span class="k">endif</span>; <span class="p">?&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="c">&lt;!-- Էլ. հասցե --&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"email"</span><span class="p">&gt;</span>Էլ. հասցե<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"email"</span> <span class="f">id</span>=<span class="s">"email"</span> <span class="f">name</span>=<span class="s">"email"</span>
+                   <span class="f">class</span>=<span class="s">"input &lt;?= isset($errors['email']) ? 'input--error' : '' ?&gt;"</span>
+                   <span class="f">value</span>=<span class="s">"&lt;?= e($old['email'] ?? '') ?&gt;"</span><span class="p">&gt;</span>
+            <span class="p">&lt;?php</span> <span class="k">if</span> (<span class="f">isset</span>(<span class="n">$errors</span>[<span class="s">'email'</span>])): <span class="p">?&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"field__error"</span><span class="p">&gt;</span>&lt;?= <span class="f">e</span>(<span class="n">$errors</span>[<span class="s">'email'</span>]) ?&gt;<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+            <span class="p">&lt;?php</span> <span class="k">endif</span>; <span class="p">?&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="c">&lt;!-- Թեմա --&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"topic"</span><span class="p">&gt;</span>Թեմա<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">select</span> <span class="f">id</span>=<span class="s">"topic"</span> <span class="f">name</span>=<span class="s">"topic"</span> <span class="f">class</span>=<span class="s">"input"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">option</span> <span class="f">value</span>=<span class="s">""</span><span class="p">&gt;</span>— ընտրեք —<span class="p">&lt;/</span><span class="t">option</span><span class="p">&gt;</span>
+                <span class="p">&lt;?php</span> <span class="k">foreach</span> (<span class="n">$topics</span> <span class="k">as</span> <span class="n">$key</span> =&gt; <span class="n">$label</span>): <span class="p">?&gt;</span>
+                    <span class="p">&lt;</span><span class="t">option</span> <span class="f">value</span>=<span class="s">"&lt;?= e($key) ?&gt;"</span>
+                        <span class="p">&lt;?=</span> (<span class="n">$old</span>[<span class="s">'topic'</span>] ?? <span class="s">''</span>) === <span class="n">$key</span> ? <span class="s">'selected'</span> : <span class="s">''</span> <span class="p">?&gt;</span><span class="p">&gt;</span>
+                        &lt;?= <span class="f">e</span>(<span class="n">$label</span>) ?&gt;
+                    <span class="p">&lt;/</span><span class="t">option</span><span class="p">&gt;</span>
+                <span class="p">&lt;?php</span> <span class="k">endforeach</span>; <span class="p">?&gt;</span>
+            <span class="p">&lt;/</span><span class="t">select</span><span class="p">&gt;</span>
+            <span class="p">&lt;?php</span> <span class="k">if</span> (<span class="f">isset</span>(<span class="n">$errors</span>[<span class="s">'topic'</span>])): <span class="p">?&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"field__error"</span><span class="p">&gt;</span>&lt;?= <span class="f">e</span>(<span class="n">$errors</span>[<span class="s">'topic'</span>]) ?&gt;<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+            <span class="p">&lt;?php</span> <span class="k">endif</span>; <span class="p">?&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="c">&lt;!-- Հաղորդագրություն --&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"message"</span><span class="p">&gt;</span>Հաղորդագրություն<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">textarea</span> <span class="f">id</span>=<span class="s">"message"</span> <span class="f">name</span>=<span class="s">"message"</span> <span class="f">rows</span>=<span class="s">"6"</span>
+                      <span class="f">class</span>=<span class="s">"input &lt;?= isset($errors['message']) ? 'input--error' : '' ?&gt;"</span><span class="p">&gt;</span>&lt;?= <span class="f">e</span>(<span class="n">$old</span>[<span class="s">'message'</span>] ?? <span class="s">''</span>) ?&gt;<span class="p">&lt;/</span><span class="t">textarea</span><span class="p">&gt;</span>
+            <span class="p">&lt;?php</span> <span class="k">if</span> (<span class="f">isset</span>(<span class="n">$errors</span>[<span class="s">'message'</span>])): <span class="p">?&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"field__error"</span><span class="p">&gt;</span>&lt;?= <span class="f">e</span>(<span class="n">$errors</span>[<span class="s">'message'</span>]) ?&gt;<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+            <span class="p">&lt;?php</span> <span class="k">endif</span>; <span class="p">?&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">button</span> <span class="f">type</span>=<span class="s">"submit"</span> <span class="f">class</span>=<span class="s">"btn btn--primary"</span><span class="p">&gt;</span>Ուղարկել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;/</span><span class="t">form</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ուշադրություն՝ <code>textarea</code>-ի արժեքը</span>
+      <p><code>&lt;textarea&gt;</code>-ը արժեքը վերցնում է <strong>իր ներսից</strong>, ոչ <code>value</code> ատրիբուտից։ Դա HTML Դաս 4-ի թակարդն էր։<br><br>
+      Եվ ուշադիր՝ բացող թեգից անմիջապես հետո չպիտի լինի նոր տող, այլապես այն կմտնի արժեքի մեջ։ Ուստի <code>&gt;&lt;?= e(...) ?&gt;&lt;/textarea&gt;</code> — մեկ տողում։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Հասանելիության երեք դետալ</span>
+      <p><code>aria-invalid="true"</code> — էկրանընթերցիչը հայտարարում է, որ դաշտում սխալ կա<br>
+      <code>aria-describedby</code> — կապում է դաշտը սխալի տեքստի հետ, և այն կարդացվում է<br>
+      <code>role="alert"</code> — ընդհանուր հաղորդագրությունը կարդացվում է անմիջապես<br><br>
+      Առանց դրանց կույր օգտագործողը լսում է միայն «տեքստային դաշտ, Անուն» և չգիտի, որ սխալ կա։ Կարմիր շրջանակը նրա համար գոյություն չունի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>POST/Redirect/GET</h2>
+
+    <div class="warn note">
+      <span class="tag">Խնդիրը</span>
+      <p>Օգտագործողը ուղարկեց ֆորման, տեսավ «Շնորհակալություն», ապա սեղմեց <kbd>F5</kbd>։<br><br>
+      Բրաուզերը հարցնում է․ «Կրկին ուղարկե՞լ տվյալները»։ Եթե սեղմի «Այո» — <strong>հաղորդագրությունը կուղարկվի երկրորդ անգամ</strong>։<br><br>
+      Պատվերի դեպքում դա երկու պատվեր է։ Վճարման դեպքում՝ երկու վճարում։</p>
+    </div>
+
+    <div class="tree">Առանց PRG                      PRG-ով
+
+  POST /contact.php              POST /contact.php
+       │                              │
+  Ցուցադրում ենք էջը             302 Redirect
+       │                              │
+  F5 → կրկին POST ⚠️             GET /contact.php?sent=1
+                                      │
+                                 Ցուցադրում ենք էջը
+                                      │
+                                 F5 → կրկին GET ✅</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>contact.php — կոնտրոլեր</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">session_start</span>();
+
+<span class="k">require_once</span> <span class="n">__DIR__</span> . <span class="s">'/functions.php'</span>;
+<span class="k">require_once</span> <span class="n">__DIR__</span> . <span class="s">'/validate.php'</span>;
+
+<span class="n">$topics</span> = [
+    <span class="s">'order'</span>   =&gt; <span class="s">'Պատվեր'</span>,
+    <span class="s">'support'</span> =&gt; <span class="s">'Տեխնիկական աջակցություն'</span>,
+    <span class="s">'other'</span>   =&gt; <span class="s">'Այլ'</span>,
+];
+
+<span class="n">$errors</span>  = [];
+<span class="n">$old</span>     = [];
+<span class="n">$success</span> = <span class="k">false</span>;
+
+<span class="c">// --- Մշակում ենք POST-ը ---</span>
+<span class="k">if</span> (<span class="n">$_SERVER</span>[<span class="s">'REQUEST_METHOD'</span>] === <span class="s">'POST'</span>) {
+
+    <span class="n">$errors</span> = <span class="f">validateContact</span>(<span class="n">$_POST</span>);
+
+    <span class="k">if</span> (<span class="n">$errors</span> === []) {
+
+        <span class="c">// Այստեղ կուղարկեինք նամակ կամ կպահեինք բազայում</span>
+
+        <span class="n">$_SESSION</span>[<span class="s">'flash'</span>] = <span class="s">'sent'</span>;
+
+        <span class="k">header</span>(<span class="s">'Location: /contact.php'</span>, <span class="k">true</span>, <span class="n">303</span>);
+        <span class="k">exit</span>;                       <span class="c">// ⭐ պարտադիր</span>
+    }
+
+    <span class="c">// Սխալ կա — պահում ենք լրացրածը</span>
+    <span class="n">$old</span> = <span class="n">$_POST</span>;
+}
+
+<span class="c">// --- Ցուցադրում ---</span>
+<span class="k">if</span> (<span class="f">isset</span>(<span class="n">$_SESSION</span>[<span class="s">'flash'</span>])) {
+    <span class="n">$success</span> = <span class="n">$_SESSION</span>[<span class="s">'flash'</span>] === <span class="s">'sent'</span>;
+    <span class="k">unset</span>(<span class="n">$_SESSION</span>[<span class="s">'flash'</span>]);   <span class="c">// ցույց տալիս ջնջում ենք</span>
+}
+
+<span class="n">$content</span> = <span class="f">render</span>(<span class="s">'pages/contact'</span>, <span class="f">compact</span>(<span class="s">'errors'</span>, <span class="s">'old'</span>, <span class="s">'success'</span>, <span class="s">'topics'</span>));
+
+<span class="k">echo</span> <span class="f">render</span>(<span class="s">'layout'</span>, [
+    <span class="s">'title'</span>   =&gt; <span class="s">'Կապ — ՏեխնոՄարկետ'</span>,
+    <span class="s">'content'</span> =&gt; <span class="n">$content</span>,
+]);</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երկու պարտադիր դետալ</span>
+      <p><strong>1. <code>exit</code> <code>header()</code>-ից հետո</strong><br>
+      <code>header()</code>-ը միայն ուղարկում է վերնագիր։ Սկրիպտը <em>շարունակում է աշխատել</em>։ Առանց <code>exit</code>-ի կոդը կկատարվի մինչև վերջ — և եթե ներքևում բազայի գրառում կա, այն կկատարվի։<br><br>
+      <strong>2. Ոչ մի ելք <code>header()</code>-ից առաջ</strong><br>
+      Եթե որևէ բան արդեն ուղարկվել է բրաուզերին՝ նույնիսկ մեկ բացատ <code>&lt;?php</code>-ից առաջ — կստանաս <em>«Cannot modify header information — headers already sent»</em>։<br><br>
+      Հենց դրա համար Դաս 1-ում ասացինք՝ մաքուր PHP ֆայլերում <strong>փակող <code>?&gt;</code> մի՛ գրիր</strong>։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ 303, ոչ 302</span>
+      <p><code>303 See Other</code>-ը բացահայտ ասում է․ «կատարիր GET այս հասցեով»։<br><br>
+      <code>302</code>-ը պատմականորեն երկիմաստ է — որոշ հին client-ներ կրկնում են POST-ը։ 303-ը հենց PRG-ի համար է ստեղծված։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Դասարանական</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css — նոր դասեր</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ---------- Ֆորմայի դաշտեր ---------- */</span>
+<span class="k">.field</span> { <span class="f">margin-bottom</span>: <span class="n">18px</span>; }
+
+<span class="k">.field</span> <span class="t">label</span> {
+    <span class="f">display</span>: <span class="s">block</span>;
+    <span class="f">margin-bottom</span>: <span class="n">6px</span>;
+    <span class="f">font-weight</span>: <span class="n">700</span>;
+    <span class="f">font-size</span>: <span class="n">0.875rem</span>;
+}
+
+<span class="k">.input</span> {
+    <span class="f">width</span>: <span class="n">100%</span>;
+    <span class="f">padding</span>: <span class="n">11px</span> <span class="n">14px</span>;
+    <span class="f">border</span>: <span class="n">1px</span> <span class="s">solid</span> <span class="s">var</span>(<span class="f">--border</span>);
+    <span class="f">border-radius</span>: <span class="s">var</span>(<span class="f">--radius-sm</span>);
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--surface</span>);
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--text</span>);
+}
+
+<span class="k">.input</span>:<span class="k">focus-visible</span> {
+    <span class="f">outline</span>: <span class="n">2px</span> <span class="s">solid</span> <span class="s">var</span>(<span class="f">--accent</span>);
+    <span class="f">outline-offset</span>: <span class="n">2px</span>;
+}
+
+<span class="k">.input--error</span> { <span class="f">border-color</span>: <span class="s">var</span>(<span class="f">--danger</span>); }
+
+<span class="k">.field__error</span> {
+    <span class="f">margin-top</span>: <span class="n">6px</span>;
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--danger</span>);
+    <span class="f">font-size</span>: <span class="n">0.8125rem</span>;
+}
+
+<span class="c">/* ---------- Հաղորդագրություններ ---------- */</span>
+<span class="k">.alert</span> {
+    <span class="f">padding</span>: <span class="n">12px</span> <span class="n">16px</span>;
+    <span class="f">border-radius</span>: <span class="s">var</span>(<span class="f">--radius-sm</span>);
+    <span class="f">margin-bottom</span>: <span class="n">20px</span>;
+    <span class="f">border-left</span>: <span class="n">4px</span> <span class="s">solid</span>;
+}
+
+<span class="k">.alert--success</span> {
+    <span class="f">background</span>: <span class="s">#e8f5ee</span>;
+    <span class="f">border-color</span>: <span class="s">var</span>(<span class="f">--success</span>);
+    <span class="f">color</span>: <span class="s">#0a5236</span>;
+}
+
+<span class="k">.alert--danger</span> {
+    <span class="f">background</span>: <span class="s">#fdeaea</span>;
+    <span class="f">border-color</span>: <span class="s">var</span>(<span class="f">--danger</span>);
+    <span class="f">color</span>: <span class="s">#8c1c1c</span>;
+}</code></pre>
+    </div>
+
+    <ol>
+      <li>Ստեղծիր <code>validate.php</code>-ը</li>
+      <li>Ստեղծիր <code>views/pages/contact.php</code></li>
+      <li>Ստեղծիր <code>contact.php</code> կոնտրոլերը</li>
+      <li>Ավելացրու CSS դասերը <code>main.css</code>-ում</li>
+      <li>Ավելացրու հղում մենյուում</li>
+      <li>Փորձարկիր՝ ուղարկիր դատարկ ֆորմա</li>
+      <li>Փորձարկիր՝ լրացրու մասամբ և ստուգիր, որ արժեքները պահպանվում են</li>
+      <li>Ուղարկիր հաջողությամբ և սեղմիր <kbd>F5</kbd> — չպիտի կրկնվի</li>
+      <li>Շրջանցիր <code>required</code>-ը DevTools-ով և ստուգիր, որ սերվերը բռնում է</li>
+      <li>Փորձարկիր <code>curl</code>-ով</li>
+    </ol>
+
+    <div class="warn note">
+      <span class="tag">Իններորդ և տասներորդ քայլերն ամենակարևորն են</span>
+      <p>Առաջին ութը սովորական ծրագրավորում է։ Վերջին երկուսը՝ <strong>անվտանգության մտածելակերպ</strong>։<br><br>
+      Երբ ինքդ ես շրջանցում սեփական պաշտպանությունը և տեսնում, որ սերվերը դիմանում է — դա այն պահն է, երբ սերվերային վալիդացիան դադարում է «ևս մեկ քայլ» լինելուց։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Կատարիր դասարանականի 10 քայլը։</li>
+      <li>Ուղարկիր <code>curl</code>-ի հրամանը և պատասխանը՝ սքրինշոթով։</li>
+      <li>Ցուցադրիր, ինչ է լինում, երբ <code>exit</code>-ը բացակայում է <code>header()</code>-ից հետո։</li>
+      <li>Դիտմամբ դիր բացատ <code>&lt;?php</code>-ից առաջ և բացատրիր սխալը։</li>
+      <li>Ավելացրու հեռախոսի դաշտ <code>preg_match</code>-ով վալիդացիայով։</li>
+      <li>Ավելացրու checkbox՝ «Համաձայն եմ պայմաններին»։ Ինչպե՞ս ես ստուգում այն PHP-ում։</li>
+      <li>Ցուցադրիր, ինչու <code>in_array</code>-ի երրորդ արգումենտը կարևոր է։ Բեր օրինակ, որտեղ առանց դրա ստուգումն անցնում է սխալմամբ։</li>
+      <li>Ցուցադրիր <code>filter_var</code>-ի <code>0</code>-ի թակարդը՝ <code>!</code>-ով և <code>=== false</code>-ով։</li>
+      <li>Ավելացրու ամեն դաշտի վերին սահման։ Փորձարկիր 5000 նիշանոց տեքստով։</li>
+      <li>Ստուգիր ֆորման միայն ստեղնաշարով և էկրանընթերցիչով (NVDA կամ VoiceOver)։ Սխալները կարդացվո՞ւմ են։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>$_POST['x'] ?? ''</code></td><td>Ապահով կարդալ ⭐</td></tr>
+      <tr><td><code>trim()</code></td><td>Հանել եզրերի բացատները</td></tr>
+      <tr><td><code>mb_strlen()</code></td><td>Երկարությունը հայերենով</td></tr>
+      <tr><td><code>filter_var(..., FILTER_VALIDATE_EMAIL)</code></td><td>Էլ. հասցե</td></tr>
+      <tr><td><code>in_array($x, $allowed, true)</code></td><td>Ցուցակից մեկը ⭐</td></tr>
+      <tr><td><code>$_SERVER['REQUEST_METHOD']</code></td><td>GET թե՞ POST</td></tr>
+      <tr><td><code>header('Location: /x', true, 303)</code></td><td>Վերահղում</td></tr>
+      <tr><td><code>exit</code></td><td><strong>Պարտադիր</strong> header-ից հետո ⭐</td></tr>
+      <tr><td><code>compact('a','b')</code></td><td><code>['a'=&gt;$a, 'b'=&gt;$b]</code></td></tr>
+    </table>
+    </div>
+
+    <h3>Վալիդացիայի օրինաչափությունը</h3>
+    <div class="tree">1. Կարդալ    $x = trim($_POST['x'] ?? '')
+2. Ստուգել   $errors['x'] = '...'
+3. Եթե սխալ չկա → գործողություն → redirect → exit
+4. Եթե սխալ կա  → $old = $_POST → ցուցադրել ֆորման</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Ամեն դաշտ ստուգվում է սերվերում</li>
+      <li>Ամեն տեքստային դաշտ ունի վերին սահման</li>
+      <li>Ընտրովի արժեքները ստուգվում են <code>in_array</code>-ով</li>
+      <li>Սխալները ցուցադրվում են դաշտերի կողքին</li>
+      <li>Լրացրած արժեքները չեն կորչում</li>
+      <li>Կա <code>aria-invalid</code> և <code>aria-describedby</code></li>
+      <li>Հաջողությունից հետո՝ redirect</li>
+      <li><code>exit</code>-ը կա <code>header()</code>-ից հետո</li>
+      <li>F5-ը չի կրկնում ուղարկումը</li>
+      <li>Ստուգված է <code>curl</code>-ով</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչու <code>required</code>-ը անվտանգություն չէ</li>
+      <li>Գիտե՞մ, ե՞րբ GET, ե՞րբ POST</li>
+      <li>Հասկանո՞ւմ եմ, ինչու <code>$_REQUEST</code>-ը վտանգավոր է</li>
+      <li>Կարո՞ղ եմ բացատրել PRG-ն</li>
+      <li>Գիտե՞մ, ինչու <code>exit</code>-ը պարտադիր է</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Սեսիաներ, cookie և ֆայլերի վերբեռնում։ Այսօր արդեն օգտագործեցինք <code>$_SESSION</code>-ը flash-հաղորդագրության համար՝ առանց բացատրության։ Վաղը կհասկանանք, ինչպես է այն աշխատում։<br><br>
+      Կկառուցենք նաև զամբյուղ սեսիայի վրա և կսովորենք ֆայլերի ապահով վերբեռնում — որտեղ կան իրենց խոցելիությունները։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>PHP Բլոկ · Դաս 6 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

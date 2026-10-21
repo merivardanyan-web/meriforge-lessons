@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 23 — Փակույթներ, սխալներ, Set և Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 23 · 2 ժամ</p>
+  <h1>Փակույթներ, սխալներ, Set և Map</h1>
+  <p class="lede">Չորս թեմա, որոնք առանձնացնում են սկսնակին փորձառու ծրագրավորողից։ Եվ վերջապես կհասկանանք, ինչպես է աշխատում այն <code>debounce</code>-ը, որը 9 դաս օգտագործում ենք առանց հասկանալու։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 04, 07, 20, 22</span>
+    <span>Բլոկ 3 · Ժամանակակից JS</span>
+    <span>Նախավերջին դասը</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Փակույթներ (closures) — ինչպես է ֆունկցիան «հիշում»</li>
+      <li><code>debounce</code>-ի գաղտնիքը</li>
+      <li>Ցիկլի դասական թակարդը</li>
+      <li><code>throw</code>, <code>try/catch</code>, <code>Error</code> օբյեկտը</li>
+      <li>Սեփական սխալների դասեր</li>
+      <li><code>Set</code> — եզակի արժեքներ</li>
+      <li><code>Map</code> — բանալի-արժեք զույգեր</li>
+      <li>Անփոփոխելիություն</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Փակույթ</h2>
+    <p>Դաս 4-ից գիտենք՝ ֆունկցիայի ներսի փոփոխականները դրսից անհասանելի են։ Բայց ի՞նչ է լինում, երբ ֆունկցիան <strong>վերադարձնում է ուրիշ ֆունկցիա</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>զարմանալի բան</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">createCounter</span>() {
+  <span class="k">let</span> count = <span class="n">0</span>;          <span class="c">// լոկալ փոփոխական</span>
+
+  <span class="k">return</span> <span class="k">function</span>() {
+    count++;
+    <span class="k">return</span> count;
+  };
+}
+
+<span class="k">const</span> counter = <span class="f">createCounter</span>();
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">counter</span>());
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">counter</span>());
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">counter</span>());
+<span class="f">console</span>.<span class="f">log</span>(<span class="k">typeof</span> count);   <span class="c">// դրսից անհասանելի է</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">1</span>
+<span class="r">2</span>
+<span class="r">3</span>
+<span class="r">undefined</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ի՞նչ կատարվեց</span>
+      <p><code>createCounter()</code>-ը ավարտվեց։ Նրա <code>count</code>-ը պիտի ջնջվեր հիշողությունից։ Բայց այն <strong>ողջ է</strong> և հիշում է իր արժեքը։<br><br>
+      Պատճառը՝ վերադարձված ֆունկցիան «կապված է» իր ծնված միջավայրին։ Այդ կապը կոչվում է <strong>փակույթ</strong> (closure)։ Քանի դեռ ֆունկցիան ողջ է, նրա միջավայրն էլ ողջ է։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ամեն կանչ ստեղծում է ՆՈՐ միջավայր</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> counterA = <span class="f">createCounter</span>();
+<span class="k">const</span> counterB = <span class="f">createCounter</span>();
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">counterA</span>(), <span class="f">counterA</span>(), <span class="f">counterA</span>());
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">counterB</span>());</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">1 2 3</span>
+<span class="r">1</span>   <span class="m">← իր սեփական count-ն ունի</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Պարզ սահմանում</span>
+      <p><strong>Փակույթ</strong> = ֆունկցիա + այն միջավայրը, որտեղ նա ծնվել է։ Ֆունկցիան հիշում է իր շուրջը եղած փոփոխականները՝ նույնիսկ եթե արտաքին ֆունկցիան վաղուց ավարտվել է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>debounce-ի գաղտնիքը</h2>
+    <p>Հիմա վերադառնանք այն ֆունկցիային, որը Դաս 16-ից օգտագործում ենք։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>վերջապես պարզ է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">debounce</span>(fn, delay = <span class="n">300</span>) {
+  <span class="k">let</span> timer;                       <span class="c">// ← ապրում է փակույթում</span>
+
+  <span class="k">return</span> <span class="k">function</span>(...args) {
+    <span class="f">clearTimeout</span>(timer);          <span class="c">// տեսնում է նախորդ կանչի timer-ը</span>
+    timer = <span class="f">setTimeout</span>(() =&gt; <span class="f">fn</span>(...args), delay);
+  };
+}</code></pre>
+    </div>
+
+    <p>Ամեն կանչի ժամանակ վերադարձված ֆունկցիան <strong>հիշում է</strong> նույն <code>timer</code>-ը։ Հենց դրա համար կարող է չեղարկել նախորդը։ Առանց փակույթի <code>timer</code>-ը պիտի լիներ գլոբալ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ևս երեք օգտակար օրինակ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// 1. Կատարել միայն մեկ անգամ</span>
+<span class="k">function</span> <span class="f">once</span>(fn) {
+  <span class="k">let</span> called = <span class="k">false</span>;
+  <span class="k">let</span> result;
+
+  <span class="k">return</span> <span class="k">function</span>(...args) {
+    <span class="k">if</span> (called) <span class="k">return</span> result;
+    called = <span class="k">true</span>;
+    result = <span class="f">fn</span>(...args);
+    <span class="k">return</span> result;
+  };
+}
+
+<span class="k">const</span> init = <span class="f">once</span>(() =&gt; {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Գործարկում"</span>);
+  <span class="k">return</span> <span class="s">"պատրաստ"</span>;
+});
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">init</span>());
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">init</span>());
+
+<span class="c">// 2. Ֆունկցիաների գործարան</span>
+<span class="k">function</span> <span class="f">multiplier</span>(factor) {
+  <span class="k">return</span> n =&gt; n * factor;
+}
+
+<span class="k">const</span> double = <span class="f">multiplier</span>(<span class="n">2</span>);
+<span class="k">const</span> triple = <span class="f">multiplier</span>(<span class="n">3</span>);
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">double</span>(<span class="n">10</span>), <span class="f">triple</span>(<span class="n">10</span>));
+
+<span class="c">// 3. Քեշ</span>
+<span class="k">function</span> <span class="f">memoize</span>(fn) {
+  <span class="k">const</span> cache = {};
+
+  <span class="k">return</span> <span class="k">function</span>(n) {
+    <span class="k">if</span> (n <span class="k">in</span> cache) {
+      <span class="f">console</span>.<span class="f">log</span>(<span class="s">"քեշից՝"</span>, n);
+      <span class="k">return</span> cache[n];
+    }
+    cache[n] = <span class="f">fn</span>(n);
+    <span class="k">return</span> cache[n];
+  };
+}
+
+<span class="k">const</span> slowSquare = <span class="f">memoize</span>(n =&gt; n * n);
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">slowSquare</span>(<span class="n">5</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">slowSquare</span>(<span class="n">5</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Գործարկում</span>
+<span class="r">պատրաստ</span>
+<span class="r">պատրաստ</span>
+<span class="r">20 30</span>
+<span class="r">25</span>
+<span class="r">քեշից՝ 5</span>
+<span class="r">25</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Դաս 18-ի module pattern-ը</span>
+      <p>Հիշո՞ւմ ես այն «հին ձևը»՝ <code>const Utils = (function () { ... })()</code>։ Ահա դրա բացատրությունը՝ ներքին <code>pad</code>-ը ապրում է փակույթում և դրսից անհասանելի է։ Ճիշտ նույն սկզբունքն է, ինչ Դաս 22-ի <code>#private</code>-ը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ցիկլի դասական թակարդը</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>var-ով — անսպասելի</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">for</span> (<span class="k">var</span> i = <span class="n">1</span>; i &lt;= <span class="n">3</span>; i++) {
+  <span class="f">setTimeout</span>(() =&gt; <span class="f">console</span>.<span class="f">log</span>(i), <span class="n">100</span>);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">4</span>
+<span class="r">4</span>
+<span class="r">4</span></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>let-ով — ինչպես սպասում էինք</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">for</span> (<span class="k">let</span> i = <span class="n">1</span>; i &lt;= <span class="n">3</span>; i++) {
+  <span class="f">setTimeout</span>(() =&gt; <span class="f">console</span>.<span class="f">log</span>(i), <span class="n">100</span>);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">1</span>
+<span class="r">2</span>
+<span class="r">3</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Բացատրություն</span>
+      <p><code>var</code>-ը ունի <strong>մեկ</strong> փոփոխական ամբողջ ցիկլի համար։ Երբ 100 մլվրկ հետո callback-ները աշխատեցին (Դաս 19՝ ասինխրոն), ցիկլն արդեն ավարտվել էր, և <code>i</code>-ն դարձել էր 4։ Բոլոր երեք փակույթները նայում են <em>նույն</em> փոփոխականին։<br><br>
+      <code>let</code>-ը ամեն կրկնության համար ստեղծում է <strong>նոր</strong> փոփոխական։ Ուստի ամեն callback ունի իր սեփականը։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ահա թե ինչու</span>
+      <p>Դաս 1-ում ասացինք՝ «<code>var</code> մի՛ օգտագործիր»։ Հիմա գիտես կոնկրետ պատճառը։ Սա հարցազրույցների ամենահաճախ տրվող հարցերից է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Սխալների մշակում</h2>
+    <p><code>try/catch</code>-ը հանդիպել ենք Դաս 14-ում և 20-ում։ Հիմա նայենք ուշադիր։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Error օբյեկտը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">try</span> {
+  <span class="k">throw</span> <span class="k">new</span> <span class="f">Error</span>(<span class="s">"Ինչ-որ բան սխալ գնաց"</span>);
+} <span class="k">catch</span> (error) {
+  <span class="f">console</span>.<span class="f">log</span>(error.name);
+  <span class="f">console</span>.<span class="f">log</span>(error.message);
+  <span class="f">console</span>.<span class="f">log</span>(<span class="k">typeof</span> error.stack);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Error</span>
+<span class="r">Ինչ-որ բան սխալ գնաց</span>
+<span class="r">string</span></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ներկառուցված սխալ</th><th>Ե՞րբ է առաջանում</th></tr>
+      <tr><td><code>TypeError</code></td><td><code>null.name</code>, ոչ ֆունկցիա կանչել</td></tr>
+      <tr><td><code>ReferenceError</code></td><td>Չհայտարարված փոփոխական</td></tr>
+      <tr><td><code>SyntaxError</code></td><td>Կոդի կառուցվածքի սխալ, <code>JSON.parse</code></td></tr>
+      <tr><td><code>RangeError</code></td><td>Թույլատրելի սահմաններից դուրս</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>finally և վերանետում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">parseConfig</span>(json) {
+  <span class="k">try</span> {
+    <span class="k">return</span> <span class="f">JSON</span>.<span class="f">parse</span>(json);
+
+  } <span class="k">catch</span> (error) {
+    <span class="k">if</span> (error <span class="k">instanceof</span> <span class="f">SyntaxError</span>) {
+      <span class="f">console</span>.<span class="f">warn</span>(<span class="s">"Փչացած JSON, օգտագործում ենք լռելյայնը"</span>);
+      <span class="k">return</span> {};
+    }
+
+    <span class="k">throw</span> error;      <span class="c">// չգիտենք՝ ինչ է — փոխանցում ենք վերև</span>
+
+  } <span class="k">finally</span> {
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Վերլուծությունն ավարտվեց"</span>);
+  }
+}
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">parseConfig</span>(<span class="s">'{"theme":"dark"}'</span>));
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">parseConfig</span>(<span class="s">"փչացած{{{"</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Վերլուծությունն ավարտվեց</span>
+<span class="r">{"theme":"dark"}</span>
+<span class="e">Փչացած JSON, օգտագործում ենք լռելյայնը</span>
+<span class="r">Վերլուծությունն ավարտվեց</span>
+<span class="r">{}</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ամենավատ սովորությունը</span>
+      <p>Դատարկ <code>catch</code>․ <code>try { ... } catch (e) {}</code>։ Սխալը լուռ անհետանում է, և ժամեր ես որոնում՝ ինչու ոչինչ չի աշխատում։ <strong>Կամ մշակիր սխալը, կամ վերանետիր։ Երբեք մի՛ կուլ տուր լուռ։</strong></p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Սեփական սխալների դասեր</h2>
+    <p>Դաս 22-ի ժառանգումը կիրառելու հիանալի առիթ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>extends Error</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="f">ValidationError</span> <span class="k">extends</span> <span class="f">Error</span> {
+  <span class="f">constructor</span>(field, message) {
+    <span class="k">super</span>(message);
+    <span class="k">this</span>.name = <span class="s">"ValidationError"</span>;
+    <span class="k">this</span>.field = field;
+  }
+}
+
+<span class="k">class</span> <span class="f">ApiError</span> <span class="k">extends</span> <span class="f">Error</span> {
+  <span class="f">constructor</span>(status, message) {
+    <span class="k">super</span>(message);
+    <span class="k">this</span>.name = <span class="s">"ApiError"</span>;
+    <span class="k">this</span>.status = status;
+  }
+
+  <span class="k">get</span> <span class="f">isServerError</span>() {
+    <span class="k">return</span> <span class="k">this</span>.status &gt;= <span class="n">500</span>;
+  }
+}
+
+<span class="k">function</span> <span class="f">validate</span>(user) {
+  <span class="k">if</span> (!user.email) {
+    <span class="k">throw</span> <span class="k">new</span> <span class="f">ValidationError</span>(<span class="s">"email"</span>, <span class="s">"Էլ. հասցեն պարտադիր է"</span>);
+  }
+  <span class="k">return</span> <span class="k">true</span>;
+}
+
+<span class="k">try</span> {
+  <span class="f">validate</span>({ name: <span class="s">"Անի"</span> });
+} <span class="k">catch</span> (error) {
+  <span class="k">if</span> (error <span class="k">instanceof</span> <span class="f">ValidationError</span>) {
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Դաշտ՝"</span>, error.field);
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Հաղորդագրություն՝"</span>, error.message);
+  } <span class="k">else</span> {
+    <span class="k">throw</span> error;
+  }
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Դաշտ՝ email</span>
+<span class="r">Հաղորդագրություն՝ Էլ. հասցեն պարտադիր է</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ է սա արժեքավոր</span>
+      <p>Հիմա <code>catch</code>-ում կարող ես <strong>տարբերել</strong> սխալի տեսակները և ամեն մեկին տալ իր արձագանքը՝ վալիդացիայի սխալը ցույց տալ դաշտի կողքին, ցանցի սխալի դեպքում առաջարկել կրկին փորձել, իսկ 500-ի դեպքում գրանցել լոգում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>կիրառում Դաս 21-ի API շերտում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">async</span> <span class="k">function</span> <span class="f">request</span>(path, options) {
+  <span class="k">const</span> response = <span class="k">await</span> <span class="f">fetch</span>(path, options);
+
+  <span class="k">if</span> (!response.ok) {
+    <span class="k">throw</span> <span class="k">new</span> <span class="f">ApiError</span>(response.status, <span class="s">`Հարցումը ձախողվեց՝ </span>${path}<span class="s">`</span>);
+  }
+
+  <span class="k">return</span> response.<span class="f">json</span>();
+}
+
+<span class="k">try</span> {
+  <span class="k">await</span> <span class="f">request</span>(<span class="s">"/users"</span>);
+} <span class="k">catch</span> (error) {
+  <span class="k">if</span> (error <span class="k">instanceof</span> <span class="f">ApiError</span> &amp;&amp; error.isServerError) {
+    <span class="f">showMessage</span>(<span class="s">"Սերվերի խնդիր։ Փորձեք ավելի ուշ։"</span>);
+  } <span class="k">else</span> <span class="k">if</span> (error <span class="k">instanceof</span> <span class="f">ApiError</span>) {
+    <span class="f">showMessage</span>(<span class="s">"Տվյալները չգտնվեցին։"</span>);
+  } <span class="k">else</span> {
+    <span class="f">showMessage</span>(<span class="s">"Ստուգեք ինտերնետը։"</span>);
+  }
+}</code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Set — եզակի արժեքներ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հիմունքներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> tags = <span class="k">new</span> <span class="f">Set</span>();
+
+tags.<span class="f">add</span>(<span class="s">"js"</span>);
+tags.<span class="f">add</span>(<span class="s">"css"</span>);
+tags.<span class="f">add</span>(<span class="s">"js"</span>);          <span class="c">// կրկնությունը անտեսվում է</span>
+
+<span class="f">console</span>.<span class="f">log</span>(tags.size);
+<span class="f">console</span>.<span class="f">log</span>(tags.<span class="f">has</span>(<span class="s">"css"</span>));
+<span class="f">console</span>.<span class="f">log</span>([...tags]);
+
+tags.<span class="f">delete</span>(<span class="s">"css"</span>);
+<span class="f">console</span>.<span class="f">log</span>([...tags]);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">2</span>
+<span class="g">true</span>
+<span class="r">["js", "css"]</span>
+<span class="r">["js"]</span></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ամենահայտնի կիրառությունը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> numbers = [<span class="n">1</span>, <span class="n">2</span>, <span class="n">2</span>, <span class="n">3</span>, <span class="n">3</span>, <span class="n">3</span>, <span class="n">4</span>];
+
+<span class="k">const</span> unique = [...<span class="k">new</span> <span class="f">Set</span>(numbers)];
+<span class="f">console</span>.<span class="f">log</span>(unique);
+
+<span class="c">// Կատեգորիաների ցուցակ ապրանքներից</span>
+<span class="k">const</span> products = [
+  { name: <span class="s">"Մկնիկ"</span>, category: <span class="s">"accessory"</span> },
+  { name: <span class="s">"Մոնիտոր"</span>, category: <span class="s">"monitor"</span> },
+  { name: <span class="s">"Ստեղնաշար"</span>, category: <span class="s">"accessory"</span> }
+];
+
+<span class="k">const</span> categories = [...<span class="k">new</span> <span class="f">Set</span>(products.<span class="f">map</span>(p =&gt; p.category))];
+<span class="f">console</span>.<span class="f">log</span>(categories);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">[1, 2, 3, 4]</span>
+<span class="r">["accessory", "monitor"]</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Գործնական կիրառություն</span>
+      <p>Դաս 15-ի կատալոգում ֆիլտրի կոճակները գրում էինք ձեռքով։ <code>Set</code>-ով դրանք կարելի է <strong>ինքնաբերաբար</strong> գեներացնել տվյալներից։ Ավելացրիր նոր կատեգորիա <code>data.js</code>-ում — կոճակն ինքն է հայտնվում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ընտրվածների հետևում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> selected = <span class="k">new</span> <span class="f">Set</span>();
+
+<span class="k">function</span> <span class="f">toggle</span>(id) {
+  <span class="k">if</span> (selected.<span class="f">has</span>(id)) {
+    selected.<span class="f">delete</span>(id);
+  } <span class="k">else</span> {
+    selected.<span class="f">add</span>(id);
+  }
+  <span class="k">return</span> selected.size;
+}
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">toggle</span>(<span class="n">1</span>), <span class="f">toggle</span>(<span class="n">2</span>), <span class="f">toggle</span>(<span class="n">1</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">1 2 1</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Map — բանալի և արժեք</h2>
+    <p>Նման է օբյեկտին, բայց ունի կարևոր առավելություններ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հիմունքներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> cache = <span class="k">new</span> <span class="f">Map</span>();
+
+cache.<span class="f">set</span>(<span class="s">"page:1"</span>, [<span class="s">"գրառում 1"</span>, <span class="s">"գրառում 2"</span>]);
+cache.<span class="f">set</span>(<span class="s">"page:2"</span>, [<span class="s">"գրառում 3"</span>]);
+
+<span class="f">console</span>.<span class="f">log</span>(cache.<span class="f">get</span>(<span class="s">"page:1"</span>));
+<span class="f">console</span>.<span class="f">log</span>(cache.<span class="f">has</span>(<span class="s">"page:3"</span>));
+<span class="f">console</span>.<span class="f">log</span>(cache.size);
+
+cache.<span class="f">delete</span>(<span class="s">"page:2"</span>);
+<span class="f">console</span>.<span class="f">log</span>([...cache.<span class="f">keys</span>()]);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">["գրառում 1", "գրառում 2"]</span>
+<span class="e">false</span>
+<span class="r">2</span>
+<span class="r">["page:1"]</span></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th></th><th>Object</th><th>Map</th></tr>
+      <tr><td>Բանալիներ</td><td>Միայն տողեր</td><td>Ցանկացած՝ օբյեկտ, թիվ, ֆունկցիա</td></tr>
+      <tr><td>Չափը</td><td><code>Object.keys(o).length</code></td><td><code>map.size</code></td></tr>
+      <tr><td>Հերթականություն</td><td>Երաշխավորված չէ</td><td>Ավելացման կարգով</td></tr>
+      <tr><td>Ցիկլ</td><td><code>for..in</code>, <code>Object.entries</code></td><td>Ուղիղ <code>for..of</code></td></tr>
+      <tr><td>JSON-ի հետ</td><td>Ուղիղ աշխատում է</td><td>Պիտի ձեռքով փոխարկես</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>իսկական քեշ Դաս 21-ի համար</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> cache = <span class="k">new</span> <span class="f">Map</span>();
+
+<span class="k">async</span> <span class="k">function</span> <span class="f">getPage</span>(page) {
+  <span class="k">const</span> key = <span class="s">`posts:</span>${page}<span class="s">`</span>;
+
+  <span class="k">if</span> (cache.<span class="f">has</span>(key)) {
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"քեշից"</span>);
+    <span class="k">return</span> cache.<span class="f">get</span>(key);
+  }
+
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"սերվերից"</span>);
+  <span class="k">const</span> data = <span class="k">await</span> api.<span class="f">getPosts</span>({ _page: page });
+  cache.<span class="f">set</span>(key, data);
+
+  <span class="k">return</span> data;
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>խմբավորում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> products = [
+  { name: <span class="s">"Մկնիկ"</span>, category: <span class="s">"accessory"</span> },
+  { name: <span class="s">"Մոնիտոր"</span>, category: <span class="s">"monitor"</span> },
+  { name: <span class="s">"Ստեղնաշար"</span>, category: <span class="s">"accessory"</span> }
+];
+
+<span class="k">const</span> byCategory = <span class="k">new</span> <span class="f">Map</span>();
+
+products.<span class="f">forEach</span>(p =&gt; {
+  <span class="k">if</span> (!byCategory.<span class="f">has</span>(p.category)) {
+    byCategory.<span class="f">set</span>(p.category, []);
+  }
+  byCategory.<span class="f">get</span>(p.category).<span class="f">push</span>(p.name);
+});
+
+byCategory.<span class="f">forEach</span>((names, category) =&gt; {
+  <span class="f">console</span>.<span class="f">log</span>(category, <span class="s">"→"</span>, names.<span class="f">join</span>(<span class="s">", "</span>));
+});</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">accessory → Մկնիկ, Ստեղնաշար</span>
+<span class="r">monitor → Մոնիտոր</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Անփոփոխելիություն</h2>
+    <p>Դաս 5-ում տեսանք՝ զանգվածները փոխանցվում են հղումով, և պատահական փոփոխությունը կարող է անսպասելի արդյունքներ տալ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>փոփոխել vs ստեղծել նոր</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> original = [<span class="n">3</span>, <span class="n">1</span>, <span class="n">2</span>];
+
+<span class="c">// ❌ փոխում է բնօրինակը</span>
+original.<span class="f">sort</span>();
+original.<span class="f">push</span>(<span class="n">4</span>);
+
+<span class="c">// ✅ ստեղծում է նոր</span>
+<span class="k">const</span> sorted = [...original].<span class="f">sort</span>();
+<span class="k">const</span> added = [...original, <span class="n">4</span>];
+<span class="k">const</span> removed = original.<span class="f">filter</span>(n =&gt; n !== <span class="n">2</span>);
+<span class="k">const</span> updated = original.<span class="f">map</span>(n =&gt; n === <span class="n">1</span> ? <span class="n">10</span> : n);</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Փոխում է բնօրինակը</th><th>Ստեղծում է նոր</th></tr>
+      <tr><td><code>push</code>, <code>pop</code>, <code>shift</code>, <code>unshift</code></td><td><code>[...arr, x]</code></td></tr>
+      <tr><td><code>splice</code></td><td><code>slice</code>, <code>filter</code></td></tr>
+      <tr><td><code>sort</code>, <code>reverse</code></td><td><code>[...arr].sort()</code>, <code>toSorted()</code></td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>օբյեկտների անփոփոխ թարմացում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> user = { name: <span class="s">"Անի"</span>, age: <span class="n">14</span>, city: <span class="s">"Երևան"</span> };
+
+<span class="k">const</span> older = { ...user, age: <span class="n">15</span> };            <span class="c">// Դաս 7</span>
+<span class="f">console</span>.<span class="f">log</span>(user.age, older.age);
+
+<span class="c">// Զանգվածում մեկ էլեմենտի թարմացում</span>
+<span class="k">const</span> todos = [
+  { id: <span class="n">1</span>, text: <span class="s">"Ա"</span>, done: <span class="k">false</span> },
+  { id: <span class="n">2</span>, text: <span class="s">"Բ"</span>, done: <span class="k">false</span> }
+];
+
+<span class="k">const</span> newTodos = todos.<span class="f">map</span>(t =&gt;
+  t.id === <span class="n">2</span> ? { ...t, done: <span class="k">true</span> } : t
+);
+
+<span class="f">console</span>.<span class="f">log</span>(todos[<span class="n">1</span>].done, newTodos[<span class="n">1</span>].done);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">14 15</span>
+<span class="e">false</span> <span class="g">true</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ է սա կարևոր</span>
+      <p>React-ը, Vue-ն և բոլոր ժամանակակից ֆրեյմվորքերը հենց այս ձևով են աշխատում․ վիճակը չեն փոփոխում, այլ <strong>ստեղծում են նոր</strong>։ Դա թույլ է տալիս արագ հասկանալ՝ ինչ է փոխվել, և վերագծել միայն այն, ինչ պետք է։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Object.freeze</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> CONFIG = <span class="f">Object</span>.<span class="f">freeze</span>({
+  apiUrl: <span class="s">"https://api.example.com"</span>,
+  timeout: <span class="n">5000</span>
+});
+
+CONFIG.timeout = <span class="n">10000</span>;      <span class="c">// լուռ անտեսվում է (strict-ում՝ սխալ)</span>
+<span class="f">console</span>.<span class="f">log</span>(CONFIG.timeout);
+<span class="f">console</span>.<span class="f">log</span>(<span class="f">Object</span>.<span class="f">isFrozen</span>(CONFIG));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">5000</span>
+<span class="g">true</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Խաղահրապարակ</h2>
+
+    <div class="pg">
+      <textarea id="pgCode" spellcheck="false">// ===== ՓԱԿՈՒՅԹ =====
+function createCounter(start = 0) {
+  let count = start;
+  return {
+    increment: () => ++count,
+    decrement: () => --count,
+    get value() { return count; }
+  };
+}
+
+const a = createCounter();
+const b = createCounter(100);
+
+a.increment(); a.increment(); a.increment();
+b.decrement();
+
+console.log("a:", a.value, "| b:", b.value);
+console.log("Իրար խանգարո՞ւմ են:", a.value === b.value);
+
+// Ֆունկցիաների գործարան
+const multiplier = factor => n => n * factor;
+const double = multiplier(2);
+const triple = multiplier(3);
+console.log(double(10), triple(10), double(triple(2)));
+
+// ===== ՍԽԱԼՆԵՐ =====
+class ValidationError extends Error {
+  constructor(field, message) {
+    super(message);
+    this.name = "ValidationError";
+    this.field = field;
+  }
+}
+
+function validate(user) {
+  if (!user.email) throw new ValidationError("email", "Էլ. հասցեն պարտադիր է");
+  if (!user.name) throw new ValidationError("name", "Անունը պարտադիր է");
+  return true;
+}
+
+[{ name: "Անի" }, { email: "a@b.am" }, { name: "Դավիթ", email: "d@b.am" }]
+  .forEach((user, i) => {
+    try {
+      validate(user);
+      console.log(`${i + 1}. ✅ վավեր է`);
+    } catch (e) {
+      if (e instanceof ValidationError) {
+        console.log(`${i + 1}. ❌ ${e.field}: ${e.message}`);
+      } else throw e;
+    }
+  });
+
+// ===== SET =====
+const products = [
+  { name: "Մկնիկ", category: "accessory", tags: ["usb", "wireless"] },
+  { name: "Մոնիտոր", category: "monitor", tags: ["hdmi"] },
+  { name: "Ստեղնաշար", category: "accessory", tags: ["usb", "mechanical"] }
+];
+
+console.log("--- Set ---");
+console.log("Կատեգորիաներ:", [...new Set(products.map(p => p.category))]);
+console.log("Բոլոր պիտակները:", [...new Set(products.flatMap(p => p.tags))]);
+
+// ===== MAP =====
+console.log("--- Map ---");
+const byCategory = new Map();
+products.forEach(p => {
+  if (!byCategory.has(p.category)) byCategory.set(p.category, []);
+  byCategory.get(p.category).push(p.name);
+});
+byCategory.forEach((names, cat) => console.log(cat, "→", names.join(", ")));
+
+// ===== ԱՆՓՈՓՈԽԵԼԻՈՒԹՅՈՒՆ =====
+console.log("--- immutability ---");
+const todos = [
+  { id: 1, text: "Ա", done: false },
+  { id: 2, text: "Բ", done: false }
+];
+const newTodos = todos.map(t => t.id === 2 ? { ...t, done: true } : t);
+console.log("Բնօրինակ:", todos[1].done, "| Նոր:", newTodos[1].done);
+console.log("Նույն օբյեկտն է՞:", todos[1] === newTodos[1], "| Չփոխվածը:", todos[0] === newTodos[0]);</textarea>
+      <div class="pg__actions">
+        <button class="run" id="runBtn">Կատարել</button>
+        <button class="clr" id="clrBtn">Մաքրել</button>
+      </div>
+<pre class="out" id="pgOut"><span class="m">Console</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Գրիր <code>createCounter(start)</code>, որը վերադարձնում է <code>increment</code>, <code>decrement</code>, <code>reset</code> և <code>get value</code>։ Ստեղծիր երկու անկախ հաշվիչ։</li>
+      <li>Գրիր <code>once(fn)</code> և ստուգիր, որ երկրորդ կանչը չի կատարում ֆունկցիան։</li>
+      <li>Գրիր <code>memoize(fn)</code> և կիրառիր դանդաղ ֆունկցիայի վրա։ Ցույց տուր տարբերությունը <code>console.time</code>-ով։</li>
+      <li>Բացատրիր մեկնաբանության մեջ, ինչու <code>var</code>-ով ցիկլը տալիս է 4, 4, 4։ Ուղղիր երկու տարբեր ձևով։</li>
+      <li>Գրիր <code>ValidationError</code> և <code>NetworkError</code> դասեր։ Ֆունկցիա, որը պատահականորեն նետում է մեկը, և <code>catch</code>, որը տարբերում է դրանք։</li>
+      <li>Վերցրու Դաս 13-ի ֆորմայի վալիդացիան և վերաշարադրիր <code>ValidationError</code>-ով։</li>
+      <li>Զանգվածից հանիր կրկնվող արժեքները <code>Set</code>-ով։ Համեմատիր <code>filter + indexOf</code> տարբերակի հետ։</li>
+      <li>Դաս 15-ի կատալոգում ֆիլտրի կոճակները գեներացրու ինքնաբերաբար՝ <code>Set</code>-ով, ապրանքների կատեգորիաներից։</li>
+      <li>Ավելացրու <code>Map</code>-ով քեշ Դաս 21-ի էջավորմանը։ Ցույց տուր Console-ում՝ «քեշից» թե «սերվերից»։</li>
+      <li>Վերցրու Դաս 12-ի to-do-ն և վերաշարադրիր <strong>անփոփոխ</strong> ձևով․ ոչ մի <code>push</code>, <code>splice</code> կամ ուղիղ վերագրում — միայն <code>map</code>, <code>filter</code> և spread։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td>Փակույթ</td><td>Ֆունկցիա + իր ծնված միջավայրը</td></tr>
+      <tr><td><code>throw new Error("...")</code></td><td>Նետում է սխալ</td></tr>
+      <tr><td><code>error.name</code>, <code>.message</code>, <code>.stack</code></td><td>Սխալի տվյալները</td></tr>
+      <tr><td><code>class X extends Error</code></td><td>Սեփական սխալի տեսակ</td></tr>
+      <tr><td><code>e instanceof ValidationError</code></td><td>Տեսակի ստուգում</td></tr>
+      <tr><td><code>new Set([1,2,2])</code></td><td>Եզակի արժեքներ</td></tr>
+      <tr><td><code>[...new Set(arr)]</code></td><td>Կրկնությունների հեռացում ⭐</td></tr>
+      <tr><td><code>set.add / has / delete / size</code></td><td>Set-ի մեթոդներ</td></tr>
+      <tr><td><code>new Map()</code></td><td>Բանալի-արժեք, ցանկացած բանալի</td></tr>
+      <tr><td><code>map.set / get / has / size</code></td><td>Map-ի մեթոդներ</td></tr>
+      <tr><td><code>{ ...obj, key: value }</code></td><td>Անփոփոխ թարմացում</td></tr>
+      <tr><td><code>[...arr].sort()</code></td><td>Տեսակավորում առանց բնօրինակը փչացնելու</td></tr>
+      <tr><td><code>Object.freeze(obj)</code></td><td>Արգելում է փոփոխությունը</td></tr>
+    </table>
+    </div>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչու է <code>count</code>-ը ողջ մնում</li>
+      <li>Հասկանո՞ւմ եմ, ինչպես է աշխատում <code>debounce</code>-ը</li>
+      <li>Գիտե՞մ, ինչու <code>var</code>-ը ցիկլում 4, 4, 4 է տալիս</li>
+      <li>Կարո՞ղ եմ ստեղծել սեփական սխալի դաս</li>
+      <li>Գիտե՞մ, ե՞րբ <code>Map</code>, ե՞րբ սովորական օբյեկտ</li>
+      <li>Կարո՞ղ եմ թարմացնել օբյեկտների զանգված՝ առանց բնօրինակը փոխելու</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Եզրափակիչ դաս։ Ամբողջ բլոկի ամփոփում, վերջնական նախագծի պահանջներ, և ի՞նչ սովորել հետո։ Բլոկ 3-ից անցնում ենք PHP-ին՝ սերվերի կողմ։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 23 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

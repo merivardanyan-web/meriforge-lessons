@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 8 — Box model</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 8 · 2 ժամ</p>
+  <h1>Box model</h1>
+  <p class="lede">Էջի ամեն էլեմենտ ուղղանկյուն տուփ է։ Հասկանալով, թե ինչից է կազմված այդ տուփը, դու հասկանում ես CSS-ի կեսը։ Եվ վերջապես կիմանաս, ինչ է անում <code>box-sizing: border-box</code>-ը։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 06–07</span>
+    <span>Բլոկ 1 · CSS հիմունքներ</span>
+    <span>CSS-ի հիմնարար հասկացություն</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Տուփի չորս շերտը</li>
+      <li><code>padding</code> — ներսի բացակ</li>
+      <li><code>border</code> և <code>border-radius</code></li>
+      <li><code>margin</code> և կենտրոնացում</li>
+      <li>Margin collapse — գլխավոր թակարդը</li>
+      <li><code>box-sizing</code> — վերջապես բացատրված</li>
+      <li><code>width</code>, <code>min-width</code>, <code>max-width</code></li>
+      <li>Կարճ գրառման կանոնները</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Չորս շերտ</h2>
+
+    <div class="tree">┌─────────────────────────────────────────┐
+│              margin                     │  ← դրսի բացակ
+│   ┌─────────────────────────────────┐   │
+│   │           border                │   │  ← եզրագիծ
+│   │   ┌─────────────────────────┐   │   │
+│   │   │        padding          │   │   │  ← ներսի բացակ
+│   │   │   ┌─────────────────┐   │   │   │
+│   │   │   │    content      │   │   │   │  ← բովանդակություն
+│   │   │   │  տեքստ, նկար    │   │   │   │
+│   │   │   └─────────────────┘   │   │   │
+│   │   └─────────────────────────┘   │   │
+│   └─────────────────────────────────┘   │
+└─────────────────────────────────────────┘</div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Շերտ</th><th>Ինչ է</th><th>Ֆո՞ն ունի</th></tr>
+      <tr><td><code>content</code></td><td>Բովանդակությունը</td><td>Այո</td></tr>
+      <tr><td><code>padding</code></td><td>Բացակ բովանդակության և եզրագծի միջև</td><td>Այո</td></tr>
+      <tr><td><code>border</code></td><td>Եզրագիծը</td><td>Իր գույնն ունի</td></tr>
+      <tr><td><code>margin</code></td><td>Բացակ ուրիշ էլեմենտների հետ</td><td><strong>Ոչ — միշտ թափանցիկ</strong></td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Հեշտ հիշելու ձև</span>
+      <p><code>padding</code> — ինչպես բարձի ներսի փափուկ շերտը։ Այն <em>ներսում</em> է և ունի նույն գույնը։<br>
+      <code>margin</code> — հեռավորությունը հարևանից։ Դատարկ տարածք, որը ոչինչ չի պատկանում։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">DevTools-ում</span>
+      <p>Ընտրիր ցանկացած էլեմենտ Inspect-ով և ոլորիր Styles վահանակը ներքև։ Այնտեղ կտեսնես գունավոր դիագրամ՝ ճիշտ նույն չորս շերտով, իրական թվերով։ Սա CSS-ի ամենաօգտակար գործիքներից է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>padding</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>չորս ուղղություն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.box</span> {
+    <span class="f">padding-top</span>: <span class="n">10px</span>;
+    <span class="f">padding-right</span>: <span class="n">20px</span>;
+    <span class="f">padding-bottom</span>: <span class="n">10px</span>;
+    <span class="f">padding-left</span>: <span class="n">20px</span>;
+}
+
+<span class="c">/* Նույնը՝ կարճ */</span>
+<span class="k">.box</span> {
+    <span class="f">padding</span>: <span class="n">10px</span> <span class="n">20px</span>;
+}</code></pre>
+    </div>
+
+    <h3>Կարճ գրառման կանոնները</h3>
+    <div class="tree">padding: 20px;                 բոլոր չորս կողմերը
+
+padding: 10px 20px;            վեր-վար  ձախ-աջ
+
+padding: 10px 20px 15px;       վեր  ձախ-աջ  վար
+
+padding: 10px 20px 15px 5px;   վեր  աջ  վար  ձախ
+                               ↑ ժամացույցի սլաքով</div>
+
+    <div class="tip note">
+      <span class="tag">Հիշելու ձև</span>
+      <p>Չորս արժեքի դեպքում՝ սկսում ես վերևից և գնում <strong>ժամացույցի սլաքի ուղղությամբ</strong>՝ վեր → աջ → վար → ձախ։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">padding-ը մեծացնում է տուփը</span>
+      <p>Առանց <code>box-sizing: border-box</code>-ի <code>width: 200px</code> + <code>padding: 20px</code> = <strong>240px</strong> իրական լայնություն։ Դա շփոթեցնող է, և հենց դրա համար ենք <code>global.css</code>-ում գրել այն կանոնը։ Մանրամասն՝ 06-րդ բաժնում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>border</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երեք արժեք</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.box</span> {
+    <span class="f">border</span>: <span class="n">1px</span> <span class="s">solid</span> <span class="s">#999</span>;
+    <span class="c">/*     ↑     ↑      ↑                */</span>
+    <span class="c">/*   հաստ  ոճ    գույն               */</span>
+}
+
+<span class="c">/* Առանձին կողմ */</span>
+<span class="k">.box</span> {
+    <span class="f">border-bottom</span>: <span class="n">2px</span> <span class="s">solid navy</span>;
+}
+
+<span class="c">/* Հանել */</span>
+<span class="k">.box</span> {
+    <span class="f">border</span>: <span class="s">none</span>;
+}</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ոճ</th><th>Տեսքը</th></tr>
+      <tr><td><code>solid</code></td><td>Ամբողջական գիծ</td></tr>
+      <tr><td><code>dashed</code></td><td>Գծիկներ</td></tr>
+      <tr><td><code>dotted</code></td><td>Կետեր</td></tr>
+      <tr><td><code>none</code></td><td>Չկա</td></tr>
+    </table>
+    </div>
+
+    <h3>border-radius</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>կլորացում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.card</span>   { <span class="f">border-radius</span>: <span class="n">10px</span>; }
+<span class="k">.btn</span>    { <span class="f">border-radius</span>: <span class="n">6px</span>; }
+<span class="k">.pill</span>   { <span class="f">border-radius</span>: <span class="n">999px</span>; }   <span class="c">/* լրիվ կլոր ծայրեր */</span>
+<span class="k">.avatar</span> { <span class="f">border-radius</span>: <span class="n">50%</span>; }     <span class="c">/* շրջան */</span>
+
+<span class="c">/* Առանձին անկյուններ */</span>
+<span class="k">.tab</span> { <span class="f">border-radius</span>: <span class="n">10px</span> <span class="n">10px</span> <span class="n">0</span> <span class="n">0</span>; }</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">border-radius: 50% ձգված տուփի վրա</span>
+      <p>Եթե տուփը քառակուսի չէ, <code>50%</code>-ը կտա <strong>օվալ</strong>, ոչ շրջան։ Ավատարի համար պարտադիր դիր նաև հավասար <code>width</code> և <code>height</code>։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>outline vs border</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* border — մաս է տուփի, մեծացնում է չափը */</span>
+<span class="k">.box</span> { <span class="f">border</span>: <span class="n">2px</span> <span class="s">solid navy</span>; }
+
+<span class="c">/* outline — նկարվում է վերևից, չափը չի փոխում */</span>
+<span class="k">.box</span>:<span class="k">focus-visible</span> { <span class="f">outline</span>: <span class="n">2px</span> <span class="s">solid navy</span>; <span class="f">outline-offset</span>: <span class="n">2px</span>; }</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ահա թե ինչու ֆոկուսի համար outline</span>
+      <p><code>outline</code>-ը չի ազդում դասավորության վրա։ Եթե ֆոկուսը ցույց տայիր <code>border</code>-ով, ամեն անգամ <kbd>Tab</kbd> սեղմելիս էջը «կցատկեր» 2px-ով։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>margin</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>նույն կանոնները, ինչ padding-ի</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.box</span> { <span class="f">margin</span>: <span class="n">20px</span>; }
+<span class="k">.box</span> { <span class="f">margin</span>: <span class="n">20px</span> <span class="n">0</span>; }
+<span class="k">.box</span> { <span class="f">margin-bottom</span>: <span class="n">30px</span>; }
+
+<span class="c">/* Բացասական margin — կարելի է, բայց զգույշ */</span>
+<span class="k">.box</span> { <span class="f">margin-top</span>: -<span class="n">10px</span>; }</code></pre>
+    </div>
+
+    <h3>Կենտրոնացում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>margin: auto</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.container</span> {
+    <span class="f">max-width</span>: <span class="n">1200px</span>;
+    <span class="f">margin</span>: <span class="n">0</span> <span class="s">auto</span>;      <span class="c">/* վեր-վար 0, ձախ-աջ ինքնաբերաբար */</span>
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">auto-ն աշխատում է միայն երկու պայմանով</span>
+      <p><strong>1.</strong> Էլեմենտն ունի <code>width</code> կամ <code>max-width</code>։<br>
+      <strong>2.</strong> Այն բլոկային է (<code>display: block</code>)։<br><br>
+      Առանց լայնության էլեմենտն արդեն զբաղեցնում է ամբողջ տողը, և կենտրոնացնելու բան չկա։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Երկու մոտեցում պատերի համար</span>
+      <p><strong>Ա.</strong> <code>.row { padding: 0 60px }</code> — մեր մեթոդաբանությունը։ Բովանդակությունը ձգվում է ամբողջ լայնությամբ, բայց պահում է կողային բացակները։<br>
+      <strong>Բ.</strong> <code>.row { max-width: 1200px; margin: 0 auto }</code> — բովանդակությունը կենտրոնանում է և չի ձգվում մեծ էկրաններին։<br><br>
+      Երկուսն էլ ճիշտ են։ 13-րդ դասին կհամեմատենք դրանք մանրամասն և կընտրենք գիտակցաբար։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Margin collapse</h2>
+    <p>Ամենաշփոթեցնող վարքագիծը CSS-ում։ Հասկանանք այն մեկընդմիշտ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ի՞նչ ես սպասում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.first</span>  { <span class="f">margin-bottom</span>: <span class="n">30px</span>; }
+<span class="k">.second</span> { <span class="f">margin-top</span>: <span class="n">20px</span>; }
+
+<span class="c">/* Ակնկալում ես՝ 30 + 20 = 50px */</span>
+<span class="c">/* Իրականում՝ 30px                */</span></code></pre>
+    </div>
+
+    <div class="tree">     .first
+  ┌──────────┐
+  └──────────┘
+       ↕  30px  ← վերցվում է ՄԵԾԸ, ոչ գումարը
+  ┌──────────┐
+     .second
+  └──────────┘</div>
+
+    <div class="warn note">
+      <span class="tag">Կանոնը</span>
+      <p>Երբ երկու էլեմենտի ուղղահայաց <code>margin</code>-ները հանդիպում են, դրանք <strong>չեն գումարվում</strong> — վերցվում է ավելի մեծը։<br><br>
+      <strong>Կարևոր՝</strong> սա տեղի է ունենում միայն <strong>ուղղահայաց</strong> ուղղությամբ։ Հորիզոնական <code>margin</code>-ները միշտ գումարվում են։</p>
+    </div>
+
+    <h3>Երկրորդ դեպքը՝ ծնող և երեխա</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>margin-ը «դուրս է թռչում»</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* &lt;div class="parent"&gt;
+       &lt;h2&gt;Վերնագիր&lt;/h2&gt;
+   &lt;/div&gt; */</span>
+
+<span class="k">.parent</span> { <span class="f">background</span>: <span class="s">lightblue</span>; }
+<span class="t">h2</span>       { <span class="f">margin-top</span>: <span class="n">30px</span>; }
+
+<span class="c">/* h2-ի margin-ը դուրս է գալիս ծնողից
+   և հրում է ամբողջ .parent-ը ներքև    */</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Երեք լուծում</span>
+      <p><strong>1.</strong> Ծնողին տուր <code>padding</code>՝ գոնե <code>1px</code>։<br>
+      <strong>2.</strong> Ծնողին տուր <code>border</code>։<br>
+      <strong>3.</strong> <strong>Ամենալավը՝</strong> օգտագործիր <code>padding</code>, ոչ <code>margin</code>, երբ բացակը «ներսի» է։<br><br>
+      Հենց դրա համար է մեր <code>.col</code>-ը օգտագործում <code>padding</code>, ոչ <code>margin</code>։ Margin collapse-ի հետ խնդիր չի լինում։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Հեռանկար</span>
+      <p>Flexbox-ում և Grid-ում margin collapse <strong>չկա</strong>։ Իսկ <code>gap</code> հատկությունը շատ ավելի կանխատեսելի է։ 11-րդ դասից սկսած այս խնդիրը մեծ մասամբ կանհետանա։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>box-sizing</h2>
+    <p>Ահա այն կանոնը, որը Դաս 6-ում գրեցինք <code>global.css</code>-ում առանց բացատրության։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>content-box — բրաուզերի լռելյայն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.box</span> {
+    <span class="f">box-sizing</span>: <span class="s">content-box</span>;
+    <span class="f">width</span>: <span class="n">200px</span>;
+    <span class="f">padding</span>: <span class="n">20px</span>;
+    <span class="f">border</span>: <span class="n">5px</span> <span class="s">solid</span>;
+}
+
+<span class="c">/* Իրական լայնությունը՝
+   200 + 20 + 20 + 5 + 5 = 250px   */</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>border-box — մեր ընտրությունը ✅</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.box</span> {
+    <span class="f">box-sizing</span>: <span class="s">border-box</span>;
+    <span class="f">width</span>: <span class="n">200px</span>;
+    <span class="f">padding</span>: <span class="n">20px</span>;
+    <span class="f">border</span>: <span class="n">5px</span> <span class="s">solid</span>;
+}
+
+<span class="c">/* Իրական լայնությունը՝ 200px
+   padding-ը և border-ը սեղմվում են ներս  */</span></code></pre>
+    </div>
+
+    <div class="tree">content-box                    border-box
+
+  200px                          200px
+├────────┤                    ├────────┤
+│content │  + padding          │ p │c│ p│  padding-ը ներսում
+└────────┘  + border           └────────┘
+            = 250px            = 200px  ✓</div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ է border-box-ը շատ ավելի հարմար</span>
+      <p>Պատկերացրու երեք սյուն՝ <code>width: 33.33%</code>։ <code>content-box</code>-ի դեպքում ամեն <code>padding</code> ավելացնում է լայնություն, և սյուները չեն տեղավորվում — երրորդն ընկնում է ներքև։<br><br>
+      <code>border-box</code>-ով 33.33% նշանակում է <strong>ուղիղ 33.33%</strong>, անկախ ամեն ինչից։ Հենց դրա շնորհիվ է աշխատում մեր <code>.w-25</code>, <code>.w-33</code> համակարգը։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Դրա համար էլ այն գրում ենք առաջին տողերում</span>
+      <p><code>* { box-sizing: border-box }</code> — կիրառվում է <em>ամեն</em> էլեմենտի վրա։ Այս մեկ տողը հանում է հարյուրավոր հետագա գլխացավեր, և այն կա գրեթե ամեն ժամանակակից նախագծում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Չափեր</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>width և ընկերները</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.box</span> {
+    <span class="f">width</span>: <span class="n">300px</span>;
+    <span class="f">max-width</span>: <span class="n">100%</span>;      <span class="c">/* չգերազանցի ծնողին */</span>
+    <span class="f">min-width</span>: <span class="n">200px</span>;
+
+    <span class="f">height</span>: <span class="n">200px</span>;
+    <span class="f">min-height</span>: <span class="n">100px</span>;
+}</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հատկություն</th><th>Ե՞րբ օգտագործել</th></tr>
+      <tr><td><code>width: 100%</code></td><td>Ամբողջ ծնողի լայնությամբ</td></tr>
+      <tr><td><code>max-width</code></td><td><strong>Ադապտիվության բանալին</strong></td></tr>
+      <tr><td><code>min-height</code></td><td>Երբ բլոկը պիտի ունենա նվազագույն բարձրություն</td></tr>
+      <tr><td><code>height</code></td><td>Զգույշ — տեքստը կարող է դուրս գալ</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">width vs max-width</span>
+      <p><code>width: 1200px</code> — 400px էկրանին բլոկը կմնա 1200px, և կհայտնվի հորիզոնական սքրոլ։<br>
+      <code>max-width: 1200px</code> — «ոչ ավելի, քան 1200px, բայց եթե տեղ չկա՝ սեղմվիր»։<br><br>
+      <strong>Կանոն՝</strong> ֆիքսված <code>width</code>-ի փոխարեն գրեթե միշտ ավելի լավ է <code>max-width</code>։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ֆիքսված height-ը վտանգավոր է</span>
+      <p><code>height: 200px</code> և ներսում երկար տեքստ → տեքստը դուրս է գալիս տուփից։ Հատկապես վտանգավոր է հայերենի հետ, որտեղ բառերն ավելի երկար են, քան անգլերենում։<br><br>
+      Օգտագործիր <code>min-height</code> — բլոկը կունենա նվազագույն բարձրություն, բայց կաճի, եթե պետք լինի։</p>
+    </div>
+
+    <h3>Նկարները և տուփը</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>global.css — այսօրվա ավելացումը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="t">picture</span> {
+    <span class="f">display</span>: <span class="s">block</span>;
+    <span class="f">font-size</span>: <span class="n">0</span>;
+}
+
+<span class="t">img</span> {
+    <span class="f">max-width</span>: <span class="n">100%</span>;
+}</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Կանոն</th><th>Ինչու</th></tr>
+      <tr><td><code>img { max-width: 100% }</code></td><td>Մեծ նկարը չի ջարդում դասավորությունը փոքր էկրանին</td></tr>
+      <tr><td><code>picture { display: block }</code></td><td>Դարձնում է բլոկային՝ հեշտ կառավարելի</td></tr>
+      <tr><td><code>picture { font-size: 0 }</code></td><td>Հանում է նկարի տակի առեղծվածային 4px բացակը</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Այդ առեղծվածային բացակը</span>
+      <p><code>img</code>-ը տողային էլեմենտ է, ուստի բրաուզերը դրա տակ թողնում է տեղ տառերի «պոչերի» համար (ինչպես <em>ց</em>, <em>ղ</em>)։ Արդյունքում նկարի տակ հայտնվում է 3–5px բացակ, որը շատերին խելագարեցնում է։<br><br>
+      <code>font-size: 0</code>-ը ծնողի վրա լուծում է դա։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Խաղահրապարակ</h2>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="css">CSS</button>
+        <button class="live__tab" data-pane="html">HTML</button>
+      </div>
+      <textarea class="live__code" data-pane="css">body {
+    font-family: system-ui, sans-serif;
+    margin: 0;
+    padding: 16px;
+    background: #f5f5f5;
+}
+
+/* ===== ՓՈՐՁԱՐԿՈՒՄ 1 — box-sizing ===== */
+.demo {
+    width: 200px;
+    padding: 20px;
+    border: 5px solid #003459;
+    background: #9db4c0;
+    margin-bottom: 12px;
+}
+
+.content-box { box-sizing: content-box; }  /* 250px */
+.border-box  { box-sizing: border-box;  }  /* 200px */
+
+/* ===== ՓՈՐՁԱՐԿՈՒՄ 2 — margin collapse ===== */
+.stack p {
+    background: white;
+    padding: 10px;
+    margin: 30px 0;   /* 30, ոչ 60 */
+}
+
+/* ===== ՓՈՐՁԱՐԿՈՒՄ 3 — կենտրոնացում ===== */
+.center {
+    max-width: 300px;
+    margin: 0 auto;
+    background: white;
+    padding: 16px;
+    border-radius: 10px;
+}
+
+/* ===== ՓՈՐՁԱՐԿՈՒՄ 4 — border-radius ===== */
+.shapes { display: flex; gap: 10px; margin-top: 16px; }
+
+.shape {
+    width: 70px;
+    height: 70px;
+    background: #003459;
+}
+
+.rounded { border-radius: 10px; }
+.pill    { border-radius: 999px; }
+.circle  { border-radius: 50%; }
+.oval    { border-radius: 50%; width: 120px; }
+
+/* ===== ՓՈՐՁԱՐԿՈՒՄ 5 — height-ի վտանգը ===== */
+.fixed-h {
+    height: 60px;
+    background: #ffe0e0;
+    padding: 8px;
+    margin-top: 16px;
+}
+
+.min-h {
+    min-height: 60px;
+    background: #e0ffe0;
+    padding: 8px;
+    margin-top: 8px;
+}</textarea>
+      <textarea class="live__code is-hidden" data-pane="html">&lt;div class="demo content-box"&gt;content-box → 250px&lt;/div&gt;
+&lt;div class="demo border-box"&gt;border-box → 200px&lt;/div&gt;
+
+&lt;div class="stack"&gt;
+    &lt;p&gt;Առաջին պարբերություն&lt;/p&gt;
+    &lt;p&gt;Երկրորդ — բացակը 30px է, ոչ 60&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="center"&gt;
+    Կենտրոնացված՝ max-width + margin auto
+&lt;/div&gt;
+
+&lt;div class="shapes"&gt;
+    &lt;div class="shape rounded"&gt;&lt;/div&gt;
+    &lt;div class="shape pill"&gt;&lt;/div&gt;
+    &lt;div class="shape circle"&gt;&lt;/div&gt;
+    &lt;div class="shape oval"&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="fixed-h"&gt;
+    height ֆիքսված — այս երկար տեքստը դուրս կգա տուփից,
+    որովհետև բարձրությունը թույլ չի տալիս աճել
+&lt;/div&gt;
+
+&lt;div class="min-h"&gt;
+    min-height — նույն երկար տեքստը, բայց տուփն աճում է
+    բովանդակության հետ և ամեն ինչ տեղում է
+&lt;/div&gt;</textarea>
+      <div class="live__actions">
+        <span>Բացիր DevTools-ը և նայիր box model դիագրամը</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Փորձիր</span>
+      <p><strong>1.</strong> Չափիր երկու <code>.demo</code>-ի լայնությունը DevTools-ով։<br>
+      <strong>2.</strong> <code>.stack p</code>-ի <code>margin</code>-ը դարձրու <code>padding</code>։ Ի՞նչ փոխվեց։<br>
+      <strong>3.</strong> Ջնջիր <code>max-width</code>-ը <code>.center</code>-ից։<br>
+      <strong>4.</strong> Ավելացրու տեքստ <code>.fixed-h</code>-ում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Դասարանական · քարտ</h2>
+    <p>Կառուցում ենք առաջին իսկական կոմպոնենտը՝ ապրանքի քարտ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">article</span> <span class="f">class</span>=<span class="s">"card"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">picture</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">img</span> <span class="f">src</span>=<span class="s">"images/laptop.jpg"</span> <span class="f">alt</span>=<span class="s">"Նոութբուք Pro 14 բաց վիճակում"</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">picture</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__body"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"title-4"</span><span class="p">&gt;</span>Նոութբուք Pro 14<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"text-muted"</span><span class="p">&gt;</span>16 ԳԲ RAM, 512 ԳԲ SSD<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__price"</span><span class="p">&gt;</span>450&amp;nbsp;000 ֏<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span> <span class="f">class</span>=<span class="s">"btn"</span><span class="p">&gt;</span>Գնել<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>CSS</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.card</span> {
+    <span class="f">max-width</span>: <span class="n">300px</span>;
+    <span class="f">background</span>: <span class="s">white</span>;
+    <span class="f">border</span>: <span class="n">1px</span> <span class="s">solid #e0e0e0</span>;
+    <span class="f">border-radius</span>: <span class="n">12px</span>;
+    <span class="f">overflow</span>: <span class="s">hidden</span>;      <span class="c">/* նկարը կկտրվի կլորացման տակ */</span>
+}
+
+<span class="k">.card</span> <span class="t">img</span> {
+    <span class="f">width</span>: <span class="n">100%</span>;
+    <span class="f">display</span>: <span class="s">block</span>;
+}
+
+<span class="k">.card__body</span> {
+    <span class="f">padding</span>: <span class="n">16px</span>;         <span class="c">/* ներսի բացակ — padding, ոչ margin */</span>
+}
+
+<span class="k">.card__body</span> <span class="k">.title-4</span> {
+    <span class="f">margin-bottom</span>: <span class="n">8px</span>;
+}
+
+<span class="k">.card__price</span> {
+    <span class="f">font-size</span>: <span class="n">1.25rem</span>;
+    <span class="f">font-weight</span>: <span class="n">700</span>;
+    <span class="f">margin</span>: <span class="n">12px</span> <span class="n">0</span>;
+}
+
+<span class="k">.btn</span> {
+    <span class="f">display</span>: <span class="s">inline-block</span>;
+    <span class="f">padding</span>: <span class="n">10px</span> <span class="n">20px</span>;
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--secondary</span>);
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--on-dark</span>);
+    <span class="f">border</span>: <span class="n">1px</span> <span class="s">solid transparent</span>;
+    <span class="f">border-radius</span>: <span class="n">6px</span>;
+}
+
+<span class="k">.btn</span>:<span class="k">hover</span> {
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--on-dark</span>);
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--secondary</span>);
+    <span class="f">border-color</span>: <span class="s">var</span>(<span class="f">--secondary</span>);
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Երկու կարևոր մանրուք</span>
+      <p><strong>1.</strong> <code>overflow: hidden</code> քարտի վրա — առանց դրա նկարի անկյունները դուրս կգան կլորացումից։<br>
+      <strong>2.</strong> <code>border: 1px solid transparent</code> կոճակի վրա — որ hover-ի ժամանակ, երբ եզրագիծը հայտնվի, կոճակը <strong>չցատկի</strong> 2px-ով։ Փոքր մանրուք, որը տարբերում է ուշադիր աշխատանքը անփույթից։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ստեղծիր բլոկ և ցուցադրիր չորս շերտն էլ՝ տարբեր գույներով։ Ստուգիր DevTools-ի դիագրամով։</li>
+      <li>Գրիր <code>padding</code>-ը չորս ձևով՝ 1, 2, 3 և 4 արժեքով։ Նկարագրիր ամեն մեկի արդյունքը։</li>
+      <li>Ցուցադրիր <code>box-sizing</code>-ի տարբերությունը՝ երկու նույնական բլոկ, տարբեր <code>box-sizing</code>։ Չափիր DevTools-ով։</li>
+      <li>Ցուցադրիր margin collapse-ը երկու պարբերությամբ։ Ապա ուղղիր՝ <code>padding</code>-ի անցնելով։</li>
+      <li>Ցուցադրիր երկրորդ դեպքը՝ երեխայի <code>margin</code>-ը դուրս է գալիս ծնողից։ Ուղղիր երեք ձևով։</li>
+      <li>Կենտրոնացրու բլոկը <code>margin: 0 auto</code>-ով։ Հետո ջնջիր <code>max-width</code>-ը և բացատրիր, ինչու դադարեց աշխատել։</li>
+      <li>Ստեղծիր չորս ձև՝ քառակուսի, կլորացված, «դեղահատ», շրջան։ Ցույց տուր, ինչ է լինում <code>50%</code>-ի հետ ոչ քառակուսի տուփի վրա։</li>
+      <li>Համեմատիր <code>height</code>-ը և <code>min-height</code>-ը երկար տեքստով։</li>
+      <li>Ավելացրու <code>global.css</code>-ում <code>picture</code>-ի և <code>img</code>-ի կանոնները։ Ցույց տուր՝ ինչ եղավ նկարի տակի բացակի հետ։</li>
+      <li>Կառուցիր ապրանքի քարտ դասարանական օրինակի պես։ Ավելացրու երկրորդ քարտ և տեղադրիր դրանք կողք կողքի (<code>display: inline-block</code>-ով — Flexbox-ը հաջորդ դասերին է)։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հատկություն</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>padding</code></td><td>Ներսի բացակ — ունի ֆոն</td></tr>
+      <tr><td><code>border</code></td><td>Եզրագիծ՝ հաստություն, ոճ, գույն</td></tr>
+      <tr><td><code>margin</code></td><td>Դրսի բացակ — միշտ թափանցիկ</td></tr>
+      <tr><td><code>border-radius</code></td><td>Կլորացում։ <code>50%</code> = շրջան</td></tr>
+      <tr><td><code>outline</code></td><td>Չի ազդում դասավորության վրա ⭐</td></tr>
+      <tr><td><code>box-sizing: border-box</code></td><td>Չափը ներառում է padding և border ⭐</td></tr>
+      <tr><td><code>margin: 0 auto</code></td><td>Կենտրոնացում (պետք է <code>width</code>)</td></tr>
+      <tr><td><code>max-width</code></td><td>Ադապտիվության բանալին ⭐</td></tr>
+      <tr><td><code>min-height</code></td><td><code>height</code>-ի անվտանգ տարբերակը</td></tr>
+      <tr><td><code>overflow: hidden</code></td><td>Կտրում է դուրս եկածը</td></tr>
+    </table>
+    </div>
+
+    <h3>Կարճ գրառում</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Նշանակություն</th></tr>
+      <tr><td><code>padding: 20px</code></td><td>Չորս կողմ</td></tr>
+      <tr><td><code>padding: 10px 20px</code></td><td>Վեր-վար, ձախ-աջ</td></tr>
+      <tr><td><code>padding: 10px 20px 15px</code></td><td>Վեր, ձախ-աջ, վար</td></tr>
+      <tr><td><code>padding: 10px 20px 15px 5px</code></td><td>Վեր, աջ, վար, ձախ</td></tr>
+    </table>
+    </div>
+
+    <h3>Ի՞նչ ավելացավ global.css-ում այսօր</h3>
+    <div class="tree">✓ picture { display: block; font-size: 0 }
+✓ img { max-width: 100% }</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li><code>box-sizing: border-box</code>-ը կա <code>global.css</code>-ում</li>
+      <li>Ֆիքսված <code>width</code>-ի փոխարեն՝ <code>max-width</code></li>
+      <li>Ֆիքսված <code>height</code>-ի փոխարեն՝ <code>min-height</code></li>
+      <li>Ներսի բացակների համար՝ <code>padding</code>, ոչ <code>margin</code></li>
+      <li>Կոճակներն ունեն <code>border: ... transparent</code>, որ hover-ին չցատկեն</li>
+      <li>Նկարներն ունեն <code>max-width: 100%</code></li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել <code>padding</code>-ի և <code>margin</code>-ի տարբերությունը</li>
+      <li>Գիտե՞մ, ինչու <code>box-sizing: border-box</code></li>
+      <li>Հասկանո՞ւմ եմ margin collapse-ը</li>
+      <li>Գիտե՞մ, ինչու <code>max-width</code>, ոչ <code>width</code></li>
+      <li>Կարո՞ղ եմ բացատրել, ինչու ֆոկուսի համար <code>outline</code></li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p><code>display</code> և նորմալ հոսք։ Ինչո՞ւ են <code>div</code>-երը դասավորվում ուղղահայաց, իսկ <code>span</code>-երը՝ հորիզոնական։ Սա վերջին քայլն է մինչև 10-րդ դասը, որտեղ կսկսենք մեր դասավորության համակարգը։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 08 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

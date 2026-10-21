@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 3 — Աղյուսակներ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 3 · 2 ժամ</p>
+  <h1>Աղյուսակներ</h1>
+  <p class="lede">Առաջին անգամ հանդիպում ենք <strong>խիստ ներդրվածության</strong>՝ որտեղ ամեն շերտ ունի իր տեղը և չես կարող մեկը բաց թողնել։ Այս մտածելակերպը հիմք է դառնալու 10-րդ դասի կառուցվածքի համար։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 01–02</span>
+    <span>Բլոկ 1 · HTML հիմունքներ</span>
+    <span>Նախապատրաստում Դաս 10-ին</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ե՞րբ է աղյուսակը ճիշտ ընտրություն, ե՞րբ՝ ոչ</li>
+      <li>Կմախքը՝ <code>table &gt; tr &gt; td</code></li>
+      <li>Խիստ ներդրվածությունը</li>
+      <li><code>th</code>, <code>caption</code>, <code>thead</code>, <code>tbody</code></li>
+      <li><code>scope</code> — հասանելիության համար</li>
+      <li><code>colspan</code> և <code>rowspan</code></li>
+      <li>Ամենահաճախ հանդիպող սխալները</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ե՞րբ է պետք աղյուսակը</h2>
+
+    <p>Աղյուսակը <strong>տվյալների</strong> համար է, որտեղ ամեն արժեք ունի տող և սյուն։ Դասացուցակ, գնացուցակ, համեմատական բնութագրեր, մրցաշարի աղյուսակ։</p>
+
+    <div class="warn note">
+      <span class="tag">Կարևոր պատմություն</span>
+      <p>2000-ականներին բոլոր կայքերը կառուցվում էին աղյուսակներով՝ դասավորության համար։ Header-ը մեկ տողում, մենյուն՝ ձախ վանդակում, բովանդակությունը՝ աջում։<br><br>
+      Դա ահավոր էր․ էջերը դանդաղ էին բեռնվում, հեռախոսում ընդհանրապես չէին աշխատում, էկրանընթերցիչները տեքստը կարդում էին սխալ հերթականությամբ։ <strong>Այսօր դասավորության համար աղյուսակ չեն օգտագործում։</strong> Դրա համար կա Flexbox և Grid։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>✅ Աղյուսակ</th><th>❌ Ոչ աղյուսակ</th></tr>
+      <tr><td>Դասացուցակ</td><td>Էջի դասավորություն</td></tr>
+      <tr><td>Գնացուցակ</td><td>Ապրանքների քարտեր</td></tr>
+      <tr><td>Բնութագրերի համեմատություն</td><td>Նավիգացիոն մենյու</td></tr>
+      <tr><td>Ֆինանսական հաշվետվություն</td><td>Ֆոտոգալերեա</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Պարզ ստուգում</span>
+      <p>Հարցրու քեզ՝ <em>«եթե սա Excel-ում լիներ, տրամաբանական կթվա՞ր»</em>։ Եթե այո՝ աղյուսակ։ Եթե ոչ՝ ուրիշ լուծում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Կմախքը</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ամենապարզ աղյուսակը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">table</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>Խնձոր<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>500 դր<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>Ծիրան<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>800 դր<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">table</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Թեգ</th><th>Անվան ծագումը</th><th>Ինչ է</th></tr>
+      <tr><td><code>&lt;table&gt;</code></td><td>table</td><td>Ամբողջ աղյուսակը</td></tr>
+      <tr><td><code>&lt;tr&gt;</code></td><td><strong>t</strong>able <strong>r</strong>ow</td><td>Տող</td></tr>
+      <tr><td><code>&lt;td&gt;</code></td><td><strong>t</strong>able <strong>d</strong>ata</td><td>Վանդակ</td></tr>
+      <tr><td><code>&lt;th&gt;</code></td><td><strong>t</strong>able <strong>h</strong>eader</td><td>Վերնագրային վանդակ</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Կարևոր դիտարկում</span>
+      <p>Աղյուսակը կառուցվում է <strong>տողերով</strong>, ոչ սյուներով։ Սյուն թեգ չկա։ Սյուները ստացվում են ինքնաբերաբար՝ ամեն տողի առաջին վանդակները կազմում են առաջին սյունը, երկրորդները՝ երկրորդը։</p>
+    </div>
+
+    <div class="tree">&lt;table&gt;
+ │
+ ├── &lt;tr&gt;  ────────────  տող 1
+ │    ├── &lt;td&gt;  Խնձոր      սյուն 1
+ │    └── &lt;td&gt;  500 դր     սյուն 2
+ │
+ └── &lt;tr&gt;  ────────────  տող 2
+      ├── &lt;td&gt;  Ծիրան      սյուն 1
+      └── &lt;td&gt;  800 դր     սյուն 2</div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Խիստ ներդրվածություն</h2>
+    <p>Ահա այն, ինչ տարբերում է աղյուսակը մինչ այժմ սովորած ամեն ինչից։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ ոչ մի շերտ չես կարող բաց թողնել</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- ❌ td-ն առանց tr-ի --&gt;</span>
+<span class="p">&lt;</span><span class="t">table</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>Խնձոր<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">table</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- ❌ տեքստ ուղիղ tr-ի մեջ --&gt;</span>
+<span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+    Խնձոր
+<span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- ❌ div-ը միջանկյալ շերտում --&gt;</span>
+<span class="p">&lt;</span><span class="t">table</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">table</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Կանոնը</span>
+      <p><code>table</code>-ի ուղիղ ներսում կարող են լինել միայն <code>tr</code> (կամ <code>thead</code>/<code>tbody</code>/<code>caption</code>)։<br>
+      <code>tr</code>-ի ուղիղ ներսում՝ միայն <code>td</code> կամ <code>th</code>։<br>
+      <code>td</code>-ի ներսում՝ ինչ ուզես — տեքստ, նկար, ցուցակ, նույնիսկ ուրիշ աղյուսակ։</p>
+    </div>
+
+    <p>Բրաուզերը փորձում է ուղղել քո սխալները, բայց արդյունքը կլինի անկանխատեսելի։ Երբեմն տարրերը «դուրս են թռչում» աղյուսակից և հայտնվում դրանից վեր։</p>
+
+    <div class="tip note">
+      <span class="tag">Հիշիր այս զգացողությունը</span>
+      <p><code>table &gt; tr &gt; td</code> — երեք շերտ, ամեն մեկն իր դերով, ոչ մեկը բաց թողնել չի կարելի։<br><br>
+      10-րդ դասին կհանդիպես <code>.row &gt; .col &gt; .wrapper</code>-ին։ Ճիշտ նույն տրամաբանությունն է․ երեք շերտ, ամեն մեկն իր գործով։ Այսօր դու հենց դրան ես նախապատրաստվում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Վերնագրեր և բաժիններ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ամբողջական կառուցվածք</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">table</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">caption</span><span class="p">&gt;</span>Ապրանքների գնացուցակ<span class="p">&lt;/</span><span class="t">caption</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">thead</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">th</span><span class="p">&gt;</span>Ապրանք<span class="p">&lt;/</span><span class="t">th</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">th</span><span class="p">&gt;</span>Քանակ<span class="p">&lt;/</span><span class="t">th</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">th</span><span class="p">&gt;</span>Գին<span class="p">&lt;/</span><span class="t">th</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">thead</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">tbody</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>Խնձոր<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>2 կգ<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>1000 դր<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>Ծիրան<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>1 կգ<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>800 դր<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">tbody</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">tfoot</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>Ընդամենը<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>3 կգ<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>1800 դր<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">tfoot</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">table</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Թեգ</th><th>Ինչի համար</th></tr>
+      <tr><td><code>&lt;caption&gt;</code></td><td>Աղյուսակի վերնագիրը։ Գրվում է <code>table</code>-ի <strong>առաջին</strong> տարրը</td></tr>
+      <tr><td><code>&lt;thead&gt;</code></td><td>Վերնագրային տողերը</td></tr>
+      <tr><td><code>&lt;tbody&gt;</code></td><td>Հիմնական տվյալները</td></tr>
+      <tr><td><code>&lt;tfoot&gt;</code></td><td>Ամփոփող տողը</td></tr>
+      <tr><td><code>&lt;th&gt;</code></td><td>Վերնագրային վանդակ։ Լռելյայն՝ հաստ և կենտրոնացված</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ են պետք thead և tbody</span>
+      <p><strong>1.</strong> Երկար աղյուսակը տպելիս վերնագիրը կրկնվում է ամեն էջում։<br>
+      <strong>2.</strong> CSS-ում հեշտ է առանձին ոճավորել՝ <code>thead th { ... }</code>։<br>
+      <strong>3.</strong> Կոդն ավելի ընթեռնելի է։<br>
+      <strong>4.</strong> Երկրորդ բլոկում JS-ով տողեր ավելացնելիս պարզ է՝ ուր դնել դրանք։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>scope — աղյուսակը հասկանալի դարձնելը</h2>
+
+    <p>Տեսողությամբ դու աղյուսակը կարդում ես մեկ հայացքով՝ տեսնում ես, որ «800 դր»-ը գտնվում է «Ծիրան» տողի և «Գին» սյան խաչմերուկում։</p>
+
+    <p>Էկրանընթերցիչը կարդում է <strong>հերթականությամբ</strong>՝ վանդակ առ վանդակ։ Առանց օգնության օգտագործողը կլսի պարզապես «Ծիրան, 1 կգ, 800 դր» և չի իմանա՝ ո՞ր թիվն ինչ է նշանակում։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>scope</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">table</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">thead</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">th</span> <span class="f">scope</span>=<span class="s">"col"</span><span class="p">&gt;</span>Ապրանք<span class="p">&lt;/</span><span class="t">th</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">th</span> <span class="f">scope</span>=<span class="s">"col"</span><span class="p">&gt;</span>Քանակ<span class="p">&lt;/</span><span class="t">th</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">th</span> <span class="f">scope</span>=<span class="s">"col"</span><span class="p">&gt;</span>Գին<span class="p">&lt;/</span><span class="t">th</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">thead</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">tbody</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">th</span> <span class="f">scope</span>=<span class="s">"row"</span><span class="p">&gt;</span>Ծիրան<span class="p">&lt;/</span><span class="t">th</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>1 կգ<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>800 դր<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">tbody</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">table</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <p>Հիմա էկրանընթերցիչը կասի՝ <em>«Ծիրան, Գին՝ 800 դր»</em>։ Երկու ատրիբուտ, և աղյուսակը դարձավ օգտագործելի։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Արժեք</th><th>Նշանակություն</th></tr>
+      <tr><td><code>scope="col"</code></td><td>Սա <strong>սյան</strong> վերնագիրն է</td></tr>
+      <tr><td><code>scope="row"</code></td><td>Սա <strong>տողի</strong> վերնագիրն է</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Պարզ կանոն</span>
+      <p>Առաջին տողի <code>th</code>-երին՝ <code>scope="col"</code>։ Ամեն տողի առաջին վանդակին, եթե այն վերնագիր է՝ <code>th scope="row"</code>։ Դա տևում է 10 վայրկյան և միշտ արժե։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>colspan և rowspan</h2>
+    <p>Երբեմն վանդակը պիտի զբաղեցնի մի քանի սյուն կամ տող։</p>
+
+    <h3>colspan — միավորում հորիզոնական</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>colspan="3"</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">table</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">th</span> <span class="f">colspan</span>=<span class="s">"3"</span><span class="p">&gt;</span>Առաջին կիսամյակ<span class="p">&lt;/</span><span class="t">th</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>Սեպտեմբեր<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>Հոկտեմբեր<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>Նոյեմբեր<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">table</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="tree">┌──────────────────────────────┐
+│     Առաջին կիսամյակ          │  ← colspan="3"
+├──────────┬──────────┬────────┤
+│Սեպտեմբեր │Հոկտեմբեր │Նոյեմբեր│
+└──────────┴──────────┴────────┘</div>
+
+    <h3>rowspan — միավորում ուղղահայաց</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>rowspan="2"</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">table</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">td</span> <span class="f">rowspan</span>=<span class="s">"2"</span><span class="p">&gt;</span>Երկուշաբթի<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>09:00<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>Մաթեմատիկա<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+        <span class="c">&lt;!-- Այստեղ ՉԿԱ առաջին td — այն զբաղված է վերևից --&gt;</span>
+        <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>10:00<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>Ֆիզիկա<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">table</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="tree">┌────────────┬───────┬─────────────┐
+│            │ 09:00 │ Մաթեմատիկա  │
+│ Երկուշաբթի ├───────┼─────────────┤  ← rowspan="2"
+│            │ 10:00 │ Ֆիզիկա      │
+└────────────┴───────┴─────────────┘</div>
+
+    <div class="warn note">
+      <span class="tag">Ամենահաճախ սխալը</span>
+      <p><code>rowspan</code>-ից հետո հաջորդ տողում պիտի <strong>հանես</strong> համապատասխան <code>td</code>-ն։ Եթե չհանես, աղյուսակը կծռվի՝ հայտնվելու է ավելորդ վանդակ։<br><br>
+      Հաշվիր՝ ամեն տողում վանդակների գումարը (հաշվի առնելով <code>colspan</code>-ը և վերևից եկող <code>rowspan</code>-ը) պիտի հավասար լինի սյուների քանակին։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Խաղահրապարակ</h2>
+    <p>Փորձարկիր <code>colspan</code>-ը և <code>rowspan</code>-ը։ CSS-ը դրված է, որ եզրագծերը երևան — 6-րդ դասից այն կգրես ինքդ։</p>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="html">HTML</button>
+        <button class="live__tab" data-pane="css">CSS</button>
+      </div>
+      <textarea class="live__code" data-pane="html">&lt;table&gt;
+    &lt;caption&gt;8-րդ դասարանի դասացուցակ&lt;/caption&gt;
+
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th scope="col"&gt;Օր&lt;/th&gt;
+            &lt;th scope="col"&gt;Ժամ&lt;/th&gt;
+            &lt;th scope="col"&gt;Առարկա&lt;/th&gt;
+            &lt;th scope="col"&gt;Կաբինետ&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;th scope="row" rowspan="2"&gt;Երկուշաբթի&lt;/th&gt;
+            &lt;td&gt;09:00&lt;/td&gt;
+            &lt;td&gt;Մաթեմատիկա&lt;/td&gt;
+            &lt;td&gt;204&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;10:00&lt;/td&gt;
+            &lt;td&gt;Ֆիզիկա&lt;/td&gt;
+            &lt;td&gt;301&lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;
+            &lt;th scope="row"&gt;Երեքշաբթի&lt;/th&gt;
+            &lt;td&gt;09:00&lt;/td&gt;
+            &lt;td&gt;Հայոց լեզու&lt;/td&gt;
+            &lt;td&gt;105&lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;
+            &lt;td colspan="4"&gt;Չորեքշաբթի — դասեր չկան&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;</textarea>
+      <textarea class="live__code is-hidden" data-pane="css">table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+caption {
+    font-weight: bold;
+    padding: 10px;
+}
+
+th, td {
+    border: 1px solid #999;
+    padding: 8px 12px;
+    text-align: left;
+}
+
+thead th {
+    background: #003459;
+    color: white;
+}
+
+tbody th {
+    background: #e8ecf2;
+}
+
+tr:nth-child(even) td {
+    background: #f7f9fb;
+}</textarea>
+      <div class="live__actions">
+        <span>Երկու ներդիր՝ HTML և CSS</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ի՞նչ է border-collapse</span>
+      <p>Առանց դրա ամեն վանդակ ունի իր առանձին եզրագիծը, և հարևան վանդակների միջև երևում է կրկնակի գիծ։ <code>border-collapse: collapse</code>-ը դրանք միավորում է մեկի մեջ։ Աղյուսակ ոճավորելիս սա գրեթե միշտ առաջին տողն է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Դասարանական · գնացուցակ</h2>
+    <p>Կառուցում ենք աղյուսակ քայլ առ քայլ։ Ամեն քայլից հետո՝ պահպանիր և նայիր։</p>
+
+    <ol>
+      <li>Կմախքը՝ <code>table</code>, չորս <code>tr</code>, ամեն մեկում երեք <code>td</code></li>
+      <li>Առաջին տողի <code>td</code>-երը դարձրու <code>th</code></li>
+      <li>Ավելացրու <code>caption</code></li>
+      <li>Փաթեթավորիր <code>thead</code>-ի և <code>tbody</code>-ի մեջ</li>
+      <li>Ավելացրու <code>scope</code>-երը</li>
+      <li>Ավելացրու <code>tfoot</code>՝ ընդհանուր գումարով</li>
+      <li>Փորձիր <code>colspan</code> <code>tfoot</code>-ում</li>
+    </ol>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>վերջնական արդյունքը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">table</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">caption</span><span class="p">&gt;</span>Պատվերի բովանդակությունը<span class="p">&lt;/</span><span class="t">caption</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">thead</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">th</span> <span class="f">scope</span>=<span class="s">"col"</span><span class="p">&gt;</span>Ապրանք<span class="p">&lt;/</span><span class="t">th</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">th</span> <span class="f">scope</span>=<span class="s">"col"</span><span class="p">&gt;</span>Քանակ<span class="p">&lt;/</span><span class="t">th</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">th</span> <span class="f">scope</span>=<span class="s">"col"</span><span class="p">&gt;</span>Գին<span class="p">&lt;/</span><span class="t">th</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">thead</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">tbody</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">th</span> <span class="f">scope</span>=<span class="s">"row"</span><span class="p">&gt;</span>Նոութբուք<span class="p">&lt;/</span><span class="t">th</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>1<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>450&amp;nbsp;000 դր<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">th</span> <span class="f">scope</span>=<span class="s">"row"</span><span class="p">&gt;</span>Մկնիկ<span class="p">&lt;/</span><span class="t">th</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>2<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>16&amp;nbsp;000 դր<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">th</span> <span class="f">scope</span>=<span class="s">"row"</span><span class="p">&gt;</span>Ստեղնաշար<span class="p">&lt;/</span><span class="t">th</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>1<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>25&amp;nbsp;000 դր<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">tbody</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">tfoot</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">td</span> <span class="f">colspan</span>=<span class="s">"2"</span><span class="p">&gt;</span>Ընդամենը<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>491&amp;nbsp;000 դր<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">tfoot</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">table</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ստուգիր վանդակների հաշիվը</span>
+      <p>Սյուները երեքն են։ <code>tfoot</code>-ի տողում՝ <code>colspan="2"</code> + մեկ սովորական <code>td</code> = 3։ Ճիշտ է։<br><br>
+      Եթե աղյուսակդ «ծռվում» է — առաջին բանը, որ պիտի անես, հենց այս հաշիվն է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Կառուցիր պարզ աղյուսակ՝ 4 տող × 3 սյուն, միայն <code>table</code>, <code>tr</code>, <code>td</code>-ով։</li>
+      <li>Ավելացրու վերնագրային տող <code>th</code>-երով և <code>caption</code>։</li>
+      <li>Բաժանիր <code>thead</code>-ի և <code>tbody</code>-ի։ Ավելացրու <code>tfoot</code>։</li>
+      <li>Ավելացրու բոլոր <code>scope</code>-երը։ Բացատրիր մեկնաբանության մեջ՝ ինչու։</li>
+      <li>Կառուցիր քո դասարանի դասացուցակը՝ 5 օր, օրական 4–6 դաս։ Օգտագործիր <code>rowspan</code> օրերի համար։</li>
+      <li>Ավելացրու տող՝ «Ընդմիջում», որը զբաղեցնում է բոլոր սյուները (<code>colspan</code>)։</li>
+      <li>Դիտավորյալ սխալ արա՝ <code>rowspan="2"</code> դիր, բայց հաջորդ տողից <code>td</code>-ն մի՛ հանիր։ Նկարագրիր՝ ինչ եղավ։ Հետո ուղղիր։</li>
+      <li>Կառուցիր համեմատական աղյուսակ՝ երեք հեռախոս, հինգ բնութագիր։ Առաջին սյունը՝ բնութագրի անունը (<code>th scope="row"</code>)։</li>
+      <li>Ավելացրու աղյուսակի ներսում նկար և հղում մեկ վանդակում։ Համոզվիր, որ դա թույլատրելի է։</li>
+      <li>Գտիր ինտերնետում որևէ կայք աղյուսակով, բացիր DevTools-ով և գտիր՝ կա՞ն արդյոք <code>thead</code>, <code>scope</code>, <code>caption</code>։ Գրիր արդյունքը։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Թեգ / ատրիբուտ</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>&lt;table&gt;</code></td><td>Աղյուսակի պատյանը</td></tr>
+      <tr><td><code>&lt;caption&gt;</code></td><td>Վերնագիրը։ Առաջին տարրը <code>table</code>-ում</td></tr>
+      <tr><td><code>&lt;thead&gt;</code> / <code>&lt;tbody&gt;</code> / <code>&lt;tfoot&gt;</code></td><td>Բաժիններ</td></tr>
+      <tr><td><code>&lt;tr&gt;</code></td><td>Տող</td></tr>
+      <tr><td><code>&lt;th&gt;</code></td><td>Վերնագրային վանդակ</td></tr>
+      <tr><td><code>&lt;td&gt;</code></td><td>Սովորական վանդակ</td></tr>
+      <tr><td><code>scope="col"</code></td><td>Սյան վերնագիր ⭐</td></tr>
+      <tr><td><code>scope="row"</code></td><td>Տողի վերնագիր ⭐</td></tr>
+      <tr><td><code>colspan="3"</code></td><td>Զբաղեցնում է 3 սյուն</td></tr>
+      <tr><td><code>rowspan="2"</code></td><td>Զբաղեցնում է 2 տող</td></tr>
+      <tr><td><code>border-collapse: collapse</code></td><td>Միավորում է եզրագծերը (CSS)</td></tr>
+    </table>
+    </div>
+
+    <h3>Ներդրվածության կանոնները</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ծնող</th><th>Թույլատրելի երեխաներ</th></tr>
+      <tr><td><code>table</code></td><td><code>caption</code>, <code>thead</code>, <code>tbody</code>, <code>tfoot</code>, <code>tr</code></td></tr>
+      <tr><td><code>thead</code> / <code>tbody</code> / <code>tfoot</code></td><td>Միայն <code>tr</code></td></tr>
+      <tr><td><code>tr</code></td><td>Միայն <code>th</code> և <code>td</code></td></tr>
+      <tr><td><code>th</code> / <code>td</code></td><td>Ցանկացած բովանդակություն</td></tr>
+    </table>
+    </div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Աղյուսակն օգտագործվում է տվյալների, ոչ դասավորության համար</li>
+      <li>Կա <code>caption</code></li>
+      <li>Վերնագրերը <code>th</code> են, ոչ <code>td</code></li>
+      <li>Բոլոր <code>th</code>-երն ունեն <code>scope</code></li>
+      <li>Կա <code>thead</code> և <code>tbody</code></li>
+      <li>Ամեն տողում վանդակների հաշիվը ճիշտ է</li>
+      <li><code>tr</code>-ի ուղիղ ներսում միայն <code>th</code>/<code>td</code> են</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչու աղյուսակով դասավորություն չեն անում</li>
+      <li>Գիտե՞մ, ինչու սյուն թեգ չկա</li>
+      <li>Հասկանո՞ւմ եմ <code>scope</code>-ի իմաստը</li>
+      <li>Կարո՞ղ եմ հաշվել վանդակները <code>rowspan</code>-ի դեպքում</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Ֆորմաներ։ Ամենամեծ HTML դասը՝ <code>input</code>-ի բոլոր տեսակները, <code>label</code>, <code>select</code>, <code>textarea</code>, խմբավորում։ Այնտեղ նույնպես ներդրվածությունը կարևոր է, բայց ավելի ազատ։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 03 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

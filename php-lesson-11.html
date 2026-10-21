@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHP Դաս 11 — OOP · դասեր և օբյեկտներ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>PHP Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">PHP Դաս 11 · 2 ժամ</p>
+  <h1>OOP · դասեր և օբյեկտներ</h1>
+  <p class="lede"><code>products.php</code>-ը 200 տող է։ Ամեն ֆունկցիա սկսվում է <code>db()</code>-ով։ Ամեն մեկը կրկնում է նույն կառուցվածքը։ Այսօր հավաքում ենք դա մեկ տեղում։</p>
+
+  <div class="facts">
+    <span>Բլոկ 3 · Դաս 11 / 24</span>
+    <span>Նախապայման՝ JS Դաս 22</span>
+    <span>Առաջին դասը՝ Product</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ի՞նչ խնդիր է լուծում OOP-ն</li>
+      <li>Դաս, օբյեկտ, հատկություն, մեթոդ</li>
+      <li>Կոնստրուկտոր և promoted properties</li>
+      <li>Տեսանելիություն՝ <code>public</code>, <code>private</code></li>
+      <li>Դասը որպես տվյալների տիպ՝ <code>Product</code></li>
+      <li><code>static</code> և ֆաբրիկա մեթոդներ</li>
+      <li><code>readonly</code> և անփոփոխելիություն</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ի՞նչ խնդիր ենք լուծում</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ընթացիկ վիճակը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// products.php — ամեն ֆունկցիա ինքնուրույն</span>
+
+<span class="k">function</span> <span class="f">getProducts</span>(...) { <span class="n">$stmt</span> = <span class="f">db</span>()-&gt;<span class="f">prepare</span>(...); ... }
+<span class="k">function</span> <span class="f">getProduct</span>(...)  { <span class="n">$stmt</span> = <span class="f">db</span>()-&gt;<span class="f">prepare</span>(...); ... }
+<span class="k">function</span> <span class="f">createProduct</span>(...) { <span class="n">$stmt</span> = <span class="f">db</span>()-&gt;<span class="f">prepare</span>(...); ... }
+<span class="k">function</span> <span class="f">updateProduct</span>(...) { <span class="n">$stmt</span> = <span class="f">db</span>()-&gt;<span class="f">prepare</span>(...); ... }
+
+<span class="c">// Իսկ ապրանքն ինքը՝ պարզապես զանգված</span>
+<span class="n">$product</span>[<span class="s">'price'</span>];
+<span class="n">$product</span>[<span class="s">'prise'</span>];   <span class="c">// ⚠️ տառասխալ → null, առանց սխալի</span></code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Խնդիր</th><th>Հետևանք</th></tr>
+      <tr><td>Զանգվածի բանալիները չեն ստուգվում</td><td>Տառասխալը լուռ վերադարձնում է <code>null</code></td></tr>
+      <tr><td>Չգիտես, ի՞նչ դաշտեր կան</td><td>Պիտի բացես SQL-ը կամ <code>var_dump</code> անես</td></tr>
+      <tr><td>Տրամաբանությունը ցրված է</td><td><code>finalPrice()</code> այստեղ, <code>formatPrice()</code> այնտեղ</td></tr>
+      <tr><td>Ամեն ֆունկցիա կանչում է <code>db()</code></td><td>Կրկնություն, դժվար է փոխարինել</td></tr>
+      <tr><td>Ֆունկցիաների անունները երկար են</td><td><code>getProductForAdmin</code>, <code>getAllProducts</code>…</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">OOP-ի հիմնական գաղափարը</span>
+      <p><strong>Տվյալները և դրանց հետ աշխատող կոդը պահել միասին։</strong><br><br>
+      Ապրանքն ունի գին, զեղչ և անուն։ Ապրանքի հետ կարելի է անել՝ հաշվել վերջնական գինը, ստուգել առկայությունը, ձևաչափել։<br><br>
+      Հիմա դրանք երկու տարբեր տեղում են՝ տվյալները զանգվածում, տրամաբանությունը՝ գլոբալ ֆունկցիաներում։ Դասը դրանք միավորում է։<br><br>
+      Դա նույն սկզբունքն է, ինչ HTML բլոկում՝ կոմպոնենտն ունի իր HTML-ը և իր CSS-ը միասին, ոչ ցրված։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Առաջին դասը</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ամենապարզ տարբերակը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="t">Product</span>
+{
+    <span class="k">public</span> <span class="k">string</span> <span class="n">$name</span>;
+    <span class="k">public</span> <span class="k">int</span> <span class="n">$price</span>;
+    <span class="k">public</span> <span class="k">int</span> <span class="n">$discount</span>;
+
+    <span class="k">public function</span> <span class="f">__construct</span>(<span class="k">string</span> <span class="n">$name</span>, <span class="k">int</span> <span class="n">$price</span>, <span class="k">int</span> <span class="n">$discount</span> = <span class="n">0</span>)
+    {
+        <span class="n">$this</span>-&gt;<span class="n">name</span>     = <span class="n">$name</span>;
+        <span class="n">$this</span>-&gt;<span class="n">price</span>    = <span class="n">$price</span>;
+        <span class="n">$this</span>-&gt;<span class="n">discount</span> = <span class="n">$discount</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">finalPrice</span>(): <span class="k">int</span>
+    {
+        <span class="k">return</span> (<span class="k">int</span>) <span class="f">round</span>(<span class="n">$this</span>-&gt;<span class="n">price</span> * (<span class="n">100</span> - <span class="n">$this</span>-&gt;<span class="n">discount</span>) / <span class="n">100</span>);
+    }
+}
+
+<span class="c">// Օգտագործում</span>
+<span class="n">$laptop</span> = <span class="k">new</span> <span class="t">Product</span>(<span class="s">'Նոութբուք Pro 14'</span>, <span class="n">450000</span>, <span class="n">30</span>);
+
+<span class="k">echo</span> <span class="n">$laptop</span>-&gt;<span class="n">name</span>;          <span class="c">// Նոութբուք Pro 14</span>
+<span class="k">echo</span> <span class="n">$laptop</span>-&gt;<span class="f">finalPrice</span>();  <span class="c">// 315000</span></code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հասկացություն</th><th>Ինչ է</th></tr>
+      <tr><td><strong>Դաս</strong></td><td>Նկարագրություն՝ ի՞նչ դաշտեր և ի՞նչ գործողություններ</td></tr>
+      <tr><td><strong>Օբյեկտ</strong></td><td>Կոնկրետ օրինակ՝ <code>new Product(...)</code></td></tr>
+      <tr><td><strong>Հատկություն</strong></td><td>Փոփոխական դասի ներսում</td></tr>
+      <tr><td><strong>Մեթոդ</strong></td><td>Ֆունկցիա դասի ներսում</td></tr>
+      <tr><td><code>$this</code></td><td>Հղում ընթացիկ օբյեկտին</td></tr>
+      <tr><td><code>-&gt;</code></td><td>Դիմել հատկությանը կամ մեթոդին</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">JS-ից եկածների համար</span>
+      <p>Դասերը JS Դաս 22-ից ծանոթ են։ Տարբերությունները՝<br><br>
+      <code>this.name</code> → <code>$this-&gt;name</code><br>
+      <code>constructor()</code> → <code>__construct()</code><br>
+      <code>#private</code> → <code>private</code><br>
+      <code>static</code> → նույնը<br><br>
+      Իսկ PHP-ում կա բան, որ JS-ում չկա՝ <strong>հատկությունների տիպերը</strong>։ <code>public int $price</code> նշանակում է, որ այնտեղ երբեք տող չի ընկնի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Constructor promotion</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>PHP 8-ի կրճատումը ⭐</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Նույն դասը՝ երեք անգամ ավելի կարճ</span>
+
+<span class="k">class</span> <span class="t">Product</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>(
+        <span class="k">public</span> <span class="k">string</span> <span class="n">$name</span>,
+        <span class="k">public</span> <span class="k">int</span> <span class="n">$price</span>,
+        <span class="k">public</span> <span class="k">int</span> <span class="n">$discount</span> = <span class="n">0</span>,
+    ) {}
+
+    <span class="k">public function</span> <span class="f">finalPrice</span>(): <span class="k">int</span>
+    {
+        <span class="k">return</span> (<span class="k">int</span>) <span class="f">round</span>(<span class="n">$this</span>-&gt;<span class="n">price</span> * (<span class="n">100</span> - <span class="n">$this</span>-&gt;<span class="n">discount</span>) / <span class="n">100</span>);
+    }
+}</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ի՞նչ եղավ</span>
+      <p><code>public</code>-ը պարամետրի առաջ միանգամից անում է երեք բան՝ հայտարարում է հատկությունը, ընդունում է արգումենտը և վերագրում է այն։<br><br>
+      Երեք տողի փոխարեն՝ մեկ։ Երբ դասն ունի 10 դաշտ, խնայվում է 20 տող։<br><br>
+      Այս ձևը հիմա ստանդարտ է ժամանակակից PHP-ում։ Կտեսնես այն Laravel-ի կոդում ամենուր։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Տեսանելիություն</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Մոդիֆիկատոր</th><th>Հասանելի է</th></tr>
+      <tr><td><code>public</code></td><td>Ամենուրից</td></tr>
+      <tr><td><code>private</code></td><td>Միայն այս դասի ներսում ⭐</td></tr>
+      <tr><td><code>protected</code></td><td>Այս դասում և ժառանգներում (Դաս 12)</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ինչու է սա կարևոր</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="t">Cart</span>
+{
+    <span class="k">private</span> <span class="k">array</span> <span class="n">$items</span> = [];      <span class="c">// ⭐ ներսից միայն</span>
+
+    <span class="k">public function</span> <span class="f">add</span>(<span class="k">int</span> <span class="n">$id</span>, <span class="k">int</span> <span class="n">$qty</span> = <span class="n">1</span>): <span class="k">void</span>
+    {
+        <span class="k">if</span> (<span class="n">$qty</span> &lt; <span class="n">1</span>) {
+            <span class="k">return</span>;
+        }
+
+        <span class="n">$current</span> = <span class="n">$this</span>-&gt;<span class="n">items</span>[<span class="n">$id</span>] ?? <span class="n">0</span>;
+        <span class="n">$this</span>-&gt;<span class="n">items</span>[<span class="n">$id</span>] = <span class="f">min</span>(<span class="n">$current</span> + <span class="n">$qty</span>, <span class="n">99</span>);
+    }
+
+    <span class="k">public function</span> <span class="f">all</span>(): <span class="k">array</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">items</span>;
+    }
+}
+
+<span class="n">$cart</span> = <span class="k">new</span> <span class="t">Cart</span>();
+<span class="n">$cart</span>-&gt;<span class="f">add</span>(<span class="n">5</span>, <span class="n">3</span>);        <span class="c">// ✅ սահմանները պահպանվում են</span>
+<span class="n">$cart</span>-&gt;<span class="n">items</span>[<span class="n">5</span>] = <span class="n">99999</span>; <span class="c">// ❌ Fatal error — private է</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինկապսուլյացիա — մեկ նախադասությամբ</span>
+      <p><strong><code>private</code>-ը երաշխավորում է, որ կանոնները չեն շրջանցվի։</strong><br><br>
+      Դաս 7-ում <code>cartAdd()</code>-ում գրեցինք <code>min($qty, 99)</code>։ Բայց ոչինչ չէր խանգարում ուրիշ տեղում գրել <code>$_SESSION['cart'][5] = 99999</code> և շրջանցել այն։<br><br>
+      Հիմա միակ մուտքը <code>add()</code>-ն է։ Կանոնը մեկ տեղում է և չի կարող շրջանցվել — ոչ պատահաբար, ոչ դիտմամբ։<br><br>
+      Կանոն՝ <strong>հատկությունները լռելյայն <code>private</code></strong>։ <code>public</code> դարձրու միայն այն, ինչին իսկապես պետք է դրսից դիմել։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Product որպես տիպ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Product.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">class</span> <span class="t">Product</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>(
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">int</span> <span class="n">$id</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">string</span> <span class="n">$name</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">string</span> <span class="n">$slug</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">int</span> <span class="n">$price</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">int</span> <span class="n">$discount</span> = <span class="n">0</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">int</span> <span class="n">$stock</span> = <span class="n">0</span>,
+        <span class="k">public</span> <span class="k">readonly</span> ?<span class="k">string</span> <span class="n">$specs</span> = <span class="k">null</span>,
+        <span class="k">public</span> <span class="k">readonly</span> ?<span class="k">string</span> <span class="n">$image</span> = <span class="k">null</span>,
+        <span class="k">public</span> <span class="k">readonly</span> ?<span class="k">string</span> <span class="n">$categoryName</span> = <span class="k">null</span>,
+    ) {}
+
+    <span class="c">// ---------- Ֆաբրիկա ----------</span>
+
+    <span class="k">public static function</span> <span class="f">fromRow</span>(<span class="k">array</span> <span class="n">$row</span>): <span class="k">self</span>
+    {
+        <span class="k">return</span> <span class="k">new</span> <span class="k">self</span>(
+            <span class="n">id</span>:           (<span class="k">int</span>) <span class="n">$row</span>[<span class="s">'id'</span>],
+            <span class="n">name</span>:         (<span class="k">string</span>) <span class="n">$row</span>[<span class="s">'name'</span>],
+            <span class="n">slug</span>:         (<span class="k">string</span>) <span class="n">$row</span>[<span class="s">'slug'</span>],
+            <span class="n">price</span>:        (<span class="k">int</span>) <span class="n">$row</span>[<span class="s">'price'</span>],
+            <span class="n">discount</span>:     (<span class="k">int</span>) (<span class="n">$row</span>[<span class="s">'discount'</span>] ?? <span class="n">0</span>),
+            <span class="n">stock</span>:        (<span class="k">int</span>) (<span class="n">$row</span>[<span class="s">'stock'</span>] ?? <span class="n">0</span>),
+            <span class="n">specs</span>:        <span class="n">$row</span>[<span class="s">'specs'</span>] ?? <span class="k">null</span>,
+            <span class="n">image</span>:        <span class="n">$row</span>[<span class="s">'image'</span>] ?? <span class="k">null</span>,
+            <span class="n">categoryName</span>: <span class="n">$row</span>[<span class="s">'category_name'</span>] ?? <span class="k">null</span>,
+        );
+    }
+
+    <span class="c">// ---------- Տրամաբանություն ----------</span>
+
+    <span class="k">public function</span> <span class="f">finalPrice</span>(): <span class="k">int</span>
+    {
+        <span class="k">return</span> (<span class="k">int</span>) <span class="f">round</span>(<span class="n">$this</span>-&gt;<span class="n">price</span> * (<span class="n">100</span> - <span class="n">$this</span>-&gt;<span class="n">discount</span>) / <span class="n">100</span>);
+    }
+
+    <span class="k">public function</span> <span class="f">hasDiscount</span>(): <span class="k">bool</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">discount</span> &gt; <span class="n">0</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">inStock</span>(): <span class="k">bool</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">stock</span> &gt; <span class="n">0</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">isLowStock</span>(): <span class="k">bool</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">stock</span> &gt; <span class="n">0</span> &amp;&amp; <span class="n">$this</span>-&gt;<span class="n">stock</span> &lt;= <span class="n">3</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">savings</span>(): <span class="k">int</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">price</span> - <span class="n">$this</span>-&gt;<span class="f">finalPrice</span>();
+    }
+
+    <span class="c">// ---------- Ներկայացում ----------</span>
+
+    <span class="k">public function</span> <span class="f">formattedPrice</span>(): <span class="k">string</span>
+    {
+        <span class="k">return</span> <span class="f">number_format</span>(<span class="n">$this</span>-&gt;<span class="f">finalPrice</span>(), <span class="n">0</span>, <span class="s">'.'</span>, <span class="s">"\u{00A0}"</span>) . <span class="s">"\u{00A0}֏"</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">url</span>(): <span class="k">string</span>
+    {
+        <span class="k">return</span> <span class="s">'/product/'</span> . <span class="n">$this</span>-&gt;<span class="n">slug</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">imageUrl</span>(): <span class="k">string</span>
+    {
+        <span class="k">return</span> <span class="s">'/images/'</span> . (<span class="n">$this</span>-&gt;<span class="n">image</span> ?? <span class="s">'placeholder.jpg'</span>);
+    }
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ի՞նչ փոխվեց</span>
+      <p>Ամեն ինչ, ինչ վերաբերում է ապրանքին, հիմա <strong>մեկ ֆայլում է</strong>։<br><br>
+      Ուզում ես իմանալ, ի՞նչ կարելի է անել ապրանքի հետ — բացիր <code>Product.php</code>-ը և կարդա մեթոդների ցուցակը։ Ոչ մի որոնում ամբողջ նախագծով։<br><br>
+      Իսկ <code>$product-&gt;prise</code>-ը հիմա տալիս է <strong>Warning</strong>, ոչ լուռ <code>null</code>։ IDE-ն էլ կընդգծի այն կարմիրով նույնիսկ մինչև գործարկելը։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag"><code>readonly</code> — PHP 8.1</span>
+      <p>Հատկությունը կարելի է վերագրել <strong>միայն մեկ անգամ</strong>՝ կոնստրուկտորում։ Դրանից հետո՝ ֆատալ սխալ։<br><br>
+      Ինչո՞ւ դա լավ է․ բազայից բեռնված ապրանքը <em>պատկեր</em> է տվյալների։ Եթե ինչ-որ տեղ պատահաբար փոխես <code>$product-&gt;price</code>-ը, բազայում ոչինչ չի փոխվի, բայց էջում կերևա այլ գին։ Դա գտնելը շատ դժվար է։<br><br>
+      <code>readonly</code>-ն դարձնում է այդ սխալն անհնար։ Գինը փոխելու համար կա <code>ProductRepository::update()</code> — բացահայտ և տեսանելի ճանապարհ։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag"><code>static</code> և <code>self</code></span>
+      <p><code>public static function fromRow()</code> — մեթոդ, որը կանչվում է <strong>դասի վրա</strong>, ոչ օբյեկտի՝ <code>Product::fromRow($row)</code>։<br><br>
+      Այն օբյեկտ դեռ չունի, ուստի <code>$this</code> չկա։ Փոխարենը՝ <code>self</code>, որը նշանակում է «այս դասը»։<br><br>
+      Այս օրինաչափությունը կոչվում է <strong>ֆաբրիկա մեթոդ</strong>․ բազայի տողից ստանում ենք օբյեկտ, և բոլոր փոխարկումները հավաքված են մեկ տեղում։ Հիշո՞ւմ ես Դաս 9-ի <code>DECIMAL</code>-ի թակարդը։ Հիմա <code>(int)</code>-ն այստեղ է՝ մեկ անգամ, ոչ ամեն օգտագործման տեղում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Շաբլոնում</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>առաջ և հետո</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- Առաջ --&gt;</span>
+<span class="p">&lt;</span><span class="t">h3</span><span class="p">&gt;</span>&lt;?= <span class="f">e</span>(<span class="n">$p</span>[<span class="s">'name'</span>]) ?&gt;<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>&lt;?= <span class="f">formatPrice</span>(<span class="f">finalPrice</span>(<span class="n">$p</span>)) ?&gt;<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+<span class="p">&lt;?php</span> <span class="k">if</span> (<span class="n">$p</span>[<span class="s">'discount'</span>] &gt; <span class="n">0</span>): <span class="p">?&gt;</span>...<span class="p">&lt;?php</span> <span class="k">endif</span>; <span class="p">?&gt;</span>
+
+<span class="c">&lt;!-- Հետո --&gt;</span>
+<span class="p">&lt;</span><span class="t">h3</span><span class="p">&gt;</span>&lt;?= <span class="f">e</span>(<span class="n">$p</span>-&gt;<span class="n">name</span>) ?&gt;<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>&lt;?= <span class="n">$p</span>-&gt;<span class="f">formattedPrice</span>() ?&gt;<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+<span class="p">&lt;?php</span> <span class="k">if</span> (<span class="n">$p</span>-&gt;<span class="f">hasDiscount</span>()): <span class="p">?&gt;</span>...<span class="p">&lt;?php</span> <span class="k">endif</span>; <span class="p">?&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ամբողջական քարտը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span> <span class="k">foreach</span> (<span class="n">$products</span> <span class="k">as</span> <span class="n">$p</span>): <span class="p">?&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">article</span> <span class="f">class</span>=<span class="s">"card"</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;?php</span> <span class="k">if</span> (<span class="n">$p</span>-&gt;<span class="f">hasDiscount</span>()): <span class="p">?&gt;</span>
+            <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"card__badge"</span><span class="p">&gt;</span>-&lt;?= <span class="n">$p</span>-&gt;<span class="n">discount</span> ?&gt;%<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+        <span class="p">&lt;?php</span> <span class="k">endif</span>; <span class="p">?&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">picture</span> <span class="f">class</span>=<span class="s">"card__media ratio-3-2"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">img</span> <span class="f">class</span>=<span class="s">"img-cover"</span> <span class="f">src</span>=<span class="s">"&lt;?= e($p-&gt;imageUrl()) ?&gt;"</span>
+                 <span class="f">alt</span>=<span class="s">"&lt;?= e($p-&gt;name) ?&gt;"</span> <span class="f">loading</span>=<span class="s">"lazy"</span>
+                 <span class="f">width</span>=<span class="s">"600"</span> <span class="f">height</span>=<span class="s">"400"</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">picture</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__body"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"card__title"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"&lt;?= e($p-&gt;url()) ?&gt;"</span><span class="p">&gt;</span>&lt;?= <span class="f">e</span>(<span class="n">$p</span>-&gt;<span class="n">name</span>) ?&gt;<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__meta"</span><span class="p">&gt;</span>&lt;?= <span class="f">e</span>(<span class="n">$p</span>-&gt;<span class="n">specs</span> ?? <span class="s">''</span>) ?&gt;<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;?php</span> <span class="k">if</span> (<span class="n">$p</span>-&gt;<span class="f">isLowStock</span>()): <span class="p">?&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__warning"</span><span class="p">&gt;</span>Մնացել է &lt;?= <span class="n">$p</span>-&gt;<span class="n">stock</span> ?&gt; հատ<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+            <span class="p">&lt;?php</span> <span class="k">endif</span>; <span class="p">?&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__footer"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__price"</span><span class="p">&gt;</span>&lt;?= <span class="n">$p</span>-&gt;<span class="f">formattedPrice</span>() ?&gt;<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+                <span class="p">&lt;?php</span> <span class="k">if</span> (<span class="n">$p</span>-&gt;<span class="f">inStock</span>()): <span class="p">?&gt;</span>
+                    <span class="p">&lt;</span><span class="t">form</span> <span class="f">method</span>=<span class="s">"post"</span> <span class="f">action</span>=<span class="s">"/cart-add.php"</span><span class="p">&gt;</span>
+                        <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"hidden"</span> <span class="f">name</span>=<span class="s">"id"</span> <span class="f">value</span>=<span class="s">"&lt;?= $p-&gt;id ?&gt;"</span><span class="p">&gt;</span>
+                        <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"btn btn--primary btn--sm"</span><span class="p">&gt;</span>Գնել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+                    <span class="p">&lt;/</span><span class="t">form</span><span class="p">&gt;</span>
+                <span class="p">&lt;?php</span> <span class="k">else</span>: <span class="p">?&gt;</span>
+                    <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"text-muted"</span><span class="p">&gt;</span>Առկա չէ<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+                <span class="p">&lt;?php</span> <span class="k">endif</span>; <span class="p">?&gt;</span>
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span>
+
+<span class="p">&lt;?php</span> <span class="k">endforeach</span>; <span class="p">?&gt;</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ուշադրություն՝ շաբլոնը դարձավ ընթեռնելի</span>
+      <p><code>$p-&gt;isLowStock()</code>-ը ասում է, թե <em>ինչ է նշանակում</em> պայմանը։ <code>$p['stock'] &gt; 0 &amp;&amp; $p['stock'] &lt;= 3</code>-ը ասում է միայն, թե <em>ինչպես</em> է այն հաշվվում։<br><br>
+      Իսկ երբ վաղը որոշես, որ «քիչ է մնացել»-ը 5-ից է սկսվում — կփոխես մեկ տեղում, ոչ բոլոր շաբլոններում։<br><br>
+      Դա նույն գաղափարն է, ինչ CSS-ի սեմանտիկ տոկենները (HTML Դաս 19)՝ <code>--accent</code>, ոչ <code>--navy-700</code>։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag"><code>e()</code>-ն դեռ պարտադիր է</span>
+      <p>Օբյեկտները XSS-ից չեն պաշտպանում։ <code>$p-&gt;name</code>-ը նույն տողն է, ինչ <code>$p['name']</code>-ը։<br><br>
+      Դաս 5-ի կանոնը մնում է անփոփոխ․ ամեն դրսից եկած արժեք անցնում է <code>e()</code>-ով։<br><br>
+      Բացառություն են միայն այն մեթոդները, որոնք վերադարձնում են մեր գեներացրած արժեք՝ <code>formattedPrice()</code>-ը թիվ է և <code>&amp;nbsp;</code>, ոչ օգտագործողի տվյալ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Դասարանական</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>products.php — ֆունկցիաները վերադարձնում են օբյեկտներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">getProducts</span>(...): <span class="k">array</span>
+{
+    <span class="c">// ... նույն SQL-ը ...</span>
+
+    <span class="n">$rows</span> = <span class="n">$stmt</span>-&gt;<span class="f">fetchAll</span>();
+
+    <span class="k">return</span> <span class="f">array_map</span>(
+        <span class="k">fn</span>(<span class="k">array</span> <span class="n">$row</span>): <span class="t">Product</span> =&gt; <span class="t">Product</span>::<span class="f">fromRow</span>(<span class="n">$row</span>),
+        <span class="n">$rows</span>
+    );
+}
+
+<span class="k">function</span> <span class="f">getProduct</span>(<span class="k">int</span> <span class="n">$id</span>): ?<span class="t">Product</span>
+{
+    <span class="c">// ... նույն SQL-ը ...</span>
+
+    <span class="n">$row</span> = <span class="n">$stmt</span>-&gt;<span class="f">fetch</span>();
+
+    <span class="k">return</span> <span class="n">$row</span> ? <span class="t">Product</span>::<span class="f">fromRow</span>(<span class="n">$row</span>) : <span class="k">null</span>;
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Cart դասը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="t">Cart</span>
+{
+    <span class="k">private const</span> <span class="n">MAX_QTY</span> = <span class="n">99</span>;
+
+    <span class="k">public function</span> <span class="f">__construct</span>(<span class="k">private</span> <span class="k">array</span> &amp;<span class="n">$storage</span>) {}
+
+    <span class="k">public function</span> <span class="f">add</span>(<span class="k">int</span> <span class="n">$id</span>, <span class="k">int</span> <span class="n">$qty</span> = <span class="n">1</span>): <span class="k">void</span>
+    {
+        <span class="k">if</span> (<span class="n">$qty</span> &lt; <span class="n">1</span>) {
+            <span class="k">return</span>;
+        }
+
+        <span class="n">$current</span> = <span class="n">$this</span>-&gt;<span class="n">storage</span>[<span class="n">$id</span>] ?? <span class="n">0</span>;
+        <span class="n">$this</span>-&gt;<span class="n">storage</span>[<span class="n">$id</span>] = <span class="f">min</span>(<span class="n">$current</span> + <span class="n">$qty</span>, <span class="k">self</span>::<span class="n">MAX_QTY</span>);
+    }
+
+    <span class="k">public function</span> <span class="f">remove</span>(<span class="k">int</span> <span class="n">$id</span>): <span class="k">void</span>
+    {
+        <span class="k">unset</span>(<span class="n">$this</span>-&gt;<span class="n">storage</span>[<span class="n">$id</span>]);
+    }
+
+    <span class="k">public function</span> <span class="f">count</span>(): <span class="k">int</span>
+    {
+        <span class="k">return</span> <span class="f">array_sum</span>(<span class="n">$this</span>-&gt;<span class="n">storage</span>);
+    }
+
+    <span class="k">public function</span> <span class="f">isEmpty</span>(): <span class="k">bool</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">storage</span> === [];
+    }
+
+    <span class="k">public function</span> <span class="f">ids</span>(): <span class="k">array</span>
+    {
+        <span class="k">return</span> <span class="f">array_map</span>(<span class="s">'intval'</span>, <span class="f">array_keys</span>(<span class="n">$this</span>-&gt;<span class="n">storage</span>));
+    }
+
+    <span class="k">public function</span> <span class="f">qtyOf</span>(<span class="k">int</span> <span class="n">$id</span>): <span class="k">int</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">storage</span>[<span class="n">$id</span>] ?? <span class="n">0</span>;
+    }
+}
+
+<span class="c">// bootstrap.php-ում</span>
+<span class="n">$_SESSION</span>[<span class="s">'cart'</span>] ??= [];
+<span class="n">$cart</span> = <span class="k">new</span> <span class="t">Cart</span>(<span class="n">$_SESSION</span>[<span class="s">'cart'</span>]);</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag"><code>&amp;$storage</code> — հղում</span>
+      <p>Ամպերսանդը նշանակում է, որ <code>Cart</code>-ը աշխատում է <strong>ուղիղ <code>$_SESSION['cart']</code>-ի հետ</strong>, ոչ պատճենի։<br><br>
+      Առանց դրա <code>$cart-&gt;add(5)</code>-ը կփոխեր միայն ներքին պատճենը, և սեսիայում ոչինչ չէր պահվի։<br><br>
+      Դա Դաս 3-ի հղումային <code>foreach</code>-ի նույն մեխանիզմն է — բայց այստեղ այն <em>ճիշտ</em> օգտագործում է, որովհետև հենց դա է նպատակը։<br><br>
+      Դաս 15-ում կտեսնենք ավելի մաքուր տարբերակ՝ առանձին <code>SessionStorage</code> դասով։</p>
+    </div>
+
+    <ol>
+      <li>Ստեղծիր <code>src/</code> թղթապանակը</li>
+      <li>Գրիր <code>src/Product.php</code>-ը</li>
+      <li>Միացրու այն <code>bootstrap.php</code>-ում <code>require_once</code>-ով</li>
+      <li>Փոխիր <code>getProducts</code>-ը և <code>getProduct</code>-ը՝ վերադարձնեն օբյեկտներ</li>
+      <li>Թարմացրու շաբլոնները</li>
+      <li>Գրիր <code>src/Cart.php</code>-ը</li>
+      <li>Փոխարինիր <code>cart.php</code>-ի ֆունկցիաները</li>
+      <li>Ավելացրու <code>isLowStock()</code>-ի ցուցադրումը քարտում</li>
+      <li>Փորձիր փոխել <code>$product-&gt;price</code>-ը — տես <code>readonly</code>-ի սխալը</li>
+      <li>Փորձիր <code>$cart-&gt;storage[5] = 999</code> — տես <code>private</code>-ի սխալը</li>
+    </ol>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Կատարիր դասարանականի 10 քայլը։</li>
+      <li>Ավելացրու <code>Product</code>-ին երեք նոր մեթոդ՝ <code>discountLabel()</code>, <code>isNew()</code> (30 օրից պակաս), <code>shortName()</code> (40 նիշից կտրած)։</li>
+      <li>Ստեղծիր <code>Category</code> դասը <code>fromRow()</code>-ով։</li>
+      <li>Ցուցադրիր տարբերությունը՝ <code>$p['prise']</code> և <code>$p-&gt;prise</code>։ Ի՞նչ է տալիս ամեն մեկը։</li>
+      <li>Ջնջիր <code>readonly</code>-ն և ցուցադրիր, ինչու է այն օգտակար՝ փոխելով գինը շաբլոնում։</li>
+      <li>Ցուցադրիր, ինչ կլինի, եթե <code>Cart</code>-ի կոնստրուկտորից հանես <code>&amp;</code>-ը։</li>
+      <li>Ավելացրու <code>Cart::setQty()</code> մեթոդ վալիդացիայով։</li>
+      <li>Համեմատիր հին <code>cart.php</code>-ը և նոր <code>Cart</code> դասը։ Քանի՞ տող, քանի՞ գլոբալ ֆունկցիա։</li>
+      <li>Գրիր <code>CartItem</code> դաս, որը պահում է <code>Product</code>-ը և քանակը, և ունի <code>sum()</code> մեթոդ։</li>
+      <li>Խնդրիր AI-ին վերանայել <code>Product</code>-ը։ Ի՞նչ մեթոդ առաջարկեց, որ չէիր մտածել։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է</th></tr>
+      <tr><td><code>class Product { }</code></td><td>Դասի հայտարարում</td></tr>
+      <tr><td><code>new Product(...)</code></td><td>Օբյեկտի ստեղծում</td></tr>
+      <tr><td><code>$this-&gt;name</code></td><td>Հատկություն</td></tr>
+      <tr><td><code>__construct()</code></td><td>Կոնստրուկտոր</td></tr>
+      <tr><td><code>public int $x</code> պարամետրում</td><td>Promotion ⭐</td></tr>
+      <tr><td><code>private</code></td><td>Միայն ներսից ⭐</td></tr>
+      <tr><td><code>readonly</code></td><td>Միայն մեկ վերագրում ⭐</td></tr>
+      <tr><td><code>static function</code></td><td>Կանչվում է դասի վրա</td></tr>
+      <tr><td><code>self::</code></td><td>Այս դասը</td></tr>
+      <tr><td><code>Product::fromRow($row)</code></td><td>Ֆաբրիկա ⭐</td></tr>
+    </table>
+    </div>
+
+    <h3>Զանգված vs օբյեկտ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th></th><th>Զանգված</th><th>Օբյեկտ</th></tr>
+      <tr><td>Տառասխալ բանալիում</td><td>Լուռ <code>null</code></td><td>Warning + IDE ⭐</td></tr>
+      <tr><td>Ի՞նչ դաշտեր կան</td><td>Անհայտ</td><td>Կոնստրուկտորում</td></tr>
+      <tr><td>Տրամաբանություն</td><td>Գլոբալ ֆունկցիաներ</td><td>Մեթոդներ ներսում</td></tr>
+      <tr><td>Պաշտպանություն</td><td>Չկա</td><td><code>private</code>, <code>readonly</code></td></tr>
+    </table>
+    </div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Հատկությունները լռելյայն <code>private</code> կամ <code>readonly</code> են</li>
+      <li>Կա <code>fromRow()</code> ֆաբրիկա</li>
+      <li>Բոլոր տիպերի փոխարկումները <code>fromRow()</code>-ում են</li>
+      <li>Տրամաբանությունը մեթոդներում է, ոչ շաբլոնում</li>
+      <li>Մեթոդների անունները նկարագրում են իմաստը, ոչ իրագործումը</li>
+      <li><code>e()</code>-ն դեռ կիրառվում է</li>
+      <li>Ամեն դաս առանձին ֆայլում է</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել դասի և օբյեկտի տարբերությունը</li>
+      <li>Գիտե՞մ, ինչու <code>private</code>-ը կարևոր է</li>
+      <li>Հասկանո՞ւմ եմ, ի՞նչ է անում <code>readonly</code>-ն</li>
+      <li>Կարո՞ղ եմ բացատրել, ինչո՞ւ <code>static</code>-ում չկա <code>$this</code></li>
+      <li>Գիտե՞մ, ինչու ֆաբրիկա մեթոդը օգտակար է</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Ժառանգում, <code>interface</code> և <code>abstract</code>։ Կունենանք երկու տեսակի ապրանք՝ ֆիզիկական և թվային, և կտեսնենք, ինչպես կիսել ընդհանուր կոդը՝ առանց կրկնության։<br><br>
+      Կսովորենք նաև ամենակարևոր հարցի պատասխանը՝ <em>ե՞րբ ժառանգում, ե՞րբ ինտերֆեյս, ե՞րբ պարզապես առանձին դաս</em>։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>PHP Բլոկ · Դաս 11 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

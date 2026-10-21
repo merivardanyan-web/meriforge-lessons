@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 06 — Զանգվածների մեթոդներ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 06 · 2 ժամ</p>
+  <h1>Զանգվածների մեթոդներ</h1>
+  <p class="lede">Այն ամենը, ինչ անցյալ դասին անում էինք ցիկլերով, այսօր կդառնա մեկ տող։ Սա այն դասն է, որից հետո քո կոդը սկսում է նմանվել իսկական ծրագրավորողի կոդի։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 04–05</span>
+    <span>Բլոկ 1 · Լեզվի հիմքերը</span>
+    <span>Տնային՝ 10 առաջադրանք</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ի՞նչ է callback ֆունկցիան</li>
+      <li><code>forEach</code> — անցնել բոլորով</li>
+      <li><code>map</code> — վերափոխել ամեն էլեմենտ</li>
+      <li><code>filter</code> — ընտրել համապատասխանողները</li>
+      <li><code>find</code> և <code>findIndex</code> — գտնել առաջինը</li>
+      <li><code>some</code> և <code>every</code> — ստուգել պայման</li>
+      <li><code>sort</code> — դասավորել</li>
+      <li><code>reduce</code> — ամեն ինչ մեկ արժեքի բերել</li>
+      <li>Մեթոդների շղթա</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Callback ֆունկցիա</h2>
+    <p>Դաս 4-ում սովորեցինք, որ ֆունկցիան կարելի է դնել փոփոխականի մեջ։ Իսկ եթե ֆունկցիան կարելի է դնել փոփոխականի մեջ, ուրեմն այն կարելի է <strong>փոխանցել ուրիշ ֆունկցիային որպես արգումենտ</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ֆունկցիա ֆունկցիայի ներսում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">doTwice</span>(action) {   <span class="c">// action — ֆունկցիա է</span>
+  <span class="f">action</span>();
+  <span class="f">action</span>();
+}
+
+<span class="f">doTwice</span>(<span class="k">function</span>() {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Բարև"</span>);
+});
+
+<span class="c">// նույնը arrow ձևով — ավելի կարճ</span>
+<span class="f">doTwice</span>(() =&gt; <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Ցտեսություն"</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Բարև</span>
+<span class="r">Բարև</span>
+<span class="r">Ցտեսություն</span>
+<span class="r">Ցտեսություն</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Callback</span>
+      <p>Ֆունկցիա, որը փոխանցում ես ուրիշ ֆունկցիային, որպեսզի նա այն <strong>կանչի իր ուզած պահին</strong>։ Հայերեն կարելի է ասել «հետկանչ»։ Ամբողջ այսօրվա դասը դրա մասին է։</p>
+    </div>
+
+    <h3>Ինչո՞ւ է սա հեղափոխական</h3>
+    <p>Զանգվածների մեթոդներն ասում են՝ <em>«ես կանցնեմ բոլոր էլեմենտներով, իսկ դու ասա՝ ամեն մեկի հետ ի՞նչ անեմ»</em>։ Ցիկլի «մեխանիկան» գրում է JS-ը, դու գրում ես միայն <strong>տրամաբանությունը</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>callback-ը միշտ ստանում է 3 բան</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> colors = [<span class="s">"կարմիր"</span>, <span class="s">"կանաչ"</span>, <span class="s">"կապույտ"</span>];
+
+colors.<span class="f">forEach</span>((item, index, array) =&gt; {
+  <span class="f">console</span>.<span class="f">log</span>(index, item, array.length);
+});</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">0 կարմիր 3</span>
+<span class="r">1 կանաչ 3</span>
+<span class="r">2 կապույտ 3</span></pre>
+    </div>
+    <p>Երեքն էլ պարտադիր չեն։ Գրում ես միայն այնքան, որքան պետք է․ ամենից հաճախ՝ միայն առաջինը։</p>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>forEach — անցնել բոլորով</h2>
+    <p><code>for..of</code>-ի փոխարինիչն է։ Ոչինչ չի վերադարձնում, պարզապես կատարում է գործողությունը ամեն էլեմենտի համար։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հին ձև → նոր ձև</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> students = [<span class="s">"Անի"</span>, <span class="s">"Դավիթ"</span>, <span class="s">"Մարիամ"</span>];
+
+<span class="c">// Դաս 5-ի ձևը</span>
+<span class="k">for</span> (<span class="k">let</span> i = <span class="n">0</span>; i &lt; students.length; i++) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">`</span>${i + <span class="n">1</span>}<span class="s">. </span>${students[i]}<span class="s">`</span>);
+}
+
+<span class="c">// նույնը forEach-ով</span>
+students.<span class="f">forEach</span>((student, i) =&gt; {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">`</span>${i + <span class="n">1</span>}<span class="s">. </span>${student}<span class="s">`</span>);
+});</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">1. Անի</span>
+<span class="r">2. Դավիթ</span>
+<span class="r">3. Մարիամ</span>
+<span class="r">1. Անի</span>
+<span class="r">2. Դավիթ</span>
+<span class="r">3. Մարիամ</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Կարևոր</span>
+      <p><code>forEach</code>-ը միշտ վերադարձնում է <code>undefined</code>։ Այն օգտագործում ենք միայն <strong>գործողության</strong> համար (տպել, ցուցադրել), ոչ թե արդյունք ստանալու։ Նաև՝ <code>forEach</code>-ում <code>break</code> չի աշխատում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>map — վերափոխել ամեն էլեմենտ</h2>
+    <p><code>map</code>-ը վերցնում է զանգվածը, ամեն էլեմենտի հետ ինչ-որ բան անում և վերադարձնում <strong>նոր զանգված՝ նույն երկարությամբ</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>map</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> prices = [<span class="n">1000</span>, <span class="n">2000</span>, <span class="n">3000</span>];
+
+<span class="c">// 20% զեղչ բոլորին</span>
+<span class="k">const</span> discounted = prices.<span class="f">map</span>(price =&gt; price * <span class="n">0.8</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(discounted);
+<span class="f">console</span>.<span class="f">log</span>(prices);        <span class="c">// բնօրինակը անվնաս է</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">[800, 1600, 2400]</span>
+<span class="r">[1000, 2000, 3000]</span></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>տիպը կարող է փոխվել</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> names = [<span class="s">"անի"</span>, <span class="s">"դավիթ"</span>, <span class="s">"մարիամ"</span>];
+
+<span class="k">const</span> upper = names.<span class="f">map</span>(n =&gt; n.<span class="f">toUpperCase</span>());
+<span class="f">console</span>.<span class="f">log</span>(upper);
+
+<span class="k">const</span> lengths = names.<span class="f">map</span>(n =&gt; n.length);
+<span class="f">console</span>.<span class="f">log</span>(lengths);
+
+<span class="k">const</span> tags = names.<span class="f">map</span>(n =&gt; <span class="s">`&lt;li&gt;</span>${n}<span class="s">&lt;/li&gt;`</span>);
+<span class="f">console</span>.<span class="f">log</span>(tags);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">["ԱՆԻ", "ԴԱՎԻԹ", "ՄԱՐԻԱՄ"]</span>
+<span class="r">[3, 5, 6]</span>
+<span class="r">["&lt;li&gt;անի&lt;/li&gt;", "&lt;li&gt;դավիթ&lt;/li&gt;", "&lt;li&gt;մարիամ&lt;/li&gt;"]</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Առաջին հայացքը DOM-ին</span>
+      <p>Վերջին օրինակը այն է, ինչ կանես Դաս 10-ում․ տվյալների զանգվածից <code>map</code>-ով պատրաստում ես HTML տողեր և դնում էջում։ Հենց այսպես են աշխատում բոլոր ժամանակակից կայքերը։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ամենահաճախ սխալը</span>
+      <p><code>map</code>-ի callback-ը <strong>պարտադիր</strong> պիտի ունենա <code>return</code>։ Առանց դրա կստանաս <code>undefined</code>-ներով լցված զանգված։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>մոռացված return</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> nums = [<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>];
+
+<span class="f">console</span>.<span class="f">log</span>(nums.<span class="f">map</span>(n =&gt; { n * <span class="n">2</span>; }));      <span class="c">// { } կա, return չկա</span>
+<span class="f">console</span>.<span class="f">log</span>(nums.<span class="f">map</span>(n =&gt; { <span class="k">return</span> n * <span class="n">2</span>; }));
+<span class="f">console</span>.<span class="f">log</span>(nums.<span class="f">map</span>(n =&gt; n * <span class="n">2</span>));           <span class="c">// ամենակարճը</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">[undefined, undefined, undefined]</span>
+<span class="r">[2, 4, 6]</span>
+<span class="r">[2, 4, 6]</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>filter — ընտրել համապատասխանողները</h2>
+    <p><code>filter</code>-ի callback-ը պիտի վերադարձնի <code>true</code> կամ <code>false</code>։ Ով <code>true</code> է — մնում է նոր զանգվածում։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>filter</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> marks = [<span class="n">14</span>, <span class="n">19</span>, <span class="n">8</span>, <span class="n">17</span>, <span class="n">20</span>, <span class="n">11</span>];
+
+<span class="k">const</span> good  = marks.<span class="f">filter</span>(m =&gt; m &gt;= <span class="n">14</span>);
+<span class="k">const</span> evens = marks.<span class="f">filter</span>(m =&gt; m % <span class="n">2</span> === <span class="n">0</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(good);
+<span class="f">console</span>.<span class="f">log</span>(evens);
+<span class="f">console</span>.<span class="f">log</span>(good.length);
+<span class="f">console</span>.<span class="f">log</span>(marks);      <span class="c">// բնօրինակը անվնաս</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">[14, 19, 17, 20]</span>
+<span class="r">[14, 8, 20]</span>
+<span class="r">4</span>
+<span class="r">[14, 19, 8, 17, 20, 11]</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">map ընդդեմ filter</span>
+      <p><strong>map</strong> — երկարությունը <em>չի փոխվում</em>, արժեքները՝ փոխվում են։<br>
+      <strong>filter</strong> — արժեքները <em>չեն փոխվում</em>, երկարությունը՝ փոխվում է։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>որոնում տեքստով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> fruits = [<span class="s">"խնձոր"</span>, <span class="s">"բանան"</span>, <span class="s">"նարինջ"</span>, <span class="s">"տանձ"</span>, <span class="s">"նուռ"</span>];
+<span class="k">const</span> query = <span class="s">"ն"</span>;
+
+<span class="k">const</span> found = fruits.<span class="f">filter</span>(f =&gt; f.<span class="f">includes</span>(query));
+<span class="f">console</span>.<span class="f">log</span>(found);
+
+<span class="k">const</span> startsWith = fruits.<span class="f">filter</span>(f =&gt; f.<span class="f">startsWith</span>(query));
+<span class="f">console</span>.<span class="f">log</span>(startsWith);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">["բանան", "նարինջ", "տանձ", "նուռ"]</span>
+<span class="r">["նարինջ", "նուռ"]</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>find և findIndex</h2>
+    <p><code>filter</code>-ը վերադարձնում է <strong>զանգված</strong>՝ բոլոր համապատասխանողները։ <code>find</code>-ը վերադարձնում է <strong>մեկ էլեմենտ</strong>՝ առաջին գտնվածը, և կանգնում է։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>find</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> marks = [<span class="n">8</span>, <span class="n">11</span>, <span class="n">19</span>, <span class="n">14</span>, <span class="n">20</span>];
+
+<span class="f">console</span>.<span class="f">log</span>(marks.<span class="f">filter</span>(m =&gt; m &gt;= <span class="n">14</span>));
+<span class="f">console</span>.<span class="f">log</span>(marks.<span class="f">find</span>(m =&gt; m &gt;= <span class="n">14</span>));
+<span class="f">console</span>.<span class="f">log</span>(marks.<span class="f">findIndex</span>(m =&gt; m &gt;= <span class="n">14</span>));
+
+<span class="f">console</span>.<span class="f">log</span>(marks.<span class="f">find</span>(m =&gt; m &gt; <span class="n">100</span>));       <span class="c">// չգտավ</span>
+<span class="f">console</span>.<span class="f">log</span>(marks.<span class="f">findIndex</span>(m =&gt; m &gt; <span class="n">100</span>));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">[19, 14, 20]</span>
+<span class="r">19</span>
+<span class="r">2</span>
+<span class="m">undefined</span>
+<span class="e">-1</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ե՞րբ որը</span>
+      <p>Փնտրում ես <strong>մեկ կոնկրետ բան</strong> (օգտագործող ըստ id-ի, ապրանք ըստ կոդի) → <code>find</code>։<br>
+      Փնտրում ես <strong>բոլորին</strong>, ովքեր համապատասխանում են → <code>filter</code>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>some և every</h2>
+    <p>Երկուսն էլ վերադարձնում են միայն <code>true</code> կամ <code>false</code>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>some — գոնե մեկը · every — բոլորը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> marks = [<span class="n">14</span>, <span class="n">19</span>, <span class="n">8</span>, <span class="n">17</span>];
+
+<span class="f">console</span>.<span class="f">log</span>(marks.<span class="f">some</span>(m =&gt; m &lt; <span class="n">10</span>));    <span class="c">// կա՞ գոնե մեկ վատ գնահատական</span>
+<span class="f">console</span>.<span class="f">log</span>(marks.<span class="f">every</span>(m =&gt; m &gt;= <span class="n">10</span>));  <span class="c">// բոլո՞րն են անցել</span>
+<span class="f">console</span>.<span class="f">log</span>(marks.<span class="f">every</span>(m =&gt; m &gt; <span class="n">0</span>));
+
+<span class="k">if</span> (marks.<span class="f">some</span>(m =&gt; m &lt; <span class="n">10</span>)) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Ուշադրություն՝ կա անբավարար գնահատական։"</span>);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="g">true</span>
+<span class="e">false</span>
+<span class="g">true</span>
+<span class="r">Ուշադրություն՝ կա անբավարար գնահատական։</span></pre>
+    </div>
+
+    <p>Հիշիր Դաս 2-ը․ <code>some</code>-ը նման է <code>||</code>-ին (գոնե մեկը), <code>every</code>-ն՝ <code>&amp;&amp;</code>-ին (բոլորը)։</p>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>sort — դասավորել</h2>
+    <p>Այստեղ մի մեծ թակարդ կա։ Նախ նայենք տեքստերին — այնտեղ ամեն ինչ լավ է։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>տեքստերի դասավորում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> names = [<span class="s">"Մարիամ"</span>, <span class="s">"Անի"</span>, <span class="s">"Դավիթ"</span>, <span class="s">"Բարսեղ"</span>];
+
+<span class="f">console</span>.<span class="f">log</span>(names.<span class="f">sort</span>());
+<span class="f">console</span>.<span class="f">log</span>(names.<span class="f">reverse</span>());</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">["Անի", "Բարսեղ", "Դավիթ", "Մարիամ"]</span>
+<span class="r">["Մարիամ", "Դավիթ", "Բարսեղ", "Անի"]</span></pre>
+    </div>
+
+    <h3>Իսկ հիմա՝ թվերը</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>անսպասելի արդյունք</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> nums = [<span class="n">10</span>, <span class="n">1</span>, <span class="n">5</span>, <span class="n">100</span>, <span class="n">25</span>];
+
+<span class="f">console</span>.<span class="f">log</span>(nums.<span class="f">sort</span>());</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">[1, 10, 100, 25, 5]</span>   <span class="m">← ?!</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ</span>
+      <p>Առանց հրահանգի <code>sort</code>-ը թվերը վերածում է <strong>տեքստի</strong> և դասավորում այբբենական կարգով։ Ինչպես բառարանում՝ «100»-ը գալիս է «25»-ից առաջ, որովհետև «1» &lt; «2»։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ճիշտ ձևը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> nums = [<span class="n">10</span>, <span class="n">1</span>, <span class="n">5</span>, <span class="n">100</span>, <span class="n">25</span>];
+
+<span class="f">console</span>.<span class="f">log</span>([...nums].<span class="f">sort</span>((a, b) =&gt; a - b));   <span class="c">// աճման կարգով</span>
+<span class="f">console</span>.<span class="f">log</span>([...nums].<span class="f">sort</span>((a, b) =&gt; b - a));   <span class="c">// նվազման կարգով</span></code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">[1, 5, 10, 25, 100]</span>
+<span class="r">[100, 25, 10, 5, 1</span>]</pre>
+    </div>
+
+    <p>Կանոնը պարզ է․ եթե <code>a - b</code>-ն բացասական է, <code>a</code>-ն գնում է առաջ։ Պարզապես անգիր արա՝ <strong><code>a - b</code> = փոքրից մեծ</strong>, <strong><code>b - a</code> = մեծից փոքր</strong>։</p>
+
+    <div class="warn note">
+      <span class="tag">sort-ը փոխում է բնօրինակը</span>
+      <p><code>sort</code>-ը և <code>reverse</code>-ը <strong>վիրահատում են</strong> ինքը զանգվածը (ինչպես <code>splice</code>-ը)։ Դրա համար վերևում գրեցինք <code>[...nums].sort(...)</code> — նախ պատճենեցինք, հետո դասավորեցինք։ Այս սովորությունը շատ սխալներից կփրկի քեզ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>reduce — ամեն ինչ մեկ արժեքի բերել</h2>
+    <p>Ամենահզոր և ամենաշատ վախեցնող մեթոդն է։ Բայց իրականում պարզ է․ այն զանգվածը «սեղմում» է մեկ արժեքի՝ գումարի, միջինի, ամենամեծի։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հին ձևը՝ ցիկլով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> prices = [<span class="n">1200</span>, <span class="n">450</span>, <span class="n">3000</span>];
+
+<span class="k">let</span> total = <span class="n">0</span>;               <span class="c">// կուտակիչ</span>
+<span class="k">for</span> (<span class="k">const</span> price <span class="k">of</span> prices) {
+  total = total + price;      <span class="c">// թարմացնում ենք</span>
+}
+<span class="f">console</span>.<span class="f">log</span>(total);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">4650</span></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>նույնը reduce-ով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> prices = [<span class="n">1200</span>, <span class="n">450</span>, <span class="n">3000</span>];
+
+<span class="k">const</span> total = prices.<span class="f">reduce</span>((acc, price) =&gt; acc + price, <span class="n">0</span>);
+<span class="c">//                            ↑     ↑                    ↑</span>
+<span class="c">//                       կուտակիչ  ընթացիկ         սկզբնական արժեք</span>
+
+<span class="f">console</span>.<span class="f">log</span>(total);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">4650</span></pre>
+    </div>
+
+    <h3>Քայլ առ քայլ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Քայլ</th><th><code>acc</code> (կուտակիչ)</th><th><code>price</code></th><th>Նոր <code>acc</code></th></tr>
+      <tr><td>սկիզբ</td><td>0</td><td>—</td><td>0</td></tr>
+      <tr><td>1</td><td>0</td><td>1200</td><td>1200</td></tr>
+      <tr><td>2</td><td>1200</td><td>450</td><td>1650</td></tr>
+      <tr><td>3</td><td>1650</td><td>3000</td><td>4650</td></tr>
+      <tr><td>արդյունք</td><td colspan="3"><strong>4650</strong></td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Հիշիր</span>
+      <p><code>acc</code>-ը այն է, ինչ callback-ը <strong>վերադարձրեց նախորդ քայլին</strong>։ Երկրորդ արգումենտը (<code>0</code>) սկզբնական արժեքն է։ Այն միշտ գրիր — առանց դրա տարօրինակ սխալներ են լինում դատարկ զանգվածների դեպքում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>reduce-ի այլ կիրառություններ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> nums = [<span class="n">4</span>, <span class="n">9</span>, <span class="n">2</span>, <span class="n">7</span>];
+
+<span class="c">// գումար</span>
+<span class="f">console</span>.<span class="f">log</span>(nums.<span class="f">reduce</span>((a, b) =&gt; a + b, <span class="n">0</span>));
+
+<span class="c">// արտադրյալ (սկզբնականը 1 է, ոչ 0)</span>
+<span class="f">console</span>.<span class="f">log</span>(nums.<span class="f">reduce</span>((a, b) =&gt; a * b, <span class="n">1</span>));
+
+<span class="c">// ամենամեծը</span>
+<span class="f">console</span>.<span class="f">log</span>(nums.<span class="f">reduce</span>((max, n) =&gt; n &gt; max ? n : max, nums[<span class="n">0</span>]));
+
+<span class="c">// միջինը</span>
+<span class="f">console</span>.<span class="f">log</span>(nums.<span class="f">reduce</span>((a, b) =&gt; a + b, <span class="n">0</span>) / nums.length);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">22</span>
+<span class="r">504</span>
+<span class="r">9</span>
+<span class="r">5.5</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Մեթոդների շղթա</h2>
+    <p>Քանի որ <code>map</code>-ը և <code>filter</code>-ը վերադարձնում են զանգված, դրանց վրա անմիջապես կարելի է կանչել հաջորդ մեթոդը։ Ահա այս դասի գագաթնակետը։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>chaining</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> prices = [<span class="n">1200</span>, <span class="n">450</span>, <span class="n">3000</span>, <span class="n">800</span>, <span class="n">2500</span>];
+
+<span class="k">const</span> result = prices
+  .<span class="f">filter</span>(p =&gt; p &gt;= <span class="n">1000</span>)      <span class="c">// [1200, 3000, 2500]</span>
+  .<span class="f">map</span>(p =&gt; p * <span class="n">0.9</span>)          <span class="c">// [1080, 2700, 2250]</span>
+  .<span class="f">reduce</span>((a, b) =&gt; a + b, <span class="n">0</span>); <span class="c">// 6030</span>
+
+<span class="f">console</span>.<span class="f">log</span>(result);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">6030</span></pre>
+    </div>
+
+    <p>Կարդում ենք ձախից աջ, ինչպես նախադասություն․ <em>«վերցրու գները, թող միայն 1000-ից թանկերը, ամեն մեկին 10% զեղչ արա, հետո գումարիր»</em>։</p>
+
+    <div class="tip note">
+      <span class="tag">Ձևավորման կանոն</span>
+      <p>Ամեն մեթոդ գրիր <strong>նոր տողում</strong>՝ կետից սկսած։ Երբ շղթան 2-ից երկար է, մեկ տողում գրելն անընթեռնելի է դառնում։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Հերթականությունը</span>
+      <p>Նախ <code>filter</code>, հետո <code>map</code> — ոչ հակառակը։ Իմաստ չկա վերափոխել այն էլեմենտները, որոնք հետո միևնույն է դեն ես նետելու։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Դասարանական աշխատանք</h2>
+    <p>Աշխատում ենք ապրանքների իրական ցուցակի հետ։ Ամեն ապրանք՝ առանձին <em>օբյեկտ</em> (դրանք մանրամասն կսովորենք հաջորդ դասին, այսօր պարզապես կարդում ենք <code>p.name</code>, <code>p.price</code> ձևով)։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>catalog.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> products = [
+  { name: <span class="s">"Նոութբուք"</span>,  price: <span class="n">450000</span>, inStock: <span class="k">true</span>  },
+  { name: <span class="s">"Մկնիկ"</span>,      price: <span class="n">8000</span>,   inStock: <span class="k">true</span>  },
+  { name: <span class="s">"Ստեղնաշար"</span>,  price: <span class="n">25000</span>,  inStock: <span class="k">false</span> },
+  { name: <span class="s">"Մոնիտոր"</span>,    price: <span class="n">120000</span>, inStock: <span class="k">true</span>  },
+  { name: <span class="s">"Ականջակալ"</span>,  price: <span class="n">15000</span>,  inStock: <span class="k">false</span> }
+];
+
+<span class="c">// 1. Բոլոր անունները</span>
+<span class="f">console</span>.<span class="f">log</span>(products.<span class="f">map</span>(p =&gt; p.name));
+
+<span class="c">// 2. Միայն առկա ապրանքները</span>
+<span class="k">const</span> available = products.<span class="f">filter</span>(p =&gt; p.inStock);
+<span class="f">console</span>.<span class="f">log</span>(available.<span class="f">map</span>(p =&gt; p.name));
+
+<span class="c">// 3. Առկա ապրանքների ընդհանուր արժեքը</span>
+<span class="k">const</span> total = available.<span class="f">reduce</span>((sum, p) =&gt; sum + p.price, <span class="n">0</span>);
+<span class="f">console</span>.<span class="f">log</span>(total);
+
+<span class="c">// 4. Գտնել կոնկրետ ապրանք</span>
+<span class="f">console</span>.<span class="f">log</span>(products.<span class="f">find</span>(p =&gt; p.name === <span class="s">"Մոնիտոր"</span>).price);
+
+<span class="c">// 5. Կա՞ արդյոք 500000-ից թանկ ապրանք</span>
+<span class="f">console</span>.<span class="f">log</span>(products.<span class="f">some</span>(p =&gt; p.price &gt; <span class="n">500000</span>));
+
+<span class="c">// 6. Էժանից թանկ, միայն անունները</span>
+<span class="f">console</span>.<span class="f">log</span>(
+  [...products]
+    .<span class="f">sort</span>((a, b) =&gt; a.price - b.price)
+    .<span class="f">map</span>(p =&gt; <span class="s">`</span>${p.name}<span class="s"> — </span>${p.price}<span class="s">֏`</span>)
+);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">["Նոութբուք", "Մկնիկ", "Ստեղնաշար", "Մոնիտոր", "Ականջակալ"]</span>
+<span class="r">["Նոութբուք", "Մկնիկ", "Մոնիտոր"]</span>
+<span class="r">578000</span>
+<span class="r">120000</span>
+<span class="e">false</span>
+<span class="r">["Մկնիկ — 8000֏", "Ականջակալ — 15000֏", "Ստեղնաշար — 25000֏", "Մոնիտոր — 120000֏", "Նոութբուք — 450000֏"]</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Խաղահրապարակ</h2>
+
+    <div class="pg">
+      <textarea id="pgCode" spellcheck="false">const marks = [14, 19, 8, 17, 20, 11];
+
+console.log("Կրկնապատկած՝", marks.map(m => m * 2));
+console.log("Լավերը՝", marks.filter(m => m >= 14));
+console.log("Առաջին լավը՝", marks.find(m => m >= 14));
+console.log("Կա՞ անբավարար՝", marks.some(m => m < 10));
+console.log("Բոլո՞րն են անցել՝", marks.every(m => m >= 10));
+console.log("Գումարը՝", marks.reduce((a, b) => a + b, 0));
+console.log("Դասավորած՝", [...marks].sort((a, b) => a - b));
+
+// Շղթա
+const result = marks
+  .filter(m => m >= 14)
+  .map(m => m + 1)
+  .reduce((a, b) => a + b, 0);
+console.log("Շղթայի արդյունքը՝", result);</textarea>
+      <div class="pg__actions">
+        <button class="run" id="runBtn">Կատարել</button>
+        <button class="clr" id="clrBtn">Մաքրել</button>
+      </div>
+<pre class="out" id="pgOut"><span class="m">Console</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 12 ============ -->
+  <section id="s12">
+    <h2><span class="num">12</span>Տնային աշխատանք</h2>
+    <p>Բոլոր առաջադրանքները կատարիր <strong>առանց <code>for</code> ցիկլի</strong> — միայն մեթոդներով։</p>
+    <ol class="hw">
+      <li>Տրված է թվերի զանգված։ Ստեղծիր նոր զանգված՝ ամեն թիվը քառակուսի բարձրացրած։</li>
+      <li>Անունների զանգվածից ստացիր դրանց երկարությունների զանգված։</li>
+      <li>Ֆիլտրիր բոլոր բացասական թվերը։</li>
+      <li>Ֆիլտրիր 5 տառից երկար բառերը։</li>
+      <li>Հաշվիր զանգվածի բոլոր թվերի գումարը և միջինը՝ <code>reduce</code>-ով։</li>
+      <li>Գտիր առաջին թիվը, որը 100-ից մեծ է։ Եթե չկա — տպիր «Չգտնվեց»։</li>
+      <li>Ստուգիր՝ բոլո՞ր բառերն են սկսվում մեծատառով (<code>every</code>)։</li>
+      <li>Դասավորիր թվերի զանգվածը նվազման կարգով՝ <strong>առանց</strong> բնօրինակը փոխելու։ Ապացուցիր՝ տպելով երկուսն էլ։</li>
+      <li>Օգտագործիր դասարանական <code>products</code> զանգվածը․ գտիր չառկա ապրանքների անունները և դրանց ընդհանուր արժեքը։</li>
+      <li>Մեկ շղթայով․ վերցրու գնահատականները, թող միայն 14-ից բարձրերը, ամեն մեկին ավելացրու 1, դասավորիր նվազման կարգով և վերածիր տողի՝ <code>", "</code> բաժանարարով։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 13 ============ -->
+  <section id="s13">
+    <h2><span class="num">13</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Մեթոդ</th><th>Վերադարձնում է</th><th>Ե՞րբ օգտագործել</th></tr>
+      <tr><td><code>forEach</code></td><td><code>undefined</code></td><td>Պարզապես անել ինչ-որ բան ամեն էլեմենտի հետ</td></tr>
+      <tr><td><code>map</code></td><td>նոր զանգված, նույն երկարությամբ</td><td>Վերափոխել ամեն էլեմենտ</td></tr>
+      <tr><td><code>filter</code></td><td>նոր զանգված, ավելի կարճ</td><td>Ընտրել համապատասխանողներին</td></tr>
+      <tr><td><code>find</code></td><td>մեկ էլեմենտ կամ <code>undefined</code></td><td>Գտնել առաջինը</td></tr>
+      <tr><td><code>findIndex</code></td><td>ինդեքս կամ <code>-1</code></td><td>Գտնել առաջինի տեղը</td></tr>
+      <tr><td><code>some</code></td><td><code>true</code> / <code>false</code></td><td>Կա՞ գոնե մեկը</td></tr>
+      <tr><td><code>every</code></td><td><code>true</code> / <code>false</code></td><td>Բոլո՞րն են այդպիսին</td></tr>
+      <tr><td><code>sort</code></td><td>նույն զանգվածը ⚠️</td><td>Դասավորել</td></tr>
+      <tr><td><code>reduce</code></td><td>մեկ արժեք</td><td>Գումար, միջին, ամեն ինչ մեկում</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Միակ մեթոդը, որ փոխում է բնօրինակը</span>
+      <p><code>sort</code> և <code>reverse</code>։ Մնացած բոլորը վերադարձնում են նոր զանգված։ Կասկածի դեպքում գրիր <code>[...arr].sort(...)</code>։</p>
+    </div>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել՝ ինչ է callback-ը</li>
+      <li>Գիտե՞մ, ինչու <code>map</code>-ը <code>undefined</code>-ներ է վերադարձնում առանց <code>return</code>-ի</li>
+      <li>Հասկանո՞ւմ եմ <code>find</code>-ի և <code>filter</code>-ի տարբերությունը</li>
+      <li>Կարո՞ղ եմ գրել <code>reduce</code>՝ առանց նայելու</li>
+      <li>Հիշո՞ւմ եմ, ինչու <code>[10, 1, 5].sort()</code>-ը սխալ արդյունք է տալիս</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Օբյեկտներ։ Այսօր ապրանքները արդեն օբյեկտներ էին — հաջորդ դասին կհասկանանք դրանք լիարժեք․ <code>{ key: value }</code>, ներդրված օբյեկտներ, destructuring, <code>Object.keys</code>։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 06 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

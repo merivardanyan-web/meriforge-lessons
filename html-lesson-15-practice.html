@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 15 · Հավելված — position-ի 16 օրինակ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 15 · Հավելված</p>
+  <h1>position-ի 16 գործնական օրինակ</h1>
+  <p class="lede">Ամեն օրինակ իրական խնդիր է, որին հանդիպելու ես նախագծերում։ Կոդը՝ պատճենելու համար, կենդանի նախադիտումը՝ փորձարկելու։ Ամեն բլոկից հետո կա «փորձիր» առաջադրանք։</p>
+
+  <div class="facts">
+    <span>Ուղեկցում է Դաս 15-ին</span>
+    <span>16 օրինակ · 5 խումբ</span>
+    <span>Ախտորոշիչ վարժություններ</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչպես օգտվել</h2>
+    <p>Ամեն խումբ ունի կոդի բլոկներ և մեկ ընդհանուր կենդանի նախադիտում։ Առաջարկվող կարգը՝</p>
+    <ol>
+      <li>Կարդա կոդը և կանխագուշակիր արդյունքը</li>
+      <li>Նայիր նախադիտումը</li>
+      <li>Կատարիր «փորձիր» առաջադրանքը — սովորաբար դա ինչ-որ բան ջնջելն է</li>
+      <li>Վերականգնիր և անցիր հաջորդին</li>
+    </ol>
+
+    <div class="tip note">
+      <span class="tag">Հիմնական բանաձևը</span>
+      <p>Գրեթե բոլոր օրինակները հետևում են նույն օրինաչափությանը՝<br><br>
+      <strong>Ծնող՝</strong> <code>position: relative</code><br>
+      <strong>Երեխա՝</strong> <code>position: absolute</code> + <code>top/right/bottom/left</code><br><br>
+      Երբ սա մտապահես, մնացածը մանրամասներ են։</p>
+    </div>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Քարտի վրա</h2>
+
+    <h3>1. Զեղչի պիտակ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ամենատարածվածը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.card</span>  { <span class="f">position</span>: <span class="s">relative</span>; }
+
+<span class="k">.badge</span> {
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">top</span>: <span class="n">10px</span>;
+    <span class="f">left</span>: <span class="n">10px</span>;
+    <span class="f">z-index</span>: <span class="n">2</span>;
+}</code></pre>
+    </div>
+
+    <h3>2. Փակելու կոճակ անկյունում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ծանուցում, մոդալ, պիտակ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.notice</span> { <span class="f">position</span>: <span class="s">relative</span>; <span class="f">padding-right</span>: <span class="n">44px</span>; }
+
+<span class="k">.notice__close</span> {
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">top</span>: <span class="n">8px</span>;
+    <span class="f">right</span>: <span class="n">8px</span>;
+    <span class="f">width</span>: <span class="n">28px</span>;
+    <span class="f">height</span>: <span class="n">28px</span>;
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">padding-right-ը կարևոր է</span>
+      <p><code>absolute</code> կոճակը <strong>դուրս է հոսքից</strong> — տեքստը չգիտի, որ այն այնտեղ է, և կանցնի դրա տակով։<br><br>
+      Ուստի ծնողին տալիս ենք <code>padding-right</code>՝ կոճակի լայնության չափ։ Նույն տրամաբանությունը՝ վերևի կամ ներքևի կոճակների դեպքում։</p>
+    </div>
+
+    <h3>3. Գրադիենտ ծածկույթ նկարի ներքևում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>տեքստը ընթեռնելի է ցանկացած նկարի վրա</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.photo</span> { <span class="f">position</span>: <span class="s">relative</span>; }
+
+<span class="k">.photo__caption</span> {
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">left</span>: <span class="n">0</span>;
+    <span class="f">right</span>: <span class="n">0</span>;
+    <span class="f">bottom</span>: <span class="n">0</span>;
+    <span class="f">padding</span>: <span class="n">30px</span> <span class="n">14px</span> <span class="n">12px</span>;
+    <span class="f">color</span>: <span class="s">#fff</span>;
+    <span class="f">background</span>: <span class="s">linear-gradient</span>(
+        <span class="s">to top</span>,
+        <span class="s">rgba</span>(<span class="n">0</span>,<span class="n">0</span>,<span class="n">0</span>,<span class="n">.85</span>),
+        <span class="s">rgba</span>(<span class="n">0</span>,<span class="n">0</span>,<span class="n">0</span>,<span class="n">0</span>)
+    );
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչու գրադիենտ, ոչ պինդ գույն</span>
+      <p>Պինդ սև շերտը կտրում է նկարը կոպիտ գծով։ Գրադիենտը սահուն անցնում է թափանցիկի, և տեքստը ընթեռնելի է՝ առանց նկարը փչացնելու։<br><br>
+      Սա այն մանրուքն է, որ տարբերում է սիրողական աշխատանքը պրոֆեսիոնալից։</p>
+    </div>
+
+    <h3>4. Անկյունագծային ժապավեն</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>absolute + transform: rotate</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.card</span> { <span class="f">position</span>: <span class="s">relative</span>; <span class="f">overflow</span>: <span class="s">hidden</span>; }
+
+<span class="k">.ribbon</span> {
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">top</span>: <span class="n">14px</span>;
+    <span class="f">right</span>: -<span class="n">34px</span>;        <span class="c">/* դուրս է գալիս, overflow-ը կտրում է */</span>
+    <span class="f">transform</span>: <span class="s">rotate</span>(<span class="n">45deg</span>);
+    <span class="f">width</span>: <span class="n">130px</span>;
+    <span class="f">text-align</span>: <span class="s">center</span>;
+    <span class="f">background</span>: <span class="s">#c62828</span>;
+    <span class="f">color</span>: <span class="s">#fff</span>;
+    <span class="f">padding</span>: <span class="n">4px</span> <span class="n">0</span>;
+}</code></pre>
+    </div>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="html">HTML</button>
+        <button class="live__tab" data-pane="css">CSS</button>
+      </div>
+      <textarea class="live__code" data-pane="html">&lt;div class="grid"&gt;
+
+    &lt;!-- 1. Պիտակ --&gt;
+    &lt;article class="card"&gt;
+        &lt;span class="badge"&gt;-30%&lt;/span&gt;
+        &lt;div class="thumb"&gt;&lt;/div&gt;
+        &lt;div class="body"&gt;
+            &lt;strong&gt;Նոութբուք Pro&lt;/strong&gt;
+            &lt;p class="price"&gt;450 000 ֏&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/article&gt;
+
+    &lt;!-- 4. Ժապավեն --&gt;
+    &lt;article class="card"&gt;
+        &lt;span class="ribbon"&gt;ՆՈՐ&lt;/span&gt;
+        &lt;div class="thumb thumb-2"&gt;&lt;/div&gt;
+        &lt;div class="body"&gt;
+            &lt;strong&gt;Մոնիտոր 27&lt;/strong&gt;
+            &lt;p class="price"&gt;120 000 ֏&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/article&gt;
+
+    &lt;!-- 3. Գրադիենտ ծածկույթ --&gt;
+    &lt;figure class="photo"&gt;
+        &lt;div class="thumb thumb-3"&gt;&lt;/div&gt;
+        &lt;figcaption class="photo__caption"&gt;
+            &lt;strong&gt;Աշնանային հավաքածու&lt;/strong&gt;
+            &lt;span&gt;24 ապրանք&lt;/span&gt;
+        &lt;/figcaption&gt;
+    &lt;/figure&gt;
+
+&lt;/div&gt;
+
+&lt;!-- 2. Փակելու կոճակ --&gt;
+&lt;div class="notice"&gt;
+    &lt;strong&gt;Անվճար առաքում&lt;/strong&gt;
+    &lt;p&gt;50 000 ֏-ից բարձր պատվերների դեպքում ամբողջ Երևանում։&lt;/p&gt;
+    &lt;button class="notice__close" aria-label="Փակել"&gt;✕&lt;/button&gt;
+&lt;/div&gt;</textarea>
+      <textarea class="live__code is-hidden" data-pane="css">* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: system-ui, sans-serif;
+    background: #f5f5f5;
+    padding: 14px;
+    line-height: 1.5;
+}
+
+.grid { display: flex; flex-wrap: wrap; gap: 14px; }
+
+.card, .photo {
+    position: relative;        /* ← ԽԱՐԻՍԽԸ */
+    width: 200px;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.thumb   { height: 110px; background: linear-gradient(135deg,#9db4c0,#003459); }
+.thumb-2 { background: linear-gradient(135deg,#c7b299,#5c4a3a); }
+.thumb-3 { background: linear-gradient(135deg,#d4a373,#6b4423); height: 150px; }
+
+.body  { padding: 12px; }
+.price { color: #003459; font-weight: 700; }
+
+/* ===== 1. ՊԻՏԱԿ ===== */
+.badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+    background: #c62828;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* ===== 4. ԺԱՊԱՎԵՆ ===== */
+.ribbon {
+    position: absolute;
+    top: 14px;
+    right: -34px;
+    z-index: 2;
+    transform: rotate(45deg);
+    width: 130px;
+    text-align: center;
+    background: #0f7b4f;
+    color: #fff;
+    padding: 4px 0;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* ===== 3. ԳՐԱԴԻԵՆՏ ԾԱԾԿՈՒՅԹ ===== */
+.photo__caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 34px 14px 12px;
+    color: #fff;
+    font-size: 13px;
+    background: linear-gradient(to top, rgba(0,0,0,.85), rgba(0,0,0,0));
+}
+
+.photo__caption span { display: block; opacity: .85; }
+
+/* ===== 2. ՓԱԿԵԼՈՒ ԿՈՃԱԿ ===== */
+.notice {
+    position: relative;
+    padding: 14px 48px 14px 14px;   /* ← տեղ կոճակի համար */
+    margin-top: 14px;
+    background: #fff;
+    border-left: 4px solid #003459;
+    border-radius: 8px;
+}
+
+.notice__close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    border-radius: 6px;
+    background: #f0f0f0;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.notice__close:hover { background: #e0e0e0; }</textarea>
+      <div class="live__actions">
+        <span>Չորս օրինակ մեկ նախադիտումում</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Փորձիր</span>
+      <p><strong>1.</strong> Ջնջիր <code>.card { position: relative }</code>-ը — ո՞ւր գնացին պիտակն ու ժապավենը։<br>
+      <strong>2.</strong> Ջնջիր <code>.notice { padding-right: 48px }</code>-ը և երկարացրու տեքստը։<br>
+      <strong>3.</strong> Ջնջիր <code>.card { overflow: hidden }</code>-ը — ի՞նչ եղավ ժապավենի հետ։<br>
+      <strong>4.</strong> Գրադիենտը փոխիր պինդ գույնի՝ <code>background: rgba(0,0,0,.85)</code>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Պատկերակներ և ավատարներ</h2>
+
+    <h3>5. Ծանուցումների հաշվիչ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>զամբյուղի կարմիր շրջանակը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.icon-btn</span> { <span class="f">position</span>: <span class="s">relative</span>; }
+
+<span class="k">.counter</span> {
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">top</span>: -<span class="n">6px</span>;        <span class="c">/* բացասական՝ դուրս է գալիս */</span>
+    <span class="f">right</span>: -<span class="n">6px</span>;
+    <span class="f">min-width</span>: <span class="n">20px</span>;
+    <span class="f">height</span>: <span class="n">20px</span>;
+    <span class="f">border-radius</span>: <span class="n">999px</span>;
+    <span class="f">background</span>: <span class="s">#c62828</span>;
+    <span class="f">color</span>: <span class="s">#fff</span>;
+    <span class="f">font-size</span>: <span class="n">11px</span>;
+    <span class="f">display</span>: <span class="s">flex</span>;
+    <span class="f">align-items</span>: <span class="s">center</span>;
+    <span class="f">justify-content</span>: <span class="s">center</span>;
+}</code></pre>
+    </div>
+
+    <h3>6. Առցանց կարգավիճակի կետ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ավատարի անկյունում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.avatar</span> { <span class="f">position</span>: <span class="s">relative</span>; <span class="f">width</span>: <span class="n">48px</span>; }
+
+<span class="k">.avatar__status</span> {
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">right</span>: <span class="n">1px</span>;
+    <span class="f">bottom</span>: <span class="n">1px</span>;
+    <span class="f">width</span>: <span class="n">13px</span>;
+    <span class="f">height</span>: <span class="n">13px</span>;
+    <span class="f">border-radius</span>: <span class="n">50%</span>;
+    <span class="f">background</span>: <span class="s">#22c55e</span>;
+    <span class="f">border</span>: <span class="n">2px</span> <span class="s">solid #fff</span>;   <span class="c">/* բաժանում է ֆոնից */</span>
+}</code></pre>
+    </div>
+
+    <h3>7. Հուշում (tooltip)</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հայտնվում է hover-ի ժամանակ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.tip</span> { <span class="f">position</span>: <span class="s">relative</span>; }
+
+<span class="k">.tip__text</span> {
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">bottom</span>: <span class="s">calc</span>(<span class="n">100%</span> + <span class="n">8px</span>);   <span class="c">/* վերևում, 8px բացակով */</span>
+    <span class="f">left</span>: <span class="n">50%</span>;
+    <span class="f">transform</span>: <span class="s">translateX</span>(-<span class="n">50%</span>);
+    <span class="f">white-space</span>: <span class="s">nowrap</span>;
+    <span class="f">opacity</span>: <span class="n">0</span>;
+    <span class="f">pointer-events</span>: <span class="s">none</span>;
+    <span class="f">transition</span>: <span class="f">opacity</span> <span class="n">.15s</span>;
+}
+
+<span class="k">.tip</span>:<span class="k">hover</span> <span class="k">.tip__text</span>,
+<span class="k">.tip</span>:<span class="k">focus-within</span> <span class="k">.tip__text</span> { <span class="f">opacity</span>: <span class="n">1</span>; }</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">calc(100% + 8px)</span>
+      <p><code>bottom: 100%</code> նշանակում է «ծնողի ամբողջ բարձրության չափ վեր» — այսինքն՝ ուղիղ ծնողից վերև։ <code>+ 8px</code>-ը ավելացնում է շնչառություն։<br><br>
+      Նույն ձևով՝ <code>top: calc(100% + 8px)</code> — ուղիղ ծնողից ներքև։ Այս հնարքը հիմքն է dropdown-ների։</p>
+    </div>
+
+    <h3>8. Dropdown մենյու</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>միայն CSS-ով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.dropdown</span> { <span class="f">position</span>: <span class="s">relative</span>; }
+
+<span class="k">.dropdown__menu</span> {
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">top</span>: <span class="s">calc</span>(<span class="n">100%</span> + <span class="n">6px</span>);
+    <span class="f">left</span>: <span class="n">0</span>;
+    <span class="f">z-index</span>: <span class="n">10</span>;
+    <span class="f">min-width</span>: <span class="n">180px</span>;
+    <span class="f">background</span>: <span class="s">#fff</span>;
+    <span class="f">border-radius</span>: <span class="n">8px</span>;
+    <span class="f">box-shadow</span>: <span class="n">0</span> <span class="n">6px</span> <span class="n">20px</span> <span class="s">rgba</span>(<span class="n">0</span>,<span class="n">0</span>,<span class="n">0</span>,<span class="n">.15</span>);
+    <span class="f">display</span>: <span class="s">none</span>;
+}
+
+<span class="k">.dropdown</span>:<span class="k">hover</span> <span class="k">.dropdown__menu</span>,
+<span class="k">.dropdown</span>:<span class="k">focus-within</span> <span class="k">.dropdown__menu</span> { <span class="f">display</span>: <span class="s">block</span>; }</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">:focus-within — մի՛ մոռացիր</span>
+      <p><code>:hover</code>-ը աշխատում է միայն մկնիկով։ Ստեղնաշարով նավարկողը երբեք չի բացի մենյուն։<br><br>
+      <code>:focus-within</code>-ը գործում է, երբ ծնողի <strong>ներսում որևէ բան</strong> ֆոկուս ունի։ Երկու սելեկտորը միասին ծածկում են երկու դեպքն էլ։</p>
+    </div>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="html">HTML</button>
+        <button class="live__tab" data-pane="css">CSS</button>
+      </div>
+      <textarea class="live__code" data-pane="html">&lt;div class="bar"&gt;
+
+    &lt;!-- 5. Հաշվիչ --&gt;
+    &lt;button class="icon-btn"&gt;
+        🛒
+        &lt;span class="counter"&gt;3&lt;/span&gt;
+    &lt;/button&gt;
+
+    &lt;button class="icon-btn"&gt;
+        🔔
+        &lt;span class="counter"&gt;12&lt;/span&gt;
+    &lt;/button&gt;
+
+    &lt;!-- 6. Կարգավիճակ --&gt;
+    &lt;div class="avatar"&gt;
+        &lt;div class="avatar__img"&gt;ԱՍ&lt;/div&gt;
+        &lt;span class="avatar__status"&gt;&lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;!-- 7. Հուշում --&gt;
+    &lt;span class="tip" tabindex="0"&gt;
+        Ի՞նչ է սա
+        &lt;span class="tip__text"&gt;Առաքումն անվճար է 50 000 ֏-ից&lt;/span&gt;
+    &lt;/span&gt;
+
+    &lt;!-- 8. Dropdown --&gt;
+    &lt;div class="dropdown"&gt;
+        &lt;button class="dropdown__btn"&gt;Կատեգորիաներ ▾&lt;/button&gt;
+        &lt;ul class="dropdown__menu"&gt;
+            &lt;li&gt;&lt;a href="#"&gt;Նոութբուքեր&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#"&gt;Մոնիտորներ&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#"&gt;Աքսեսուարներ&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;p class="hint"&gt;Սավառնիր հուշումի և «Կատեգորիաներ»-ի վրայով։
+Կամ սեղմիր Tab՝ ստեղնաշարով ստուգելու համար։&lt;/p&gt;</textarea>
+      <textarea class="live__code is-hidden" data-pane="css">* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: system-ui, sans-serif;
+    background: #f5f5f5;
+    padding: 30px 14px;
+    line-height: 1.5;
+}
+
+.bar {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    flex-wrap: wrap;
+    background: #fff;
+    padding: 14px 18px;
+    border-radius: 10px;
+}
+
+.hint { margin-top: 14px; font-size: 13px; color: #6b6b6b; }
+
+/* ===== 5. ՀԱՇՎԻՉ ===== */
+.icon-btn {
+    position: relative;          /* ← խարիսխ */
+    width: 42px;
+    height: 42px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.counter {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: #c62828;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===== 6. ԿԱՐԳԱՎԻՃԱԿ ===== */
+.avatar { position: relative; width: 46px; height: 46px; }
+
+.avatar__img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #003459;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.avatar__status {
+    position: absolute;
+    right: 1px;
+    bottom: 1px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #22c55e;
+    border: 2px solid #fff;
+}
+
+/* ===== 7. ՀՈՒՇՈՒՄ ===== */
+.tip {
+    position: relative;
+    border-bottom: 1px dashed #6b6b6b;
+    cursor: help;
+}
+
+.tip__text {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    background: #253237;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .15s;
+}
+
+.tip:hover .tip__text,
+.tip:focus-within .tip__text,
+.tip:focus .tip__text { opacity: 1; }
+
+/* ===== 8. DROPDOWN ===== */
+.dropdown { position: relative; }
+
+.dropdown__btn {
+    padding: 9px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.dropdown__menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 10;
+    min-width: 180px;
+    list-style: none;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.15);
+    padding: 6px;
+    display: none;
+}
+
+.dropdown__menu a {
+    display: block;
+    padding: 8px 10px;
+    border-radius: 6px;
+    color: #1a1a1a;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.dropdown__menu a:hover { background: #f0f3f5; }
+
+.dropdown:hover .dropdown__menu,
+.dropdown:focus-within .dropdown__menu { display: block; }</textarea>
+      <div class="live__actions">
+        <span>Սավառնիր և սեղմիր Tab</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Փորձիր</span>
+      <p><strong>1.</strong> Փոխիր <code>.counter { top: -6px }</code>-ը <code>0</code>-ի։<br>
+      <strong>2.</strong> Ջնջիր <code>.avatar__status { border: 2px solid #fff }</code>-ը։<br>
+      <strong>3.</strong> Ջնջիր <code>.tip__text { transform: translateX(-50%) }</code>-ը։<br>
+      <strong>4.</strong> Ջնջիր <code>:focus-within</code> սելեկտորը և փորձիր Tab-ով բացել dropdown-ը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Կպչուն տարրեր</h2>
+
+    <h3>9. Կպչուն header</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>չորս պարտադիր հատկություն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="t">header</span> {
+    <span class="f">position</span>: <span class="s">sticky</span>;
+    <span class="f">top</span>: <span class="n">0</span>;                 <span class="c">/* առանց սրա չի կպչի */</span>
+    <span class="f">z-index</span>: <span class="n">100</span>;            <span class="c">/* որ լինի վերևում */</span>
+    <span class="f">background</span>: <span class="s">#fff</span>;        <span class="c">/* որ տակից չերևա */</span>
+}</code></pre>
+    </div>
+
+    <h3>10. Կպչուն կողքի բլոկ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>պատվերի ամփոփում, բովանդակության ցանկ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.sidebar</span> {
+    <span class="f">position</span>: <span class="s">sticky</span>;
+    <span class="f">top</span>: <span class="n">80px</span>;              <span class="c">/* header-ի բարձրության չափ */</span>
+    <span class="f">align-self</span>: <span class="s">start</span>;      <span class="c">/* ⭐ flex-ում պարտադիր */</span>
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">align-self: start — կրիտիկական</span>
+      <p>Flex-կոնտեյներում երեխաները լռելյայն <code>stretch</code> են (Դաս 11) — այսինքն ձգվում են ամբողջ բարձրությամբ։ Իսկ <code>sticky</code>-ն կպչում է <strong>միայն ծնողի սահմաններում</strong>։<br><br>
+      Եթե բլոկն արդեն ամբողջ բարձրությամբ է, կպչելու տեղ չկա — և <code>sticky</code>-ն լուռ չի աշխատում։<br><br>
+      <code>align-self: start</code>-ը թողնում է բլոկին իր բնական բարձրությունը, և ամեն ինչ սկսում է աշխատել։ Սա այն սխալներից է, որ ժամեր է խլում։</p>
+    </div>
+
+    <h3>11. Կպչուն աղյուսակի վերնագիր</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երկար աղյուսակների համար</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.table-wrap</span> {
+    <span class="f">max-height</span>: <span class="n">300px</span>;
+    <span class="f">overflow</span>: <span class="s">auto</span>;
+}
+
+<span class="t">thead</span> <span class="t">th</span> {
+    <span class="f">position</span>: <span class="s">sticky</span>;
+    <span class="f">top</span>: <span class="n">0</span>;
+    <span class="f">z-index</span>: <span class="n">1</span>;
+    <span class="f">background</span>: <span class="s">#003459</span>;      <span class="c">/* պարտադիր */</span>
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ուշադրություն</span>
+      <p><code>position: sticky</code>-ն դրվում է <code>th</code>-ի վրա, <strong>ոչ <code>thead</code>-ի</strong>։ Աղյուսակի բաժինները չեն աջակցում <code>sticky</code>-ին բոլոր բրաուզերներում։<br><br>
+      Նաև՝ այստեղ <code>overflow: auto</code>-ն ծնողի վրա <em>չի</em> կոտրում <code>sticky</code>-ն, որովհետև հենց այդ ոլորվող տարածքի ներսում է կպչում։</p>
+    </div>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="html">HTML</button>
+        <button class="live__tab" data-pane="css">CSS</button>
+      </div>
+      <textarea class="live__code" data-pane="html">&lt;header&gt;Կպչուն header · z-index: 100&lt;/header&gt;
+
+&lt;div class="layout"&gt;
+
+    &lt;main class="main"&gt;
+        &lt;h3&gt;11. Կպչուն աղյուսակի վերնագիր&lt;/h3&gt;
+        &lt;div class="table-wrap"&gt;
+            &lt;table&gt;
+                &lt;thead&gt;
+                    &lt;tr&gt;&lt;th&gt;Ապրանք&lt;/th&gt;&lt;th&gt;Քանակ&lt;/th&gt;&lt;th&gt;Գին&lt;/th&gt;&lt;/tr&gt;
+                &lt;/thead&gt;
+                &lt;tbody&gt;
+                    &lt;tr&gt;&lt;td&gt;Նոութբուք&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;450 000&lt;/td&gt;&lt;/tr&gt;
+                    &lt;tr&gt;&lt;td&gt;Մկնիկ&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;16 000&lt;/td&gt;&lt;/tr&gt;
+                    &lt;tr&gt;&lt;td&gt;Ստեղնաշար&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;25 000&lt;/td&gt;&lt;/tr&gt;
+                    &lt;tr&gt;&lt;td&gt;Մոնիտոր&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;240 000&lt;/td&gt;&lt;/tr&gt;
+                    &lt;tr&gt;&lt;td&gt;Ականջակալ&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;35 000&lt;/td&gt;&lt;/tr&gt;
+                    &lt;tr&gt;&lt;td&gt;Վեբ-տեսախցիկ&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;28 000&lt;/td&gt;&lt;/tr&gt;
+                    &lt;tr&gt;&lt;td&gt;Խսուս&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;9 000&lt;/td&gt;&lt;/tr&gt;
+                    &lt;tr&gt;&lt;td&gt;Պայուսակ&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;18 000&lt;/td&gt;&lt;/tr&gt;
+                &lt;/tbody&gt;
+            &lt;/table&gt;
+        &lt;/div&gt;
+
+        &lt;h3&gt;Ոլորիր ներքև&lt;/h3&gt;
+        &lt;p&gt;Կողքի բլոկը կմնա տեսադաշտում։&lt;/p&gt;
+        &lt;div class="spacer"&gt;&lt;/div&gt;
+        &lt;p&gt;Ահա և վերջը։&lt;/p&gt;
+    &lt;/main&gt;
+
+    &lt;!-- 10. Կպչուն կողքի բլոկ --&gt;
+    &lt;aside class="sidebar"&gt;
+        &lt;strong&gt;Ձեր պատվերը&lt;/strong&gt;
+        &lt;p&gt;8 ապրանք&lt;/p&gt;
+        &lt;p class="total"&gt;821 000 ֏&lt;/p&gt;
+        &lt;button&gt;Ձևակերպել&lt;/button&gt;
+    &lt;/aside&gt;
+
+&lt;/div&gt;</textarea>
+      <textarea class="live__code is-hidden" data-pane="css">* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: system-ui, sans-serif;
+    background: #f5f5f5;
+    line-height: 1.5;
+}
+
+h3 { font-size: 14px; margin: 14px 0 8px; }
+
+/* ===== 9. ԿՊՉՈՒՆ HEADER ===== */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #253237;
+    color: #fff;
+    padding: 12px 14px;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.layout {
+    display: flex;
+    gap: 14px;
+    padding: 14px;
+    align-items: flex-start;   /* կամ .sidebar-ին align-self: start */
+}
+
+.main { flex: 1; }
+.spacer { height: 400px; }
+
+/* ===== 10. ԿՊՉՈՒՆ ԿՈՂՔԻ ԲԼՈԿ ===== */
+.sidebar {
+    position: sticky;
+    top: 60px;                 /* header-ի բարձրության չափ */
+    align-self: start;         /* ⭐ ԱՌԱՆՑ ՍՐԱ ՉԻ ԱՇԽԱՏԻ */
+    width: 170px;
+    flex-shrink: 0;
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 13px;
+}
+
+.sidebar .total { color: #003459; font-weight: 700; font-size: 17px; margin: 6px 0 10px; }
+
+.sidebar button {
+    width: 100%;
+    padding: 9px;
+    border: 0;
+    border-radius: 6px;
+    background: #003459;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* ===== 11. ԿՊՉՈՒՆ ԱՂՅՈՒՍԱԿԻ ՎԵՐՆԱԳԻՐ ===== */
+.table-wrap {
+    max-height: 190px;
+    overflow: auto;
+    background: #fff;
+    border-radius: 10px;
+}
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+
+thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #003459;       /* պարտադիր */
+    color: #fff;
+    text-align: left;
+    padding: 9px 12px;
+}
+
+tbody td { padding: 9px 12px; border-bottom: 1px solid #eee; }</textarea>
+      <div class="live__actions">
+        <span>Ոլորիր և՛ էջը, և՛ աղյուսակի ներսը</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Փորձիր</span>
+      <p><strong>1.</strong> Ջնջիր <code>.sidebar { align-self: start }</code>-ը և <code>.layout { align-items: flex-start }</code>-ը։ Ոլորիր։<br>
+      <strong>2.</strong> Ջնջիր <code>thead th { background }</code>-ը և ոլորիր աղյուսակը։<br>
+      <strong>3.</strong> Փոխիր <code>.sidebar { top: 60px }</code>-ը <code>0</code>-ի — բլոկը կմտնի header-ի տակ։<br>
+      <strong>4.</strong> Ավելացրու <code>.layout { overflow: hidden }</code> — <code>sticky</code>-ն կկոտրվի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Ծածկույթներ և մոդալներ</h2>
+
+    <h3>12. Մոդալ պատուհան</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>fixed + inset + flex</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.backdrop</span> {
+    <span class="f">position</span>: <span class="s">fixed</span>;
+    <span class="f">inset</span>: <span class="n">0</span>;
+    <span class="f">z-index</span>: <span class="n">1000</span>;
+    <span class="f">background</span>: <span class="s">rgba</span>(<span class="n">0</span>,<span class="n">0</span>,<span class="n">0</span>,<span class="n">.6</span>);
+
+    <span class="f">display</span>: <span class="s">flex</span>;
+    <span class="f">justify-content</span>: <span class="s">center</span>;
+    <span class="f">align-items</span>: <span class="s">center</span>;
+    <span class="f">padding</span>: <span class="n">20px</span>;              <span class="c">/* որ հեռախոսում չկպչի եզրերին */</span>
+}
+
+<span class="k">.modal</span> {
+    <span class="f">position</span>: <span class="s">relative</span>;         <span class="c">/* խարիսխ փակելու կոճակի համար */</span>
+    <span class="f">background</span>: <span class="s">#fff</span>;
+    <span class="f">border-radius</span>: <span class="n">12px</span>;
+    <span class="f">padding</span>: <span class="n">24px</span>;
+    <span class="f">max-width</span>: <span class="n">440px</span>;
+    <span class="f">width</span>: <span class="n">100%</span>;
+    <span class="f">max-height</span>: <span class="n">90vh</span>;
+    <span class="f">overflow-y</span>: <span class="s">auto</span>;          <span class="c">/* երկար բովանդակության համար */</span>
+}</code></pre>
+    </div>
+
+    <h3>13. Ամբողջ էկրանով hero</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>նկար + մուգ շերտ + կենտրոնացված տեքստ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.hero</span> {
+    <span class="f">position</span>: <span class="s">relative</span>;
+    <span class="f">min-height</span>: <span class="n">70vh</span>;
+    <span class="f">display</span>: <span class="s">flex</span>;
+    <span class="f">align-items</span>: <span class="s">center</span>;
+    <span class="f">background-image</span>: <span class="s">url</span>(...);
+    <span class="f">background-size</span>: <span class="s">cover</span>;
+}
+
+<span class="k">.hero</span>::<span class="k">before</span> {
+    <span class="f">content</span>: <span class="s">""</span>;
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">inset</span>: <span class="n">0</span>;
+    <span class="f">background</span>: <span class="s">rgba</span>(<span class="n">37</span>,<span class="n">50</span>,<span class="n">55</span>,<span class="n">.7</span>);
+}
+
+<span class="k">.hero__content</span> {
+    <span class="f">position</span>: <span class="s">relative</span>;    <span class="c">/* ⭐ որ լինի ::before-ից վերև */</span>
+    <span class="f">z-index</span>: <span class="n">1</span>;
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչու է պետք .hero__content { position: relative }</span>
+      <p><code>::before</code>-ը <code>absolute</code> է և գծվում է սովորական բովանդակությունից <strong>վերև</strong>։ Առանց <code>position: relative</code>-ի տեքստը կհայտնվի մուգ շերտի տակ և կդառնա անտեսանելի։<br><br>
+      Այս մեկ տողը ամենահաճախ մոռացվողն է hero-ներ սարքելիս։</p>
+    </div>
+
+    <h3>14. «Վեր» կոճակ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>fixed անկյունում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.to-top</span> {
+    <span class="f">position</span>: <span class="s">fixed</span>;
+    <span class="f">right</span>: <span class="n">20px</span>;
+    <span class="f">bottom</span>: <span class="n">20px</span>;
+    <span class="f">z-index</span>: <span class="n">50</span>;
+}</code></pre>
+    </div>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="html">HTML</button>
+        <button class="live__tab" data-pane="css">CSS</button>
+      </div>
+      <textarea class="live__code" data-pane="html">&lt;!-- 13. Hero --&gt;
+&lt;section class="hero"&gt;
+    &lt;div class="hero__content"&gt;
+        &lt;h1&gt;Տեխնիկա ամեն օրվա&lt;/h1&gt;
+        &lt;p&gt;Տեքստը ::before շերտից վերև է&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;div class="page"&gt;
+    &lt;p&gt;Ներքևում՝ մոդալ պատուհանի օրինակ։&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;!-- 12. Մոդալ --&gt;
+&lt;div class="backdrop"&gt;
+    &lt;div class="modal"&gt;
+        &lt;button class="modal__close" aria-label="Փակել"&gt;✕&lt;/button&gt;
+        &lt;h2&gt;Հաստատել պատվերը&lt;/h2&gt;
+        &lt;p&gt;8 ապրանք · 821 000 ֏&lt;/p&gt;
+        &lt;p&gt;Առաքումն անվճար է։ Ակնկալվող ժամկետը՝ 2–3 աշխատանքային օր։&lt;/p&gt;
+        &lt;div class="modal__actions"&gt;
+            &lt;button class="btn-ghost"&gt;Չեղարկել&lt;/button&gt;
+            &lt;button class="btn"&gt;Հաստատել&lt;/button&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- 14. Վեր կոճակ --&gt;
+&lt;a href="#" class="to-top"&gt;↑&lt;/a&gt;</textarea>
+      <textarea class="live__code is-hidden" data-pane="css">* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: system-ui, sans-serif;
+    background: #f5f5f5;
+    line-height: 1.5;
+}
+
+/* ===== 13. HERO ===== */
+.hero {
+    position: relative;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    background-image: linear-gradient(120deg, #6b4423, #d4a373);
+    background-size: cover;
+    color: #fff;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(37, 50, 55, .7);
+}
+
+.hero__content {
+    position: relative;    /* ⭐ ջնջիր և տես ինչ կլինի */
+    z-index: 1;
+}
+
+.hero h1 { font-size: 26px; margin-bottom: 6px; }
+
+.page { padding: 16px 20px; }
+
+/* ===== 12. ՄՈԴԱԼ ===== */
+.backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0,0,0,.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal {
+    position: relative;
+    background: #fff;
+    border-radius: 12px;
+    padding: 22px;
+    max-width: 380px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal h2 { font-size: 18px; margin-bottom: 8px; }
+.modal p { font-size: 14px; margin-bottom: 8px; }
+
+.modal__close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    border-radius: 6px;
+    background: #f0f0f0;
+    cursor: pointer;
+}
+
+.modal__actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 14px;
+}
+
+.btn, .btn-ghost {
+    padding: 9px 16px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn { background: #003459; color: #fff; }
+.btn-ghost { background: transparent; border-color: #ccc; }
+
+/* ===== 14. ՎԵՐ ԿՈՃԱԿ ===== */
+.to-top {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 50;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #003459;
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}</textarea>
+      <div class="live__actions">
+        <span>Մոդալը միշտ բաց է՝ ուսումնական նպատակով</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Փորձիր</span>
+      <p><strong>1.</strong> Ջնջիր <code>.hero__content { position: relative }</code>-ը։ Ո՞ւր գնաց տեքստը։<br>
+      <strong>2.</strong> Ջնջիր <code>.backdrop { padding: 20px }</code>-ը և նեղացրու նախադիտումը։<br>
+      <strong>3.</strong> Փոխիր <code>.modal { position: relative }</code>-ը <code>static</code>-ի — ո՞ւր փախավ ✕-ը։<br>
+      <strong>4.</strong> Փոխիր <code>.backdrop { z-index: 1000 }</code>-ը <code>10</code>-ի և <code>.to-top</code>-ինը՝ <code>50</code>։ Ո՞րն է վերևում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Դեկորատիվ տարրեր</h2>
+
+    <h3>15. Գիծ վերնագրի հետևում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>z-index: -1</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.divider</span> {
+    <span class="f">position</span>: <span class="s">relative</span>;
+    <span class="f">text-align</span>: <span class="s">center</span>;
+}
+
+<span class="k">.divider</span>::<span class="k">before</span> {
+    <span class="f">content</span>: <span class="s">""</span>;
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">top</span>: <span class="n">50%</span>;
+    <span class="f">left</span>: <span class="n">0</span>;
+    <span class="f">right</span>: <span class="n">0</span>;
+    <span class="f">height</span>: <span class="n">1px</span>;
+    <span class="f">background</span>: <span class="s">#ddd</span>;
+    <span class="f">z-index</span>: -<span class="n">1</span>;              <span class="c">/* հետևում */</span>
+}
+
+<span class="k">.divider</span> <span class="t">span</span> {
+    <span class="f">background</span>: <span class="s">#f5f5f5</span>;      <span class="c">/* էջի ֆոնի գույնը */</span>
+    <span class="f">padding</span>: <span class="n">0</span> <span class="n">14px</span>;
+}</code></pre>
+    </div>
+
+    <h3>16. Ժամանակագրություն</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ուղղահայաց գիծ կետերի հետևում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.timeline</span> { <span class="f">position</span>: <span class="s">relative</span>; <span class="f">padding-left</span>: <span class="n">28px</span>; }
+
+<span class="c">/* Գիծը՝ ամբողջ բարձրությամբ */</span>
+<span class="k">.timeline</span>::<span class="k">before</span> {
+    <span class="f">content</span>: <span class="s">""</span>;
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">left</span>: <span class="n">7px</span>;
+    <span class="f">top</span>: <span class="n">6px</span>;
+    <span class="f">bottom</span>: <span class="n">6px</span>;
+    <span class="f">width</span>: <span class="n">2px</span>;
+    <span class="f">background</span>: <span class="s">#dfe6ea</span>;
+}
+
+<span class="c">/* Կետը՝ ամեն տարրի համար */</span>
+<span class="k">.timeline</span> <span class="t">li</span> { <span class="f">position</span>: <span class="s">relative</span>; }
+
+<span class="k">.timeline</span> <span class="t">li</span>::<span class="k">before</span> {
+    <span class="f">content</span>: <span class="s">""</span>;
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">left</span>: -<span class="n">28px</span>;
+    <span class="f">top</span>: <span class="n">6px</span>;
+    <span class="f">width</span>: <span class="n">16px</span>;
+    <span class="f">height</span>: <span class="n">16px</span>;
+    <span class="f">border-radius</span>: <span class="n">50%</span>;
+    <span class="f">background</span>: <span class="s">#003459</span>;
+    <span class="f">border</span>: <span class="n">3px</span> <span class="s">solid #f5f5f5</span>;
+}</code></pre>
+    </div>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="html">HTML</button>
+        <button class="live__tab" data-pane="css">CSS</button>
+      </div>
+      <textarea class="live__code" data-pane="html">&lt;!-- 15. Բաժանարար --&gt;
+&lt;div class="divider"&gt;&lt;span&gt;կամ&lt;/span&gt;&lt;/div&gt;
+
+&lt;!-- 16. Ժամանակագրություն --&gt;
+&lt;h3&gt;Պատվերի կարգավիճակը&lt;/h3&gt;
+&lt;ul class="timeline"&gt;
+    &lt;li&gt;
+        &lt;strong&gt;Ընդունված է&lt;/strong&gt;
+        &lt;p&gt;10 օգոստոսի, 14:20&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;strong&gt;Հավաքվում է&lt;/strong&gt;
+        &lt;p&gt;10 օգոստոսի, 16:05&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;strong&gt;Ճանապարհին է&lt;/strong&gt;
+        &lt;p&gt;11 օգոստոսի, 09:30&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li class="is-pending"&gt;
+        &lt;strong&gt;Առաքված&lt;/strong&gt;
+        &lt;p&gt;Ակնկալվում է այսօր&lt;/p&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class="divider"&gt;&lt;span&gt;վերջ&lt;/span&gt;&lt;/div&gt;</textarea>
+      <textarea class="live__code is-hidden" data-pane="css">* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: system-ui, sans-serif;
+    background: #f5f5f5;
+    padding: 20px 16px;
+    line-height: 1.5;
+}
+
+h3 { font-size: 15px; margin: 20px 0 14px; }
+
+/* ===== 15. ԲԱԺԱՆԱՐԱՐ ===== */
+.divider {
+    position: relative;
+    text-align: center;
+    margin: 18px 0;
+    color: #6b6b6b;
+    font-size: 13px;
+}
+
+.divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #ccc;
+    z-index: -1;           /* ← հետևում */
+}
+
+.divider span {
+    background: #f5f5f5;   /* էջի ֆոնի գույնը */
+    padding: 0 14px;
+}
+
+/* ===== 16. ԺԱՄԱՆԱԿԱԳՐՈՒԹՅՈՒՆ ===== */
+.timeline {
+    position: relative;
+    list-style: none;
+    padding-left: 28px;
+}
+
+.timeline::before {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: #cfd8dd;
+}
+
+.timeline li {
+    position: relative;
+    margin-bottom: 18px;
+    font-size: 13px;
+}
+
+.timeline li:last-child { margin-bottom: 0; }
+
+.timeline li::before {
+    content: "";
+    position: absolute;
+    left: -28px;
+    top: 4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #003459;
+    border: 3px solid #f5f5f5;
+}
+
+.timeline li.is-pending::before { background: #cfd8dd; }
+
+.timeline p { color: #6b6b6b; }</textarea>
+      <div class="live__actions">
+        <span>::before-ը նույնպես կարող է լինել absolute</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Փորձիր</span>
+      <p><strong>1.</strong> Ջնջիր <code>.divider::before { z-index: -1 }</code>-ը։<br>
+      <strong>2.</strong> Փոխիր <code>.divider span { background }</code>-ը <code>transparent</code>-ի։<br>
+      <strong>3.</strong> Ջնջիր <code>.timeline li { position: relative }</code>-ը — ո՞ւր գնացին կետերը։<br>
+      <strong>4.</strong> Փոխիր <code>.timeline::before { bottom: 8px }</code>-ը <code>0</code>-ի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Ախտորոշիչ վարժություններ</h2>
+    <p>Չորս կոտրված օրինակ։ Ամեն մեկում մեկ սխալ կա։ Գտիր և ուղղիր՝ առանց նայելու պատասխանները։</p>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="css">CSS</button>
+        <button class="live__tab" data-pane="html">HTML</button>
+      </div>
+      <textarea class="live__code" data-pane="css">* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: system-ui, sans-serif;
+    background: #f5f5f5;
+    padding: 14px;
+    line-height: 1.5;
+}
+
+h3 { font-size: 13px; margin: 16px 0 6px; color: #c62828; }
+
+.box {
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 8px;
+}
+
+/* ===== ԽՆԴԻՐ 1 =====
+   Պիտակը պիտի լինի քարտի աջ վերին անկյունում,
+   բայց հայտնվել է էջի անկյունում։            */
+.card-1 {
+    /* ← ինչ-որ բան պակասում է */
+    background: #fff;
+    border-radius: 10px;
+    height: 90px;
+    margin-bottom: 8px;
+}
+
+.badge-1 {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #c62828;
+    color: #fff;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+}
+
+/* ===== ԽՆԴԻՐ 2 =====
+   Header-ը պիտի կպչի ոլորելիս, բայց չի կպչում։ */
+.header-2 {
+    position: sticky;
+    /* ← ինչ-որ բան պակասում է */
+    z-index: 10;
+    background: #253237;
+    color: #fff;
+    padding: 10px 14px;
+    font-size: 13px;
+}
+
+/* ===== ԽՆԴԻՐ 3 =====
+   Ոլորելիս բովանդակությունը երևում է header-ի
+   միջով, կարծես թափանցիկ լինի։                */
+.header-3 {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    /* ← ինչ-որ բան պակասում է */
+    color: #003459;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* ===== ԽՆԴԻՐ 4 =====
+   Տեքստը պիտի լինի մուգ շերտից վերև,
+   բայց անտեսանելի է։                  */
+.hero-4 {
+    position: relative;
+    min-height: 110px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    background: linear-gradient(120deg, #6b4423, #d4a373);
+    color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.hero-4::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(37, 50, 55, .75);
+}
+
+.hero-4__content {
+    /* ← ինչ-որ բան պակասում է */
+}
+
+.scroll-area {
+    height: 150px;
+    overflow: auto;
+    background: #fff;
+    border-radius: 10px;
+    margin-bottom: 8px;
+}
+
+.tall { height: 400px; padding: 14px; font-size: 13px; }</textarea>
+      <textarea class="live__code is-hidden" data-pane="html">&lt;h3&gt;Խնդիր 1 — պիտակը փախել է&lt;/h3&gt;
+&lt;div class="card-1"&gt;
+    &lt;span class="badge-1"&gt;-30%&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;h3&gt;Խնդիր 2 — header-ը չի կպչում&lt;/h3&gt;
+&lt;div class="scroll-area"&gt;
+    &lt;div class="header-2"&gt;Ես պիտի կպչեմ&lt;/div&gt;
+    &lt;div class="tall"&gt;Ոլորիր այս տարածքի ներսում...&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3&gt;Խնդիր 3 — տակից երևում է տեքստը&lt;/h3&gt;
+&lt;div class="scroll-area"&gt;
+    &lt;div class="header-3"&gt;Ես կպչում եմ, բայց թափանցիկ եմ&lt;/div&gt;
+    &lt;div class="tall"&gt;Ոլորիր և տես, ինչպես է տեքստը անցնում իմ միջով։
+    Սա ամենահաճախ հանդիպող sticky-ի խնդիրն է։&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3&gt;Խնդիր 4 — տեքստը անտեսանելի է&lt;/h3&gt;
+&lt;div class="hero-4"&gt;
+    &lt;div class="hero-4__content"&gt;
+        &lt;strong&gt;Ես պիտի երևամ&lt;/strong&gt;
+        &lt;p&gt;բայց ::before-ը ծածկել է ինձ&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</textarea>
+      <div class="live__actions">
+        <span>Չորս սխալ · ուղղիր CSS ներդիրում</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Պատասխանները — նայիր միայն փորձելուց հետո</span>
+      <p><strong>1.</strong> <code>.card-1 { position: relative }</code> — չկար խարիսխ։<br>
+      <strong>2.</strong> <code>.header-2 { top: 0 }</code> — <code>sticky</code>-ն չգիտեր՝ որտեղ կպչի։<br>
+      <strong>3.</strong> <code>.header-3 { background: #fff }</code> — թափանցիկ էր։<br>
+      <strong>4.</strong> <code>.hero-4__content { position: relative; z-index: 1 }</code> — <code>::before</code>-ը վերևում էր։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Ամփոփում</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>#</th><th>Օրինակ</th><th>Բանաձևը</th></tr>
+      <tr><td>1</td><td>Զեղչի պիտակ</td><td><code>relative</code> + <code>absolute top/left</code></td></tr>
+      <tr><td>2</td><td>Փակելու կոճակ</td><td>+ ծնողին <code>padding-right</code></td></tr>
+      <tr><td>3</td><td>Գրադիենտ ծածկույթ</td><td><code>absolute left/right/bottom: 0</code></td></tr>
+      <tr><td>4</td><td>Ժապավեն</td><td><code>absolute</code> + <code>rotate</code> + <code>overflow: hidden</code></td></tr>
+      <tr><td>5</td><td>Ծանուցումների հաշվիչ</td><td>Բացասական <code>top/right</code></td></tr>
+      <tr><td>6</td><td>Կարգավիճակի կետ</td><td><code>absolute</code> + <code>border</code> ֆոնի գույնով</td></tr>
+      <tr><td>7</td><td>Հուշում</td><td><code>bottom: calc(100% + 8px)</code> + <code>translateX(-50%)</code></td></tr>
+      <tr><td>8</td><td>Dropdown</td><td><code>top: calc(100% + 6px)</code> + <code>:focus-within</code></td></tr>
+      <tr><td>9</td><td>Կպչուն header</td><td><code>sticky</code> + <code>top</code> + <code>z-index</code> + <code>background</code></td></tr>
+      <tr><td>10</td><td>Կպչուն կողքի բլոկ</td><td>+ <code>align-self: start</code> ⭐</td></tr>
+      <tr><td>11</td><td>Կպչուն <code>thead</code></td><td><code>sticky</code> <code>th</code>-ի վրա, ոչ <code>thead</code>-ի</td></tr>
+      <tr><td>12</td><td>Մոդալ</td><td><code>fixed</code> + <code>inset: 0</code> + flex կենտրոն</td></tr>
+      <tr><td>13</td><td>Hero ծածկույթով</td><td><code>::before inset: 0</code> + բովանդակությանը <code>relative</code></td></tr>
+      <tr><td>14</td><td>«Վեր» կոճակ</td><td><code>fixed right/bottom</code></td></tr>
+      <tr><td>15</td><td>Գիծ վերնագրի հետևում</td><td><code>z-index: -1</code> + տեքստին ֆոն</td></tr>
+      <tr><td>16</td><td>Ժամանակագրություն</td><td>Երկու մակարդակի <code>relative</code> + <code>::before</code></td></tr>
+    </table>
+    </div>
+
+    <h3>Հինգ ամենահաճախ սխալը</h3>
+    <ol>
+      <li><strong>Ծնողը չունի <code>position: relative</code></strong> → երեխան փախչում է էջի անկյուն</li>
+      <li><strong><code>sticky</code>-ն առանց <code>top</code>-ի</strong> → չի կպչում</li>
+      <li><strong><code>sticky</code>-ն առանց <code>background</code>-ի</strong> → տակից երևում է տեքստը</li>
+      <li><strong><code>sticky</code> flex-ի ներսում առանց <code>align-self: start</code></strong> → կպչելու տեղ չկա</li>
+      <li><strong><code>::before</code>-ը ծածկում է բովանդակությունը</strong> → պետք է <code>relative</code> + <code>z-index: 1</code></li>
+    </ol>
+
+    <div class="tip note">
+      <span class="tag">Առաջադրանք</span>
+      <p>Ընտրիր չորս օրինակ այս ցուցակից և ներդրիր դրանք քո նախագծի մեջ։ Առաջարկվող հավաքածու՝<br><br>
+      <strong>9</strong> (կպչուն header) + <strong>1</strong> (պիտակ քարտի վրա) + <strong>3</strong> (գրադիենտ ծածկույթ) + <strong>14</strong> («վեր» կոճակ)։<br><br>
+      Այս չորսը միասին տալիս են ամբողջական և պրոֆեսիոնալ տեսք։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 15 · Հավելված</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

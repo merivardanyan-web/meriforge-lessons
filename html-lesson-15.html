@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 15 — position և z-index</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 15 · 2 ժամ</p>
+  <h1>position և z-index</h1>
+  <p class="lede">Մինչ այժմ ամեն էլեմենտ ապրում էր նորմալ հոսքում։ Այսօր սովորում ենք հանել այն այդտեղից՝ պիտակ նկարի անկյունում, կպչուն header, մոդալ պատուհան։ Եվ կհասկանանք, ինչու է <code>z-index</code>-ը երբեմն «չաշխատում»։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 08–14</span>
+    <span>Բլոկ 1 · Դասավորություն</span>
+    <span>Նախապատրաստում Դաս 18-ին</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li><code>static</code> — լռելյայնը</li>
+      <li><code>relative</code> — տեղաշարժ և խարիսխ</li>
+      <li><code>absolute</code> — դուրս հոսքից</li>
+      <li><code>fixed</code> — կպած էկրանին</li>
+      <li><code>sticky</code> — հիբրիդը</li>
+      <li>Կենտրոնացման երկու ձև</li>
+      <li><code>z-index</code> և stacking context</li>
+      <li>Կպչուն header գործնականում</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Հինգ արժեք</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Արժեք</th><th>Մնո՞ւմ է հոսքում</th><th>Ինչի՞ նկատմամբ է տեղաշարժվում</th></tr>
+      <tr><td><code>static</code></td><td>Այո</td><td>Չի տեղաշարժվում</td></tr>
+      <tr><td><code>relative</code></td><td><strong>Այո</strong> — տեղը մնում է</td><td>Իր սկզբնական դիրքի</td></tr>
+      <tr><td><code>absolute</code></td><td><strong>Ոչ</strong> — տեղը անհետանում է</td><td>Մոտակա <code>relative</code> ծնողի</td></tr>
+      <tr><td><code>fixed</code></td><td>Ոչ</td><td>Էկրանի (viewport-ի)</td></tr>
+      <tr><td><code>sticky</code></td><td>Այո</td><td>Սկզբում հոսքում, հետո՝ էկրանի</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ուղեկցող հատկություններ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.box</span> {
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">top</span>: <span class="n">10px</span>;
+    <span class="f">right</span>: <span class="n">10px</span>;
+    <span class="f">bottom</span>: <span class="s">auto</span>;
+    <span class="f">left</span>: <span class="s">auto</span>;
+    <span class="f">z-index</span>: <span class="n">10</span>;
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Կարևոր</span>
+      <p><code>top</code>, <code>right</code>, <code>bottom</code>, <code>left</code> և <code>z-index</code> հատկությունները <strong>չեն աշխատում</strong> <code>position: static</code>-ի դեպքում — այսինքն՝ լռելյայն։<br><br>
+      Եթե գրել ես <code>top: 20px</code> և ոչինչ չի փոխվել — առաջին բանը, որ պիտի ստուգես, <code>position</code>-ն է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>relative</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>տեղաշարժ իր դիրքից</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.box</span> {
+    <span class="f">position</span>: <span class="s">relative</span>;
+    <span class="f">top</span>: <span class="n">20px</span>;
+    <span class="f">left</span>: <span class="n">30px</span>;
+}</code></pre>
+    </div>
+
+    <div class="tree">Առաջ                        Հետո
+┌────┐┌────┐┌────┐          ┌────┐      ┌────┐
+│ 1  ││ 2  ││ 3  │          │ 1  │░░░░░░│ 3  │
+└────┘└────┘└────┘          └────┘░ 2 ░ └────┘
+                                  └────┘
+                            ↑ տեղը մնում է դատարկ,
+                              հարևանները չեն շարժվում</div>
+
+    <div class="note">
+      <span class="tag">Երկու գործածություն</span>
+      <p><strong>1.</strong> Փոքր ճշգրտում՝ պատկերակը 2px վեր բարձրացնել։ Հազվադեպ։<br><br>
+      <strong>2.</strong> <strong>Խարիսխ դառնալ <code>absolute</code> երեխայի համար</strong>։ Սա իրական պատճառն է, որի համար <code>relative</code>-ը գրվում է 95% դեպքերում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>absolute</h2>
+    <p>Էլեմենտը <strong>դուրս է գալիս նորմալ հոսքից</strong>։ Հարևանները վարվում են այնպես, կարծես այն գոյություն չունի։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>դասական զույգ՝ relative + absolute</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Ծնողը՝ խարիսխ */</span>
+<span class="k">.card</span> {
+    <span class="f">position</span>: <span class="s">relative</span>;
+}
+
+<span class="c">/* Երեխան՝ ազատ տեղաշարժվող */</span>
+<span class="k">.card__badge</span> {
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">top</span>: <span class="n">10px</span>;
+    <span class="f">right</span>: <span class="n">10px</span>;
+}</code></pre>
+    </div>
+
+    <div class="tree">┌─────────────────────┐
+│ .card (relative) ┌──┴──┐
+│                  │ -30%│ ← .card__badge (absolute)
+│    ┌──────────┐  └──┬──┘   top: 10px; right: 10px
+│    │  նկար    │     │
+│    └──────────┘     │
+│  Նոութբուք Pro      │
+└─────────────────────┘</div>
+
+    <div class="warn note">
+      <span class="tag">Եթե relative ծնող չկա</span>
+      <p><code>absolute</code>-ը փնտրում է մոտակա ծնողը, որի <code>position</code>-ը <strong>static չէ</strong>։ Եթե չգտնի — կապվում է <code>&lt;html&gt;</code>-ին և կհայտնվի էջի անկյունում։<br><br>
+      Սա ամենահաճախ հանդիպող սխալն է․ պիտակը հայտնվում է էջի վերևում, ոչ քարտի վրա։ <strong>Առաջին բանը, որ պիտի ստուգես՝ ծնողն ունի՞ <code>position: relative</code>։</strong></p>
+    </div>
+
+    <h3>Ձգում չորս կողմից</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ծածկույթ նկարի վրա</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.overlay</span> {
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">top</span>: <span class="n">0</span>;
+    <span class="f">right</span>: <span class="n">0</span>;
+    <span class="f">bottom</span>: <span class="n">0</span>;
+    <span class="f">left</span>: <span class="n">0</span>;
+    <span class="f">background</span>: <span class="s">rgba</span>(<span class="n">0</span>, <span class="n">0</span>, <span class="n">0</span>, <span class="n">.5</span>);
+}
+
+<span class="c">/* Կարճ ձև */</span>
+<span class="k">.overlay</span> { <span class="f">position</span>: <span class="s">absolute</span>; <span class="f">inset</span>: <span class="n">0</span>; }</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">inset</span>
+      <p><code>inset: 0</code> = <code>top: 0; right: 0; bottom: 0; left: 0</code>։ Աշխատում է ինչպես <code>padding</code>-ի կարճ գրառումը՝ <code>inset: 10px 20px</code>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Կենտրոնացում</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ձև 1՝ transform</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.modal</span> {
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">top</span>: <span class="n">50%</span>;
+    <span class="f">left</span>: <span class="n">50%</span>;
+    <span class="f">transform</span>: <span class="s">translate</span>(-<span class="n">50%</span>, -<span class="n">50%</span>);
+}</code></pre>
+    </div>
+
+    <div class="tree">Միայն top/left: 50%          + transform: translate(-50%, -50%)
+┌──────────────────┐         ┌──────────────────┐
+│                  │         │                  │
+│         ┌────────┤         │      ┌─────┐     │
+│         │ բլոկ   │         │      │բլոկ │     │
+│         │        │         │      └─────┘     │
+└─────────┴────────┘         └──────────────────┘
+ ձախ վերին անկյունն է        իսկական կենտրոնում
+ կենտրոնում, ոչ բլոկը</div>
+
+    <div class="note">
+      <span class="tag">Ինչու է պետք transform-ը</span>
+      <p><code>top: 50%</code>-ը տեղափոխում է էլեմենտի <strong>վերին ձախ անկյունը</strong> կենտրոն։ Ինքը բլոկը մնում է աջ-ներքև։<br><br>
+      <code>translate(-50%, -50%)</code>-ը հետ է քաշում այն <em>իր սեփական</em> չափի կեսով։ Դրա գեղեցկությունն այն է, որ բլոկի չափը իմանալ պետք չէ։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ձև 2՝ flex — ավելի պարզ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.modal-backdrop</span> {
+    <span class="f">position</span>: <span class="s">fixed</span>;
+    <span class="f">inset</span>: <span class="n">0</span>;
+    <span class="f">background</span>: <span class="s">rgba</span>(<span class="n">0</span>,<span class="n">0</span>,<span class="n">0</span>,<span class="n">.6</span>);
+
+    <span class="f">display</span>: <span class="s">flex</span>;
+    <span class="f">justify-content</span>: <span class="s">center</span>;
+    <span class="f">align-items</span>: <span class="s">center</span>;
+}
+
+<span class="k">.modal</span> {
+    <span class="f">background</span>: <span class="s">white</span>;
+    <span class="f">border-radius</span>: <span class="n">12px</span>;
+    <span class="f">padding</span>: <span class="n">24px</span>;
+    <span class="f">max-width</span>: <span class="n">500px</span>;
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ո՞րն ընտրել</span>
+      <p><strong>Flex</strong> — երբ կարող ես ծնողին տալ <code>display: flex</code>։ Ավելի պարզ և ավելի կանխատեսելի։<br><br>
+      <strong>Transform</strong> — երբ ծնողն արդեն ուրիշ դեր ունի, կամ պիտի կենտրոնացնես միայն մեկ առանցքով։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>fixed և sticky</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>fixed — կպած էկրանին</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.to-top</span> {
+    <span class="f">position</span>: <span class="s">fixed</span>;
+    <span class="f">right</span>: <span class="n">20px</span>;
+    <span class="f">bottom</span>: <span class="n">20px</span>;
+    <span class="f">z-index</span>: <span class="n">50</span>;
+}</code></pre>
+    </div>
+
+    <p>Չի շարժվում ոլորելիս։ Օգտագործվում է «վեր» կոճակի, cookie-ի ծանուցման, մոդալի ֆոնի համար։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>sticky — կպչուն header</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="t">header</span> {
+    <span class="f">position</span>: <span class="s">sticky</span>;
+    <span class="f">top</span>: <span class="n">0</span>;              <span class="c">/* ՊԱՐՏԱԴԻՐ */</span>
+    <span class="f">z-index</span>: <span class="n">100</span>;
+    <span class="f">background</span>: <span class="s">white</span>;   <span class="c">/* ՊԱՐՏԱԴԻՐ */</span>
+}</code></pre>
+    </div>
+
+    <div class="tree">Ոլորելուց առաջ            Ոլորելուց հետո
+┌──────────────┐          ┌──────────────┐
+│   header     │          │   header     │ ← կպել է վերևին
+├──────────────┤          ├──────────────┤
+│  բովանդակ.   │          │  բովանդակ.   │
+│              │          │  (ոլորվում)  │
+└──────────────┘          └──────────────┘</div>
+
+    <div class="warn note">
+      <span class="tag">Երեք պատճառ, ինչու sticky-ն չի աշխատում</span>
+      <p><strong>1.</strong> Չկա <code>top</code> (կամ <code>bottom</code>)։ Առանց դրա բրաուզերը չգիտի՝ որտեղ կպչի։<br>
+      <strong>2.</strong> Ծնողն ունի <code>overflow: hidden</code> կամ <code>auto</code>։ Դա կոտրում է <code>sticky</code>-ն։<br>
+      <strong>3.</strong> Ծնողի բարձրությունը հավասար է էլեմենտի բարձրությանը — կպչելու տեղ չկա։<br><br>
+      Չկա <code>background</code>՝ չորրորդ խնդիր է — բովանդակությունը կերևա header-ի տակից։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th></th><th><code>fixed</code></th><th><code>sticky</code></th></tr>
+      <tr><td>Տեղը հոսքում</td><td>Անհետանում է</td><td>Մնում է</td></tr>
+      <tr><td>Հաջորդ բլոկը</td><td>Բարձրանում է վերև ⚠️</td><td>Մնում է տեղում</td></tr>
+      <tr><td>Ե՞րբ</td><td>«Վեր» կոճակ, մոդալ</td><td>Header, կողքի մենյու</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">fixed header-ի թակարդը</span>
+      <p><code>position: fixed</code> header-ը դուրս է գալիս հոսքից, և առաջին բաժինը <strong>մտնում է դրա տակ</strong>։ Պիտի ավելացնես <code>body { padding-top: 70px }</code>՝ header-ի բարձրության չափ։<br><br>
+      <code>sticky</code>-ի դեպքում այդ խնդիրը չկա — հենց դրա համար է այն ավելի լավ ընտրություն header-ի համար։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>z-index</h2>
+    <p>Որոշում է՝ ո՞ր էլեմենտն է վերևում, երբ դրանք ծածկում են իրար։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>շերտերի սանդղակ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.dropdown</span>       { <span class="f">z-index</span>: <span class="n">10</span>; }
+<span class="t">header</span>          { <span class="f">z-index</span>: <span class="n">100</span>; }
+<span class="k">.modal-backdrop</span> { <span class="f">z-index</span>: <span class="n">1000</span>; }
+<span class="k">.toast</span>          { <span class="f">z-index</span>: <span class="n">2000</span>; }</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">z-index-ը չի աշխատում առանց position-ի</span>
+      <p><code>z-index</code>-ը գործում է միայն, եթե էլեմենտն ունի <code>position</code>՝ <code>relative</code>, <code>absolute</code>, <code>fixed</code> կամ <code>sticky</code>։<br><br>
+      Բացառություն՝ flex-տարրերի և grid-տարրերի վրա <code>z-index</code>-ը աշխատում է նաև առանց <code>position</code>-ի։</p>
+    </div>
+
+    <h3>Stacking context — ամենաշփոթեցնողը</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ինչու z-index: 9999-ը չօգնեց</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.header</span>  { <span class="f">position</span>: <span class="s">relative</span>; <span class="f">z-index</span>: <span class="n">1</span>; }
+<span class="k">.content</span> { <span class="f">position</span>: <span class="s">relative</span>; <span class="f">z-index</span>: <span class="n">2</span>; }
+
+<span class="k">.header</span> <span class="k">.dropdown</span> { <span class="f">z-index</span>: <span class="n">9999</span>; }
+
+<span class="c">/* Dropdown-ը ՄԻԵՎՆՈՒՅՆ Է կմնա .content-ի տակ։
+   Որովհետև ամբողջ .header-ը (z-index: 1) գտնվում է
+   .content-ից (z-index: 2) ցածր, և ներսի 9999-ը
+   համեմատվում է միայն .header-ի ՆԵՐՍՈՒՄ։            */</span></code></pre>
+    </div>
+
+    <div class="tree">Համեմատություն միայն ՆՈՒՅՆ մակարդակում
+
+  .header (z-index: 1)          .content (z-index: 2)
+     │                              │
+     └── .dropdown (9999)           └── .card (5)
+
+  1 &lt; 2  →  ամբողջ .header-ը ցածր է
+            անկախ ներսի թվերից</div>
+
+    <div class="tip note">
+      <span class="tag">Ի՞նչ է ստեղծում stacking context</span>
+      <p><code>position</code> + <code>z-index</code> (ոչ <code>auto</code>), <code>opacity</code> 1-ից պակաս, <code>transform</code>, <code>filter</code>, <code>will-change</code>։<br><br>
+      Այսինքն՝ <code>opacity: 0.99</code>-ը կարող է անսպասելիորեն կոտրել <code>z-index</code>-ի տրամաբանությունը։ Երբ ինչ-որ բան չի աշխատում, փնտրիր հենց այս հատկությունները ծնողների վրա։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Կանոն</span>
+      <p>Օգտագործիր <strong>ընդամենը 4–5 արժեք</strong>՝ 10, 100, 1000, 2000։ Եթե սկսում ես գրել 9999, 99999 — խնդիրը <code>z-index</code>-ը չէ, այլ stacking context-ը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Խաղահրապարակ</h2>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="css">CSS</button>
+        <button class="live__tab" data-pane="html">HTML</button>
+      </div>
+      <textarea class="live__code" data-pane="css">* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: system-ui, sans-serif;
+    background: #f5f5f5;
+    line-height: 1.5;
+}
+
+h3 { font-size: 14px; color: #555; margin: 16px 12px 6px; }
+
+/* ===== ԿՊՉՈՒՆ HEADER ===== */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #253237;   /* ՊԱՐՏԱԴԻՐ */
+    color: #fff;
+    padding: 12px 16px;
+    font-weight: 700;
+}
+
+.content { padding: 12px; }
+
+/* ===== ՔԱՐՏ ՊԻՏԱԿՈՎ ===== */
+.card {
+    position: relative;          /* ← խարիսխը */
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    max-width: 260px;
+    margin-bottom: 12px;
+}
+
+.thumb {
+    height: 110px;
+    background: linear-gradient(135deg, #9db4c0, #003459);
+}
+
+.card__body { padding: 14px; }
+
+.badge {
+    position: absolute;          /* ← կապվում է .card-ին */
+    top: 10px;
+    right: 10px;
+    background: #c62828;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* ===== ԾԱԾԿՈՒՅԹ ===== */
+.overlay-demo { position: relative; max-width: 260px; }
+
+.overlay {
+    position: absolute;
+    inset: 0;                    /* = top/right/bottom/left: 0 */
+    background: rgba(37, 50, 55, .65);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    border-radius: 12px;
+}
+
+/* ===== ԿԵՆՏՐՈՆԱՑՄԱՆ ԵՐԿՈՒ ՁԵՎ ===== */
+.stage {
+    position: relative;
+    height: 130px;
+    background: #ddd;
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+
+.center-transform {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #003459;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 8px;
+}
+
+.stage-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ===== FIXED ===== */
+.to-top {
+    position: fixed;
+    right: 14px;
+    bottom: 14px;
+    z-index: 50;
+    background: #003459;
+    color: #fff;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+}
+
+.spacer { height: 300px; }</textarea>
+      <textarea class="live__code is-hidden" data-pane="html">&lt;header&gt;sticky header — ոլորիր ներքև&lt;/header&gt;
+
+&lt;div class="content"&gt;
+
+    &lt;h3&gt;1. Պիտակ քարտի անկյունում&lt;/h3&gt;
+    &lt;article class="card"&gt;
+        &lt;div class="thumb"&gt;&lt;/div&gt;
+        &lt;span class="badge"&gt;-30%&lt;/span&gt;
+        &lt;div class="card__body"&gt;
+            &lt;strong&gt;Նոութբուք Pro&lt;/strong&gt;
+            &lt;p&gt;450 000 ֏&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/article&gt;
+
+    &lt;h3&gt;2. Ծածկույթ (inset: 0)&lt;/h3&gt;
+    &lt;div class="overlay-demo"&gt;
+        &lt;div class="thumb" style="border-radius:12px"&gt;&lt;/div&gt;
+        &lt;div class="overlay"&gt;Շուտով&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;h3&gt;3. Կենտրոն՝ transform-ով&lt;/h3&gt;
+    &lt;div class="stage"&gt;
+        &lt;div class="center-transform"&gt;translate(-50%, -50%)&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;h3&gt;4. Կենտրոն՝ flex-ով&lt;/h3&gt;
+    &lt;div class="stage stage-flex"&gt;
+        &lt;div class="center-transform" style="position:static;transform:none"&gt;
+            justify + align: center
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;h3&gt;5. Ոլորիր՝ header-ը կմնա վերևում&lt;/h3&gt;
+    &lt;div class="spacer"&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;a href="#" class="to-top"&gt;↑&lt;/a&gt;</textarea>
+      <div class="live__actions">
+        <span>Ոլորիր նախադիտման ներսում</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Փորձիր</span>
+      <p><strong>1.</strong> Ջնջիր <code>.card { position: relative }</code>-ը — ո՞ւր փախավ պիտակը։<br>
+      <strong>2.</strong> Ջնջիր <code>header { top: 0 }</code>-ը։<br>
+      <strong>3.</strong> Ջնջիր <code>header { background }</code>-ը և ոլորիր։<br>
+      <strong>4.</strong> Փոխիր <code>header { z-index: 100 }</code>-ը <code>0</code>-ի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Դասարանական · կպչուն header</h2>
+    <p>Վերցնում ենք Դաս 11-ի header-ը և դարձնում ենք կպչուն։ Ապա ավելացնում ենք պիտակ ապրանքի քարտին։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>css/main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ---------- Կպչուն header ---------- */</span>
+<span class="t">header</span> {
+    <span class="f">position</span>: <span class="s">sticky</span>;
+    <span class="f">top</span>: <span class="n">0</span>;
+    <span class="f">z-index</span>: <span class="n">100</span>;
+    <span class="f">background</span>: <span class="s">#ffffff</span>;
+    <span class="f">box-shadow</span>: <span class="n">0</span> <span class="n">1px</span> <span class="n">4px</span> <span class="s">rgba</span>(<span class="n">0</span>,<span class="n">0</span>,<span class="n">0</span>,<span class="n">.08</span>);
+}
+
+<span class="c">/* ---------- Խարիսխներով նավիգացիա ---------- */</span>
+<span class="k">html</span> {
+    <span class="f">scroll-behavior</span>: <span class="s">smooth</span>;
+    <span class="f">scroll-padding-top</span>: <span class="n">80px</span>;   <span class="c">/* header-ի բարձրությունը ⭐ */</span>
+}
+
+<span class="c">/* ---------- Պիտակ քարտի վրա ---------- */</span>
+<span class="k">#products</span> <span class="k">.wrapper</span> {
+    <span class="f">position</span>: <span class="s">relative</span>;      <span class="c">/* խարիսխ */</span>
+}
+
+<span class="k">.badge</span> {
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">top</span>: <span class="n">10px</span>;
+    <span class="f">left</span>: <span class="n">10px</span>;
+    <span class="f">z-index</span>: <span class="n">2</span>;
+    <span class="f">background</span>: <span class="s">#c62828</span>;
+    <span class="f">color</span>: <span class="s">#ffffff</span>;
+    <span class="f">padding</span>: <span class="n">4px</span> <span class="n">10px</span>;
+    <span class="f">border-radius</span>: <span class="n">999px</span>;
+    <span class="f">font-size</span>: <span class="n">0.75rem</span>;
+    <span class="f">font-weight</span>: <span class="n">700</span>;
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">scroll-padding-top — շատ օգտակար</span>
+      <p>Խարիսխով հղումը (Դաս 2՝ <code>href="#contacts"</code>) ոլորում է այնպես, որ բաժինը հայտնվի էկրանի հենց վերևում։ Բայց այնտեղ արդեն կպչուն header-ն է — և վերնագիրը ծածկվում է։<br><br>
+      <code>scroll-padding-top: 80px</code>-ը ասում է․ «կանգնիր 80px շուտ»։ Մեկ տող, և բոլոր խարիսխները ճիշտ են աշխատում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-33 w-md-50 w-sm-100"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">article</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"badge"</span><span class="p">&gt;</span>-30%<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">picture</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">img</span> <span class="f">src</span>=<span class="s">"images/laptop.jpg"</span> <span class="f">alt</span>=<span class="s">"Նոութբուք Pro"</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">picture</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__body"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"title-4 mb-10"</span><span class="p">&gt;</span>Նոութբուք Pro<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"price"</span><span class="p">&gt;</span>450&amp;nbsp;000 ֏<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ուշադրություն՝ overflow: hidden</span>
+      <p>Դաս 8-ում <code>.wrapper</code>-ին տվեցինք <code>overflow: hidden</code>՝ որ նկարի անկյունները կտրվեն։ Դա նշանակում է, որ պիտակը <strong>չի կարող դուրս գալ</strong> քարտից։<br><br>
+      Եթե դիզայնում պիտակը մասամբ դուրս է քարտից — պիտի հանես <code>overflow: hidden</code>-ը և կլորացնես նկարը առանձին՝ <code>picture img { border-radius: 12px 12px 0 0 }</code>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ցուցադրիր <code>relative</code>-ի և <code>absolute</code>-ի տարբերությունը՝ երեք բլոկ, միջինը տեղաշարժված։ Նկարագրիր, ինչ եղավ հարևանների հետ։</li>
+      <li>Ավելացրու պիտակ քարտի անկյունում։ Ապա ջնջիր ծնողի <code>relative</code>-ը և գրիր՝ ուր գնաց այն։</li>
+      <li>Կառուցիր ծածկույթ նկարի վրա՝ <code>inset: 0</code>-ով և կենտրոնացված տեքստով։</li>
+      <li>Կենտրոնացրու բլոկ երկու ձևով՝ <code>transform</code>-ով և <code>flex</code>-ով։ Համեմատիր կոդի ծավալը։</li>
+      <li>Դարձրու header-ը կպչուն։ Ջնջիր <code>top: 0</code>-ը և նկարագրիր արդյունքը։</li>
+      <li>Ջնջիր header-ի <code>background</code>-ը և ոլորիր։ Ուղարկիր սքրինշոթ։</li>
+      <li>Ավելացրու <code>scroll-padding-top</code> և ստուգիր խարիսխներով նավիգացիան։ Ջնջիր և համեմատիր։</li>
+      <li>Կառուցիր «վեր» կոճակ՝ <code>position: fixed</code>-ով։</li>
+      <li>Վերարտադրիր stacking context-ի խնդիրը՝ երկու բլոկ <code>z-index: 1</code> և <code>2</code>, առաջինի ներսում՝ <code>z-index: 9999</code>։ Բացատրիր, ինչու չաշխատեց։</li>
+      <li>Կառուցիր մոդալ պատուհան՝ ֆոնով (<code>fixed</code> + <code>inset: 0</code>), կենտրոնացված պատուհանով և փակելու կոճակով անկյունում (<code>absolute</code>)։ JavaScript պետք չէ — պարզապես ցույց տուր տեսքը։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>position: relative</code></td><td>Խարիսխ + տեղաշարժ, տեղը մնում է</td></tr>
+      <tr><td><code>position: absolute</code></td><td>Դուրս հոսքից, կապվում է <code>relative</code> ծնողին ⭐</td></tr>
+      <tr><td><code>position: fixed</code></td><td>Կպած էկրանին</td></tr>
+      <tr><td><code>position: sticky</code></td><td>Հոսքում, հետո կպչում է</td></tr>
+      <tr><td><code>top / right / bottom / left</code></td><td>Չեն աշխատում <code>static</code>-ի դեպքում</td></tr>
+      <tr><td><code>inset: 0</code></td><td>Չորս կողմից ձգում</td></tr>
+      <tr><td><code>transform: translate(-50%,-50%)</code></td><td>Կենտրոնացում <code>top/left: 50%</code>-ի հետ</td></tr>
+      <tr><td><code>z-index</code></td><td>Շերտ։ Պահանջում է <code>position</code></td></tr>
+      <tr><td><code>scroll-padding-top</code></td><td>Խարիսխները չեն մտնում header-ի տակ ⭐</td></tr>
+      <tr><td><code>scroll-behavior: smooth</code></td><td>Սահուն ոլորում</td></tr>
+    </table>
+    </div>
+
+    <h3>Երբ ինչ-որ բան չի աշխատում</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ախտանիշ</th><th>Սովորական պատճառ</th></tr>
+      <tr><td><code>top</code>-ը ոչինչ չի անում</td><td>Չկա <code>position</code></td></tr>
+      <tr><td>Պիտակը էջի անկյունում է</td><td>Ծնողը չունի <code>relative</code></td></tr>
+      <tr><td><code>sticky</code>-ն չի կպչում</td><td>Չկա <code>top</code>, կամ ծնողն ունի <code>overflow</code></td></tr>
+      <tr><td>Header-ի տակից երևում է տեքստ</td><td>Չկա <code>background</code></td></tr>
+      <tr><td><code>z-index: 9999</code>-ը չօգնեց</td><td>Stacking context</td></tr>
+      <tr><td>Խարիսխը մտնում է header-ի տակ</td><td>Չկա <code>scroll-padding-top</code></td></tr>
+    </table>
+    </div>
+
+    <h3>Ի՞նչ ավելացավ global.css-ում այսօր</h3>
+    <div class="tree">✓ html { scroll-behavior: smooth }
+✓ .position-relative { position: relative; }
+✓ .position-absolute { position: absolute; }</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Ամեն <code>absolute</code>-ի ծնողն ունի <code>relative</code></li>
+      <li><code>sticky</code> header-ն ունի <code>top</code>, <code>z-index</code> և <code>background</code></li>
+      <li>Կա <code>scroll-padding-top</code>՝ header-ի բարձրության չափ</li>
+      <li><code>z-index</code>-ի արժեքները սանդղակի վրա են (10/100/1000)</li>
+      <li>Չկա <code>z-index: 9999</code></li>
+      <li>Fixed տարրերը չեն ծածկում կարևոր բովանդակությունը հեռախոսում</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել <code>relative</code>-ի և <code>absolute</code>-ի տարբերությունը</li>
+      <li>Գիտե՞մ, ինչու է պետք <code>translate(-50%, -50%)</code></li>
+      <li>Հասկանո՞ւմ եմ, ինչու <code>sticky</code>-ն երբեմն չի աշխատում</li>
+      <li>Կարո՞ղ եմ բացատրել stacking context-ը</li>
+      <li>Գիտե՞մ տարբերությունը <code>fixed</code>-ի և <code>sticky</code>-ի միջև</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Նկարներ և media՝ <code>object-fit</code>, <code>aspect-ratio</code>, SVG, <code>srcset</code>։ Կսովորենք, ինչպես նկարները դարձնել ադապտիվ առանց դեֆորմացիայի, և ինչու է հեռախոսում պետք ուրիշ նկար, ոչ պարզապես փոքրացված։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 15 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

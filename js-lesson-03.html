@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 03 — Ցիկլեր</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 03 · 2 ժամ</p>
+  <h1>Ցիկլեր</h1>
+  <p class="lede">Համակարգիչը ձանձրույթ չգիտի։ Այսօր սովորում ենք, թե ինչպես ստիպել նրան նույն գործողությունը կրկնել 10, 100 կամ միլիոն անգամ՝ ընդամենը երեք տող կոդով։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 01–02</span>
+    <span>Բլոկ 1 · Լեզվի հիմքերը</span>
+    <span>Տնային՝ 10 առաջադրանք</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ինչո՞ւ են պետք ցիկլերը</li>
+      <li><code>for</code> ցիկլը՝ իր երեք մասերով</li>
+      <li><code>while</code> և <code>do..while</code></li>
+      <li>Ե՞րբ որն օգտագործել</li>
+      <li><code>break</code> և <code>continue</code></li>
+      <li>Ներդրված ցիկլեր՝ ցիկլ ցիկլի մեջ</li>
+      <li>Կուտակիչ և հաշվիչ փոփոխականներ</li>
+      <li>Դասական խնդիրներ՝ բազմապատկման աղյուսակ, բուրգ, պարզ թվեր</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչո՞ւ են պետք ցիկլերը</h2>
+    <p>Պատկերացրու՝ ուսուցիչը խնդրում է տպել 1-ից 5 թվերը։ Առանց ցիկլի կգրես․</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>առանց ցիկլի</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">console</span>.<span class="f">log</span>(<span class="n">1</span>);
+<span class="f">console</span>.<span class="f">log</span>(<span class="n">2</span>);
+<span class="f">console</span>.<span class="f">log</span>(<span class="n">3</span>);
+<span class="f">console</span>.<span class="f">log</span>(<span class="n">4</span>);
+<span class="f">console</span>.<span class="f">log</span>(<span class="n">5</span>);</code></pre>
+    </div>
+
+    <p>Աշխատում է։ Իսկ եթե խնդրեն 1-ից <strong>1000</strong>-ը։ 1000 տո՞ղ։ Իսկ եթե 1 միլիո՞ն։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ցիկլով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">for</span> (<span class="k">let</span> i = <span class="n">1</span>; i &lt;= <span class="n">5</span>; i++) {
+  <span class="f">console</span>.<span class="f">log</span>(i);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">1</span>
+<span class="r">2</span>
+<span class="r">3</span>
+<span class="r">4</span>
+<span class="r">5</span></pre>
+    </div>
+
+    <p>Երեք տող։ Իսկ 1 միլիոնի համար՝ <strong>նույն երեք տողը</strong>, պարզապես <code>5</code>-ի փոխարեն կգրես <code>1000000</code>։ Ահա ցիկլի ուժը։</p>
+
+    <div class="note">
+      <span class="tag">Ցիկլ նշանակում է</span>
+      <p>«Կրկնիր այս կոդը այնքան ժամանակ, քանի դեռ պայմանը ճշմարիտ է»։ Երբ պայմանը դառնում է <code>false</code> — ցիկլը կանգնում է և ծրագիրը շարունակվում է հաջորդ տողից։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>for ցիկլը</h2>
+    <p>Դա ամենահաճախ օգտագործվող ցիկլն է։ Փակագծերում երեք մաս կա, բաժանված <code>;</code>-ով։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>կառուցվածքը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">for</span> (սկիզբ<span class="p">;</span> պայման<span class="p">;</span> քայլ) {
+  <span class="c">// կրկնվող կոդը</span>
+}
+
+<span class="c">// 1. սկիզբ  → աշխատում է ՄԵԿ անգամ, ամենասկզբում</span>
+<span class="c">// 2. պայման → ստուգվում է ԱՄԵՆ կրկնությունից ԱՌԱՋ</span>
+<span class="c">// 3. քայլ   → աշխատում է ԱՄԵՆ կրկնությունից ՀԵՏՈ</span></code></pre>
+    </div>
+
+    <h3>Քայլ առ քայլ՝ ինչ է կատարվում</h3>
+    <p>Վերցնենք <code>for (let i = 1; i &lt;= 3; i++)</code> և հետևենք ամեն քայլին։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>#</th><th>Ինչ է անում JS-ը</th><th><code>i</code></th><th>Պայմանը</th><th>Արդյունք</th></tr>
+      <tr><td>1</td><td>Ստեղծում է <code>i = 1</code></td><td>1</td><td>—</td><td>մեկ անգամ</td></tr>
+      <tr><td>2</td><td>Ստուգում <code>1 &lt;= 3</code></td><td>1</td><td><code>true</code></td><td>տպում է 1</td></tr>
+      <tr><td>3</td><td><code>i++</code>, ապա ստուգում <code>2 &lt;= 3</code></td><td>2</td><td><code>true</code></td><td>տպում է 2</td></tr>
+      <tr><td>4</td><td><code>i++</code>, ապա ստուգում <code>3 &lt;= 3</code></td><td>3</td><td><code>true</code></td><td>տպում է 3</td></tr>
+      <tr><td>5</td><td><code>i++</code>, ապա ստուգում <code>4 &lt;= 3</code></td><td>4</td><td><code>false</code></td><td>ցիկլը կանգնում է</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ i</span>
+      <p><code>i</code>-ն գալիս է <em>index</em> բառից։ Սա համաշխարհային սովորույթ է։ Եթե ցիկլ ցիկլի մեջ լինի՝ երկրորդինը կլինի <code>j</code>, երրորդինը՝ <code>k</code>։</p>
+    </div>
+
+    <h3>Տարբեր տարբերակներ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հակառակ ուղղությամբ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">for</span> (<span class="k">let</span> i = <span class="n">5</span>; i &gt;= <span class="n">1</span>; i--) {
+  <span class="f">console</span>.<span class="f">log</span>(i);
+}
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">"Մեկնարկ։"</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">5</span>
+<span class="r">4</span>
+<span class="r">3</span>
+<span class="r">2</span>
+<span class="r">1</span>
+<span class="r">Մեկնարկ։</span></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>քայլը 2-ով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// միայն զույգ թվերը 0-ից 10</span>
+<span class="k">for</span> (<span class="k">let</span> i = <span class="n">0</span>; i &lt;= <span class="n">10</span>; i += <span class="n">2</span>) {
+  <span class="f">console</span>.<span class="f">log</span>(i);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">0</span>
+<span class="r">2</span>
+<span class="r">4</span>
+<span class="r">6</span>
+<span class="r">8</span>
+<span class="r">10</span></pre>
+    </div>
+
+    <h3>Կուտակիչ փոփոխական</h3>
+    <p>Շատ հաճախ մեզ պետք է ցիկլի ընթացքում ինչ-որ բան <strong>հավաքել</strong>։ Դրա համար ցիկլից <em>դուրս</em> ստեղծում ենք փոփոխական, իսկ ցիկլի <em>ներսում</em> ավելացնում։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>1-ից 100 թվերի գումարը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">let</span> sum = <span class="n">0</span>;          <span class="c">// կուտակիչը՝ ցիկլից ԴՈՒՐՍ</span>
+
+<span class="k">for</span> (<span class="k">let</span> i = <span class="n">1</span>; i &lt;= <span class="n">100</span>; i++) {
+  sum += i;             <span class="c">// ամեն կրկնության ավելացնում ենք</span>
+}
+
+<span class="f">console</span>.<span class="f">log</span>(sum);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">5050</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ամենահաճախ սխալը</span>
+      <p>Եթե <code>let sum = 0;</code> գրես ցիկլի <strong>ներսում</strong>, ամեն կրկնության այն կզրոյացվի և վերջում կստանաս ընդամենը 100։ Կուտակիչը միշտ ցիկլից դուրս է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>while ցիկլը</h2>
+    <p><code>for</code>-ն օգտագործում ենք, երբ <strong>գիտենք</strong>, թե քանի անգամ պիտի կրկնվի։ <code>while</code>-ը՝ երբ <strong>չգիտենք</strong>, և պարզապես ասում ենք՝ «կրկնիր, քանի դեռ…»։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>while</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">let</span> i = <span class="n">1</span>;              <span class="c">// 1. սկիզբ</span>
+
+<span class="k">while</span> (i &lt;= <span class="n">5</span>) {        <span class="c">// 2. պայման</span>
+  <span class="f">console</span>.<span class="f">log</span>(i);
+  i++;                    <span class="c">// 3. քայլ — ՁԵՌՔՈՎ</span>
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">1</span>
+<span class="r">2</span>
+<span class="r">3</span>
+<span class="r">4</span>
+<span class="r">5</span></pre>
+    </div>
+
+    <p>Նույն երեք մասերն են, պարզապես ցրված են երեք տեղում։ Հենց դրա համար էլ <code>for</code>-ն ավելի հարմար է հաշվելու համար՝ ամեն ինչ մեկ տողում է։</p>
+
+    <div class="warn note">
+      <span class="tag">Անվերջ ցիկլ · վտանգավոր</span>
+      <p>Եթե մոռանաս <code>i++</code>-ը, պայմանը <strong>երբեք չի դառնա false</strong>։ Բրաուզերը կսառչի։ Եթե պատահի՝ փակիր ներդիրը (<code>Ctrl + W</code>)։ Ամեն ծրագրավորող սա գոնե մեկ անգամ արել է։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ՄԻ՛ գործարկիր սա</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">let</span> i = <span class="n">1</span>;
+<span class="k">while</span> (i &lt;= <span class="n">5</span>) {
+  <span class="f">console</span>.<span class="f">log</span>(i);
+  <span class="c">// i++ բացակայում է → i-ն միշտ 1 է → պայմանը միշտ true</span>
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">1</span>
+<span class="r">1</span>
+<span class="r">1</span>
+<span class="e">... անվերջ ...</span></pre>
+    </div>
+
+    <h3>Երբ <code>while</code>-ն է ավելի ճիշտ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>գաղտնաբառի ստուգում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">let</span> password = <span class="f">prompt</span>(<span class="s">"Մուտքագրիր գաղտնաբառը"</span>);
+
+<span class="k">while</span> (password !== <span class="s">"1234"</span>) {
+  password = <span class="f">prompt</span>(<span class="s">"Սխալ է։ Փորձիր նորից"</span>);
+}
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">"Բարի գալուստ։"</span>);</code></pre>
+    </div>
+    <p>Այստեղ մենք <strong>չգիտենք</strong>՝ քանի անգամ կսխալվի օգտագործողը։ Կարող է առաջին անգամից գուշակի, կարող է 20-րդից։ <code>for</code>-ը այստեղ չէր օգնի։</p>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>do..while</h2>
+    <p>Նույն <code>while</code>-ն է, բայց <strong>մեկ կարևոր տարբերությամբ</strong>․ կոդը կատարվում է <em>գոնե մեկ անգամ</em>, և միայն հետո ստուգվում պայմանը։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>համեմատենք</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">let</span> i = <span class="n">10</span>;
+
+<span class="c">// while — պայմանը false է, ոչինչ չի տպվում</span>
+<span class="k">while</span> (i &lt; <span class="n">5</span>) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"while:"</span>, i);
+  i++;
+}
+
+<span class="k">let</span> j = <span class="n">10</span>;
+
+<span class="c">// do..while — մեկ անգամ միևնույն է կկատարվի</span>
+<span class="k">do</span> {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"do..while:"</span>, j);
+  j++;
+} <span class="k">while</span> (j &lt; <span class="n">5</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">do..while: 10</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ե՞րբ է պետք</span>
+      <p>Երբ պիտի նախ <strong>հարցնես</strong>, հետո ստուգես։ Օրինակ՝ մենյու ցույց տալ, հետո ստուգել՝ օգտագործողն «ելք» ընտրե՞ց։ Իրականում շատ հազվադեպ է օգտագործվում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>break և continue</h2>
+
+    <h3><code>break</code> — դուրս թռիր ցիկլից</h3>
+    <p>Երբ գտար այն, ինչ փնտրում էիր, իմաստ չկա շարունակել։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>break</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">for</span> (<span class="k">let</span> i = <span class="n">1</span>; i &lt;= <span class="n">10</span>; i++) {
+  <span class="k">if</span> (i === <span class="n">4</span>) {
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Գտա 4-ը։ Կանգնում եմ։"</span>);
+    <span class="k">break</span>;
+  }
+  <span class="f">console</span>.<span class="f">log</span>(i);
+}
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">"Ցիկլն ավարտվեց։"</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">1</span>
+<span class="r">2</span>
+<span class="r">3</span>
+<span class="r">Գտա 4-ը։ Կանգնում եմ։</span>
+<span class="r">Ցիկլն ավարտվեց։</span></pre>
+    </div>
+
+    <h3><code>continue</code> — բաց թող այս կրկնությունը</h3>
+    <p>Ցիկլը շարունակվում է, պարզապես ընթացիկ քայլի մնացած կոդը չի կատարվում։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>continue</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// տպիր բոլորը, բացի կենտ թվերից</span>
+<span class="k">for</span> (<span class="k">let</span> i = <span class="n">1</span>; i &lt;= <span class="n">8</span>; i++) {
+  <span class="k">if</span> (i % <span class="n">2</span> !== <span class="n">0</span>) {
+    <span class="k">continue</span>;   <span class="c">// կենտ է → անցիր հաջորդին</span>
+  }
+  <span class="f">console</span>.<span class="f">log</span>(i);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">2</span>
+<span class="r">4</span>
+<span class="r">6</span>
+<span class="r">8</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Հիշիր տարբերությունը</span>
+      <p><code>break</code> = <strong>դուրս գալ շենքից</strong>։<br><code>continue</code> = <strong>բաց թողնել այս հարկը</strong> և բարձրանալ հաջորդը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Ներդրված ցիկլեր</h2>
+    <p>Ցիկլ՝ ցիկլի ներսում։ Պատկերացրու ժամացույցը․ ժամի սլաքը մեկ քայլ է անում, րոպեի սլաքը այդ ընթացքում՝ 60։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ինչպես է աշխատում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">for</span> (<span class="k">let</span> i = <span class="n">1</span>; i &lt;= <span class="n">3</span>; i++) {          <span class="c">// արտաքին — ժամ</span>
+  <span class="k">for</span> (<span class="k">let</span> j = <span class="n">1</span>; j &lt;= <span class="n">2</span>; j++) {        <span class="c">// ներքին — րոպե</span>
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">`i = </span>${i}<span class="s">, j = </span>${j}<span class="s">`</span>);
+  }
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">i = 1, j = 1</span>
+<span class="r">i = 1, j = 2</span>
+<span class="r">i = 2, j = 1</span>
+<span class="r">i = 2, j = 2</span>
+<span class="r">i = 3, j = 1</span>
+<span class="r">i = 3, j = 2</span></pre>
+    </div>
+
+    <p><strong>Կանոնը․</strong> արտաքին ցիկլի <em>յուրաքանչյուր</em> քայլի համար ներքին ցիկլն անցնում է <em>ամբողջությամբ</em>։ 3 × 2 = 6 կրկնություն։</p>
+
+    <h3>Աստղերի բուրգ</h3>
+    <p>Ահա ներդրված ցիկլերի ամենադասական խնդիրը։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>pyramid.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">for</span> (<span class="k">let</span> i = <span class="n">1</span>; i &lt;= <span class="n">5</span>; i++) {
+  <span class="k">let</span> line = <span class="s">""</span>;                <span class="c">// տողի կուտակիչը</span>
+
+  <span class="k">for</span> (<span class="k">let</span> j = <span class="n">1</span>; j &lt;= i; j++) {   <span class="c">// ուշադրություն՝ j &lt;= i</span>
+    line += <span class="s">"*"</span>;
+  }
+
+  <span class="f">console</span>.<span class="f">log</span>(line);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">*</span>
+<span class="r">**</span>
+<span class="r">***</span>
+<span class="r">****</span>
+<span class="r">*****</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Կարճ ձև</span>
+      <p>Տողերի համար կա պատրաստի գործիք՝ <code>"*".repeat(i)</code>։ Բայց նախ սովորիր ցիկլով, որ հասկանաս տրամաբանությունը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Դասարանական աշխատանք</h2>
+
+    <h3>Ա — Բազմապատկման աղյուսակ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>multiplication.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> n = <span class="n">7</span>;
+
+<span class="k">for</span> (<span class="k">let</span> i = <span class="n">1</span>; i &lt;= <span class="n">10</span>; i++) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">`</span>${n}<span class="s"> × </span>${i}<span class="s"> = </span>${n * i}<span class="s">`</span>);
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">7 × 1 = 7</span>
+<span class="r">7 × 2 = 14</span>
+<span class="r">7 × 3 = 21</span>
+<span class="m">...</span>
+<span class="r">7 × 10 = 70</span></pre>
+    </div>
+
+    <h3>Բ — FizzBuzz · դասական հարցազրույցի խնդիր</h3>
+    <p>Տպիր 1-ից 15։ Բայց՝ 3-ի բազմապատիկների փոխարեն «Fizz», 5-ի փոխարեն «Buzz», իսկ եթե և՛ 3-ի, և՛ 5-ի է բաժանվում — «FizzBuzz»։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>fizzbuzz.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">for</span> (<span class="k">let</span> i = <span class="n">1</span>; i &lt;= <span class="n">15</span>; i++) {
+  <span class="k">if</span> (i % <span class="n">3</span> === <span class="n">0</span> &amp;&amp; i % <span class="n">5</span> === <span class="n">0</span>) {
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"FizzBuzz"</span>);
+  } <span class="k">else</span> <span class="k">if</span> (i % <span class="n">3</span> === <span class="n">0</span>) {
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Fizz"</span>);
+  } <span class="k">else</span> <span class="k">if</span> (i % <span class="n">5</span> === <span class="n">0</span>) {
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Buzz"</span>);
+  } <span class="k">else</span> {
+    <span class="f">console</span>.<span class="f">log</span>(i);
+  }
+}</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">1</span>
+<span class="r">2</span>
+<span class="r">Fizz</span>
+<span class="r">4</span>
+<span class="r">Buzz</span>
+<span class="r">Fizz</span>
+<span class="r">7</span>
+<span class="r">8</span>
+<span class="r">Fizz</span>
+<span class="r">Buzz</span>
+<span class="r">11</span>
+<span class="r">Fizz</span>
+<span class="r">13</span>
+<span class="r">14</span>
+<span class="r">FizzBuzz</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Հերթականությունը</span>
+      <p><code>FizzBuzz</code>-ի ստուգումը պիտի լինի <strong>առաջինը</strong>։ Հակառակ դեպքում 15-ը կընկնի <code>i % 3 === 0</code>-ի մեջ և կտպվի պարզապես «Fizz»։</p>
+    </div>
+
+    <h3>Գ — Թվի թվանշանների գումարը</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>digit-sum.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">let</span> number = <span class="n">4729</span>;
+<span class="k">let</span> sum = <span class="n">0</span>;
+
+<span class="k">while</span> (number &gt; <span class="n">0</span>) {
+  sum += number % <span class="n">10</span>;              <span class="c">// վերջին թվանշանը</span>
+  number = <span class="f">Math</span>.<span class="f">floor</span>(number / <span class="n">10</span>); <span class="c">// կտրում ենք վերջինը</span>
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">`sum = </span>${sum}<span class="s">, մնաց = </span>${number}<span class="s">`</span>);
+}
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">`Ընդհանուր գումարը՝ </span>${sum}<span class="s">`</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">sum = 9, մնաց = 472</span>
+<span class="r">sum = 11, մնաց = 47</span>
+<span class="r">sum = 18, մնաց = 4</span>
+<span class="r">sum = 22, մնաց = 0</span>
+<span class="r">Ընդհանուր գումարը՝ 22</span></pre>
+    </div>
+    <p><code>Math.floor()</code>-ը կլորացնում է <strong>ներքև</strong>․ <code>472.9</code> → <code>472</code>։ Այսպես մենք «կտրում» ենք վերջին թվանշանը։</p>
+
+    <h3>Դ — Պարզ թիվ է, թե՞ ոչ</h3>
+    <p>Պարզ է այն թիվը, որը բաժանվում է միայն 1-ի և ինքն իրեն։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>prime.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> num = <span class="n">29</span>;
+<span class="k">let</span> isPrime = <span class="k">true</span>;      <span class="c">// ենթադրում ենք՝ պարզ է</span>
+
+<span class="k">if</span> (num &lt; <span class="n">2</span>) {
+  isPrime = <span class="k">false</span>;
+}
+
+<span class="k">for</span> (<span class="k">let</span> i = <span class="n">2</span>; i &lt; num; i++) {
+  <span class="k">if</span> (num % i === <span class="n">0</span>) {
+    isPrime = <span class="k">false</span>;
+    <span class="k">break</span>;              <span class="c">// գտանք բաժանարար → իմաստ չկա շարունակել</span>
+  }
+}
+
+<span class="f">console</span>.<span class="f">log</span>(isPrime ? <span class="s">`</span>${num}<span class="s"> — պարզ թիվ է`</span> : <span class="s">`</span>${num}<span class="s"> — պարզ թիվ չէ`</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">29 — պարզ թիվ է</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Դրոշակ (flag)</span>
+      <p><code>isPrime</code>-ը կոչվում է <strong>դրոշակ</strong>։ Հնարքը միշտ նույնն է․ ենթադրում ենք լավագույնը (<code>true</code>), և եթե ցիկլում գտնում ենք հակառակ ապացույց՝ իջեցնում ենք դրոշակը (<code>false</code>) և <code>break</code>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Խաղահրապարակ</h2>
+    <p>Փոխիր թվերը, ավելացրու <code>break</code>, փորձիր հակառակ ցիկլ։ Ամեն սխալ՝ մեկ նոր բան սովորեցնում է։</p>
+
+    <div class="pg">
+      <textarea id="pgCode" spellcheck="false">// 1. Բուրգ
+for (let i = 1; i <= 4; i++) {
+  let line = "";
+  for (let j = 1; j <= i; j++) {
+    line += "■ ";
+  }
+  console.log(line);
+}
+
+// 2. Գումարը
+let sum = 0;
+for (let i = 1; i <= 10; i++) {
+  sum += i;
+}
+console.log("1-ից 10 գումարը՝", sum);
+
+// 3. Հակառակ հաշվարկ
+for (let i = 3; i >= 1; i--) {
+  console.log(i);
+}
+console.log("Թռի՛չք");</textarea>
+      <div class="pg__actions">
+        <button class="run" id="runBtn">Կատարել</button>
+        <button class="clr" id="clrBtn">Մաքրել</button>
+      </div>
+<pre class="out" id="pgOut"><span class="m">Console</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Զգույշ</span>
+      <p>Խաղահրապարակում անվերջ ցիկլ գրելը կսառեցնի էջը։ Միշտ ստուգիր՝ քայլը (<code>i++</code>) կա՞։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Տպիր 1-ից 20 թվերը <code>for</code>-ով, ապա նույնը՝ <code>while</code>-ով։</li>
+      <li>Տպիր 100-ից 1 թվերը՝ 5-ական քայլով (100, 95, 90…)։</li>
+      <li>Հաշվիր 1-ից 50 <strong>զույգ</strong> թվերի գումարը։</li>
+      <li>Օգտագործողից վերցրու թիվ և տպիր դրա բազմապատկման աղյուսակը 1-ից 10։</li>
+      <li>Հաշվիր տրված թվի ֆակտորիալը (5! = 1×2×3×4×5 = 120)։</li>
+      <li>Կառուցիր հակառակ բուրգ՝<br>
+        <code>*****</code><br><code>****</code><br><code>***</code><br><code>**</code><br><code>*</code></li>
+      <li>Տպիր 2-ից 50 բոլոր պարզ թվերը (օգտագործիր ներդրված ցիկլ և դրոշակ)։</li>
+      <li>Տրված է թիվ։ Հաշվիր՝ քանի՞ թվանշան ունի (օրինակ՝ 4729 → 4)։</li>
+      <li>Կառուցիր 5×5 քառակուսի <code>■</code> նշաններից՝ ներդրված ցիկլով։</li>
+      <li>Խաղ․ ծրագիրը «մտածում» է թիվ (օրինակ՝ 7)։ <code>while</code>-ով հարցրու օգտագործողին, մինչև գուշակի, և հուշիր՝ «շատ է» կամ «քիչ է»։</li>
+    </ol>
+
+    <div class="note">
+      <span class="tag">Հանձնում</span>
+      <p>Թղթապանակ՝ <code>hw-03-anun-azganun</code>։ Ամեն ֆայլում գրիր մեկնաբանություն՝ ինչո՞ւ ես ընտրել հենց այդ ցիկլը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>for (let i = 0; i &lt; 10; i++)</code></td><td>Հայտնի քանակի կրկնություն</td></tr>
+      <tr><td><code>while (պայման)</code></td><td>Կրկնում է, քանի դեռ պայմանը true է</td></tr>
+      <tr><td><code>do { } while (պայման)</code></td><td>Գոնե մեկ անգամ կկատարվի</td></tr>
+      <tr><td><code>break</code></td><td>Ամբողջովին դուրս է գալիս ցիկլից</td></tr>
+      <tr><td><code>continue</code></td><td>Բաց է թողնում ընթացիկ կրկնությունը</td></tr>
+      <tr><td><code>i++</code> / <code>i--</code></td><td>Քայլ 1-ով վեր / վար</td></tr>
+      <tr><td><code>i += 2</code></td><td>Քայլ 2-ով</td></tr>
+      <tr><td><code>sum += i</code></td><td>Կուտակիչ — միշտ ցիկլից դուրս հայտարարիր</td></tr>
+      <tr><td><code>Math.floor(x)</code></td><td>Կլորացնում է ներքև</td></tr>
+      <tr><td><code>"*".repeat(3)</code></td><td>Տալիս է <code>"***"</code></td></tr>
+    </table>
+    </div>
+
+    <h3>Ո՞ր ցիկլն ընտրել</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Իրավիճակ</th><th>Ցիկլ</th></tr>
+      <tr><td>Գիտեմ ճշգրիտ քանակը (1-ից 100)</td><td><code>for</code></td></tr>
+      <tr><td>Չգիտեմ քանակը, կա միայն պայման</td><td><code>while</code></td></tr>
+      <tr><td>Պիտի գոնե մեկ անգամ կատարվի</td><td><code>do..while</code></td></tr>
+      <tr><td>Աղյուսակ, ցանց, բուրգ</td><td>ներդրված <code>for</code></td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Ֆունկցիաներ։ Կսովորենք կոդը փաթեթավորել և վերաօգտագործել՝ մեկ անգամ գրիր, հազար անգամ կանչիր։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 03 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 19 — CSS փոփոխականներ և թեմաներ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 19 · 2 ժամ</p>
+  <h1>CSS փոփոխականներ և թեմաներ</h1>
+  <p class="lede">Փոփոխականներն օգտագործում ենք Դաս 7-ից՝ առանց խորանալու։ Այսօր հասկանում ենք, ինչպես են դրանք իսկապես աշխատում, և կառուցում ենք մուգ թեմա՝ առանց մեկ տող JavaScript-ի։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 06, 13, 17</span>
+    <span>Բլոկ 1 · Ճարտարապետություն</span>
+    <span>Դիզայն-տոկեններ</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ինչպես են աշխատում փոփոխականները</li>
+      <li>Ժառանգում և վերասահմանում</li>
+      <li>Պահեստային արժեքներ</li>
+      <li>Դիզայն-տոկենների երկու շերտ</li>
+      <li>Մուգ թեմա՝ առանց JS-ի</li>
+      <li><code>prefers-color-scheme</code></li>
+      <li>Փոփոխականներ կոմպոնենտներում</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Հիմունքներ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>սահմանում և օգտագործում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">:root</span> {
+    <span class="f">--secondary</span>: <span class="s">#003459</span>;    <span class="c">/* սահմանում — երկու գծիկ */</span>
+}
+
+<span class="k">.btn</span> {
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--secondary</span>);   <span class="c">/* օգտագործում */</span>
+}</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Առանձնահատկություն</th><th>Բացատրություն</th></tr>
+      <tr><td>Անունը սկսվում է <code>--</code>-ով</td><td>Պարտադիր</td></tr>
+      <tr><td>Ռեգիստրը կարևոր է</td><td><code>--Main</code> ≠ <code>--main</code></td></tr>
+      <tr><td><strong>Ժառանգվում է</strong></td><td>Ի տարբերություն Sass-ի փոփոխականների ⭐</td></tr>
+      <tr><td>Աշխատում է runtime-ում</td><td>Կարելի է փոխել media query-ով, JS-ով</td></tr>
+      <tr><td>Երևում է DevTools-ում</td><td>Կարելի է խմբագրել ուղիղ բրաուզերում</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ի՞նչ է <code>:root</code>-ը</span>
+      <p>Դա <code>&lt;html&gt;</code> էլեմենտն է, բայց ավելի բարձր սպեցիֆիկությամբ (<code>0-1-0</code> ընդդեմ <code>0-0-1</code>)։<br><br>
+      Փոփոխականները դնում ենք այնտեղ, որովհետև <code>html</code>-ը բոլորի նախնին է — և ժառանգման շնորհիվ դրանք հասանելի են ամենուր։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Ժառանգում — գլխավոր գաղափարը</h2>
+    <p>Սա այն է, ինչ տարբերում է CSS փոփոխականները սովորական «հաստատուններից»։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>վերասահմանում ցանկացած մակարդակում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">:root</span> {
+    <span class="f">--card-bg</span>: <span class="s">#ffffff</span>;
+    <span class="f">--card-text</span>: <span class="s">#1a1a1a</span>;
+}
+
+<span class="k">.card</span> {
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--card-bg</span>);
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--card-text</span>);
+}
+
+<span class="c">/* Մուգ բաժնում քարտերը դառնում են այլ —
+   ԱՌԱՆՑ .card-ի կանոնը փոխելու            */</span>
+<span class="k">#hero</span> {
+    <span class="f">--card-bg</span>: <span class="s">rgba</span>(<span class="n">255</span>,<span class="n">255</span>,<span class="n">255</span>,<span class="n">.1</span>);
+    <span class="f">--card-text</span>: <span class="s">#ffffff</span>;
+}</code></pre>
+    </div>
+
+    <div class="tree">:root  --card-bg: #fff
+  │
+  ├── section#products
+  │      └── .card  →  #fff
+  │
+  └── section#hero   --card-bg: rgba(255,255,255,.1)
+         └── .card  →  rgba(255,255,255,.1)
+
+Նույն .card դասը, տարբեր արդյունք։
+Փոփոխականը վերցվում է մոտակա ծնողից։</div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ է սա հզոր</span>
+      <p>Առանց փոփոխականների պիտի գրեիր՝<br>
+      <code>#hero .card { background: ...; color: ...; }</code><br><br>
+      Իսկ եթե քարտն ունի 8 գունային հատկություն՝ 8 վերագրում։ Եվ ամեն նոր բաժնի համար՝ նորից 8։<br><br>
+      Փոփոխականներով բաժինը պարզապես <strong>հայտարարում է իր պայմանները</strong>, և կոմպոնենտն ինքն է հարմարվում։</p>
+    </div>
+
+    <h3>Պահեստային արժեք</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>var()-ի երկրորդ արգումենտը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.badge</span> {
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--badge-bg</span>, <span class="s">#c62828</span>);
+    <span class="c">/*                    ↑            ↑         */</span>
+    <span class="c">/*                փոփոխական    պահեստային    */</span>
+}
+
+<span class="c">/* Եթե --badge-bg-ն սահմանված չէ, կօգտագործվի #c62828 */</span>
+
+<span class="c">/* Կարելի է շղթայել */</span>
+<span class="k">.el</span> { <span class="f">color</span>: <span class="s">var</span>(<span class="f">--custom</span>, <span class="s">var</span>(<span class="f">--text</span>, <span class="s">#000</span>)); }</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Անվավեր արժեքի թակարդ</span>
+      <p>Եթե փոփոխականը պարունակում է անվավեր արժեք, հատկությունը դառնում է <strong>«անվավեր ժառանգման ժամանակ»</strong> — և վերցնում է ժառանգված արժեքը, ոչ լռելյայնը։<br><br>
+      <code>--gap: 10rem;</code> հետո <code>margin: var(--gap)</code> — լավ։<br>
+      <code>--gap: կապույտ;</code> հետո <code>margin: var(--gap)</code> — <code>margin</code>-ը կդառնա ժառանգված արժեք, ոչ <code>0</code>։<br><br>
+      Սա շփոթեցնող է, և դրա համար DevTools-ում միշտ ստուգիր <em>Computed</em> ներդիրը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Դիզայն-տոկեններ</h2>
+    <p>Հասուն համակարգում փոփոխականները երկու շերտի են։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>շերտ 1 — պարզունակ արժեքներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">:root</span> {
+    <span class="c">/* Գունապնակ — ի՞նչ գույներ ունենք */</span>
+    <span class="f">--navy-900</span>: <span class="s">#00253f</span>;
+    <span class="f">--navy-700</span>: <span class="s">#003459</span>;
+    <span class="f">--navy-300</span>: <span class="s">#9db4c0</span>;
+    <span class="f">--slate-900</span>: <span class="s">#1a1a1a</span>;
+    <span class="f">--slate-500</span>: <span class="s">#6b6b6b</span>;
+    <span class="f">--slate-100</span>: <span class="s">#f5f5f5</span>;
+    <span class="f">--white</span>: <span class="s">#ffffff</span>;
+    <span class="f">--red-600</span>: <span class="s">#c62828</span>;
+    <span class="f">--green-600</span>: <span class="s">#0f7b4f</span>;
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>շերտ 2 — իմաստային անուններ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">:root</span> {
+    <span class="c">/* Ի՞նչ դեր է կատարում ամեն գույնը */</span>
+    <span class="f">--bg</span>:          <span class="s">var</span>(<span class="f">--slate-100</span>);
+    <span class="f">--surface</span>:     <span class="s">var</span>(<span class="f">--white</span>);
+    <span class="f">--text</span>:        <span class="s">var</span>(<span class="f">--slate-900</span>);
+    <span class="f">--text-muted</span>:  <span class="s">var</span>(<span class="f">--slate-500</span>);
+    <span class="f">--accent</span>:      <span class="s">var</span>(<span class="f">--navy-700</span>);
+    <span class="f">--accent-hover</span>:<span class="s">var</span>(<span class="f">--navy-900</span>);
+    <span class="f">--on-accent</span>:   <span class="s">var</span>(<span class="f">--white</span>);
+    <span class="f">--border</span>:      <span class="s">#e2e6e9</span>;
+    <span class="f">--danger</span>:      <span class="s">var</span>(<span class="f">--red-600</span>);
+    <span class="f">--success</span>:     <span class="s">var</span>(<span class="f">--green-600</span>);
+}
+
+<span class="c">/* Կոմպոնենտները օգտագործում են ՄԻԱՅՆ երկրորդ շերտը */</span>
+<span class="k">.card</span> { <span class="f">background</span>: <span class="s">var</span>(<span class="f">--surface</span>); <span class="f">color</span>: <span class="s">var</span>(<span class="f">--text</span>); }
+<span class="k">.btn--primary</span> { <span class="f">background</span>: <span class="s">var</span>(<span class="f">--accent</span>); <span class="f">color</span>: <span class="s">var</span>(<span class="f">--on-accent</span>); }</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ երկու շերտ — կրիտիկական պահ</span>
+      <p>Պատկերացրու՝ կոմպոնենտները գրված են <code>var(--white)</code>-ով։ Հիմա ուզում ես մուգ թեմա։ Պիտի գրես <code>--white: #1e1e1e</code> — և ստացվում է <strong>սպիտակը սև է</strong>։ Անհեթեթություն։<br><br>
+      Իսկ <code>--surface</code>-ը իմաստային է․ «մակերես, որի վրա նստում է բովանդակությունը»։ Բաց թեմայում այն սպիտակ է, մուգում՝ մուգ մոխրագույն։ Անունը ճիշտ է մնում։<br><br>
+      <strong>Կանոն՝</strong> կոմպոնենտները երբեք ուղիղ չեն դիմում գունապնակին։</p>
+    </div>
+
+    <h3>Այլ տոկեններ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ոչ միայն գույներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">:root</span> {
+    <span class="c">/* Հեռավորություններ */</span>
+    <span class="f">--space-1</span>: <span class="n">4px</span>;
+    <span class="f">--space-2</span>: <span class="n">8px</span>;
+    <span class="f">--space-3</span>: <span class="n">16px</span>;
+    <span class="f">--space-4</span>: <span class="n">24px</span>;
+    <span class="f">--space-5</span>: <span class="n">40px</span>;
+
+    <span class="c">/* Կմախք */</span>
+    <span class="f">--wall</span>: <span class="n">60px</span>;
+    <span class="f">--gap</span>:  <span class="n">10px</span>;
+
+    <span class="c">/* Կլորացումներ */</span>
+    <span class="f">--radius-sm</span>: <span class="n">6px</span>;
+    <span class="f">--radius-md</span>: <span class="n">12px</span>;
+    <span class="f">--radius-full</span>: <span class="n">999px</span>;
+
+    <span class="c">/* Ստվերներ — Դաս 17 */</span>
+    <span class="f">--shadow-sm</span>: <span class="n">0</span> <span class="n">1px</span> <span class="n">3px</span> <span class="s">rgba</span>(<span class="n">0</span>,<span class="n">0</span>,<span class="n">0</span>,<span class="n">.08</span>);
+    <span class="f">--shadow-md</span>: <span class="n">0</span> <span class="n">4px</span> <span class="n">12px</span> <span class="s">rgba</span>(<span class="n">0</span>,<span class="n">0</span>,<span class="n">0</span>,<span class="n">.12</span>);
+
+    <span class="c">/* Անցումներ — Դաս 21 */</span>
+    <span class="f">--transition</span>: <span class="n">.15s</span> <span class="s">ease</span>;
+}</code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Մուգ թեմա</h2>
+    <p>Ահա ամբողջ երկու շերտի պարգևը․ թեման փոխվում է <strong>մեկ բլոկով</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>css/main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ---------- Բաց թեմա (լռելյայն) ---------- */</span>
+<span class="k">:root</span>, <span class="k">[data-theme=</span><span class="s">"light"</span><span class="k">]</span> {
+    <span class="f">--bg</span>:         <span class="s">#f5f5f5</span>;
+    <span class="f">--surface</span>:    <span class="s">#ffffff</span>;
+    <span class="f">--text</span>:       <span class="s">#1a1a1a</span>;
+    <span class="f">--text-muted</span>: <span class="s">#6b6b6b</span>;
+    <span class="f">--border</span>:     <span class="s">#e2e6e9</span>;
+    <span class="f">--accent</span>:     <span class="s">#003459</span>;
+    <span class="f">--on-accent</span>:  <span class="s">#ffffff</span>;
+    <span class="f">--shadow-md</span>:  <span class="n">0</span> <span class="n">4px</span> <span class="n">12px</span> <span class="s">rgba</span>(<span class="n">0</span>,<span class="n">0</span>,<span class="n">0</span>,<span class="n">.12</span>);
+}
+
+<span class="c">/* ---------- Մուգ թեմա ---------- */</span>
+<span class="k">[data-theme=</span><span class="s">"dark"</span><span class="k">]</span> {
+    <span class="f">--bg</span>:         <span class="s">#151a1d</span>;
+    <span class="f">--surface</span>:    <span class="s">#1e252a</span>;
+    <span class="f">--text</span>:       <span class="s">#e8eced</span>;
+    <span class="f">--text-muted</span>: <span class="s">#9aa5ab</span>;
+    <span class="f">--border</span>:     <span class="s">#2c353b</span>;
+    <span class="f">--accent</span>:     <span class="s">#5b9dd9</span>;   <span class="c">/* ավելի բաց — կոնտրաստի համար ⭐ */</span>
+    <span class="f">--on-accent</span>:  <span class="s">#0a1520</span>;
+    <span class="f">--shadow-md</span>:  <span class="n">0</span> <span class="n">4px</span> <span class="n">14px</span> <span class="s">rgba</span>(<span class="n">0</span>,<span class="n">0</span>,<span class="n">0</span>,<span class="n">.5</span>);
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Չորս սխալ, որ բոլորն են անում մուգ թեմա սարքելիս</span>
+      <p><strong>1. Մաքուր սև ֆոն</strong> — <code>#000</code>-ը սպիտակ տեքստի հետ ստեղծում է չափազանց մեծ կոնտրաստ, տառերը «թրթռում են»։ Օգտագործիր <code>#151a1d</code> տիպի մուգ մոխրագույն։<br><br>
+      <strong>2. Նույն ակցենտային գույնը</strong> — <code>#003459</code>-ը մուգ ֆոնի վրա գրեթե անտեսանելի է։ Մուգ թեմայում ակցենտները պիտի լինեն <strong>ավելի բաց</strong>։<br><br>
+      <strong>3. Ստվերները մոռացված</strong> — մուգ ֆոնի վրա <code>rgba(0,0,0,.1)</code> ստվերը չի երևում։ Ուժեղացրու անթափանցիկությունը կամ օգտագործիր բաց եզրագիծ։<br><br>
+      <strong>4. Նկարները չափազանց պայծառ</strong> — լուծում՝ <code>img { filter: brightness(.9) }</code> մուգ թեմայում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>անջատիչը — checkbox-ի հնարքով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- body-ի սկզբում --&gt;</span>
+<span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"checkbox"</span> <span class="f">id</span>=<span class="s">"theme"</span> <span class="f">class</span>=<span class="s">"theme-toggle"</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"theme"</span> <span class="f">class</span>=<span class="s">"theme-btn"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">span</span> <span class="f">aria-hidden</span>=<span class="s">"true"</span><span class="p">&gt;</span>☾<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"visually-hidden"</span><span class="p">&gt;</span>Մուգ թեմա<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span></code></pre>
+<pre><code><span class="k">.theme-toggle</span> { <span class="f">position</span>: <span class="s">absolute</span>; <span class="f">opacity</span>: <span class="n">0</span>; }
+
+<span class="c">/* Երբ նշված է — վերասահմանում ենք փոփոխականները */</span>
+<span class="k">.theme-toggle</span>:<span class="k">checked</span> ~ <span class="k">*</span> {
+    <span class="f">--bg</span>:      <span class="s">#151a1d</span>;
+    <span class="f">--surface</span>: <span class="s">#1e252a</span>;
+    <span class="f">--text</span>:    <span class="s">#e8eced</span>;
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Այս մոտեցման սահմանափակումը</span>
+      <p><code>~ *</code>-ը հասնում է միայն <strong>հետագա եղբայրներին</strong>։ Եթե ինչ-որ բան <code>checkbox</code>-ից առաջ է, այն չի փոխվի։ Նաև <code>body</code>-ի ֆոնը չի փոխվի, քանի որ <code>body</code>-ն եղբայր չէ։<br><br>
+      Իրական լուծումը <code>&lt;html data-theme="dark"&gt;</code>-ն է, որը պահանջում է <strong>մեկ տող JavaScript</strong>․<br>
+      <code>document.documentElement.dataset.theme = "dark"</code><br><br>
+      Դա կանենք <strong>JS բլոկի Դաս 14-ում</strong>, երբ սովորենք <code>localStorage</code>-ը՝ որ ընտրությունը հիշվի։ Այս դասի էջն ինքը հենց այդպես է աշխատում — նայիր վերևի կոճակին։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>prefers-color-scheme</h2>
+    <p>Համակարգն արդեն գիտի՝ օգտագործողը մուգ թեմա՞ է նախընտրում։ Կարելի է հարգել այդ ընտրությունը՝ ամբողջովին առանց JS-ի։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ավտոմատ թեմա</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">@media</span> (<span class="f">prefers-color-scheme</span>: <span class="s">dark</span>) {
+    <span class="k">:root</span> {
+        <span class="f">--bg</span>:      <span class="s">#151a1d</span>;
+        <span class="f">--surface</span>: <span class="s">#1e252a</span>;
+        <span class="f">--text</span>:    <span class="s">#e8eced</span>;
+        <span class="f">--accent</span>:  <span class="s">#5b9dd9</span>;
+    }
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Լավագույն համադրությունը</span>
+      <p><strong>1.</strong> Լռելյայն՝ հարգիր համակարգի ընտրությունը (<code>prefers-color-scheme</code>)։<br>
+      <strong>2.</strong> Տուր օգտագործողին անջատիչ՝ ձեռքով փոխելու համար (<code>data-theme</code>)։<br>
+      <strong>3.</strong> Հիշիր նրա ընտրությունը (<code>localStorage</code> — JS բլոկ)։<br><br>
+      Ձեռքով ընտրությունը միշտ պիտի հաղթի համակարգայինին։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչպես ստուգել DevTools-ով</span>
+      <p><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → գրիր <em>«rendering»</em> → <em>Show Rendering</em><br><br>
+      Այնտեղ կա <strong>Emulate CSS media feature prefers-color-scheme</strong>։ Ընտրիր <code>dark</code> և տես արդյունքը՝ առանց համակարգի կարգավորումները փոխելու։<br><br>
+      Նույն վահանակում կա նաև <code>prefers-reduced-motion</code>-ը՝ Դաս 21-ի համար։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Փոփոխականներ կոմպոնենտներում</h2>
+    <p>Հզոր օրինաչափություն․ կոմպոնենտը հայտարարում է իր «պարամետրերը», որոնք դրսից կարելի է փոխել։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>կոմպոնենտ՝ պարամետրերով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.btn</span> {
+    <span class="c">/* Պարամետրերը՝ լռելյայն արժեքներով */</span>
+    <span class="f">--btn-bg</span>:     <span class="s">var</span>(<span class="f">--accent</span>);
+    <span class="f">--btn-color</span>:  <span class="s">var</span>(<span class="f">--on-accent</span>);
+    <span class="f">--btn-border</span>: <span class="s">transparent</span>;
+
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--btn-bg</span>);
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--btn-color</span>);
+    <span class="f">border</span>: <span class="n">1px</span> <span class="s">solid</span> <span class="s">var</span>(<span class="f">--btn-border</span>);
+    <span class="f">padding</span>: <span class="n">12px</span> <span class="n">24px</span>;
+    <span class="f">border-radius</span>: <span class="s">var</span>(<span class="f">--radius-sm</span>);
+}
+
+<span class="c">/* Մոդիֆիկատորները փոխում են ՄԻԱՅՆ պարամետրերը */</span>
+<span class="k">.btn--outline</span> {
+    <span class="f">--btn-bg</span>: <span class="s">transparent</span>;
+    <span class="f">--btn-color</span>: <span class="s">var</span>(<span class="f">--accent</span>);
+    <span class="f">--btn-border</span>: <span class="s">var</span>(<span class="f">--accent</span>);
+}
+
+<span class="k">.btn--danger</span> {
+    <span class="f">--btn-bg</span>: <span class="s">var</span>(<span class="f">--danger</span>);
+    <span class="f">--btn-color</span>: <span class="s">#ffffff</span>;
+}
+
+<span class="k">.btn--ghost</span> {
+    <span class="f">--btn-bg</span>: <span class="s">transparent</span>;
+    <span class="f">--btn-color</span>: <span class="s">var</span>(<span class="f">--accent</span>);
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Համեմատիր Դաս 17-ի հետ</span>
+      <p>Այնտեղ ամեն մոդիֆիկատոր վերագրում էր <code>background</code>, <code>color</code>, <code>border-color</code> — երեք հատկություն։<br><br>
+      Այստեղ մոդիֆիկատորը փոխում է <strong>միայն երեք փոփոխական</strong>, իսկ իրական հատկությունները գրված են մեկ տեղում՝ <code>.btn</code>-ում։<br><br>
+      Երբ ուզես ավելացնել, օրինակ, <code>box-shadow</code>-ը՝ ավելացնում ես մեկ տեղում, և բոլոր տարբերակները ստանում են այն։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>մեկ անգամ օգտագործվող ուղղում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- Inline style-ը այստեղ արդարացված է --&gt;</span>
+<span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"btn"</span> <span class="f">style</span>=<span class="s">"--btn-bg: #7b1fa2"</span><span class="p">&gt;</span>Հատուկ<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ե՞րբ է inline style-ը ընդունելի</span>
+      <p>Սովորաբար՝ երբեք։ Բայց <strong>փոփոխականի</strong> փոխանցումը բացառություն է․ դու չես գրում ոճ, դու փոխանցում ես <em>պարամետր</em>։<br><br>
+      Հատկապես օգտակար է, երբ արժեքը գալիս է սերվերից՝ ապրանքի գույնը, առաջընթացի տոկոսը, դիագրամի բարձրությունը։ PHP բլոկում սա շատ կհանդիպի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Խաղահրապարակ</h2>
+    <p>Աշխատող թեմայի փոխարկիչ։ Սեղմիր անջատիչին կամ փոխիր փոփոխականները CSS ներդիրում։</p>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="css">CSS</button>
+        <button class="live__tab" data-pane="html">HTML</button>
+      </div>
+      <textarea class="live__code" data-pane="css">/* ===== ՇԵՐՏ 1 — ԳՈՒՆԱՊՆԱԿ ===== */
+:root {
+    --navy-900: #00253f;
+    --navy-700: #003459;
+    --blue-300: #5b9dd9;
+    --slate-900: #1a1a1a;
+    --slate-500: #6b6b6b;
+    --slate-100: #f5f5f5;
+    --white: #ffffff;
+    --red-600: #c62828;
+
+    /* Չափեր */
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --space-3: 16px;
+}
+
+/* ===== ՇԵՐՏ 2 — ԻՄԱՍՏԱՅԻՆ (ԲԱՑ ԹԵՄԱ) ===== */
+:root {
+    --bg:         var(--slate-100);
+    --surface:    var(--white);
+    --text:       var(--slate-900);
+    --text-muted: var(--slate-500);
+    --border:     #e2e6e9;
+    --accent:     var(--navy-700);
+    --accent-hover: var(--navy-900);
+    --on-accent:  var(--white);
+    --danger:     var(--red-600);
+    --shadow:     0 2px 10px rgba(0,0,0,.10);
+}
+
+/* ===== ՄՈՒԳ ԹԵՄԱ ===== */
+.theme-toggle:checked ~ .page {
+    --bg:         #151a1d;
+    --surface:    #1e252a;
+    --text:       #e8eced;
+    --text-muted: #9aa5ab;
+    --border:     #2c353b;
+    --accent:     var(--blue-300);
+    --accent-hover: #7fb5e3;
+    --on-accent:  #0a1520;
+    --shadow:     0 4px 14px rgba(0,0,0,.5);
+}
+
+/* ===== ԲԱԶԱ ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body { font-family: system-ui, sans-serif; line-height: 1.5; }
+
+.page {
+    background: var(--bg);
+    color: var(--text);
+    padding: 16px;
+    min-height: 100vh;
+    transition: background-color .25s, color .25s;
+}
+
+.theme-toggle { position: absolute; opacity: 0; }
+
+.theme-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.theme-toggle:focus-visible ~ .page .theme-btn {
+    outline: 2px solid var(--accent);
+}
+
+/* ===== ԿՈՄՊՈՆԵՆՏՆԵՐ ===== */
+h2 { font-size: 19px; margin-bottom: 4px; }
+.muted { color: var(--text-muted); font-size: 14px; }
+
+.cards { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0; }
+
+.card {
+    flex: 1 1 190px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    box-shadow: var(--shadow);
+}
+
+.card h3 { font-size: 15px; margin-bottom: 4px; }
+
+/* ===== ԿՈՃԱԿ ՊԱՐԱՄԵՏՐԵՐՈՎ ===== */
+.btn {
+    --btn-bg: var(--accent);
+    --btn-color: var(--on-accent);
+    --btn-border: transparent;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 10px 18px;
+    border: 1px solid var(--btn-border);
+    border-radius: var(--radius-sm);
+    background: var(--btn-bg);
+    color: var(--btn-color);
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color .15s;
+}
+
+.btn--outline {
+    --btn-bg: transparent;
+    --btn-color: var(--accent);
+    --btn-border: var(--accent);
+}
+
+.btn--danger {
+    --btn-bg: var(--danger);
+    --btn-color: #fff;
+}
+
+.btn--ghost {
+    --btn-bg: transparent;
+    --btn-color: var(--accent);
+}
+
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ===== ՏԵՂԱԿԱՆ ՎԵՐԱՍԱՀՄԱՆՈՒՄ ===== */
+.hero {
+    background: var(--accent);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    margin-top: 16px;
+
+    /* Այս բլոկի ներսում քարտերն ուրիշ են */
+    --surface: rgba(255,255,255,.12);
+    --text: #fff;
+    --text-muted: rgba(255,255,255,.75);
+    --border: rgba(255,255,255,.25);
+
+    color: var(--text);
+}</textarea>
+      <textarea class="live__code is-hidden" data-pane="html">&lt;input type="checkbox" id="theme" class="theme-toggle"&gt;
+
+&lt;div class="page"&gt;
+
+    &lt;label for="theme" class="theme-btn"&gt;
+        ☾ Փոխել թեման
+    &lt;/label&gt;
+
+    &lt;h2&gt;Դիզայն-տոկեններ&lt;/h2&gt;
+    &lt;p class="muted"&gt;Ամեն ինչ կառուցված է իմաստային փոփոխականների վրա&lt;/p&gt;
+
+    &lt;div class="cards"&gt;
+        &lt;article class="card"&gt;
+            &lt;h3&gt;Առաջին քարտ&lt;/h3&gt;
+            &lt;p class="muted"&gt;background: var(--surface)&lt;/p&gt;
+        &lt;/article&gt;
+        &lt;article class="card"&gt;
+            &lt;h3&gt;Երկրորդ քարտ&lt;/h3&gt;
+            &lt;p class="muted"&gt;border: var(--border)&lt;/p&gt;
+        &lt;/article&gt;
+    &lt;/div&gt;
+
+    &lt;div class="row"&gt;
+        &lt;button class="btn"&gt;Primary&lt;/button&gt;
+        &lt;button class="btn btn--outline"&gt;Outline&lt;/button&gt;
+        &lt;button class="btn btn--ghost"&gt;Ghost&lt;/button&gt;
+        &lt;button class="btn btn--danger"&gt;Danger&lt;/button&gt;
+        &lt;button class="btn" style="--btn-bg: #7b1fa2"&gt;Inline&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;section class="hero"&gt;
+        &lt;h2&gt;Տեղական վերասահմանում&lt;/h2&gt;
+        &lt;p class="muted"&gt;Այս բլոկը վերասահմանել է --surface և --text&lt;/p&gt;
+
+        &lt;div class="cards"&gt;
+            &lt;article class="card"&gt;
+                &lt;h3&gt;Նույն .card դասը&lt;/h3&gt;
+                &lt;p class="muted"&gt;բայց բոլորովին այլ տեսք&lt;/p&gt;
+            &lt;/article&gt;
+            &lt;article class="card"&gt;
+                &lt;h3&gt;Առանց վերագրումների&lt;/h3&gt;
+                &lt;p class="muted"&gt;միայն փոփոխականները փոխվեցին&lt;/p&gt;
+            &lt;/article&gt;
+        &lt;/div&gt;
+    &lt;/section&gt;
+
+&lt;/div&gt;</textarea>
+      <div class="live__actions">
+        <span>Սեղմիր «Փոխել թեման»</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox="allow-forms"></iframe>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Փորձիր</span>
+      <p><strong>1.</strong> Սեղմիր անջատիչին — քանի՞ կանոն փոխվեց։ (Ոչ մեկը, միայն 9 փոփոխական։)<br>
+      <strong>2.</strong> Ջնջիր <code>.hero</code>-ի ներսի փոփոխականները։<br>
+      <strong>3.</strong> Փոխիր <code>--accent</code>-ը մուգ թեմայում <code>var(--navy-700)</code>-ի — ընթեռնե՞լի է։<br>
+      <strong>4.</strong> Փոխիր inline կոճակի <code>--btn-bg</code>-ը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Դասարանական</h2>
+    <ol>
+      <li>Վերակառուցիր <code>main.css</code>-ի <code>:root</code>-ը երկու շերտով</li>
+      <li>Գունապնակին տուր տեխնիկական անուններ (<code>--navy-700</code>)</li>
+      <li>Ստեղծիր իմաստային շերտ (<code>--surface</code>, <code>--text</code>, <code>--accent</code>)</li>
+      <li>Անցիր բոլոր կոմպոնենտներով և փոխարինիր ուղիղ գույները իմաստային փոփոխականներով</li>
+      <li>Ավելացրու հեռավորությունների և կլորացումների տոկեններ</li>
+      <li>Ստեղծիր մուգ թեմայի բլոկ</li>
+      <li>Ստուգիր բոլոր կոնտրաստները մուգ թեմայում</li>
+      <li>Ավելացրու <code>prefers-color-scheme</code></li>
+      <li>Վերաշարադրիր <code>.btn</code>-ը պարամետրերով</li>
+    </ol>
+
+    <div class="warn note">
+      <span class="tag">Ամենակարևոր քայլը՝ չորրորդը</span>
+      <p>Բացիր <code>main.css</code>-ը և որոնիր <code>#</code> նշանը։ Ամեն HEX գույն, որը գտնում ես <code>:root</code>-ից <em>դուրս</em>, խնդիր է։<br><br>
+      Այն պիտի կամ դառնա տոկեն, կամ փոխարինվի գոյություն ունեցող տոկենով։ Երբ ավարտես, մուգ թեման կաշխատի ինքնաբերաբար։<br><br>
+      Եթե ինչ-որ գույն մուգ թեմայում սխալ է երևում — ուրեմն մի տեղ HEX է մնացել։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ստեղծիր երկու շերտի տոկենների համակարգ՝ 8+ գունապնակ, 10+ իմաստային։</li>
+      <li>Ցուցադրիր ժառանգումը՝ նույն <code>.card</code> դասը երկու բաժնում, տարբեր տեսքով, առանց վերագրումների։</li>
+      <li>Օգտագործիր <code>var()</code>-ի պահեստային արժեքը։ Ցույց տուր, ինչ է լինում, երբ փոփոխականը սահմանված չէ։</li>
+      <li>Ստեղծիր անվավեր արժեք (<code>--gap: կապույտ</code>) և նկարագրիր, ինչ եղավ։ Ստուգիր DevTools-ի Computed ներդիրում։</li>
+      <li>Կառուցիր մուգ թեմա։ Ստուգիր բոլոր կոնտրաստները և գրիր արժեքները։</li>
+      <li>Ցուցադրիր չորս սխալը մուգ թեմայում՝ մաքուր սև, նույն ակցենտ, անտեսանելի ստվեր, պայծառ նկար։ Ապա ուղղիր բոլորը։</li>
+      <li>Ավելացրու <code>prefers-color-scheme</code> և ստուգիր DevTools-ի Rendering վահանակով։</li>
+      <li>Վերաշարադրիր <code>.btn</code>-ը պարամետրերով։ Համեմատիր Դաս 17-ի տարբերակի հետ՝ քանի՞ տող կրճատվեց։</li>
+      <li>Ստեղծիր առաջընթացի գիծ, որի տոկոսը փոխանցվում է inline փոփոխականով՝ <code>style="--progress: 65%"</code>։</li>
+      <li>Անցիր ամբողջ նախագծով և հեռացրու բոլոր HEX գույները <code>:root</code>-ից դուրս։ Հաշվիր՝ քանիսը գտար։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>--name: value</code></td><td>Սահմանում</td></tr>
+      <tr><td><code>var(--name)</code></td><td>Օգտագործում</td></tr>
+      <tr><td><code>var(--name, fallback)</code></td><td>Պահեստային արժեք</td></tr>
+      <tr><td><code>:root</code></td><td>Գլոբալ սահմանում</td></tr>
+      <tr><td>Վերասահմանում սելեկտորում</td><td>Ազդում է միայն այնտեղ և ներսում ⭐</td></tr>
+      <tr><td><code>[data-theme="dark"]</code></td><td>Թեմայի փոխարկում</td></tr>
+      <tr><td><code>@media (prefers-color-scheme: dark)</code></td><td>Համակարգի ընտրություն</td></tr>
+      <tr><td><code>style="--x: value"</code></td><td>Պարամետրի փոխանցում ✅</td></tr>
+    </table>
+    </div>
+
+    <h3>Երկու շերտ</h3>
+    <div class="tree">Շերտ 1՝ ի՞նչ գույներ ունենք
+  --navy-700: #003459
+  --white: #ffffff
+
+Շերտ 2՝ ի՞նչ դեր են կատարում
+  --accent: var(--navy-700)
+  --surface: var(--white)
+
+Կոմպոնենտները դիմում են ՄԻԱՅՆ շերտ 2-ին</div>
+
+    <h3>Ի՞նչ ավելացավ main.css-ում այսօր</h3>
+    <div class="tree">✓ Գունապնակի շերտ (--navy-*, --slate-*)
+✓ Իմաստային շերտ (--bg, --surface, --text, --accent...)
+✓ --space-*, --radius-*, --shadow-*
+✓ [data-theme="dark"] բլոկ
+✓ @media (prefers-color-scheme: dark)
+✓ .btn-ը՝ պարամետրերով</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li><code>:root</code>-ից դուրս HEX գույն չկա</li>
+      <li>Կոմպոնենտները դիմում են իմաստային շերտին</li>
+      <li>Մուգ թեմայի ֆոնը մաքուր սև չէ</li>
+      <li>Մուգ թեմայի ակցենտն ավելի բաց է</li>
+      <li>Ստվերները հարմարեցված են մուգ թեմային</li>
+      <li>Բոլոր կոնտրաստները ≥ 4.5:1 <strong>երկու</strong> թեմայում</li>
+      <li>Անջատիչն ունի տեքստային անուն</li>
+      <li>Կա <code>prefers-color-scheme</code> աջակցություն</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչու երկու շերտ</li>
+      <li>Գիտե՞մ, ինչ է լինում, երբ փոփոխականը վերասահմանվում է սելեկտորում</li>
+      <li>Հասկանո՞ւմ եմ, ինչու մուգ թեմայում ակցենտը պիտի փոխվի</li>
+      <li>Կարո՞ղ եմ բացատրել, ե՞րբ է inline <code>style</code>-ը ընդունելի</li>
+      <li>Գիտե՞մ, ինչու CSS փոփոխականներն ավելի հզոր են, քան Sass-ինը</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Grid։ Երկչափ դասավորության համակարգ՝ <code>grid-template-columns</code>, <code>auto-fit</code>, <code>minmax()</code>։ Կհամեմատենք Flexbox-ի հետ և կհասկանանք, ե՞րբ որն ընտրել։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 19 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

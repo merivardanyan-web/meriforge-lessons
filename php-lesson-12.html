@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHP Դաս 12 — Ժառանգում և ինտերֆեյս</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>PHP Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">PHP Դաս 12 · 2 ժամ</p>
+  <h1>Ժառանգում և ինտերֆեյս</h1>
+  <p class="lede">Երկու տեսակի ապրանք՝ ֆիզիկական և թվային։ Շատ ընդհանուր բան, մի քանի տարբերություն։ Այսօր սովորում ենք, ինչպես կիսել կոդը — և ամենակարևորը, <strong>ե՞րբ չկիսել</strong>։</p>
+
+  <div class="facts">
+    <span>Բլոկ 3 · Դաս 12 / 24</span>
+    <span>extends · interface · abstract</span>
+    <span>Կոմպոզիցիա vs ժառանգում</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ժառանգում՝ <code>extends</code>, <code>parent::</code></li>
+      <li><code>protected</code></li>
+      <li><code>abstract</code> — չավարտված դաս</li>
+      <li><code>interface</code> — պայմանագիր</li>
+      <li>Պոլիմորֆիզմ</li>
+      <li>Ե՞րբ ժառանգում, ե՞րբ ինտերֆեյս</li>
+      <li>Կոմպոզիցիա որպես երրորդ ճանապարհ</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Խնդիրը</h2>
+
+    <div class="tree">ՏեխնոՄարկետը սկսում է վաճառել նաև ծրագրեր
+
+  Ֆիզիկական ապրանք        Թվային ապրանք
+  ─────────────────       ────────────────
+  id, name, price   ✓     id, name, price   ✓
+  discount          ✓     discount          ✓
+  stock             ✓     stock             ✗ անսահման
+  weight            ✓     fileSize          ✓
+  առաքում           ✓     ներբեռնման հղում  ✓
+
+  80% ընդհանուր, 20% տարբեր</div>
+
+    <div class="warn note">
+      <span class="tag">Երկու վատ ելք</span>
+      <p><strong>1. Պատճենել դասը</strong> → երկու <code>Product</code>, և ամեն ուղղում պիտի անես երկու տեղում։ Մի օր կմոռանաս։<br><br>
+      <strong>2. Մեկ դաս բոլորի համար</strong> → <code>$product-&gt;fileSize</code>-ը ֆիզիկական ապրանքի մոտ <code>null</code> է, <code>$product-&gt;weight</code>-ը թվայինի մոտ՝ նույնպես։ Ամեն մեթոդում պիտի ստուգես տեսակը՝ <code>if ($this-&gt;type === 'digital')</code>։<br><br>
+      Երկրորդը հատկապես նենգ է․ սկզբում այն թվում է պարզ, հետո դառնում է անընթեռնելի պայմանների խառնուրդ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Ժառանգում</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ընդհանուրը վերևում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="t">Product</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>(
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">int</span> <span class="n">$id</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">string</span> <span class="n">$name</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">int</span> <span class="n">$price</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">int</span> <span class="n">$discount</span> = <span class="n">0</span>,
+    ) {}
+
+    <span class="k">public function</span> <span class="f">finalPrice</span>(): <span class="k">int</span>
+    {
+        <span class="k">return</span> (<span class="k">int</span>) <span class="f">round</span>(<span class="n">$this</span>-&gt;<span class="n">price</span> * (<span class="n">100</span> - <span class="n">$this</span>-&gt;<span class="n">discount</span>) / <span class="n">100</span>);
+    }
+}
+
+<span class="c">// ---------- Ժառանգ ----------</span>
+
+<span class="k">class</span> <span class="t">PhysicalProduct</span> <span class="k">extends</span> <span class="t">Product</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>(
+        <span class="k">int</span> <span class="n">$id</span>,
+        <span class="k">string</span> <span class="n">$name</span>,
+        <span class="k">int</span> <span class="n">$price</span>,
+        <span class="k">int</span> <span class="n">$discount</span> = <span class="n">0</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">int</span> <span class="n">$stock</span> = <span class="n">0</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">int</span> <span class="n">$weight</span> = <span class="n">0</span>,
+    ) {
+        <span class="k">parent</span>::<span class="f">__construct</span>(<span class="n">$id</span>, <span class="n">$name</span>, <span class="n">$price</span>, <span class="n">$discount</span>);  <span class="c">// ⭐ պարտադիր</span>
+    }
+
+    <span class="k">public function</span> <span class="f">inStock</span>(): <span class="k">bool</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">stock</span> &gt; <span class="n">0</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">shippingCost</span>(): <span class="k">int</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">weight</span> &gt; <span class="n">5000</span> ? <span class="n">3000</span> : <span class="n">1000</span>;
+    }
+}
+
+<span class="k">class</span> <span class="t">DigitalProduct</span> <span class="k">extends</span> <span class="t">Product</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>(
+        <span class="k">int</span> <span class="n">$id</span>,
+        <span class="k">string</span> <span class="n">$name</span>,
+        <span class="k">int</span> <span class="n">$price</span>,
+        <span class="k">int</span> <span class="n">$discount</span> = <span class="n">0</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">int</span> <span class="n">$fileSize</span> = <span class="n">0</span>,
+    ) {
+        <span class="k">parent</span>::<span class="f">__construct</span>(<span class="n">$id</span>, <span class="n">$name</span>, <span class="n">$price</span>, <span class="n">$discount</span>);
+    }
+
+    <span class="k">public function</span> <span class="f">inStock</span>(): <span class="k">bool</span>
+    {
+        <span class="k">return</span> <span class="k">true</span>;      <span class="c">// միշտ առկա է</span>
+    }
+
+    <span class="k">public function</span> <span class="f">downloadUrl</span>(): <span class="k">string</span>
+    {
+        <span class="k">return</span> <span class="s">'/download/'</span> . <span class="n">$this</span>-&gt;<span class="n">id</span>;
+    }
+}</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Բառ</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>extends</code></td><td>Ժառանգում է բոլոր հատկություններն ու մեթոդները</td></tr>
+      <tr><td><code>parent::__construct()</code></td><td>Կանչում է ծնողի կոնստրուկտորը ⭐</td></tr>
+      <tr><td><code>protected</code></td><td>Հասանելի է ծնողում և ժառանգներում</td></tr>
+      <tr><td><code>instanceof</code></td><td>Ստուգում է տիպը</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Մոռացված <code>parent::__construct()</code></span>
+      <p>Եթե ժառանգում սահմանում ես սեփական կոնստրուկտոր, ծնողինը <strong>ինքնաբերաբար չի կանչվում</strong>։<br><br>
+      Արդյունքում <code>$this-&gt;name</code>-ը կմնա չնախաստորագրված, և կստանաս <em>«Typed property must not be accessed before initialization»</em>։<br><br>
+      Դա ամենահաճախ սխալն է ժառանգման հետ առաջին օրերին։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>abstract</h2>
+
+    <div class="warn note">
+      <span class="tag">Ընթացիկ խնդիրը</span>
+      <p><code>new Product(1, 'Ինչ-որ բան', 1000)</code> — սա թույլատրված է, բայց <strong>անիմաստ</strong>։<br><br>
+      «Ապրանք ընդհանրապես» գոյություն չունի — ամեն ապրանք կա՛մ ֆիզիկական է, կա՛մ թվային։ Իսկ այդ օբյեկտը չունի <code>inStock()</code>, և կոդն այն կանչելիս կփլվի։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>abstract լուծում է երկու խնդիր</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">abstract class</span> <span class="t">Product</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>(
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">int</span> <span class="n">$id</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">string</span> <span class="n">$name</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">int</span> <span class="n">$price</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">int</span> <span class="n">$discount</span> = <span class="n">0</span>,
+    ) {}
+
+    <span class="c">// Ընդհանուր իրագործում</span>
+    <span class="k">public function</span> <span class="f">finalPrice</span>(): <span class="k">int</span>
+    {
+        <span class="k">return</span> (<span class="k">int</span>) <span class="f">round</span>(<span class="n">$this</span>-&gt;<span class="n">price</span> * (<span class="n">100</span> - <span class="n">$this</span>-&gt;<span class="n">discount</span>) / <span class="n">100</span>);
+    }
+
+    <span class="c">// Պարտադիր, բայց ամեն ժառանգ իր ձևով ⭐</span>
+    <span class="k">abstract public function</span> <span class="f">inStock</span>(): <span class="k">bool</span>;
+    <span class="k">abstract public function</span> <span class="f">typeLabel</span>(): <span class="k">string</span>;
+}
+
+<span class="n">$p</span> = <span class="k">new</span> <span class="t">Product</span>(...);   <span class="c">// ❌ Fatal error — abstract է</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Երկու երաշխիք</span>
+      <p><strong>1.</strong> Չես կարող ստեղծել «ապրանք ընդհանրապես»։<br>
+      <strong>2.</strong> Ամեն ժառանգ <strong>պարտադիր</strong> իրագործում է <code>inStock()</code>-ը և <code>typeLabel()</code>-ը — այլապես ֆատալ սխալ դեռ գործարկելուց առաջ։<br><br>
+      Երկրորդը կարևոր է․ վաղը երբ ավելացնես <code>SubscriptionProduct</code>, PHP-ն կհիշեցնի, որ մոռացել ես <code>inStock()</code>-ը։ Առանց <code>abstract</code>-ի սխալը կհայտնվեր միայն օգտագործման պահին։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>interface</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>պայմանագիր՝ առանց իրագործման</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">interface</span> <span class="t">Discountable</span>
+{
+    <span class="k">public function</span> <span class="f">finalPrice</span>(): <span class="k">int</span>;
+    <span class="k">public function</span> <span class="f">savings</span>(): <span class="k">int</span>;
+}
+
+<span class="k">interface</span> <span class="t">Shippable</span>
+{
+    <span class="k">public function</span> <span class="f">weight</span>(): <span class="k">int</span>;
+    <span class="k">public function</span> <span class="f">shippingCost</span>(): <span class="k">int</span>;
+}
+
+<span class="c">// Դասը կարող է իրագործել ՄԻ ՔԱՆԻ ինտերֆեյս ⭐</span>
+<span class="k">class</span> <span class="t">PhysicalProduct</span> <span class="k">extends</span> <span class="t">Product</span> <span class="k">implements</span> <span class="t">Discountable</span>, <span class="t">Shippable</span>
+{
+    <span class="c">// ...</span>
+}
+
+<span class="k">class</span> <span class="t">DigitalProduct</span> <span class="k">extends</span> <span class="t">Product</span> <span class="k">implements</span> <span class="t">Discountable</span>
+{
+    <span class="c">// Shippable չէ — չի առաքվում</span>
+}</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th></th><th><code>abstract class</code></th><th><code>interface</code></th></tr>
+      <tr><td>Կարո՞ղ է ունենալ կոդ</td><td>✅ Այո</td><td>❌ Միայն ստորագրություններ</td></tr>
+      <tr><td>Հատկություններ</td><td>✅</td><td>❌ (միայն հաստատուններ)</td></tr>
+      <tr><td>Քանիսի՞ց ժառանգել</td><td><strong>Մեկից</strong></td><td><strong>Ցանկացած քանակի</strong> ⭐</td></tr>
+      <tr><td>Իմաստը</td><td>«Սա այդ բանի տեսակ է»</td><td>«Սա կարող է անել այդ բանը»</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Հիշելու պարզ ձև</span>
+      <p><code>extends</code> → <strong>«է»</strong>․ <code>PhysicalProduct</code> <em>է</em> <code>Product</code><br>
+      <code>implements</code> → <strong>«կարող է»</strong>․ <code>PhysicalProduct</code> <em>կարող է</em> առաքվել<br><br>
+      Դրա համար ինտերֆեյսների անունները հաճախ վերջանում են <code>-able</code>-ով՝ <code>Discountable</code>, <code>Shippable</code>, <code>Countable</code>։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ինչո՞ւ սա գործնականում օգտակար է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Ֆունկցիան ընդունում է ամեն ինչ, ինչ առաքվում է</span>
+<span class="k">function</span> <span class="f">calculateShipping</span>(<span class="k">array</span> <span class="n">$items</span>): <span class="k">int</span>
+{
+    <span class="n">$total</span> = <span class="n">0</span>;
+
+    <span class="k">foreach</span> (<span class="n">$items</span> <span class="k">as</span> <span class="n">$item</span>) {
+        <span class="k">if</span> (<span class="n">$item</span> <span class="k">instanceof</span> <span class="t">Shippable</span>) {
+            <span class="n">$total</span> += <span class="n">$item</span>-&gt;<span class="f">shippingCost</span>();
+        }
+    }
+
+    <span class="k">return</span> <span class="n">$total</span>;
+}
+
+<span class="c">// Աշխատում է և PhysicalProduct-ի, և ապագա Furniture-ի,
+// և ցանկացած դասի հետ, որ իրագործի Shippable</span></code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Պոլիմորֆիզմ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>մեկ կոդ — տարբեր վարքագիծ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="n">$products</span> = [
+    <span class="k">new</span> <span class="t">PhysicalProduct</span>(<span class="n">1</span>, <span class="s">'Նոութբուք'</span>, <span class="n">450000</span>, <span class="n">30</span>, <span class="n">stock</span>: <span class="n">5</span>, <span class="n">weight</span>: <span class="n">2000</span>),
+    <span class="k">new</span> <span class="t">DigitalProduct</span>(<span class="n">2</span>, <span class="s">'Անտիվիրուս'</span>, <span class="n">15000</span>, <span class="n">0</span>, <span class="n">fileSize</span>: <span class="n">80</span>),
+    <span class="k">new</span> <span class="t">PhysicalProduct</span>(<span class="n">3</span>, <span class="s">'Մկնիկ'</span>, <span class="n">8000</span>, <span class="n">0</span>, <span class="n">stock</span>: <span class="n">0</span>, <span class="n">weight</span>: <span class="n">100</span>),
+];
+
+<span class="k">foreach</span> (<span class="n">$products</span> <span class="k">as</span> <span class="n">$p</span>) {
+    <span class="k">echo</span> <span class="n">$p</span>-&gt;<span class="n">name</span>;
+    <span class="k">echo</span> <span class="n">$p</span>-&gt;<span class="f">finalPrice</span>();      <span class="c">// ընդհանուր իրագործում</span>
+    <span class="k">echo</span> <span class="n">$p</span>-&gt;<span class="f">inStock</span>();         <span class="c">// ամեն մեկն իր ձևով ⭐</span>
+    <span class="k">echo</span> <span class="n">$p</span>-&gt;<span class="f">typeLabel</span>();       <span class="c">// ամեն մեկն իր ձևով</span>
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ահա գաղափարը</span>
+      <p><code>foreach</code>-ը <strong>չգիտի</strong>, թե ինչ տեսակի ապրանք է։ Այն պարզապես կանչում է <code>inStock()</code>։<br><br>
+      Ամեն օբյեկտ ինքն է որոշում, ինչպես պատասխանել։ Ֆիզիկականը նայում է պահեստին, թվայինը միշտ ասում է «այո»։<br><br>
+      Այլընտրանքը կլիներ՝ <code>if ($p-&gt;type === 'physical') { ... } elseif (...)</code> ամեն տեղ։ Եվ ամեն նոր տեսակի հետ պիտի գտնեիր բոլոր այդ <code>if</code>-երը։<br><br>
+      <strong>Պոլիմորֆիզմը հանում է պայմանները կոդից և տեղափոխում դասերի մեջ։</strong></p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>շաբլոնում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span> <span class="k">if</span> (<span class="n">$p</span> <span class="k">instanceof</span> <span class="t">DigitalProduct</span>): <span class="p">?&gt;</span>
+    <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"badge"</span><span class="p">&gt;</span>Ակնթարթային ներբեռնում<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+<span class="p">&lt;?php</span> <span class="k">elseif</span> (<span class="n">$p</span>-&gt;<span class="f">isLowStock</span>()): <span class="p">?&gt;</span>
+    <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__warning"</span><span class="p">&gt;</span>Մնացել է &lt;?= <span class="n">$p</span>-&gt;<span class="n">stock</span> ?&gt; հատ<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+<span class="p">&lt;?php</span> <span class="k">endif</span>; <span class="p">?&gt;</span></code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Ե՞րբ չժառանգել</h2>
+
+    <div class="warn note">
+      <span class="tag">Ամենակարևոր բաժինը այս դասում</span>
+      <p>Ժառանգումը գայթակղիչ է․ այն ակնթարթորեն հեռացնում է կրկնությունը։ Բայց այն նաև <strong>ամուր կապում է դասերը իրար</strong>։<br><br>
+      Ծնողի ամեն փոփոխություն ազդում է բոլոր ժառանգների վրա։ Երբ շղթան դառնում է երեք-չորս մակարդակ, կոդի կարդալը վերածվում է հետաքննության՝ որտեղի՞ց է եկել այս մեթոդը։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>դասական սխալ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ❌ Ժառանգում «որ կոդը կրկնվի»</span>
+<span class="k">class</span> <span class="t">Product</span> {
+    <span class="k">protected function</span> <span class="f">formatMoney</span>(<span class="k">int</span> <span class="n">$n</span>): <span class="k">string</span> { ... }
+}
+
+<span class="k">class</span> <span class="t">Order</span> <span class="k">extends</span> <span class="t">Product</span> {   <span class="c">// ⚠️ Պատվե՞րը ապրանք է։ Ոչ։</span>
+    <span class="c">// ժառանգել է միայն formatMoney()-ի համար</span>
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>✅ կոմպոզիցիա — ավելի ապահով ճանապարհ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="t">MoneyFormatter</span>
+{
+    <span class="k">public function</span> <span class="f">format</span>(<span class="k">int</span> <span class="n">$amount</span>): <span class="k">string</span>
+    {
+        <span class="k">return</span> <span class="f">number_format</span>(<span class="n">$amount</span>, <span class="n">0</span>, <span class="s">'.'</span>, <span class="s">"\u{00A0}"</span>) . <span class="s">"\u{00A0}֏"</span>;
+    }
+}
+
+<span class="k">class</span> <span class="t">Order</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>(
+        <span class="k">private</span> <span class="t">MoneyFormatter</span> <span class="n">$money</span>,   <span class="c">// ⭐ ունի, ոչ թե է</span>
+    ) {}
+
+    <span class="k">public function</span> <span class="f">formattedTotal</span>(): <span class="k">string</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">money</span>-&gt;<span class="f">format</span>(<span class="n">$this</span>-&gt;<span class="f">total</span>());
+    }
+}</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ընտրիր</th><th>Երբ</th></tr>
+      <tr><td><code>extends</code></td><td>Իսկապես «է»-հարաբերություն է, և ժառանգը կարող է փոխարինել ծնողին ամենուր</td></tr>
+      <tr><td><code>interface</code></td><td>Պետք է պայմանագիր, բայց իրագործումները տարբեր են ⭐</td></tr>
+      <tr><td>Կոմպոզիցիա</td><td>Պարզապես պետք է կիսել կոդ ⭐</td></tr>
+      <tr><td>Առանձին դասեր</td><td>Ընդհանուրը իրականում 20% է, ոչ 80%</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ժամանակակից խորհուրդը</span>
+      <p><strong>«Կոմպոզիցիա ժառանգման փոխարեն»</strong> — սա արդյունաբերության ընդհանուր դիրքորոշումն է վերջին տասնամյակում։<br><br>
+      Ժառանգումը լավ է, երբ հիերարխիան <em>իսկապես</em> գոյություն ունի իրականում՝ <code>PhysicalProduct</code> և <code>DigitalProduct</code>։<br><br>
+      Բայց երբ պարզապես ուզում ես կիսել ֆունկցիա — ստեղծիր առանձին դաս և փոխանցիր այն կոնստրուկտորով։ Դա ավելի ճկուն է․ վաղը կարող ես փոխարինել <code>MoneyFormatter</code>-ը <code>ArmenianMoneyFormatter</code>-ով՝ առանց ոչինչ կոտրելու։<br><br>
+      Դաս 13-ում կտեսնենք, ինչպես Repository-ն օգտագործում է հենց այս մոտեցումը։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Գործնական սահման</span>
+      <p><strong>Ժառանգման երկուսից ավելի մակարդակը գրեթե միշտ սխալ է։</strong><br><br>
+      <code>Product → PhysicalProduct</code> — կարգին։<br>
+      <code>Product → PhysicalProduct → HeavyProduct → FragileHeavyProduct</code> — կանգ առ և վերանայիր։<br><br>
+      Երրորդ մակարդակում սովորաբար պարզվում է, որ տարբերությունը վարքագծի մեջ չէ, այլ պարզապես տվյալների — և այն պիտի լիներ դաշտ, ոչ դաս։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Դասարանական</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Product.php — վերջնական</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">abstract class</span> <span class="t">Product</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>(
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">int</span> <span class="n">$id</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">string</span> <span class="n">$name</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">string</span> <span class="n">$slug</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">int</span> <span class="n">$price</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">int</span> <span class="n">$discount</span> = <span class="n">0</span>,
+        <span class="k">public</span> <span class="k">readonly</span> ?<span class="k">string</span> <span class="n">$specs</span> = <span class="k">null</span>,
+        <span class="k">public</span> <span class="k">readonly</span> ?<span class="k">string</span> <span class="n">$image</span> = <span class="k">null</span>,
+    ) {}
+
+    <span class="c">// ---------- Ֆաբրիկա՝ ընտրում է դասը ----------</span>
+
+    <span class="k">public static function</span> <span class="f">fromRow</span>(<span class="k">array</span> <span class="n">$row</span>): <span class="k">static</span>
+    {
+        <span class="k">return</span> (<span class="n">$row</span>[<span class="s">'type'</span>] ?? <span class="s">'physical'</span>) === <span class="s">'digital'</span>
+            ? <span class="t">DigitalProduct</span>::<span class="f">fromRow</span>(<span class="n">$row</span>)
+            : <span class="t">PhysicalProduct</span>::<span class="f">fromRow</span>(<span class="n">$row</span>);
+    }
+
+    <span class="c">// ---------- Ընդհանուր ----------</span>
+
+    <span class="k">public function</span> <span class="f">finalPrice</span>(): <span class="k">int</span>
+    {
+        <span class="k">return</span> (<span class="k">int</span>) <span class="f">round</span>(<span class="n">$this</span>-&gt;<span class="n">price</span> * (<span class="n">100</span> - <span class="n">$this</span>-&gt;<span class="n">discount</span>) / <span class="n">100</span>);
+    }
+
+    <span class="k">public function</span> <span class="f">hasDiscount</span>(): <span class="k">bool</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">discount</span> &gt; <span class="n">0</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">savings</span>(): <span class="k">int</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">price</span> - <span class="n">$this</span>-&gt;<span class="f">finalPrice</span>();
+    }
+
+    <span class="k">public function</span> <span class="f">formattedPrice</span>(): <span class="k">string</span>
+    {
+        <span class="k">return</span> <span class="f">number_format</span>(<span class="n">$this</span>-&gt;<span class="f">finalPrice</span>(), <span class="n">0</span>, <span class="s">'.'</span>, <span class="s">"\u{00A0}"</span>) . <span class="s">"\u{00A0}֏"</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">url</span>(): <span class="k">string</span>
+    {
+        <span class="k">return</span> <span class="s">'/product/'</span> . <span class="n">$this</span>-&gt;<span class="n">slug</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">imageUrl</span>(): <span class="k">string</span>
+    {
+        <span class="k">return</span> <span class="s">'/images/'</span> . (<span class="n">$this</span>-&gt;<span class="n">image</span> ?? <span class="s">'placeholder.jpg'</span>);
+    }
+
+    <span class="c">// ---------- Պարտադիր ժառանգներում ----------</span>
+
+    <span class="k">abstract public function</span> <span class="f">inStock</span>(): <span class="k">bool</span>;
+    <span class="k">abstract public function</span> <span class="f">typeLabel</span>(): <span class="k">string</span>;
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/PhysicalProduct.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="t">PhysicalProduct</span> <span class="k">extends</span> <span class="t">Product</span> <span class="k">implements</span> <span class="t">Shippable</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>(
+        <span class="k">int</span> <span class="n">$id</span>,
+        <span class="k">string</span> <span class="n">$name</span>,
+        <span class="k">string</span> <span class="n">$slug</span>,
+        <span class="k">int</span> <span class="n">$price</span>,
+        <span class="k">int</span> <span class="n">$discount</span> = <span class="n">0</span>,
+        ?<span class="k">string</span> <span class="n">$specs</span> = <span class="k">null</span>,
+        ?<span class="k">string</span> <span class="n">$image</span> = <span class="k">null</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">int</span> <span class="n">$stock</span> = <span class="n">0</span>,
+        <span class="k">public</span> <span class="k">readonly</span> <span class="k">int</span> <span class="n">$weightGrams</span> = <span class="n">0</span>,
+    ) {
+        <span class="k">parent</span>::<span class="f">__construct</span>(<span class="n">$id</span>, <span class="n">$name</span>, <span class="n">$slug</span>, <span class="n">$price</span>, <span class="n">$discount</span>, <span class="n">$specs</span>, <span class="n">$image</span>);
+    }
+
+    <span class="k">public static function</span> <span class="f">fromRow</span>(<span class="k">array</span> <span class="n">$row</span>): <span class="k">self</span>
+    {
+        <span class="k">return</span> <span class="k">new</span> <span class="k">self</span>(
+            <span class="n">id</span>:          (<span class="k">int</span>) <span class="n">$row</span>[<span class="s">'id'</span>],
+            <span class="n">name</span>:        (<span class="k">string</span>) <span class="n">$row</span>[<span class="s">'name'</span>],
+            <span class="n">slug</span>:        (<span class="k">string</span>) <span class="n">$row</span>[<span class="s">'slug'</span>],
+            <span class="n">price</span>:       (<span class="k">int</span>) <span class="n">$row</span>[<span class="s">'price'</span>],
+            <span class="n">discount</span>:    (<span class="k">int</span>) (<span class="n">$row</span>[<span class="s">'discount'</span>] ?? <span class="n">0</span>),
+            <span class="n">specs</span>:       <span class="n">$row</span>[<span class="s">'specs'</span>] ?? <span class="k">null</span>,
+            <span class="n">image</span>:       <span class="n">$row</span>[<span class="s">'image'</span>] ?? <span class="k">null</span>,
+            <span class="n">stock</span>:       (<span class="k">int</span>) (<span class="n">$row</span>[<span class="s">'stock'</span>] ?? <span class="n">0</span>),
+            <span class="n">weightGrams</span>: (<span class="k">int</span>) (<span class="n">$row</span>[<span class="s">'weight'</span>] ?? <span class="n">0</span>),
+        );
+    }
+
+    <span class="k">public function</span> <span class="f">inStock</span>(): <span class="k">bool</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">stock</span> &gt; <span class="n">0</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">isLowStock</span>(): <span class="k">bool</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">stock</span> &gt; <span class="n">0</span> &amp;&amp; <span class="n">$this</span>-&gt;<span class="n">stock</span> &lt;= <span class="n">3</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">typeLabel</span>(): <span class="k">string</span>
+    {
+        <span class="k">return</span> <span class="s">'Ապրանք'</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">weight</span>(): <span class="k">int</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">weightGrams</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">shippingCost</span>(): <span class="k">int</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">weightGrams</span> &gt; <span class="n">5000</span> ? <span class="n">3000</span> : <span class="n">1000</span>;
+    }
+}</code></pre>
+    </div>
+
+    <ol>
+      <li>Ավելացրու <code>type ENUM('physical','digital')</code> և <code>weight</code> դաշտերը բազայում</li>
+      <li>Դարձրու <code>Product</code>-ը <code>abstract</code></li>
+      <li>Ստեղծիր <code>PhysicalProduct</code> և <code>DigitalProduct</code></li>
+      <li>Ստեղծիր <code>Shippable</code> ինտերֆեյսը</li>
+      <li>Փոխիր <code>Product::fromRow()</code>-ը՝ ընտրի ճիշտ դասը</li>
+      <li>Ավելացրու թվային ապրանք բազայում</li>
+      <li>Թարմացրու շաբլոնը <code>instanceof</code>-ով</li>
+      <li>Գրիր <code>calculateShipping()</code> ֆունկցիան</li>
+      <li>Փորձիր <code>new Product(...)</code> — տես սխալը</li>
+      <li>Ջնջիր <code>typeLabel()</code>-ը <code>DigitalProduct</code>-ից — տես, երբ է սխալը հայտնվում</li>
+    </ol>
+
+    <div class="tip note">
+      <span class="tag">Տասներորդ քայլի իմաստը</span>
+      <p>Սխալը հայտնվում է <strong>ֆայլը բեռնելու պահին</strong>, ոչ մեթոդը կանչելիս։<br><br>
+      Դա <code>abstract</code>-ի ամբողջ արժեքն է․ սխալը գտնվում է անմիջապես, ոչ երեք ամիս անց, երբ ինչ-որ մեկը բացի թվային ապրանքի էջը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Կատարիր դասարանականի 10 քայլը։</li>
+      <li>Ավելացրու երրորդ տեսակ՝ <code>ServiceProduct</code> (վերանորոգում, տեղադրում)։ Ի՞նչ մեթոդներ պիտի իրագործի։</li>
+      <li>Ցուցադրիր մոռացված <code>parent::__construct()</code>-ի սխալը։</li>
+      <li>Ստեղծիր <code>Discountable</code> ինտերֆեյսը և իրագործիր այն։</li>
+      <li>Գրիր ֆունկցիա, որը ընդունում է <code>Shippable</code> և հաշվում ընդհանուր քաշը։</li>
+      <li>Ցուցադրիր պոլիմորֆիզմը՝ մեկ <code>foreach</code>-ով երեք տարբեր տեսակի ապրանք։</li>
+      <li>Գրիր նույն կոդը <strong>առանց</strong> պոլիմորֆիզմի՝ <code>if/elseif</code>-ով։ Համեմատիր տողերի քանակը և ընթեռնելիությունը։</li>
+      <li>Գտիր քո կոդում տեղ, որտեղ ժառանգումը սխալ որոշում կլիներ։ Բացատրիր, ինչու։</li>
+      <li>Վերաշարադրիր <code>formattedPrice()</code>-ը կոմպոզիցիայով՝ <code>MoneyFormatter</code> դասով։</li>
+      <li>Խնդրիր AI-ին քննադատել քո հիերարխիան։ Առաջարկե՞ց կոմպոզիցիա որևէ տեղում։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է</th></tr>
+      <tr><td><code>class A extends B</code></td><td>Ժառանգում</td></tr>
+      <tr><td><code>parent::__construct()</code></td><td>Ծնողի կոնստրուկտոր ⭐</td></tr>
+      <tr><td><code>protected</code></td><td>Դասում և ժառանգներում</td></tr>
+      <tr><td><code>abstract class</code></td><td>Չի ստեղծվում ուղիղ</td></tr>
+      <tr><td><code>abstract function</code></td><td>Պարտադիր ժառանգներում ⭐</td></tr>
+      <tr><td><code>interface</code></td><td>Պայմանագիր</td></tr>
+      <tr><td><code>implements A, B</code></td><td>Մի քանիսը միանգամից ⭐</td></tr>
+      <tr><td><code>instanceof</code></td><td>Տիպի ստուգում</td></tr>
+      <tr><td><code>self</code> / <code>static</code></td><td>Այս դասը / կանչված դասը</td></tr>
+    </table>
+    </div>
+
+    <h3>Ո՞ր գործիքը</h3>
+    <div class="tree">«է»          →  extends
+«կարող է»    →  interface
+«ունի»       →  կոմպոզիցիա ⭐
+
+Կիսել կոդ    →  կոմպոզիցիա, ոչ ժառանգում
+Պայմանագիր   →  interface
+Իրական հիերարխիա →  abstract + extends</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Բազային դասը <code>abstract</code> է, եթե ուղիղ չի օգտագործվում</li>
+      <li>Ամեն ժառանգ կանչում է <code>parent::__construct()</code></li>
+      <li>Ժառանգման մակարդակները երկուսից ավելի չեն</li>
+      <li>Ինտերֆեյսների անունները նկարագրում են ունակություն</li>
+      <li>Կոդ կիսելու համար օգտագործվում է կոմպոզիցիա</li>
+      <li>Շաբլոնում <code>instanceof</code>-ը հազվադեպ է</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել <code>abstract</code>-ի և <code>interface</code>-ի տարբերությունը</li>
+      <li>Գիտե՞մ, ինչու մի քանի ինտերֆեյս հնարավոր է, իսկ մի քանի ծնող՝ ոչ</li>
+      <li>Հասկանո՞ւմ եմ, ի՞նչ է պոլիմորֆիզմը</li>
+      <li>Կարո՞ղ եմ բացատրել, ե՞րբ կոմպոզիցիա, ե՞րբ ժառանգում</li>
+      <li>Գիտե՞մ, ինչու երեք մակարդակը վտանգավոր է</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Composer, namespace և Repository։ <code>bootstrap.php</code>-ում արդեն 8 <code>require_once</code> կա, և ամեն նոր դասով դրանք կաճեն։<br><br>
+      Autoload-ը լուծում է դա մեկ տողով։ Իսկ Repository-ն վերջապես կհանի SQL-ը գլոբալ ֆունկցիաներից և կդառնա այն շերտը, որը Դաս 20-ում Laravel-ի Eloquent-ը կփոխարինի։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>PHP Բլոկ · Դաս 12 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

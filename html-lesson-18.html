@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 18 — Նավիգացիա</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 18 · 2 ժամ</p>
+  <h1>Նավիգացիա</h1>
+  <p class="lede">Header-ը էջի ամենակարևոր կոմպոնենտն է — այն կա ամեն էջում և դրանով են սկսում ամեն այցելուները։ Այսօր կառուցում ենք ամբողջական համակարգ՝ dropdown, բուրգեր-մենյու, footer։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 15, 17</span>
+    <span>Բլոկ 1 · Կոմպոնենտներ</span>
+    <span>Ստեղնաշարային հասանելիություն</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Նավիգացիայի ճիշտ HTML կառուցվածքը</li>
+      <li>Ակտիվ էջի նշում</li>
+      <li>Dropdown ենթամենյու</li>
+      <li>Բուրգեր-մենյու՝ միայն CSS-ով</li>
+      <li>Ինչո՞ւ JS-ը ավելի լավն է դրա համար</li>
+      <li>Footer՝ ամբողջական կառուցվածք</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ճիշտ կառուցվածքը</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հիմքը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">nav</span> <span class="f">aria-label</span>=<span class="s">"Գլխավոր մենյու"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">ul</span> <span class="f">class</span>=<span class="s">"menu"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"index.html"</span> <span class="f">aria-current</span>=<span class="s">"page"</span><span class="p">&gt;</span>Գլխավոր<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"products.html"</span><span class="p">&gt;</span>Ապրանքներ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"about.html"</span><span class="p">&gt;</span>Մեր մասին<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">nav</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Տարր</th><th>Ինչու</th></tr>
+      <tr><td><code>&lt;nav&gt;</code></td><td>Landmark — էկրանընթերցիչը կարող է ցատկել այստեղ</td></tr>
+      <tr><td><code>aria-label</code></td><td>Երբ էջում մի քանի <code>nav</code> կա — Դաս 5</td></tr>
+      <tr><td><code>&lt;ul&gt;</code> / <code>&lt;li&gt;</code></td><td>Հայտարարվում է «ցուցակ՝ 3 կետից»</td></tr>
+      <tr><td><code>aria-current="page"</code></td><td>«Դու հիմա այստեղ ես» ⭐</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">aria-current — երկու օգուտ մեկ ատրիբուտից</span>
+      <p><strong>1.</strong> Էկրանընթերցիչը հայտարարում է «ընթացիկ էջ»։<br>
+      <strong>2.</strong> CSS-ում ոճավորելու համար լրացուցիչ դաս պետք չէ՝<br><br>
+      <code>.menu a[aria-current="page"] { color: var(--secondary); }</code><br><br>
+      Սա <code>class="is-active"</code>-ից լավն է, որովհետև մեկ ատրիբուտը միաժամանակ իմաստ և ոճ է տալիս։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Header · համակարգիչ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML — մեր կմախքով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">header</span> <span class="f">class</span>=<span class="s">"header"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row align-center justify-between"</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"index.html"</span> <span class="f">class</span>=<span class="s">"logo"</span><span class="p">&gt;</span>ՏեխնոՄարկետ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">nav</span> <span class="f">aria-label</span>=<span class="s">"Գլխավոր մենյու"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">ul</span> <span class="f">class</span>=<span class="s">"menu flex align-center gap-10"</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span> <span class="f">aria-current</span>=<span class="s">"page"</span><span class="p">&gt;</span>Գլխավոր<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span><span class="p">&gt;</span>Ապրանքներ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span><span class="p">&gt;</span>Կապ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span> <span class="f">class</span>=<span class="s">"btn btn--primary btn--sm"</span><span class="p">&gt;</span>Զամբյուղ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+                <span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">nav</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">header</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>CSS</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.header</span> {
+    <span class="f">position</span>: <span class="s">sticky</span>;         <span class="c">/* Դաս 15 */</span>
+    <span class="f">top</span>: <span class="n">0</span>;
+    <span class="f">z-index</span>: <span class="n">100</span>;
+    <span class="f">background</span>: <span class="s">#ffffff</span>;
+    <span class="f">box-shadow</span>: <span class="s">var</span>(<span class="f">--shadow-sm</span>);
+}
+
+<span class="k">.header</span> <span class="k">.row</span> {
+    <span class="f">padding-top</span>: <span class="n">10px</span>;
+    <span class="f">padding-bottom</span>: <span class="n">10px</span>;
+}
+
+<span class="k">.logo</span> {
+    <span class="f">font-size</span>: <span class="n">1.375rem</span>;
+    <span class="f">font-weight</span>: <span class="n">700</span>;
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--secondary</span>);
+}
+
+<span class="k">.menu</span> <span class="t">a</span> {
+    <span class="f">padding</span>: <span class="n">12px</span> <span class="n">16px</span>;    <span class="c">/* 44px սեղմելի տարածք */</span>
+    <span class="f">border-radius</span>: <span class="n">6px</span>;
+}
+
+<span class="k">.menu</span> <span class="t">a</span>:<span class="k">hover</span> { <span class="f">background</span>: <span class="s">var</span>(<span class="f">--bg</span>); }
+
+<span class="k">.menu</span> <span class="t">a</span>:<span class="k">focus-visible</span> {
+    <span class="f">outline</span>: <span class="n">2px</span> <span class="s">solid</span> <span class="s">var</span>(<span class="f">--secondary</span>);
+    <span class="f">outline-offset</span>: -<span class="n">2px</span>;
+}
+
+<span class="c">/* Ակտիվ էջ */</span>
+<span class="k">.menu</span> <span class="t">a</span>[<span class="f">aria-current</span>=<span class="s">"page"</span>] {
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--secondary</span>);
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--bg</span>);
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Skip link — վերադառնանք Դաս 5-ին</span>
+      <p>Ստեղնաշարով նավարկողը ամեն էջում պիտի անցնի մենյուի բոլոր հղումներով, նախքան բովանդակությանը հասնելը։ 8 հղում × 20 էջ = տառապանք։<br><br>
+      Ուստի <code>&lt;body&gt;</code>-ի հենց սկզբում՝<br>
+      <code>&lt;a href="#main" class="skip-link"&gt;Անցնել բովանդակությանը&lt;/a&gt;</code><br><br>
+      <code>.skip-link</code>-ը արդեն կա <code>global.css</code>-ում Դաս 6-ից։ Հիմա գիտես՝ ինչու։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Dropdown</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">li</span> <span class="f">class</span>=<span class="s">"has-sub"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"catalog.html"</span><span class="p">&gt;</span>Կատեգորիաներ ▾<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">ul</span> <span class="f">class</span>=<span class="s">"submenu"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span><span class="p">&gt;</span>Նոութբուքեր<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span><span class="p">&gt;</span>Մոնիտորներ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span><span class="p">&gt;</span>Աքսեսուարներ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>CSS</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.has-sub</span> { <span class="f">position</span>: <span class="s">relative</span>; }
+
+<span class="k">.submenu</span> {
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">top</span>: <span class="s">calc</span>(<span class="n">100%</span> + <span class="n">4px</span>);
+    <span class="f">left</span>: <span class="n">0</span>;
+    <span class="f">z-index</span>: <span class="n">10</span>;
+
+    <span class="f">min-width</span>: <span class="n">200px</span>;
+    <span class="f">background</span>: <span class="s">#ffffff</span>;
+    <span class="f">border-radius</span>: <span class="n">8px</span>;
+    <span class="f">box-shadow</span>: <span class="s">var</span>(<span class="f">--shadow-lg</span>);
+    <span class="f">padding</span>: <span class="n">6px</span>;
+
+    <span class="f">opacity</span>: <span class="n">0</span>;
+    <span class="f">visibility</span>: <span class="s">hidden</span>;
+    <span class="f">transform</span>: <span class="s">translateY</span>(-<span class="n">6px</span>);
+    <span class="f">transition</span>: <span class="s">opacity .15s, transform .15s, visibility .15s</span>;
+}
+
+<span class="k">.has-sub</span>:<span class="k">hover</span> <span class="k">.submenu</span>,
+<span class="k">.has-sub</span>:<span class="k">focus-within</span> <span class="k">.submenu</span> {
+    <span class="f">opacity</span>: <span class="n">1</span>;
+    <span class="f">visibility</span>: <span class="s">visible</span>;
+    <span class="f">transform</span>: <span class="s">translateY</span>(<span class="n">0</span>);
+}
+
+<span class="k">.submenu</span> <span class="t">a</span> { <span class="f">display</span>: <span class="s">block</span>; <span class="f">padding</span>: <span class="n">10px</span> <span class="n">12px</span>; <span class="f">border-radius</span>: <span class="n">6px</span>; }
+<span class="k">.submenu</span> <span class="t">a</span>:<span class="k">hover</span> { <span class="f">background</span>: <span class="s">var</span>(<span class="f">--bg</span>); }</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ visibility, ոչ display: none</span>
+      <p><code>display: none</code>-ը <strong>չի անիմացվում</strong> — մենյուն ուղղակի ցատկում է։<br><br>
+      <code>visibility: hidden</code> + <code>opacity: 0</code> — անիմացվում է, և միևնույն ժամանակ էլեմենտն անհասանելի է <kbd>Tab</kbd>-ի համար (ի տարբերություն միայն <code>opacity: 0</code>-ի, Դաս 9)։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երկու պարտադիր բան</span>
+      <p><strong>1. <code>:focus-within</code></strong> — առանց դրա ստեղնաշարով մենյուն չի բացվի։<br><br>
+      <strong>2. Ծնող հղումը պիտի աշխատող լինի</strong> — <code>href="catalog.html"</code>, ոչ <code>href="#"</code>։ Հեռախոսում <code>:hover</code> չկա, և եթե ծնողը ոչ մի տեղ չի տանում, օգտագործողը փակուղում է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Բուրգեր-մենյու</h2>
+    <p>Հեռախոսում 5 հղում հորիզոնական չեն տեղավորվում։ Լուծումը՝ թաքցնել դրանք կոճակի հետևում։</p>
+
+    <h3>Բուրգերի պատկերակը</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երեք գիծ → ✕</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- HTML --&gt;</span>
+<span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"burger"</span> <span class="f">aria-label</span>=<span class="s">"Բացել մենյուն"</span> <span class="f">aria-expanded</span>=<span class="s">"false"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">span</span><span class="p">&gt;&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">span</span><span class="p">&gt;&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">span</span><span class="p">&gt;&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span></code></pre>
+<pre><code><span class="k">.burger</span> {
+    <span class="f">display</span>: <span class="s">none</span>;              <span class="c">/* միայն հեռախոսում */</span>
+    <span class="f">width</span>: <span class="n">44px</span>;
+    <span class="f">height</span>: <span class="n">44px</span>;
+    <span class="f">flex-direction</span>: <span class="s">column</span>;
+    <span class="f">justify-content</span>: <span class="s">center</span>;
+    <span class="f">align-items</span>: <span class="s">center</span>;
+    <span class="f">gap</span>: <span class="n">5px</span>;
+    <span class="f">background</span>: <span class="s">transparent</span>;
+    <span class="f">border</span>: <span class="n">0</span>;
+    <span class="f">cursor</span>: <span class="s">pointer</span>;
+}
+
+<span class="k">.burger</span> <span class="t">span</span> {
+    <span class="f">display</span>: <span class="s">block</span>;
+    <span class="f">width</span>: <span class="n">24px</span>;
+    <span class="f">height</span>: <span class="n">2px</span>;
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--text</span>);
+    <span class="f">transition</span>: <span class="s">transform .25s, opacity .25s</span>;
+}
+
+<span class="c">/* Բացված վիճակ՝ ✕ */</span>
+<span class="k">.is-open</span> <span class="k">.burger</span> <span class="t">span</span>:<span class="k">nth-child</span>(<span class="n">1</span>) { <span class="f">transform</span>: <span class="s">translateY</span>(<span class="n">7px</span>) <span class="s">rotate</span>(<span class="n">45deg</span>); }
+<span class="k">.is-open</span> <span class="k">.burger</span> <span class="t">span</span>:<span class="k">nth-child</span>(<span class="n">2</span>) { <span class="f">opacity</span>: <span class="n">0</span>; }
+<span class="k">.is-open</span> <span class="k">.burger</span> <span class="t">span</span>:<span class="k">nth-child</span>(<span class="n">3</span>) { <span class="f">transform</span>: <span class="s">translateY</span>(-<span class="n">7px</span>) <span class="s">rotate</span>(-<span class="n">45deg</span>); }</code></pre>
+    </div>
+
+    <div class="tree">Փակ                Բացված
+━━━━━━━            ╲     ╱
+━━━━━━━     →         ╳
+━━━━━━━            ╱     ╲
+
+1-ին գիծը՝ ներքև + 45°
+2-րդը՝ անհետանում
+3-րդը՝ վեր + −45°</div>
+
+    <h3>Մենյուն հեռախոսում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>media query</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">@media</span> (<span class="f">max-width</span>: <span class="n">768px</span>) {
+
+    <span class="k">.burger</span> { <span class="f">display</span>: <span class="s">flex</span>; }
+
+    <span class="k">.menu</span> {
+        <span class="f">position</span>: <span class="s">fixed</span>;
+        <span class="f">top</span>: <span class="n">64px</span>;              <span class="c">/* header-ի բարձրությունը */</span>
+        <span class="f">left</span>: <span class="n">0</span>;
+        <span class="f">right</span>: <span class="n">0</span>;
+        <span class="f">bottom</span>: <span class="n">0</span>;
+        <span class="f">z-index</span>: <span class="n">90</span>;
+
+        <span class="f">flex-direction</span>: <span class="s">column</span>;
+        <span class="f">align-items</span>: <span class="s">stretch</span>;
+        <span class="f">gap</span>: <span class="n">0</span>;
+
+        <span class="f">background</span>: <span class="s">#ffffff</span>;
+        <span class="f">padding</span>: <span class="n">16px</span>;
+        <span class="f">overflow-y</span>: <span class="s">auto</span>;      <span class="c">/* երկար մենյուի համար */</span>
+
+        <span class="f">transform</span>: <span class="s">translateX</span>(<span class="n">100%</span>);
+        <span class="f">transition</span>: <span class="s">transform .25s</span>;
+    }
+
+    <span class="k">.is-open</span> <span class="k">.menu</span> { <span class="f">transform</span>: <span class="s">translateX</span>(<span class="n">0</span>); }
+
+    <span class="k">.menu</span> <span class="t">a</span> {
+        <span class="f">display</span>: <span class="s">block</span>;
+        <span class="f">padding</span>: <span class="n">14px</span> <span class="n">12px</span>;
+        <span class="f">border-bottom</span>: <span class="n">1px</span> <span class="s">solid</span> <span class="s">var</span>(<span class="f">--bg</span>);
+    }
+
+    <span class="c">/* Ենթամենյուն միշտ բաց է հեռախոսում */</span>
+    <span class="k">.submenu</span> {
+        <span class="f">position</span>: <span class="s">static</span>;
+        <span class="f">opacity</span>: <span class="n">1</span>;
+        <span class="f">visibility</span>: <span class="s">visible</span>;
+        <span class="f">transform</span>: <span class="s">none</span>;
+        <span class="f">box-shadow</span>: <span class="s">none</span>;
+        <span class="f">padding-left</span>: <span class="n">16px</span>;
+    }
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ ենթամենյուն միշտ բաց</span>
+      <p>Հեռախոսում <code>:hover</code> չկա։ Առանց JS-ի ենթամենյուն բացելու ձև չկա։<br><br>
+      Ուստի ամենապարզ և ամենաազնիվ լուծումն է՝ ցույց տալ այն միանգամից՝ ներսի հատվածով։ Օգտագործողը տեսնում է ամբողջ կառուցվածքը մեկ հայացքով։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>CSS-ով բացել-փակելը</h2>
+    <p>Մինչև JS սովորելը կա հնարք՝ թաքնված <code>checkbox</code>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>checkbox-ի հնարքը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- Checkbox-ը գալիս է ԱՌԱՋ մենյուից --&gt;</span>
+<span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"checkbox"</span> <span class="f">id</span>=<span class="s">"nav-toggle"</span> <span class="f">class</span>=<span class="s">"nav-toggle"</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"nav-toggle"</span> <span class="f">class</span>=<span class="s">"burger"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">span</span><span class="p">&gt;&lt;/</span><span class="t">span</span><span class="p">&gt;&lt;</span><span class="t">span</span><span class="p">&gt;&lt;/</span><span class="t">span</span><span class="p">&gt;&lt;</span><span class="t">span</span><span class="p">&gt;&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"visually-hidden"</span><span class="p">&gt;</span>Մենյու<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">nav</span><span class="p">&gt;&lt;</span><span class="t">ul</span> <span class="f">class</span>=<span class="s">"menu"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;&lt;/</span><span class="t">nav</span><span class="p">&gt;</span></code></pre>
+<pre><code><span class="k">.nav-toggle</span> { <span class="f">position</span>: <span class="s">absolute</span>; <span class="f">opacity</span>: <span class="n">0</span>; <span class="f">pointer-events</span>: <span class="s">none</span>; }
+
+<span class="c">/* ~ = հետագա եղբայր */</span>
+<span class="k">.nav-toggle</span>:<span class="k">checked</span> ~ <span class="t">nav</span> <span class="k">.menu</span> { <span class="f">transform</span>: <span class="s">translateX</span>(<span class="n">0</span>); }
+
+<span class="k">.nav-toggle</span>:<span class="k">checked</span> ~ <span class="k">.burger</span> <span class="t">span</span>:<span class="k">nth-child</span>(<span class="n">1</span>) { <span class="f">transform</span>: <span class="s">translateY</span>(<span class="n">7px</span>) <span class="s">rotate</span>(<span class="n">45deg</span>); }
+<span class="k">.nav-toggle</span>:<span class="k">checked</span> ~ <span class="k">.burger</span> <span class="t">span</span>:<span class="k">nth-child</span>(<span class="n">2</span>) { <span class="f">opacity</span>: <span class="n">0</span>; }
+<span class="k">.nav-toggle</span>:<span class="k">checked</span> ~ <span class="k">.burger</span> <span class="t">span</span>:<span class="k">nth-child</span>(<span class="n">3</span>) { <span class="f">transform</span>: <span class="s">translateY</span>(-<span class="n">7px</span>) <span class="s">rotate</span>(-<span class="n">45deg</span>); }
+
+<span class="c">/* Ֆոկուս label-ի վրա, երբ checkbox-ը ֆոկուսում է */</span>
+<span class="k">.nav-toggle</span>:<span class="k">focus-visible</span> ~ <span class="k">.burger</span> {
+    <span class="f">outline</span>: <span class="n">2px</span> <span class="s">solid</span> <span class="s">var</span>(<span class="f">--secondary</span>);
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ազնիվ գնահատական — սա ժամանակավոր լուծում է</span>
+      <p><strong>Աշխատում է՝</strong> բացվում և փակվում է, անիմացվում է, ստեղնաշարով հասանելի է։<br><br>
+      <strong>Բայց՝</strong><br>
+      · <code>checkbox</code>-ը <em>իմաստային</em> առումով սխալ է — դա ֆորմայի տարր է, ոչ կոճակ<br>
+      · Չի փակվում <kbd>Esc</kbd>-ով<br>
+      · Չի փակվում հղումին սեղմելուց հետո<br>
+      · Չի փակվում դրսում սեղմելիս<br>
+      · <code>aria-expanded</code>-ը չի թարմացվում — էկրանընթերցիչը չգիտի վիճակը<br><br>
+      <strong>JS բլոկի Դաս 11-ում</strong> այս նույն մենյուն կվերաշարադրենք ճիշտ՝ <code>&lt;button&gt;</code>-ով, <code>aria-expanded</code>-ի թարմացմամբ և բոլոր փակելու ձևերով։ Այսօրվա CSS տարբերակը լավ է հասկանալու համար, բայց իրական նախագծում օգտագործիր JS-ը։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ի՞նչ է <code>~</code></span>
+      <p><strong>Հետագա եղբոր</strong> սելեկտոր — ընտրում է բոլոր հետո եկող եղբայրներին։<br><br>
+      <code>A ~ B</code> — բոլոր <code>B</code>-երը, որոնք <code>A</code>-ից <em>հետո</em> են, նույն ծնողի ներսում։<br>
+      <code>A + B</code> — միայն <em>անմիջապես</em> հաջորդը (Դաս 17-ի bread crumbs-ը)։<br><br>
+      Ուստի <code>checkbox</code>-ը պիտի լինի HTML-ում <strong>ավելի վաղ</strong>, քան այն, ինչ ուզում ես կառավարել։ CSS-ը չի կարող «հետ նայել»։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Footer</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>կառուցվածքը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">footer</span> <span class="f">class</span>=<span class="s">"footer"</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row flex-wrap"</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-40 w-md-100"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"logo mb-10"</span><span class="p">&gt;</span>ՏեխնոՄարկետ<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Տեխնիկա ամեն օրվա համար։<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-30 w-md-50 w-sm-100"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"footer__title"</span><span class="p">&gt;</span>Բաժիններ<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">nav</span> <span class="f">aria-label</span>=<span class="s">"Footer-ի բաժիններ"</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">ul</span> <span class="f">class</span>=<span class="s">"flex flex-column gap-10"</span><span class="p">&gt;</span>
+                        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span><span class="p">&gt;</span>Ապրանքներ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+                        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span><span class="p">&gt;</span>Առաքում<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+                    <span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;</span>
+                <span class="p">&lt;/</span><span class="t">nav</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-30 w-md-50 w-sm-100"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"footer__title"</span><span class="p">&gt;</span>Կապ<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">address</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Երևան, Աբովյան 15<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"tel:+37410123456"</span><span class="p">&gt;</span>+374 10 123456<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+                <span class="p">&lt;/</span><span class="t">address</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-100"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"footer__bottom flex justify-between flex-wrap gap-10"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>&amp;copy; 2026 ՏեխնոՄարկետ<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span><span class="p">&gt;</span>Գաղտնիության քաղաքականություն<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="t">footer</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Footer-ի հասանելիության մանրուքներ</span>
+      <p><strong>1.</strong> Footer-ի <code>nav</code>-ը նույնպես պիտի ունենա <code>aria-label</code> — այլապես էկրանընթերցիչը կասի «նավիգացիա» երկու անգամ։<br>
+      <strong>2.</strong> <code>&lt;address&gt;</code>-ը կոնտակտների համար է (Դաս 5)։<br>
+      <strong>3.</strong> Մուգ ֆոնի վրա հղումների կոնտրաստը ստուգիր առանձին — մոխրագույն տեքստը մուգի վրա հաճախ ձախողվում է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Խաղահրապարակ</h2>
+    <p>Ամբողջական աշխատող նավիգացիա։ Նեղացրու նախադիտումը 768px-ից ներքև՝ բուրգերը տեսնելու համար։</p>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="html">HTML</button>
+        <button class="live__tab" data-pane="css">CSS</button>
+      </div>
+      <textarea class="live__code" data-pane="html">&lt;a href="#main" class="skip-link"&gt;Անցնել բովանդակությանը&lt;/a&gt;
+
+&lt;header class="header"&gt;
+
+    &lt;input type="checkbox" id="nav-toggle" class="nav-toggle"&gt;
+
+    &lt;a href="#" class="logo"&gt;ՏեխնոՄարկետ&lt;/a&gt;
+
+    &lt;label for="nav-toggle" class="burger"&gt;
+        &lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;
+        &lt;span class="visually-hidden"&gt;Մենյու&lt;/span&gt;
+    &lt;/label&gt;
+
+    &lt;nav aria-label="Գլխավոր մենյու"&gt;
+        &lt;ul class="menu"&gt;
+            &lt;li&gt;&lt;a href="#" aria-current="page"&gt;Գլխավոր&lt;/a&gt;&lt;/li&gt;
+
+            &lt;li class="has-sub"&gt;
+                &lt;a href="#"&gt;Կատեգորիաներ ▾&lt;/a&gt;
+                &lt;ul class="submenu"&gt;
+                    &lt;li&gt;&lt;a href="#"&gt;Նոութբուքեր&lt;/a&gt;&lt;/li&gt;
+                    &lt;li&gt;&lt;a href="#"&gt;Մոնիտորներ&lt;/a&gt;&lt;/li&gt;
+                    &lt;li&gt;&lt;a href="#"&gt;Աքսեսուարներ&lt;/a&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/li&gt;
+
+            &lt;li&gt;&lt;a href="#"&gt;Առաքում&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#"&gt;Կապ&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#" class="btn"&gt;Զամբյուղ&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/nav&gt;
+
+&lt;/header&gt;
+
+&lt;main id="main"&gt;
+    &lt;h1&gt;Բովանդակություն&lt;/h1&gt;
+    &lt;p&gt;Նեղացրու նախադիտումը 768px-ից ներքև։&lt;/p&gt;
+    &lt;p&gt;Սեղմիր Tab՝ skip link-ը տեսնելու համար։&lt;/p&gt;
+&lt;/main&gt;
+
+&lt;footer class="footer"&gt;
+    &lt;div class="footer__cols"&gt;
+        &lt;div&gt;
+            &lt;p class="footer__logo"&gt;ՏեխնոՄարկետ&lt;/p&gt;
+            &lt;p&gt;Տեխնիկա ամեն օրվա համար։&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+            &lt;h3 class="footer__title"&gt;Բաժիններ&lt;/h3&gt;
+            &lt;nav aria-label="Footer-ի բաժիններ"&gt;
+                &lt;ul class="footer__list"&gt;
+                    &lt;li&gt;&lt;a href="#"&gt;Ապրանքներ&lt;/a&gt;&lt;/li&gt;
+                    &lt;li&gt;&lt;a href="#"&gt;Առաքում&lt;/a&gt;&lt;/li&gt;
+                    &lt;li&gt;&lt;a href="#"&gt;Երաշխիք&lt;/a&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/nav&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+            &lt;h3 class="footer__title"&gt;Կապ&lt;/h3&gt;
+            &lt;address&gt;
+                &lt;p&gt;Երևան, Աբովյան 15&lt;/p&gt;
+                &lt;p&gt;&lt;a href="tel:+37410123456"&gt;+374 10 123456&lt;/a&gt;&lt;/p&gt;
+            &lt;/address&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class="footer__bottom"&gt;
+        &lt;p&gt;&amp;copy; 2026 ՏեխնոՄարկետ&lt;/p&gt;
+        &lt;p&gt;&lt;a href="#"&gt;Գաղտնիության քաղաքականություն&lt;/a&gt;&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/footer&gt;</textarea>
+      <textarea class="live__code is-hidden" data-pane="css">:root {
+    --dark: #253237;
+    --secondary: #003459;
+    --bg: #f5f5f5;
+    --text: #1a1a1a;
+    --muted: #6b6b6b;
+    --on-dark: #fff;
+    --shadow-sm: 0 1px 4px rgba(0,0,0,.10);
+    --shadow-lg: 0 10px 28px rgba(0,0,0,.16);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+}
+
+ul { list-style: none; }
+a  { color: inherit; text-decoration: none; display: inline-block; }
+
+.visually-hidden {
+    position: absolute; width: 1px; height: 1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* ===== SKIP LINK ===== */
+.skip-link {
+    position: absolute;
+    top: -60px;
+    left: 10px;
+    z-index: 200;
+    background: var(--secondary);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 0 0 8px 8px;
+    transition: top .2s;
+}
+
+.skip-link:focus { top: 0; }
+
+/* ===== HEADER ===== */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 16px;
+    background: #fff;
+    box-shadow: var(--shadow-sm);
+}
+
+.logo { font-size: 19px; font-weight: 700; color: var(--secondary); }
+
+.menu { display: flex; align-items: center; gap: 4px; }
+
+.menu a {
+    padding: 11px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.menu a:hover { background: var(--bg); }
+
+.menu a:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: -2px;
+}
+
+.menu a[aria-current="page"] {
+    color: var(--secondary);
+    background: var(--bg);
+    font-weight: 700;
+}
+
+.menu .btn {
+    background: var(--secondary);
+    color: #fff;
+    font-weight: 700;
+}
+
+.menu .btn:hover { background: #00253f; }
+
+/* ===== DROPDOWN ===== */
+.has-sub { position: relative; }
+
+.submenu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    z-index: 10;
+    min-width: 190px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: var(--shadow-lg);
+    padding: 6px;
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity .15s, transform .15s, visibility .15s;
+}
+
+.has-sub:hover .submenu,
+.has-sub:focus-within .submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.submenu a { display: block; }
+
+/* ===== BURGER ===== */
+.nav-toggle { position: absolute; opacity: 0; pointer-events: none; }
+
+.burger {
+    display: none;
+    width: 44px;
+    height: 44px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.burger span:not(.visually-hidden) {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--text);
+    transition: transform .25s, opacity .25s;
+}
+
+.nav-toggle:focus-visible ~ .burger {
+    outline: 2px solid var(--secondary);
+}
+
+/* ===== MAIN ===== */
+main { padding: 24px 16px; }
+main h1 { font-size: 22px; margin-bottom: 8px; }
+
+/* ===== FOOTER ===== */
+.footer {
+    background: var(--dark);
+    color: var(--on-dark);
+    padding: 28px 16px 16px;
+}
+
+.footer__cols {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    font-size: 14px;
+}
+
+.footer__cols > div { flex: 1 1 180px; }
+
+.footer__logo { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+.footer__title { font-size: 14px; margin-bottom: 10px; }
+
+.footer__list { display: flex; flex-direction: column; gap: 8px; }
+
+.footer a { color: #cfd8dd; }          /* կոնտրաստ 8.4:1 մուգի վրա */
+.footer a:hover { color: #fff; text-decoration: underline; }
+
+.footer address { font-style: normal; }
+
+.footer__bottom {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 22px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,.15);
+    font-size: 13px;
+}
+
+/* ============ ՀԵՌԱԽՈՍ ============ */
+@media (max-width: 768px) {
+
+    .burger { display: flex; }
+
+    .menu {
+        position: fixed;
+        top: 64px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 90;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        background: #fff;
+        padding: 16px;
+        overflow-y: auto;
+        transform: translateX(100%);
+        transition: transform .25s;
+    }
+
+    .nav-toggle:checked ~ nav .menu { transform: translateX(0); }
+
+    .nav-toggle:checked ~ .burger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle:checked ~ .burger span:nth-child(2) { opacity: 0; }
+    .nav-toggle:checked ~ .burger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .menu a {
+        display: block;
+        padding: 14px 12px;
+        border-bottom: 1px solid var(--bg);
+    }
+
+    .menu .btn { margin-top: 12px; text-align: center; border-radius: 6px; }
+
+    /* Ենթամենյուն միշտ բաց */
+    .submenu {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        box-shadow: none;
+        padding: 0 0 0 16px;
+        min-width: 0;
+    }
+}</textarea>
+      <div class="live__actions">
+        <span>Նեղացրու պատուհանը · սեղմիր Tab</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox="allow-forms"></iframe>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Փորձիր</span>
+      <p><strong>1.</strong> Նեղացրու պատուհանը և սեղմիր բուրգերին։<br>
+      <strong>2.</strong> Սեղմիր <kbd>Tab</kbd> առաջին անգամ — կհայտնվի skip link-ը։<br>
+      <strong>3.</strong> Ջնջիր <code>:focus-within</code>-ը և փորձիր <kbd>Tab</kbd>-ով բացել ենթամենյուն։<br>
+      <strong>4.</strong> Բացիր մենյուն և սեղմիր հղումին — կփակվի՞։ (Ահա CSS-ի սահմանափակումը։)</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Դասարանական</h2>
+    <ol>
+      <li>Կառուցիր header՝ լոգոյով և 5 կետանոց մենյուով</li>
+      <li>Ավելացրու <code>aria-current="page"</code> և ոճավորիր այն</li>
+      <li>Ավելացրու skip link ամենասկզբում</li>
+      <li>Ավելացրու dropdown մեկ կետի համար՝ <code>:hover</code> և <code>:focus-within</code></li>
+      <li>Կառուցիր բուրգերի պատկերակը երեք <code>span</code>-ով</li>
+      <li>Ավելացրու checkbox-ի հնարքը</li>
+      <li>768px-ից ներքև՝ մենյուն դարձրու fullscreen պանել</li>
+      <li>Կառուցիր footer՝ երեք սյունով և ներքևի տողով</li>
+      <li>Ստուգիր ամեն ինչը <kbd>Tab</kbd>-ով՝ առանց մկնիկի</li>
+    </ol>
+
+    <div class="warn note">
+      <span class="tag">Ստուգման կարգը՝ մկնիկը մի կողմ</span>
+      <p>Ձեռքդ վերցրու մկնիկից և փորձիր անցնել ամբողջ էջով միայն <kbd>Tab</kbd>-ով և <kbd>Enter</kbd>-ով։<br><br>
+      Պիտի կարողանաս՝ ցատկել բովանդակությանը, բացել մենյուն, մտնել ենթամենյու, հասնել footer։ Ամեն պահի պիտի <strong>տեսնես</strong>, թե որտեղ ես։<br><br>
+      Եթե ինչ-որ պահի ֆոկուսը կորչում է — այնտեղ խնդիր կա։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Կառուցիր ամբողջական header՝ լոգո, 5 հղում, կոճակ։</li>
+      <li>Ավելացրու <code>aria-current="page"</code>։ Ցուցադրիր, ինչպես ես ոճավորում այն առանց լրացուցիչ դասի։</li>
+      <li>Ավելացրու skip link։ Ցույց տուր, ինչպես է այն հայտնվում <kbd>Tab</kbd>-ի ժամանակ։</li>
+      <li>Կառուցիր dropdown։ Ջնջիր <code>:focus-within</code>-ը և նկարագրիր, ինչ կորավ։</li>
+      <li>Համեմատիր <code>display: none</code>-ը և <code>visibility: hidden</code> + <code>opacity</code>-ը dropdown-ի համար։ Ո՞րն է անիմացվում։</li>
+      <li>Կառուցիր բուրգերի պատկերակ, որը վերածվում է ✕-ի։ Ուղարկիր երկու սքրինշոթ։</li>
+      <li>Իրականացրու checkbox-ի հնարքը։ Ցուցադրիր, որ այն աշխատում է <kbd>Tab</kbd>-ով և <kbd>Space</kbd>-ով։</li>
+      <li>Գրիր ցուցակ՝ ի՞նչ 5 բան չի աշխատում CSS-ի տարբերակում։ (Ակնարկ՝ Esc, հղումին սեղմելը, դրսում սեղմելը...)</li>
+      <li>Կառուցիր footer՝ 3 սյուն, որը հեռախոսում դառնում է 1։ Ստուգիր հղումների կոնտրաստը մուգ ֆոնի վրա։</li>
+      <li>Անցիր ամբողջ էջով միայն ստեղնաշարով։ Նկարագրիր ամեն խնդիր, որ գտար։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>&lt;nav aria-label="..."&gt;</code></td><td>Landmark + անուն</td></tr>
+      <tr><td><code>aria-current="page"</code></td><td>Ակտիվ էջ՝ իմաստ + ոճ ⭐</td></tr>
+      <tr><td><code>.skip-link</code></td><td>Ցատկ բովանդակությանը ⭐</td></tr>
+      <tr><td><code>:focus-within</code></td><td>Dropdown-ը ստեղնաշարով ⭐</td></tr>
+      <tr><td><code>visibility: hidden</code> + <code>opacity</code></td><td>Անիմացվող թաքցնում</td></tr>
+      <tr><td><code>A ~ B</code></td><td>Հետագա եղբայրներ</td></tr>
+      <tr><td><code>A + B</code></td><td>Անմիջապես հաջորդ եղբայրը</td></tr>
+      <tr><td><code>:checked ~ ...</code></td><td>CSS-ով բացել-փակել</td></tr>
+      <tr><td><code>transform: translateX(100%)</code></td><td>Պանել կողքից</td></tr>
+      <tr><td><code>aria-expanded</code></td><td>Բաց/փակ վիճակ — <strong>պահանջում է JS</strong></td></tr>
+    </table>
+    </div>
+
+    <h3>Ի՞նչ ավելացավ main.css-ում այսօր</h3>
+    <div class="tree">✓ .header (sticky + shadow)
+✓ .logo, .menu, .menu a վիճակներով
+✓ .has-sub / .submenu
+✓ .burger + checkbox-ի հնարքը
+✓ .footer և բոլոր .footer__* էլեմենտները
+✓ @media 768px — բուրգեր և պանել</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li><code>nav</code>-երն ունեն <code>aria-label</code></li>
+      <li>Ակտիվ էջը նշված է <code>aria-current</code>-ով</li>
+      <li>Կա skip link</li>
+      <li>Dropdown-ն ունի <code>:focus-within</code></li>
+      <li>Dropdown-ի ծնող հղումն աշխատող է</li>
+      <li>Բուրգերի կոճակը ≥ 44×44px</li>
+      <li>Բուրգերն ունի տեքստային անուն (<code>aria-label</code> կամ <code>.visually-hidden</code>)</li>
+      <li>Մենյուն հեռախոսում ունի <code>overflow-y: auto</code></li>
+      <li>Footer-ի հղումների կոնտրաստը ≥ 4.5:1</li>
+      <li>Ամբողջ նավիգացիան անցնելի է <kbd>Tab</kbd>-ով</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչու <code>aria-current</code>, ոչ <code>class="active"</code></li>
+      <li>Գիտե՞մ, ինչու <code>visibility</code>, ոչ <code>display: none</code></li>
+      <li>Հասկանո՞ւմ եմ <code>~</code>-ի և <code>+</code>-ի տարբերությունը</li>
+      <li>Կարո՞ղ եմ անվանել CSS-բուրգերի 3 սահմանափակում</li>
+      <li>Գիտե՞մ, ինչու է skip link-ը պետք</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>CSS փոփոխականներ և թեմաներ։ Կխորանանք <code>:root</code>-ի մեջ, կկառուցենք դիզայն-տոկենների համակարգ և կավելացնենք մուգ թեմա՝ առանց մեկ տող JavaScript-ի։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 18 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

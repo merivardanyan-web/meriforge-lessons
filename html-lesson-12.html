@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 12 — Կառուցվածք և Flexbox II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 12 · 2 ժամ</p>
+  <h1>Կառուցվածք և Flexbox II</h1>
+  <p class="lede">Ինչպե՞ս են սյուները բաժանում ազատ տեղը։ Ի՞նչ է <code>gap</code>-ը և ինչո՞ւ մեր համակարգը դրա փոխարեն օգտագործում է <code>.col</code>-ի <code>padding</code>-ը։ Այսօր ավարտում ենք Flexbox-ը։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 10–11</span>
+    <span>Բլոկ 1 · Կառուցվածք</span>
+    <span>Դասարանում՝ footer</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Կմախքի կրկնում</li>
+      <li><code>flex-grow</code> — ազատ տեղի բաշխում</li>
+      <li><code>flex-shrink</code> և <code>flex-basis</code></li>
+      <li><code>flex</code> — կարճ գրառումը</li>
+      <li><code>gap</code> և ինչո՞ւ մենք չենք օգտագործում այն <code>.row</code>-ում</li>
+      <li><code>flex-wrap</code> — նախապատրաստում ադապտիվությանը</li>
+      <li><code>align-self</code> և <code>order</code></li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Կրկնում</h2>
+    <p>Երկու րոպե՝ առանց նայելու։ Գրիր հիշողությամբ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>լրացրու բացերը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* global.css */</span>
+<span class="k">.row</span>     { <span class="f">display</span>: ______; }
+<span class="k">.wrapper</span> { <span class="f">height</span>: ______; }
+
+<span class="c">/* main.css */</span>
+<span class="t">section</span> { <span class="f">padding</span>: ______; }   <span class="c">/* ուղղահայաց */</span>
+<span class="k">.row</span>    { <span class="f">padding</span>: ______; }   <span class="c">/* հորիզոնական */</span>
+<span class="k">.col</span>    { <span class="f">padding</span>: ______; }   <span class="c">/* բացակներ */</span></code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հարց Դաս 11-ից</th><th>Պատասխան</th></tr>
+      <tr><td>Ո՞ր առանցքով է <code>justify-content</code>-ը</td><td>Գլխավոր</td></tr>
+      <tr><td>Ի՞նչ է <code>align-items</code>-ի լռելյայնը</td><td><code>stretch</code></td></tr>
+      <tr><td>Ինչո՞ւ են քարտերը հավասար բարձրության</td><td><code>stretch</code> + <code>.wrapper { height: 100% }</code></td></tr>
+      <tr><td>Ինչպե՞ս հրել կոճակը ներքև</td><td><code>flex-direction: column</code> + <code>margin-top: auto</code></td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>flex-grow</h2>
+    <p>Երբ սյուների լայնությունների գումարը 100%-ից պակաս է, մնում է <strong>ազատ տեղ</strong>։ <code>flex-grow</code>-ը որոշում է՝ ով և որքան կվերցնի այն։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հիմունքներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.col</span>       { <span class="f">flex-grow</span>: <span class="n">0</span>; }   <span class="c">/* լռելյայն — չի աճում */</span>
+<span class="k">.col-grow</span>  { <span class="f">flex-grow</span>: <span class="n">1</span>; }   <span class="c">/* վերցնում է ազատ տեղը */</span></code></pre>
+    </div>
+
+    <div class="tree">flex-grow: 0 բոլորին (լռելյայն)
+┌────┐┌────┐┌────┐░░░░░░░░░░░░░░░
+│ 1  ││ 2  ││ 3  │  ազատ տեղ
+└────┘└────┘└────┘░░░░░░░░░░░░░░░
+
+flex-grow: 1 բոլորին
+┌───────────┐┌───────────┐┌───────────┐
+│     1     ││     2     ││     3     │
+└───────────┘└───────────┘└───────────┘
+   ազատ տեղը բաժանվեց հավասար
+
+flex-grow: 1 միայն երկրորդին
+┌────┐┌───────────────────────┐┌────┐
+│ 1  ││          2            ││ 3  │
+└────┘└───────────────────────┘└────┘</code></div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>համամասնություններ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.a</span> { <span class="f">flex-grow</span>: <span class="n">1</span>; }
+<span class="k">.b</span> { <span class="f">flex-grow</span>: <span class="n">2</span>; }   <span class="c">/* կրկնակի ավելի շատ ազատ տեղ */</span>
+<span class="k">.c</span> { <span class="f">flex-grow</span>: <span class="n">1</span>; }
+
+<span class="c">/* Ազատ տեղը բաժանվում է 1:2:1 հարաբերությամբ */</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Կարևոր նրբություն</span>
+      <p><code>flex-grow</code>-ը բաժանում է <strong>միայն ազատ տեղը</strong>, ոչ ամբողջ լայնությունը։<br><br>
+      Եթե <code>.b</code>-ի բովանդակությունն արդեն լայն է, <code>flex-grow: 2</code>-ը չի նշանակի, որ այն կլինի կրկնակի լայն <code>.a</code>-ից։ Այն պարզապես կստանա կրկնակի ավելի շատ <em>ավելացում</em>։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ամենահաճախ պետք եկող օրինակը</span>
+      <p>Որոնման դաշտ կոճակով․ դաշտը պիտի ձգվի, կոճակը՝ մնա իր չափին։<br>
+      <code>input { flex-grow: 1 }</code> և կոճակին ոչինչ։ Ամեն ինչ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>flex-shrink և flex-basis</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երբ տեղը չի հերիքում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.col</span>    { <span class="f">flex-shrink</span>: <span class="n">1</span>; }   <span class="c">/* լռելյայն — սեղմվում է */</span>
+<span class="k">.logo</span>   { <span class="f">flex-shrink</span>: <span class="n">0</span>; }   <span class="c">/* չսեղմվել ⭐ */</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">flex-shrink: 0 — շատ օգտակար</span>
+      <p>Լոգոն, պատկերակը, ավատարը չպիտի սեղմվեն, երբ կողքի տեքստը երկար է։ <code>flex-shrink: 0</code>-ը պաշտպանում է դրանք։<br><br>
+      Առանց դրա նկարը կսեղմվի և կդառնա ձվաձև։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>flex-basis — ելակետային չափը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.col</span> { <span class="f">flex-basis</span>: <span class="n">300px</span>; }   <span class="c">/* սկզբնական լայնությունը */</span>
+<span class="k">.col</span> { <span class="f">flex-basis</span>: <span class="n">0</span>; }       <span class="c">/* անտեսել բովանդակությունը */</span>
+<span class="k">.col</span> { <span class="f">flex-basis</span>: <span class="s">auto</span>; }    <span class="c">/* լռելյայն — ըստ բովանդակության */</span></code></pre>
+    </div>
+
+    <h3>flex — կարճ գրառումը</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երեքը մեկում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.col</span> { <span class="f">flex</span>: <span class="n">1</span> <span class="n">1</span> <span class="s">auto</span>; }
+<span class="c">/*      ↑ ↑  ↑                    */</span>
+<span class="c">/*   grow shrink basis            */</span>
+
+<span class="c">/* Ամենատարածված գրառումները */</span>
+<span class="k">.equal</span>  { <span class="f">flex</span>: <span class="n">1</span>; }        <span class="c">/* = 1 1 0 — բոլորը հավասար ⭐ */</span>
+<span class="k">.fixed</span>  { <span class="f">flex</span>: <span class="s">none</span>; }     <span class="c">/* = 0 0 auto — չի փոխվում */</span>
+<span class="k">.card</span>   { <span class="f">flex</span>: <span class="n">1</span> <span class="n">1</span> <span class="n">300px</span>; } <span class="c">/* ելակետը 300px, ճկուն */</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">flex: 1 — ամենակարևոր գրառումը</span>
+      <p><code>flex: 1</code> նշանակում է <code>flex: 1 1 0</code> — <strong>բովանդակությունն անտեսվում է</strong>, և բոլոր տարրերը դառնում են ուղիղ հավասար։<br><br>
+      Սա այլ բան է, քան <code>flex-grow: 1</code> առանձին, որտեղ <code>basis</code>-ը մնում է <code>auto</code>, և երկար տեքստով սյունը կլինի ավելի լայն։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>gap</h2>
+    <p>Բացակ flex-տարրերի միջև՝ մեկ հատկությամբ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>շատ պարզ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.menu</span> {
+    <span class="f">display</span>: <span class="s">flex</span>;
+    <span class="f">gap</span>: <span class="n">20px</span>;
+}
+
+<span class="c">/* Առանձին ուղղություններով */</span>
+<span class="k">.grid</span> {
+    <span class="f">gap</span>: <span class="n">20px</span> <span class="n">10px</span>;    <span class="c">/* տողերի միջև, սյուների միջև */</span>
+    <span class="f">row-gap</span>: <span class="n">20px</span>;
+    <span class="f">column-gap</span>: <span class="n">10px</span>;
+}</code></pre>
+    </div>
+
+    <div class="tree">Առանց gap-ի              gap: 20px-ով
+[1][2][3]                [1]  [2]  [3]
+                              ↑    ↑
+                          միայն ՄԻՋԵՎ,
+                          եզրերին բացակ չկա</div>
+
+    <h3>Ինչո՞ւ մեր .row-ը չի օգտագործում gap</h3>
+    <p>Հարցն արդարացի է․ եթե <code>gap</code>-ը այսքան պարզ է, ինչու <code>.col</code>-ի <code>padding</code>-ը։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>խնդիրը՝ gap + տոկոսներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.row</span> { <span class="f">display</span>: <span class="s">flex</span>; <span class="f">gap</span>: <span class="n">20px</span>; }
+<span class="k">.col</span> { <span class="f">width</span>: <span class="n">33.3333%</span>; }
+
+<span class="c">/* 33.33% + 20px + 33.33% + 20px + 33.33% &gt; 100%
+   Երրորդ սյունը ընկնում է ներքև                    */</span></code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th></th><th><code>.col</code> padding</th><th><code>gap</code></th></tr>
+      <tr><td>Աշխատում է <code>%</code> լայնությունների հետ</td><td>✅</td><td>❌</td></tr>
+      <tr><td>Բացակ միայն միջև</td><td>❌ (նաև եզրերին)</td><td>✅</td></tr>
+      <tr><td>Պարզություն</td><td>Պիտի հիշես շերտը</td><td>Մեկ տող</td></tr>
+      <tr><td>Աշխատում է <code>flex: 1</code>-ի հետ</td><td>✅</td><td>✅</td></tr>
+      <tr><td>Ֆոն սյան վրա</td><td>❌ չի կարելի</td><td>✅ կարելի է</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Երկուսն էլ ճիշտ են՝ տարբեր տեղերում</span>
+      <p><strong><code>.col</code> padding</strong> — էջի հիմնական ցանցի համար, որտեղ լայնությունները տոկոսներով են (<code>.w-25</code>, <code>.w-33</code>)։<br><br>
+      <strong><code>gap</code></strong> — փոքր խմբերի համար՝ մենյու, կոճակների շարք, պիտակներ, քարտի ներսի տարրեր։ Այնտեղ տոկոսներ չկան, և <code>gap</code>-ը շատ ավելի մաքուր է։<br><br>
+      Այսինքն՝ մեր համակարգում <strong>օգտագործվում են երկուսն էլ</strong>՝ ամեն մեկն իր տեղում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>որտեղ gap-ը ճիշտ ընտրություն է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- Մենյու --&gt;</span>
+<span class="p">&lt;</span><span class="t">ul</span> <span class="f">class</span>=<span class="s">"flex align-center gap-20"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Կոճակների խումբ --&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"flex gap-10"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"btn"</span><span class="p">&gt;</span>Պահպանել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"btn btn-light"</span><span class="p">&gt;</span>Չեղարկել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Քարտի ներսում՝ գին և կոճակ --&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"flex justify-between align-center gap-10"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">span</span><span class="p">&gt;</span>450 000 ֏<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span> <span class="f">class</span>=<span class="s">"btn"</span><span class="p">&gt;</span>Գնել<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>flex-wrap</h2>
+    <p>Լռելյայն flex-տարրերը <strong>չեն տողադարձվում</strong> — դրանք սեղմվում են մինչև անհնարինություն։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>թույլատրում ենք տողադարձը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.row</span> {
+    <span class="f">display</span>: <span class="s">flex</span>;
+    <span class="f">flex-wrap</span>: <span class="s">wrap</span>;
+}</code></pre>
+    </div>
+
+    <div class="tree">nowrap (լռելյայն)          wrap
+┌─┐┌─┐┌─┐┌─┐┌─┐┌─┐         ┌────┐┌────┐┌────┐
+│1││2││3││4││5││6│         │ 1  ││ 2  ││ 3  │
+└─┘└─┘└─┘└─┘└─┘└─┘         └────┘└────┘└────┘
+սեղմվում են և             ┌────┐┌────┐┌────┐
+դառնում անընթեռնելի        │ 4  ││ 5  ││ 6  │
+                          └────┘└────┘└────┘</div>
+
+    <div class="tip note">
+      <span class="tag">Սա ադապտիվության հիմքն է</span>
+      <p><code>flex-wrap: wrap</code> + <code>.w-*</code> դասեր = երբ սյուները չեն տեղավորվում, դրանք բնականորեն անցնում են հաջորդ տող։<br><br>
+      14-րդ դասին կավելացնենք media queries, և հեռախոսում <code>w-25</code>-ը կդառնա <code>w-100</code>։ Բայց առանց <code>flex-wrap</code>-ի դա չէր աշխատի — սյուները պարզապես կսեղմվեին։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Առանց wrap-ի հեռախոսում</span>
+      <p>Չորս սյուն <code>w-25</code>-ով 375px էկրանին՝ ամեն մեկը 94px։ Տեքստն անընթեռնելի է, նկարները՝ մանրիկ։<br><br>
+      Ուստի <code>flex-wrap: wrap</code>-ը մեր <code>.row</code>-ի համար գործնականում պարտադիր է։ Ավելացնում ենք <code>global.css</code>-ում որպես առանձին դաս, որ կիրառես գիտակցաբար։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ինքնաբերաբար հարմարվող ցանց</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Բոնուս՝ առանց media queries */</span>
+<span class="k">.auto-grid</span> {
+    <span class="f">display</span>: <span class="s">flex</span>;
+    <span class="f">flex-wrap</span>: <span class="s">wrap</span>;
+    <span class="f">gap</span>: <span class="n">20px</span>;
+}
+
+<span class="k">.auto-grid</span> &gt; <span class="k">*</span> {
+    <span class="f">flex</span>: <span class="n">1</span> <span class="n">1</span> <span class="n">250px</span>;   <span class="c">/* ելակետը 250px, աճում է, տողադարձվում */</span>
+}
+
+<span class="c">/* Լայն էկրանին՝ 4 սյուն, նեղում՝ 2, հեռախոսում՝ 1 */</span></code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>align-self և order</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>բացառություն մեկ տարրի համար</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.row</span> { <span class="f">align-items</span>: <span class="s">center</span>; }
+
+<span class="k">.special</span> { <span class="f">align-self</span>: <span class="s">flex-start</span>; }   <span class="c">/* միայն սա՝ վերևից */</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>order — տեսողական հերթականություն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.a</span> { <span class="f">order</span>: <span class="n">2</span>; }
+<span class="k">.b</span> { <span class="f">order</span>: <span class="n">1</span>; }   <span class="c">/* կհայտնվի առաջինը */</span>
+<span class="k">.c</span> { <span class="f">order</span>: <span class="n">3</span>; }
+
+<span class="c">/* Լռելյայն բոլորի order-ը 0 է */</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">order-ը հասանելիության թակարդ է</span>
+      <p><code>order</code>-ը փոխում է <strong>միայն տեսողական</strong> հերթականությունը։ <kbd>Tab</kbd>-ի հերթականությունը և էկրանընթերցիչի ընթերցումը մնում են ըստ HTML-ի։<br><br>
+      Արդյունքում ստեղնաշարով նավարկողը ֆոկուսը կտեսնի «ցատկելով»՝ երկրորդ, հետո առաջին, հետո երրորդ։ Դա շփոթեցնող է։<br><br>
+      <strong>Կանոն՝</strong> եթե տեսողական հերթականությունը կարևոր է, փոխիր HTML-ը։ <code>order</code>-ը՝ միայն զուտ դեկորատիվ դեպքերում։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Օրինաչափ կիրառություն</span>
+      <p>Հեռախոսում նկարը պիտի լինի տեքստից վեր, համակարգչում՝ աջ կողմում։ Այստեղ <code>order</code>-ը արդարացված է, քանի որ իմաստային հերթականությունը չի փոխվում — մենակ դասավորությունն է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Խաղահրապարակ</h2>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="css">CSS</button>
+        <button class="live__tab" data-pane="html">HTML</button>
+      </div>
+      <textarea class="live__code" data-pane="css">* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: system-ui, sans-serif;
+    padding: 16px;
+    background: #f5f5f5;
+    line-height: 1.5;
+}
+
+h3 { margin: 18px 0 6px; font-size: 14px; color: #555; }
+
+.demo {
+    display: flex;
+    background: #ddd;
+    padding: 8px;
+    margin-bottom: 8px;
+}
+
+.demo > div {
+    background: #003459;
+    color: white;
+    padding: 10px 14px;
+}
+
+/* ===== 1. flex-grow ===== */
+.g1 > div:nth-child(2) { flex-grow: 1; }
+
+/* ===== 2. համամասնություններ ===== */
+.g2 > div:nth-child(1) { flex-grow: 1; }
+.g2 > div:nth-child(2) { flex-grow: 2; }
+.g2 > div:nth-child(3) { flex-grow: 1; }
+
+/* ===== 3. flex: 1 vs flex-grow: 1 ===== */
+.g3 > div { flex-grow: 1; }   /* basis: auto — տեքստը ազդում է */
+.g4 > div { flex: 1; }        /* basis: 0 — ուղիղ հավասար */
+
+/* ===== 4. flex-shrink: 0 ===== */
+.g5 .logo {
+    flex-shrink: 0;
+    width: 80px;
+    background: #c62828;
+    text-align: center;
+}
+
+/* ===== 5. gap ===== */
+.g6 { gap: 20px; }
+
+/* ===== 6. wrap + flex: 1 1 250px ===== */
+.auto-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: #ddd;
+    padding: 8px;
+}
+
+.auto-grid > div {
+    flex: 1 1 200px;
+    background: white;
+    border-radius: 8px;
+    padding: 14px;
+}
+
+/* ===== 7. Որոնման դաշտ ===== */
+.search {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.search input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #999;
+    border-radius: 6px;
+}
+
+.search button {
+    flex-shrink: 0;
+    padding: 10px 20px;
+    background: #003459;
+    color: white;
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+}</textarea>
+      <textarea class="live__code is-hidden" data-pane="html">&lt;h3&gt;1. flex-grow: 1 միայն երկրորդին&lt;/h3&gt;
+&lt;div class="demo g1"&gt;&lt;div&gt;1&lt;/div&gt;&lt;div&gt;2&lt;/div&gt;&lt;div&gt;3&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3&gt;2. Համամասնություն 1 : 2 : 1&lt;/h3&gt;
+&lt;div class="demo g2"&gt;&lt;div&gt;1&lt;/div&gt;&lt;div&gt;2&lt;/div&gt;&lt;div&gt;3&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3&gt;3. flex-grow: 1 — տեքստի երկարությունն ազդում է&lt;/h3&gt;
+&lt;div class="demo g3"&gt;&lt;div&gt;կարճ&lt;/div&gt;&lt;div&gt;շատ ավելի երկար տեքստ այստեղ&lt;/div&gt;&lt;div&gt;միջին&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3&gt;4. flex: 1 — ուղիղ հավասար&lt;/h3&gt;
+&lt;div class="demo g4"&gt;&lt;div&gt;կարճ&lt;/div&gt;&lt;div&gt;շատ ավելի երկար տեքստ այստեղ&lt;/div&gt;&lt;div&gt;միջին&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3&gt;5. flex-shrink: 0 — լոգոն չի սեղմվում&lt;/h3&gt;
+&lt;div class="demo g5"&gt;
+    &lt;div class="logo"&gt;LOGO&lt;/div&gt;
+    &lt;div&gt;Այս տեքստը երկար է և ուզում է տեղ զբաղեցնել, բայց լոգոն մնում է 80px&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3&gt;6. gap: 20px&lt;/h3&gt;
+&lt;div class="demo g6"&gt;&lt;div&gt;1&lt;/div&gt;&lt;div&gt;2&lt;/div&gt;&lt;div&gt;3&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3&gt;7. Ինքնահարմարվող ցանց — նեղացրու պատուհանը&lt;/h3&gt;
+&lt;div class="auto-grid"&gt;
+    &lt;div&gt;Առաջին&lt;/div&gt;
+    &lt;div&gt;Երկրորդ&lt;/div&gt;
+    &lt;div&gt;Երրորդ&lt;/div&gt;
+    &lt;div&gt;Չորրորդ&lt;/div&gt;
+    &lt;div&gt;Հինգերորդ&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3&gt;8. Որոնման դաշտ&lt;/h3&gt;
+&lt;div class="search"&gt;
+    &lt;input type="search" placeholder="Որոնել..."&gt;
+    &lt;button&gt;Գտնել&lt;/button&gt;
+&lt;/div&gt;</textarea>
+      <div class="live__actions">
+        <span>Համեմատիր 3-րդ և 4-րդ օրինակները</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Փորձիր</span>
+      <p><strong>1.</strong> Համեմատիր 3-րդ և 4-րդ բլոկները — դա <code>flex-grow: 1</code>-ի և <code>flex: 1</code>-ի ամբողջ տարբերությունն է։<br>
+      <strong>2.</strong> Ջնջիր <code>flex-shrink: 0</code>-ը լոգոյից։<br>
+      <strong>3.</strong> Փոխիր <code>flex: 1 1 200px</code>-ը <code>300px</code>-ի։<br>
+      <strong>4.</strong> Ջնջիր <code>flex-grow: 1</code>-ը որոնման դաշտից։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Դասարանական · footer</h2>
+    <p>Կառուցում ենք ամբողջական footer՝ մեր կմախքով և այսօրվա գիտելիքով։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">footer</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- Հիմնական տող --&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row flex-wrap"</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-40"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"title-4 mb-10"</span><span class="p">&gt;</span>ՏեխնոՄարկետ<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Տեխնիկա ամեն օրվա համար։<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-20"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">h4</span> <span class="f">class</span>=<span class="s">"mb-10"</span><span class="p">&gt;</span>Բաժիններ<span class="p">&lt;/</span><span class="t">h4</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">nav</span> <span class="f">aria-label</span>=<span class="s">"Footer-ի հղումներ"</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">ul</span> <span class="f">class</span>=<span class="s">"flex flex-column gap-10"</span><span class="p">&gt;</span>
+                        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span><span class="p">&gt;</span>Գլխավոր<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+                        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span><span class="p">&gt;</span>Ապրանքներ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+                        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#"</span><span class="p">&gt;</span>Կապ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+                    <span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;</span>
+                <span class="p">&lt;/</span><span class="t">nav</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-40"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">h4</span> <span class="f">class</span>=<span class="s">"mb-10"</span><span class="p">&gt;</span>Բաժանորդագրություն<span class="p">&lt;/</span><span class="t">h4</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">form</span> <span class="f">class</span>=<span class="s">"flex gap-10"</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"mail"</span> <span class="f">class</span>=<span class="s">"visually-hidden"</span><span class="p">&gt;</span>Էլ. հասցե<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"email"</span> <span class="f">id</span>=<span class="s">"mail"</span> <span class="f">name</span>=<span class="s">"mail"</span>
+                           <span class="f">placeholder</span>=<span class="s">"ani@example.com"</span> <span class="f">required</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">button</span> <span class="f">type</span>=<span class="s">"submit"</span> <span class="f">class</span>=<span class="s">"btn"</span><span class="p">&gt;</span>Ուղարկել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+                <span class="p">&lt;/</span><span class="t">form</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- Ներքևի տող --&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-100"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper flex justify-between align-center flex-wrap gap-10"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>&amp;copy; 2026 ՏեխնոՄարկետ<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Երևան, Աբովյան 15<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="t">footer</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>css/main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="t">footer</span> {
+    <span class="f">background</span>: <span class="s">var</span>(<span class="f">--dark</span>);
+    <span class="f">color</span>: <span class="s">var</span>(<span class="f">--on-dark</span>);
+    <span class="f">padding</span>: <span class="n">40px</span> <span class="n">0</span> <span class="n">20px</span>;
+}
+
+<span class="t">footer</span> <span class="t">a</span>:<span class="k">hover</span>,
+<span class="t">footer</span> <span class="t">a</span>:<span class="k">focus-visible</span> {
+    <span class="f">text-decoration</span>: <span class="s">underline</span>;
+}
+
+<span class="t">footer</span> <span class="t">input</span> {
+    <span class="f">flex-grow</span>: <span class="n">1</span>;        <span class="c">/* ձգվում է ⭐ */</span>
+    <span class="f">min-width</span>: <span class="n">0</span>;         <span class="c">/* թույլ է տալիս սեղմվել */</span>
+}
+
+<span class="t">footer</span> <span class="k">.btn</span> {
+    <span class="f">flex-shrink</span>: <span class="n">0</span>;      <span class="c">/* կոճակը չի սեղմվում ⭐ */</span>
+}
+
+<span class="c">/* Ներքևի տողի բաժանարար */</span>
+<span class="t">footer</span> <span class="k">.row</span>:<span class="k">last-child</span> <span class="k">.wrapper</span> {
+    <span class="f">border-top</span>: <span class="n">1px</span> <span class="s">solid rgba</span>(<span class="n">255</span>,<span class="n">255</span>,<span class="n">255</span>,<span class="n">.15</span>);
+    <span class="f">padding-top</span>: <span class="n">20px</span>;
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">min-width: 0 — կարևոր մանրուք</span>
+      <p>Flex-տարրերն ունեն թաքնված <code>min-width: auto</code>, ինչը թույլ չի տալիս դրանց սեղմվել իրենց բովանդակությունից ավելի փոքր։<br><br>
+      Երկար <code>placeholder</code>-ով դաշտը կարող է «պայթեցնել» դասավորությունը։ <code>min-width: 0</code>-ը թույլ է տալիս այն սեղմվել նորմալ։<br><br>
+      Սա այն սխալներից է, որ շատ դժվար է գտնել, եթե չգիտես դրա մասին։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ցուցադրիր <code>flex-grow</code>-ի ազդեցությունը՝ երեք բլոկ, <code>grow</code>-ը միայն մեկին։</li>
+      <li>Ցուցադրիր համամասնությունը 1:2:1 և 1:3:1։</li>
+      <li>Կողք կողքի համեմատիր <code>flex-grow: 1</code>-ը և <code>flex: 1</code>-ը՝ շատ տարբեր երկարության տեքստերով։ Բացատրիր տարբերությունը։</li>
+      <li>Կառուցիր որոնման դաշտ կոճակով՝ <code>flex-grow</code> և <code>flex-shrink: 0</code>-ով։</li>
+      <li>Ցուցադրիր <code>flex-shrink: 0</code>-ի կարևորությունը լոգոյի օրինակով՝ առաջ և հետո։</li>
+      <li>Ցուցադրիր <code>gap</code>-ի և տոկոսային լայնությունների կոնֆլիկտը։ Ապա լուծիր՝ <code>flex: 1</code>-ի անցնելով։</li>
+      <li>Կառուցիր ինքնահարմարվող ցանց՝ <code>flex: 1 1 250px</code>-ով, 6 տարրով։ Ստուգիր տարբեր լայնություններով։</li>
+      <li>Ավելացրու <code>flex-wrap: wrap</code> Դաս 10-ի «Մեր թիմը» բաժնին։ Նեղացրու պատուհանը և նկարագրիր վարքագիծը։</li>
+      <li>Կառուցիր footer դասարանական օրինակի պես։ Ստուգիր <kbd>Tab</kbd>-ով և նեղ էկրանով։</li>
+      <li>Ցուցադրիր <code>order</code>-ի հասանելիության խնդիրը․ երեք հղում, <code>order</code>-ով փոխված հերթականությամբ։ Անցիր <kbd>Tab</kbd>-ով և նկարագրիր, ինչ ես տեսնում։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հատկություն</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>flex-grow: 1</code></td><td>Վերցնում է ազատ տեղը</td></tr>
+      <tr><td><code>flex-shrink: 0</code></td><td>Չի սեղմվում ⭐</td></tr>
+      <tr><td><code>flex-basis</code></td><td>Ելակետային չափը</td></tr>
+      <tr><td><code>flex: 1</code></td><td><code>1 1 0</code> — ուղիղ հավասար ⭐</td></tr>
+      <tr><td><code>flex: none</code></td><td><code>0 0 auto</code> — չի փոխվում</td></tr>
+      <tr><td><code>flex: 1 1 250px</code></td><td>Ինքնահարմարվող ցանց</td></tr>
+      <tr><td><code>gap</code></td><td>Բացակ միայն միջև</td></tr>
+      <tr><td><code>flex-wrap: wrap</code></td><td>Թույլ է տալիս տողադարձ ⭐</td></tr>
+      <tr><td><code>align-self</code></td><td>Բացառություն մեկ տարրի համար</td></tr>
+      <tr><td><code>order</code></td><td>Տեսողական հերթականություն ⚠️</td></tr>
+      <tr><td><code>min-width: 0</code></td><td>Թույլ է տալիս flex-տարրին սեղմվել</td></tr>
+    </table>
+    </div>
+
+    <h3>Ե՞րբ gap, ե՞րբ .col padding</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Իրավիճակ</th><th>Ընտրություն</th></tr>
+      <tr><td>Էջի ցանց՝ <code>.w-25</code>, <code>.w-33</code></td><td><code>.col</code> padding</td></tr>
+      <tr><td>Մենյու, կոճակների խումբ</td><td><code>gap</code></td></tr>
+      <tr><td>Քարտի ներսի տարրեր</td><td><code>gap</code></td></tr>
+      <tr><td><code>flex: 1</code>-ով սյուներ</td><td><code>gap</code></td></tr>
+    </table>
+    </div>
+
+    <h3>Ի՞նչ ավելացավ global.css-ում այսօր</h3>
+    <div class="tree">✓ .flex-wrap { flex-wrap: wrap; }</div>
+
+    <h3>Ի՞նչ ավելացավ main.css-ում</h3>
+    <div class="tree">✓ .gap-5 / .gap-10 / .gap-15 / .gap-20 / .gap-30 / .gap-40 / .gap-50</div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ gap-երը main.css-ում</span>
+      <p><code>gap</code>-ի արժեքները <strong>դիզայնի մաս են</strong> — ամեն նախագծում իր սանդղակն է։ Իսկ <code>.flex-wrap</code>-ը վարքագիծ է, որը չի փոխվում։<br><br>
+      Նույն տրամաբանությամբ են բաժանված <code>.row { display: flex }</code>-ը և <code>.row { padding: 0 50px }</code>-ը։</p>
+    </div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Լոգոները և պատկերակներն ունեն <code>flex-shrink: 0</code></li>
+      <li>Ձգվող դաշտերն ունեն <code>min-width: 0</code></li>
+      <li><code>.row</code>-երն ունեն <code>flex-wrap</code>, եթե սյուները շատ են</li>
+      <li><code>gap</code>-ը չի օգտագործվում տոկոսային լայնությունների հետ</li>
+      <li><code>order</code>-ը չի կոտրում <kbd>Tab</kbd>-ի հերթականությունը</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել <code>flex: 1</code>-ի և <code>flex-grow: 1</code>-ի տարբերությունը</li>
+      <li>Գիտե՞մ, ինչու <code>gap</code>-ը կոնֆլիկտում է տոկոսների հետ</li>
+      <li>Հասկանո՞ւմ եմ, ինչու է պետք <code>min-width: 0</code></li>
+      <li>Գիտե՞մ, ինչու է <code>order</code>-ը վտանգավոր</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին — ջրբաժան</span>
+      <p>Կառուցվածքի երեք դասն ավարտված է։ Դաս 13-ը լինելու է շրջադարձային․ կսովորենք <strong>դիզայնի մակետը կարդալ</strong> — չափել հեռավորությունները, հանել գույներն ու տառաչափերը, կառուցել <code>main.css</code>-ը, և <em>միայն դրանից հետո</em> գրել HTML։<br><br>
+      Այնտեղ նաև կհամեմատենք երկու մոտեցում՝ utility-դասեր vs BEM, և կհասկանանք, թե ինչու ենք ընտրում այս ձևը։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 12 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHP Դաս 16 — Նույնականացում և CSRF</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>PHP Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">PHP Դաս 16 · 2 ժամ · Անվտանգություն 4 / 4 · Սեփական MVC 2 / 3</p>
+  <h1>Նույնականացում և CSRF</h1>
+  <p class="lede">Վեց դաս ասում էինք «ադմինը պաշտպանված չէ»։ Այսօր փակում ենք այդ պարտքը — և սովորում ենք հարձակում, որի մասին շատերը չգիտեն։</p>
+
+  <div class="facts">
+    <span>Բլոկ 3 · Դաս 16 / 24</span>
+    <span>Անվտանգության վերջին դասը</span>
+    <span>password_hash · մուտք · CSRF</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ինչո՞ւ գաղտնաբառերը երբեք չեն պահվում</li>
+      <li><code>password_hash</code> և <code>password_verify</code></li>
+      <li>Մուտք, ելք, սեսիայի պաշտպանություն</li>
+      <li>Ստուգումը՝ մեկ տեղում (middleware-ի գաղափարը)</li>
+      <li>CSRF — ի՞նչ է և ինչո՞ւ վտանգավոր</li>
+      <li>Token ամեն ֆորմայում</li>
+      <li>Փորձերի սահմանափակում</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Գաղտնաբառեր</h2>
+
+    <div class="warn note">
+      <span class="tag">Հիմնական կանոն</span>
+      <p><strong>Գաղտնաբառը երբեք չի պահվում։ Պահվում է դրա հեշը։</strong><br><br>
+      Հեշավորումը միակողմանի է․ գաղտնաբառից հեշ ստանալը հեշտ է, հակառակը՝ գործնականում անհնար։<br><br>
+      Դա նշանակում է, որ բազայի արտահոսքի դեպքում հարձակվողը գաղտնաբառեր չի ստանում։ Իսկ արտահոսքերը լինում են՝ SQL injection, աշխատակցի սխալ, չպաշտպանված պահուստավորում։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Մոտեցում</th><th>Գնահատական</th></tr>
+      <tr><td>Բաց տեքստ</td><td>❌ Աններելի</td></tr>
+      <tr><td><code>md5()</code>, <code>sha1()</code></td><td>❌ Կոտրվում է վայրկյաններում</td></tr>
+      <tr><td><code>sha256</code> + աղ</td><td>⚠️ Ավելի լավ, բայց չափազանց արագ</td></tr>
+      <tr><td><code>password_hash()</code></td><td>✅ Ճիշտ ⭐</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ «չափազանց արագ»-ը վատ է</span>
+      <p>Սովորական հեշ-ֆունկցիաները նախագծված են <em>արագության</em> համար։ Ժամանակակից վիդեոքարտը հաշվում է միլիարդավոր <code>sha256</code> վայրկյանում։<br><br>
+      Դա նշանակում է, որ հարձակվողը կարող է փորձել բոլոր տարածված գաղտնաբառերը րոպեների ընթացքում։<br><br>
+      <code>password_hash()</code>-ը օգտագործում է bcrypt՝ <strong>դիտավորյալ դանդաղ</strong> ալգորիթմ։ Մեկ ստուգումը ~50-100 մվ է։ Օգտագործողի համար անտեսանելի, հարձակվողի համար՝ միլիոնավոր անգամ ավելի թանկ։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>օգտագործում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Գրանցում</span>
+<span class="n">$hash</span> = <span class="f">password_hash</span>(<span class="n">$password</span>, <span class="k">PASSWORD_DEFAULT</span>);
+
+<span class="c">// $2y$12$LQv3c1yqBw...  — 60 նիշ
+// Աղն արդեն ներսում է, առանձին պահել պետք չէ ⭐</span>
+
+<span class="c">// Ստուգում</span>
+<span class="k">if</span> (<span class="f">password_verify</span>(<span class="n">$password</span>, <span class="n">$hash</span>)) {
+    <span class="c">// ճիշտ է</span>
+}
+
+<span class="c">// Նույն գաղտնաբառը → ամեն անգամ ՏԱՐԲԵՐ հեշ
+// (պատահական աղի պատճառով)
+// Ուստի հեշերը երբեք չեն համեմատվում === -ով ⚠️</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>users աղյուսակը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">CREATE TABLE</span> users (
+    id            <span class="t">INT UNSIGNED</span> <span class="k">AUTO_INCREMENT PRIMARY KEY</span>,
+    email         <span class="t">VARCHAR</span>(<span class="n">190</span>) <span class="k">NOT NULL UNIQUE</span>,
+    password_hash <span class="t">VARCHAR</span>(<span class="n">255</span>) <span class="k">NOT NULL</span>,
+    name          <span class="t">VARCHAR</span>(<span class="n">100</span>) <span class="k">NOT NULL</span>,
+    role          <span class="t">ENUM</span>(<span class="s">'admin'</span>,<span class="s">'manager'</span>) <span class="k">NOT NULL DEFAULT</span> <span class="s">'manager'</span>,
+    created_at    <span class="t">DATETIME</span> <span class="k">NOT NULL DEFAULT CURRENT_TIMESTAMP</span>
+) <span class="k">ENGINE</span>=InnoDB;</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ <code>VARCHAR(190)</code> և <code>VARCHAR(255)</code></span>
+      <p><strong>190</strong> — <code>utf8mb4</code>-ում ամեն նիշը մինչև 4 բայտ է, իսկ ինդեքսի սահմանը հին MySQL-ում 767 բայտ էր։ 190 × 4 = 760։ Անվտանգ ընտրություն <code>UNIQUE</code> դաշտի համար։<br><br>
+      <strong>255</strong> — bcrypt-ը 60 նիշ է, բայց <code>PASSWORD_DEFAULT</code>-ը ապագայում կարող է փոխվել ավելի երկար ալգորիթմի։ Դաշտը պիտի պատրաստ լինի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Auth ծառայությունը</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Services/Auth.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">namespace</span> <span class="t">App\Services</span>;
+
+<span class="k">use</span> <span class="t">App\Models\User</span>;
+<span class="k">use</span> <span class="t">App\Repositories\UserRepository</span>;
+
+<span class="k">class</span> <span class="t">Auth</span>
+{
+    <span class="k">private</span> ?<span class="t">User</span> <span class="n">$cached</span> = <span class="k">null</span>;
+
+    <span class="k">public function</span> <span class="f">__construct</span>(
+        <span class="k">private</span> <span class="k">readonly</span> <span class="t">UserRepository</span> <span class="n">$users</span>,
+    ) {}
+
+    <span class="k">public function</span> <span class="f">attempt</span>(<span class="k">string</span> <span class="n">$email</span>, <span class="k">string</span> <span class="n">$password</span>): <span class="k">bool</span>
+    {
+        <span class="n">$user</span> = <span class="n">$this</span>-&gt;<span class="n">users</span>-&gt;<span class="f">findByEmail</span>(<span class="n">$email</span>);
+
+        <span class="c">// ⭐ Ստուգում ենք ՄԻՇՏ, նույնիսկ երբ օգտագործողը չկա</span>
+        <span class="n">$hash</span> = <span class="n">$user</span>?-&gt;<span class="n">passwordHash</span>
+            ?? <span class="s">'$2y$12$'</span> . <span class="f">str_repeat</span>(<span class="s">'x'</span>, <span class="n">53</span>);
+
+        <span class="k">if</span> (!<span class="f">password_verify</span>(<span class="n">$password</span>, <span class="n">$hash</span>) || <span class="n">$user</span> === <span class="k">null</span>) {
+            <span class="k">return</span> <span class="k">false</span>;
+        }
+
+        <span class="c">// Հեշը հնացե՞լ է — վերահեշավորում ենք</span>
+        <span class="k">if</span> (<span class="f">password_needs_rehash</span>(<span class="n">$hash</span>, <span class="k">PASSWORD_DEFAULT</span>)) {
+            <span class="n">$this</span>-&gt;<span class="n">users</span>-&gt;<span class="f">updatePassword</span>(
+                <span class="n">$user</span>-&gt;<span class="n">id</span>,
+                <span class="f">password_hash</span>(<span class="n">$password</span>, <span class="k">PASSWORD_DEFAULT</span>)
+            );
+        }
+
+        <span class="c">// ⭐ Նոր ID սեսիայի համար — session fixation-ի դեմ</span>
+        <span class="k">session_regenerate_id</span>(<span class="k">true</span>);
+
+        <span class="n">$_SESSION</span>[<span class="s">'user_id'</span>]    = <span class="n">$user</span>-&gt;<span class="n">id</span>;
+        <span class="n">$_SESSION</span>[<span class="s">'login_time'</span>] = <span class="k">time</span>();
+
+        <span class="k">return</span> <span class="k">true</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">logout</span>(): <span class="k">void</span>
+    {
+        <span class="n">$_SESSION</span> = [];
+
+        <span class="k">if</span> (<span class="k">ini_get</span>(<span class="s">'session.use_cookies'</span>)) {
+            <span class="n">$p</span> = <span class="k">session_get_cookie_params</span>();
+            <span class="k">setcookie</span>(<span class="k">session_name</span>(), <span class="s">''</span>, <span class="k">time</span>() - <span class="n">42000</span>,
+                <span class="n">$p</span>[<span class="s">'path'</span>], <span class="n">$p</span>[<span class="s">'domain'</span>], <span class="n">$p</span>[<span class="s">'secure'</span>], <span class="n">$p</span>[<span class="s">'httponly'</span>]);
+        }
+
+        <span class="k">session_destroy</span>();
+    }
+
+    <span class="k">public function</span> <span class="f">user</span>(): ?<span class="t">User</span>
+    {
+        <span class="k">if</span> (<span class="n">$this</span>-&gt;<span class="n">cached</span> !== <span class="k">null</span>) {
+            <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">cached</span>;
+        }
+
+        <span class="n">$id</span> = <span class="n">$_SESSION</span>[<span class="s">'user_id'</span>] ?? <span class="k">null</span>;
+
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">cached</span> = <span class="n">$id</span>
+            ? <span class="n">$this</span>-&gt;<span class="n">users</span>-&gt;<span class="f">find</span>((<span class="k">int</span>) <span class="n">$id</span>)
+            : <span class="k">null</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">check</span>(): <span class="k">bool</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="f">user</span>() !== <span class="k">null</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">isAdmin</span>(): <span class="k">bool</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="f">user</span>()?-&gt;<span class="n">role</span> === <span class="s">'admin'</span>;
+    }
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Խորացված · ինչու ստուգում ենք հեշը, նույնիսկ երբ օգտագործողը չկա</span>
+      <p>Եթե անմիջապես վերադարձնեինք <code>false</code>, պատասխանը կգար ~1 մվ-ում։ Իսկ գոյություն ունեցող հասցեի դեպքում՝ ~80 մվ (bcrypt)։<br><br>
+      Հարձակվողը չափում է ժամանակը և <strong>պարզում է, որ էլ. հասցեն գրանցված է</strong>։ Դա կոչվում է timing attack, և այն թույլ է տալիս հավաքել գործող հասցեների ցուցակ։<br><br>
+      Կեղծ հեշի ստուգումը հավասարեցնում է ժամանակը։ Նույն պատճառով սխալի հաղորդագրությունը պիտի լինի <strong>ընդհանուր</strong>՝ «Սխալ էլ. հասցե կամ գաղտնաբառ», ոչ «Այդպիսի օգտագործող չկա»։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag"><code>session_regenerate_id(true)</code> — session fixation</span>
+      <p>Հարձակումը՝ հարձակվողը քեզ ուղարկում է հղում <code>?PHPSESSID=abc123</code>։ Դու մուտք ես գործում, և այդ ID-ն դառնում է <strong>քո նույնականացված սեսիան</strong>։ Հարձակվողն արդեն գիտի ID-ն։<br><br>
+      Դաս 7-ի <code>use_strict_mode</code>-ը մասամբ պաշտպանում է։ Բայց հուսալի լուծումը՝ <strong>մուտքի պահին տալ նոր ID</strong>։<br><br>
+      <code>true</code> արգումենտը ջնջում է հին սեսիայի ֆայլը։ Առանց դրա այն մնում է սերվերում։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Խորացված · <code>password_needs_rehash</code></span>
+      <p>PHP-ի հետագա տարբերակներում <code>PASSWORD_DEFAULT</code>-ը կարող է փոխվել ավելի ուժեղ ալգորիթմի։<br><br>
+      Այս երեք տողը ապահովում է, որ հին օգտագործողների գաղտնաբառերը <strong>աստիճանաբար թարմացվեն</strong>՝ ամեն մուտքի ժամանակ, առանց նրանց մասնակցության։<br><br>
+      Առանց դրա տասը տարի հետո բազայում կլինեն 2015-ի ալգորիթմով հեշեր։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգումը՝ մեկ տեղում</h2>
+
+    <div class="warn note">
+      <span class="tag">Խնդիրը, որ լուծում ենք</span>
+      <p>Ադմինի ուղիները չորսն են։ Ստուգումը կարելի էր գրել ամեն կոնտրոլերի մեթոդի սկզբում։<br><br>
+      Բայց վաղը ավելացնում ես հինգերորդը և <strong>մոռանում ես</strong>։ Դա նկատելի չէ․ էջն աշխատում է։ Այն պարզապես բաց է բոլորի համար։<br><br>
+      Դաս 15-ում ամեն հարցում սկսեցինք անցկացնել մեկ ֆայլով՝ <code>public/index.php</code>։ Հիմա դա օգտագործում ենք․ ստուգումը դնում ենք <strong>Router-ից առաջ</strong>, և այն աշխատում է ամեն <code>/admin</code>-ով սկսվող հասցեի համար, նաև այն ուղիների, որոնք դեռ չեն գրվել։</p>
+    </div>
+
+    <div class="tree">Հարցում
+   │
+   ▼
+ public/index.php
+   │
+   ├─ POST է՞  →  _token-ը ճի՞շտ է          ոչ → 419
+   │
+   ├─ /admin… է՞ →  մուտք գործա՞ծ է          ոչ → /login
+   │
+   ▼
+ Router → Կոնտրոլեր → Response</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>public/index.php — երկու ստուգում Router-ից առաջ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="n">$request</span> = <span class="t">Request</span>::<span class="f">fromGlobals</span>();
+
+<span class="k">try</span> {
+    <span class="c">// 1. CSRF — ամեն POST-ի համար (բաժին 04)</span>
+    <span class="k">if</span> (<span class="n">$request</span>-&gt;<span class="n">method</span> === <span class="s">'POST'</span> &amp;&amp; !<span class="f">csrf_verify</span>(<span class="n">$request</span>-&gt;<span class="f">input</span>(<span class="s">'_token'</span>))) {
+        <span class="k">throw</span> <span class="k">new</span> <span class="t">HttpException</span>(<span class="s">'Ձևաթուղթը ժամկետանց է։ Թարմացրեք էջը և փորձեք կրկին։'</span>, <span class="n">419</span>);
+    }
+
+    <span class="c">// 2. Ադմին գոտի — ամեն /admin… հասցեի համար ⭐</span>
+    <span class="k">if</span> (<span class="f">str_starts_with</span>(<span class="n">$request</span>-&gt;<span class="n">path</span>, <span class="s">'/admin'</span>) &amp;&amp; !<span class="n">$auth</span>-&gt;<span class="f">check</span>()) {
+        <span class="n">$_SESSION</span>[<span class="s">'intended'</span>] = <span class="n">$request</span>-&gt;<span class="n">path</span>;      <span class="c">// հիշում ենք, ուր էր գնում</span>
+        <span class="n">$response</span> = <span class="t">Response</span>::<span class="f">redirect</span>(<span class="s">'/login'</span>);
+    } <span class="k">else</span> {
+        <span class="n">$response</span> = <span class="n">$router</span>-&gt;<span class="f">dispatch</span>(<span class="n">$request</span>);
+    }
+
+} <span class="k">catch</span> (<span class="t">HttpException</span> <span class="n">$e</span>) {
+    <span class="c">// ... Դաս 15-ի նույն երկու catch-ը ...</span>
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>routes.php — նոր ուղիներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/login'</span>,   [<span class="n">$authController</span>, <span class="s">'form'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/login'</span>,  [<span class="n">$authController</span>, <span class="s">'login'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/logout'</span>, [<span class="n">$authController</span>, <span class="s">'logout'</span>]);
+
+<span class="c">// Ադմին — պաշտպանված է public/index.php-ում ✅
+// Նոր /admin/... ուղին ավտոմատ պաշտպանված է</span>
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/admin'</span>,           [<span class="n">$adminController</span>, <span class="s">'index'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/admin/edit/{id}'</span>, [<span class="n">$adminController</span>, <span class="s">'form'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/admin/edit/{id}'</span>,[<span class="n">$adminController</span>, <span class="s">'save'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/admin/delete'</span>,   [<span class="n">$adminController</span>, <span class="s">'delete'</span>]);</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Սա middleware-ի գաղափարն է</span>
+      <p>Կոդ, որը կատարվում է <strong>ամեն հարցումից առաջ</strong> և կարող է կանգնեցնել այն, կոչվում է <em>middleware</em>։ Մենք գրեցինք այն ամենապարզ ձևով՝ երկու <code>if</code> front controller-ում։<br><br>
+      Կանոնը, որ այստեղից պետք է հիշել․ <strong>պաշտպանությունը կապվում է հասցեի հետ, ոչ թե կոնտրոլերի ներսի կոդի</strong>։ Այդպես այն մոռանալ հնարավոր չէ։<br><br>
+      Laravel-ում նույնը գրվում է <code>Route::middleware('auth')-&gt;group(...)</code>, և ամեն ստուգում առանձին դաս է (Դաս 21)։ Գաղափարը նույնն է, պարզապես ավելի կազմակերպված։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>CSRF</h2>
+
+    <div class="warn note">
+      <span class="tag">Հարձակում, որի մասին շատերը չգիտեն</span>
+      <p>Cross-Site Request Forgery։ Այն <strong>չի</strong> գողանում տվյալները — այն ստիպում է <em>քեզ</em> կատարել գործողություն առանց քո իմացության։</p>
+    </div>
+
+    <div class="tree">Սցենար
+
+1. Դու մուտք ես գործում technomarket.test/admin
+   Բրաուզերում պահվում է PHPSESSID cookie-ն
+
+2. Չես դուրս գալիս — պարզապես բացում ես նոր ներդիր
+
+3. Բացում ես հարձակվողի էջը (գովազդ, ֆորում, նամակ)
+
+4. Այդ էջում կա թաքնված ֆորմա՝
+
+   &lt;form action="https://technomarket.test/admin/delete"
+         method="post"&gt;
+       &lt;input type="hidden" name="id" value="5"&gt;
+   &lt;/form&gt;
+   &lt;script&gt;document.forms[0].submit()&lt;/script&gt;
+
+5. Բրաուզերը ուղարկում է հարցումը
+   ԵՎ ԿՑՈՒՄ Է ՔՈ COOKIE-Ն ⚠️
+
+6. Սերվերը տեսնում է վավեր սեսիա → ջնջում է ապրանքը
+
+   Դու ոչինչ չես նկատել։</div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ սեսիան չի փրկում</span>
+      <p>Սեսիան պատասխանում է հարցին «<em>ո՞վ է սա</em>»։ CSRF-ը այդ հարցի պատասխանը չի կեղծում — հարցումն իսկապես քեզնից է։<br><br>
+      Բացակայում է պատասխանը մյուս հարցին՝ «<strong>իսկապե՞ս դու ես ուզել այս գործողությունը</strong>»։<br><br>
+      Հենց դա է ապացուցում CSRF token-ը։</p>
+    </div>
+
+    <div class="tree">Ինչպես է աշխատում token-ը
+
+  Սերվերը գեներացնում է պատահական տող
+  և պահում այն ՍԵՍԻԱՅՈՒՄ
+
+  Ամեն ֆորմա կրում է նույն տողը hidden դաշտում
+
+  POST-ի ժամանակ սերվերը համեմատում է դրանք
+
+  Հարձակվողի էջը ՉԻ ԿԱՐՈՂ իմանալ token-ը՝
+  · այն սեսիայում է, ոչ cookie-ում
+  · JS-ը ուրիշ դոմենից չի կարդում քո էջը (CORS)
+
+  → հարցումը մերժվում է</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/helpers.php — երեք ֆունկցիա</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">csrf_token</span>(): <span class="k">string</span>
+{
+    <span class="k">return</span> <span class="n">$_SESSION</span>[<span class="s">'_csrf_token'</span>] ??= <span class="f">bin2hex</span>(<span class="f">random_bytes</span>(<span class="n">32</span>));
+}
+
+<span class="k">function</span> <span class="f">csrf_field</span>(): <span class="k">string</span>
+{
+    <span class="k">return</span> <span class="s">'&lt;input type="hidden" name="_token" value="'</span> . <span class="f">e</span>(<span class="f">csrf_token</span>()) . <span class="s">'"&gt;'</span>;
+}
+
+<span class="k">function</span> <span class="f">csrf_verify</span>(?<span class="k">string</span> <span class="n">$token</span>): <span class="k">bool</span>
+{
+    <span class="n">$stored</span> = <span class="n">$_SESSION</span>[<span class="s">'_csrf_token'</span>] ?? <span class="s">''</span>;
+
+    <span class="k">if</span> (<span class="n">$stored</span> === <span class="s">''</span> || <span class="n">$token</span> === <span class="k">null</span> || <span class="n">$token</span> === <span class="s">''</span>) {
+        <span class="k">return</span> <span class="k">false</span>;
+    }
+
+    <span class="k">return</span> <span class="f">hash_equals</span>(<span class="n">$stored</span>, <span class="n">$token</span>);   <span class="c">// ⭐ ոչ ===</span>
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag"><code>hash_equals</code>, ոչ <code>===</code></span>
+      <p><code>===</code>-ը կանգ է առնում առաջին տարբերվող նիշի վրա։ Դա նշանակում է, որ համեմատման <strong>տևողությունը կախված է</strong> նրանից, քանի նիշ է համընկել։<br><br>
+      Հարձակվողը կարող է նիշ առ նիշ վերականգնել token-ը՝ չափելով պատասխանի ժամանակը։<br><br>
+      <code>hash_equals</code>-ը միշտ համեմատում է ամբողջ երկարությունը։ Դա նույն timing attack-ի դեմ պաշտպանությունն է, ինչ բաժին 02-ի խորացված նշումում։<br><br>
+      Հիշո՞ւմ ես Դաս 2-ը՝ <em>«PHP-ում <code>==</code>-ը անվտանգության խոցելիություն է»</em>։ Ահա դեպք, որտեղ նույնիսկ <code>===</code>-ը բավարար չէ։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ միայն POST</span>
+      <p>Բաժին 03-ի ստուգումը աշխատում է միայն POST-ի համար։ GET-ը ըստ սահմանման չպիտի փոխի վիճակը (Դաս 6)։ Եթե GET-ը ինչ-որ բան ջնջում է, խնդիրը CSRF-ը չէ, այլ ճարտարապետությունը։<br><br>
+      Հենց դրա համար Դաս 11-ում ջնջումը դարձրինք POST։ Այն ժամանակ պատճառը բոտերն էին — հիմա ավելանում է երկրորդը՝ CSRF-ից պաշտպանվելու հնարավորությունը։<br><br>
+      <code>419</code>-ը ոչ ստանդարտ կոդ է, բայց Laravel-ը հենց այն է օգտագործում ժամկետանց token-ի համար։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ամեն ֆորմայում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">form</span> <span class="f">method</span>=<span class="s">"post"</span> <span class="f">action</span>=<span class="s">"/cart/add"</span><span class="p">&gt;</span>
+    <span class="p">&lt;?=</span> <span class="f">csrf_field</span>() <span class="p">?&gt;</span>    <span class="c">&lt;!-- ⭐ ամեն POST ֆորմայում --&gt;</span>
+    <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"hidden"</span> <span class="f">name</span>=<span class="s">"id"</span> <span class="f">value</span>=<span class="s">"&lt;?= $p-&gt;id ?&gt;"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"btn btn--primary btn--sm"</span><span class="p">&gt;</span>Գնել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">form</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Երկրորդ շերտ՝ SameSite</span>
+      <p>Դաս 7-ում դրեցինք <code>'cookie_samesite' =&gt; 'Lax'</code>։ Այն արգելում է cookie-ի ուղարկումը ուրիշ կայքից եկող POST-երի հետ։<br><br>
+      Դա ինքնին մեծ մասամբ կանգնեցնում է CSRF-ը ժամանակակից բրաուզերներում։ Բայց այն կախված է բրաուզերի տարբերակից և կարգավորումներից։<br><br>
+      Token-ը չի կախված ոչնչից։ Ուստի՝ երկուսն էլ։ Նույն շերտավոր մոտեցումը, ինչ Դաս 7-ի <code>e()</code> + <code>httponly</code> զույգում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Փորձերի սահմանափակում</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>պարզ պաշտպանություն brute force-ից</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="t">LoginThrottle</span>
+{
+    <span class="k">private const</span> <span class="n">MAX</span> = <span class="n">5</span>;
+    <span class="k">private const</span> <span class="n">LOCK_SECONDS</span> = <span class="n">900</span>;   <span class="c">// 15 րոպե</span>
+
+    <span class="k">public function</span> <span class="f">tooManyAttempts</span>(): <span class="k">bool</span>
+    {
+        <span class="n">$data</span> = <span class="n">$_SESSION</span>[<span class="s">'login_attempts'</span>] ?? [<span class="s">'count'</span> =&gt; <span class="n">0</span>, <span class="s">'until'</span> =&gt; <span class="n">0</span>];
+
+        <span class="k">return</span> <span class="n">$data</span>[<span class="s">'count'</span>] &gt;= <span class="k">self</span>::<span class="n">MAX</span> &amp;&amp; <span class="n">$data</span>[<span class="s">'until'</span>] &gt; <span class="k">time</span>();
+    }
+
+    <span class="k">public function</span> <span class="f">hit</span>(): <span class="k">void</span>
+    {
+        <span class="n">$data</span> = <span class="n">$_SESSION</span>[<span class="s">'login_attempts'</span>] ?? [<span class="s">'count'</span> =&gt; <span class="n">0</span>, <span class="s">'until'</span> =&gt; <span class="n">0</span>];
+        <span class="n">$data</span>[<span class="s">'count'</span>]++;
+        <span class="n">$data</span>[<span class="s">'until'</span>] = <span class="k">time</span>() + <span class="k">self</span>::<span class="n">LOCK_SECONDS</span>;
+
+        <span class="n">$_SESSION</span>[<span class="s">'login_attempts'</span>] = <span class="n">$data</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">clear</span>(): <span class="k">void</span>
+    {
+        <span class="k">unset</span>(<span class="n">$_SESSION</span>[<span class="s">'login_attempts'</span>]);
+    }
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ազնիվ սահմանափակում</span>
+      <p>Սեսիայի վրա հիմնված սահմանափակումը <strong>հեշտ շրջանցվում է</strong>․ հարձակվողը պարզապես ջնջում է cookie-ն և ստանում նոր սեսիա։<br><br>
+      Իրական պաշտպանությունը հաշվում է փորձերը <strong>ըստ IP-ի և էլ. հասցեի</strong>՝ բազայում կամ Redis-ում։<br><br>
+      Մենք սեսիայի տարբերակն ենք գրում, որովհետև այն ցույց է տալիս գաղափարը 30 տողում։ Բայց արժե իմանալ, որ դա ուսումնական տարբերակ է, ոչ production-ի։ Laravel-ում կա պատրաստի <code>RateLimiter</code>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>AuthController</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Controllers/AuthController.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="t">AuthController</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>(
+        <span class="k">private</span> <span class="k">readonly</span> <span class="t">Auth</span> <span class="n">$auth</span>,
+        <span class="k">private</span> <span class="k">readonly</span> <span class="t">LoginThrottle</span> <span class="n">$throttle</span>,
+    ) {}
+
+    <span class="k">public function</span> <span class="f">form</span>(<span class="t">Request</span> <span class="n">$request</span>): <span class="t">Response</span>
+    {
+        <span class="k">if</span> (<span class="n">$this</span>-&gt;<span class="n">auth</span>-&gt;<span class="f">check</span>()) {
+            <span class="k">return</span> <span class="t">Response</span>::<span class="f">redirect</span>(<span class="s">'/admin'</span>);
+        }
+
+        <span class="k">return</span> <span class="t">Response</span>::<span class="f">html</span>(
+            <span class="f">page</span>(<span class="s">'pages/login'</span>, [<span class="s">'error'</span> =&gt; <span class="f">flash</span>(<span class="s">'auth_error'</span>)], <span class="s">'Մուտք'</span>)
+        );
+    }
+
+    <span class="k">public function</span> <span class="f">login</span>(<span class="t">Request</span> <span class="n">$request</span>): <span class="t">Response</span>
+    {
+        <span class="k">if</span> (<span class="n">$this</span>-&gt;<span class="n">throttle</span>-&gt;<span class="f">tooManyAttempts</span>()) {
+            <span class="f">flash</span>(<span class="s">'auth_error'</span>, <span class="s">'Չափազանց շատ փորձեր։ Փորձեք 15 րոպեից։'</span>);
+            <span class="k">return</span> <span class="t">Response</span>::<span class="f">redirect</span>(<span class="s">'/login'</span>);
+        }
+
+        <span class="n">$email</span>    = <span class="n">$request</span>-&gt;<span class="f">input</span>(<span class="s">'email'</span>);
+        <span class="n">$password</span> = <span class="n">$request</span>-&gt;<span class="f">input</span>(<span class="s">'password'</span>);
+
+        <span class="k">if</span> (!<span class="n">$this</span>-&gt;<span class="n">auth</span>-&gt;<span class="f">attempt</span>(<span class="n">$email</span>, <span class="n">$password</span>)) {
+            <span class="n">$this</span>-&gt;<span class="n">throttle</span>-&gt;<span class="f">hit</span>();
+
+            <span class="c">// ⭐ Ընդհանուր հաղորդագրություն</span>
+            <span class="f">flash</span>(<span class="s">'auth_error'</span>, <span class="s">'Սխալ էլ. հասցե կամ գաղտնաբառ'</span>);
+
+            <span class="k">return</span> <span class="t">Response</span>::<span class="f">redirect</span>(<span class="s">'/login'</span>);
+        }
+
+        <span class="n">$this</span>-&gt;<span class="n">throttle</span>-&gt;<span class="f">clear</span>();
+
+        <span class="n">$to</span> = <span class="n">$_SESSION</span>[<span class="s">'intended'</span>] ?? <span class="s">'/admin'</span>;
+        <span class="k">unset</span>(<span class="n">$_SESSION</span>[<span class="s">'intended'</span>]);
+
+        <span class="k">return</span> <span class="t">Response</span>::<span class="f">redirect</span>(<span class="n">$to</span>);
+    }
+
+    <span class="k">public function</span> <span class="f">logout</span>(<span class="t">Request</span> <span class="n">$request</span>): <span class="t">Response</span>
+    {
+        <span class="n">$this</span>-&gt;<span class="n">auth</span>-&gt;<span class="f">logout</span>();
+
+        <span class="k">return</span> <span class="t">Response</span>::<span class="f">redirect</span>(<span class="s">'/'</span>);
+    }
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>bootstrap.php — նոր օբյեկտներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="n">$users</span>          = <span class="k">new</span> <span class="t">UserRepository</span>(<span class="n">$pdo</span>);
+<span class="n">$auth</span>           = <span class="k">new</span> <span class="t">Auth</span>(<span class="n">$users</span>);
+<span class="n">$authController</span> = <span class="k">new</span> <span class="t">AuthController</span>(<span class="n">$auth</span>, <span class="k">new</span> <span class="t">LoginThrottle</span>());</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ելքը POST է, ոչ հղում</span>
+      <p><code>&lt;a href="/logout"&gt;</code>-ը թույլ է տալիս CSRF-ով <strong>դուրս հանել</strong> օգտագործողին։<br><br>
+      Դա ավելի քիչ վնասակար է, քան ջնջումը, բայց մնում է անհարմարություն, և բոտերը կարող են դուրս հանել քեզ ամեն անգամ։<br><br>
+      Ուստի՝ փոքրիկ ֆորմա token-ով, ոճավորված որպես հղում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Դասարանական</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>առաջին ադմինի ստեղծում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># Տերմինալում</span>
+php -r "echo password_hash('ձեր_գաղտնաբառը', PASSWORD_DEFAULT);"
+
+<span class="c"># Պատճենիր արդյունքը և HeidiSQL-ում՝</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>SQL</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">INSERT INTO</span> users (email, password_hash, name, role)
+<span class="k">VALUES</span> (
+    <span class="s">'admin@technomarket.am'</span>,
+    <span class="s">'$2y$12$...'</span>,
+    <span class="s">'Ադմին'</span>,
+    <span class="s">'admin'</span>
+);</code></pre>
+    </div>
+
+    <ol>
+      <li>Ստեղծիր <code>users</code> աղյուսակը, <code>User</code> մոդելը, <code>UserRepository</code>-ն և առաջին ադմինին</li>
+      <li>Գրիր <code>Auth</code> ծառայությունը և <code>LoginThrottle</code>-ը</li>
+      <li>Ավելացրու <code>csrf_token()</code>, <code>csrf_field()</code>, <code>csrf_verify()</code> և <code>csrf_field()</code>-ը <strong>բոլոր</strong> POST ֆորմաներում</li>
+      <li>Ավելացրու երկու ստուգումը <code>public/index.php</code>-ում</li>
+      <li>Ստեղծիր <code>AuthController</code>-ը, մուտքի էջը և ելքի ֆորման header-ում</li>
+    </ol>
+
+    <div class="warn note">
+      <span class="tag">Հինգ պարտադիր փորձարկում</span>
+      <p><strong>1.</strong> Բացիր <code>/admin</code> առանց մուտքի → վերահղում <code>/login</code><br>
+      <strong>2.</strong> Մուտք գործիր → վերադառնո՞ւմ է <code>/admin</code> (<code>intended</code>)<br>
+      <strong>3.</strong> Ջնջիր <code>_token</code>-ը DevTools-ով և ուղարկիր → 419 ⭐<br>
+      <strong>4.</strong> Ստեղծիր <code>attack.html</code> սեփական համակարգչում ջնջման ֆորմայով և բացիր → մերժվե՞ց<br>
+      <strong>5.</strong> Սխալ գաղտնաբառ 6 անգամ → արգելափակո՞ւմ</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Չորրորդ փորձարկումն է ամենակարևորը</span>
+      <p>Ստեղծիր սովորական HTML ֆայլ աշխատասեղանին, բացիր այն <code>file://</code>-ով և տես, ինչ է լինում։<br><br>
+      Առաջին անգամ արա դա <strong>առանց CSRF ստուգման</strong> (մեկնաբանիր առաջին <code>if</code>-ը)։ Ապրանքը կջնջվի։ Դա այն պահն է, երբ CSRF-ը դադարում է վերացական լինել — ճիշտ ինչպես Դաս 5-ի <code>alert</code>-ը XSS-ի համար։<br><br>
+      Ապա վերադարձրու ստուգումը և կրկնիր։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ավարտիր դասարանականի 5 քայլը և հինգ փորձարկումը։</li>
+      <li>Ուղարկիր սքրինշոթներ CSRF հարձակման՝ պաշտպանությամբ և առանց դրա։</li>
+      <li>Ցուցադրիր, որ նույն գաղտնաբառը տալիս է տարբեր հեշեր։ Բացատրիր, ինչու <code>===</code>-ը այստեղ չի աշխատի։</li>
+      <li>Չափիր <code>password_hash()</code>-ի ժամանակը <code>microtime()</code>-ով։ Համեմատիր <code>md5()</code>-ի հետ։</li>
+      <li><em>Խորացված․</em> ցուցադրիր timing attack-ի հնարավորությունը՝ չափիր մուտքի ժամանակը գոյություն ունեցող և չգոյություն ունեցող հասցեով, կեղծ հեշի ստուգումով և առանց դրա։</li>
+      <li>Ցուցադրիր <code>session_regenerate_id()</code>-ի աշխատանքը՝ համեմատիր <code>PHPSESSID</code>-ն մուտքից առաջ և հետո։</li>
+      <li>Ավելացրու երրորդ ստուգում․ <code>/admin/delete</code>-ը թույլատրված է միայն <code>role = 'admin'</code>-ին (<code>$auth-&gt;isAdmin()</code>), մյուսներին՝ 403։</li>
+      <li>Ավելացրու ադմին էջ <code>/manage/orders</code> հասցեով (առանց <code>/admin</code>-ի)։ Պաշտպանվա՞ծ է։ Ինչ կանոն պետք է պահել, որ սա չպատահի։</li>
+      <li>Ավելացրու «Բարև, [անուն]» և ելքի կոճակ header-ում։</li>
+      <li>Խնդրիր AI-ին վերանայել <code>Auth</code>-ը։ Ի՞նչ գտավ։ Համաձա՞յն ես։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է</th></tr>
+      <tr><td><code>password_hash($p, PASSWORD_DEFAULT)</code></td><td>Հեշավորում ⭐</td></tr>
+      <tr><td><code>password_verify($p, $hash)</code></td><td>Ստուգում</td></tr>
+      <tr><td><code>password_needs_rehash()</code></td><td>Հնացած ալգորիթմ</td></tr>
+      <tr><td><code>session_regenerate_id(true)</code></td><td>Fixation-ի դեմ ⭐</td></tr>
+      <tr><td><code>hash_equals($a, $b)</code></td><td>Timing-ի դեմ ⭐</td></tr>
+      <tr><td><code>random_bytes(32)</code></td><td>Կրիպտո-պատահական</td></tr>
+    </table>
+    </div>
+
+    <h3>Անվտանգության չորս դասը</h3>
+    <div class="tree">Դաս 5  XSS            →  e()
+Դաս 6  Վալիդացիա     →  սերվերում միշտ
+Դաս 10  SQL injection →  prepared statements
+Դաս 16  CSRF + Auth   →  token + ստուգում մեկ տեղում
+
+Ընդհանուր սկզբունքը՝
+  տվյալը երբեք չդառնա հրաման
+  և ոչինչ չվստահել client-ին</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Գաղտնաբառերը հեշավորված են <code>password_hash</code>-ով</li>
+      <li>Սխալի հաղորդագրությունը ընդհանուր է</li>
+      <li>Ժամանակը հավասար է գոյություն ունեցող և չունեցող հասցեների համար</li>
+      <li>Մուտքի պահին սեսիայի ID-ն թարմացվում է</li>
+      <li>Ամեն <code>/admin…</code> հասցե ստուգվում է <code>public/index.php</code>-ում</li>
+      <li>Ամեն POST ֆորմա ունի <code>_token</code></li>
+      <li><code>hash_equals</code> է օգտագործվում, ոչ <code>===</code></li>
+      <li>Ելքը POST է</li>
+      <li>Կա փորձերի սահմանափակում</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչու <code>md5</code>-ը վատ է գաղտնաբառերի համար</li>
+      <li>Գիտե՞մ, ինչու հեշերը չեն համեմատվում <code>===</code>-ով</li>
+      <li>Հասկանո՞ւմ եմ, ի՞նչ է CSRF-ը և ինչու սեսիան չի փրկում</li>
+      <li>Կարո՞ղ եմ բացատրել timing attack-ը</li>
+      <li>Գիտե՞մ, ինչու ստուգումը front controller-ում ավելի ապահով է, քան ամեն կոնտրոլերում</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Սեփական REST API՝ սեփական MVC-ի վերջին դասը։<br><br>
+      Դաս 15-ում ասացինք, որ <code>Response</code>-ը կստանա <code>json()</code> մեթոդ։ Այժմ նույն նախագիծը կսկսի սպասարկել և՛ HTML, և՛ JSON։<br><br>
+      Եվ ամենակարևորը՝ JS բլոկի Դաս 19–21-ի <code>fetch</code>-ը վերջապես կդիմի <strong>քո սերվերին</strong>, ոչ արտաքին API-ի։ Երկու բլոկ կմիանան մեկ նախագծում։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>PHP Բլոկ · Դաս 16 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

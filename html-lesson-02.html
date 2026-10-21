@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 2 — Տեքստ, ցուցակներ, հղումներ, նկարներ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 2 · 2 ժամ</p>
+  <h1>Տեքստ և բովանդակություն</h1>
+  <p class="lede">Անցյալ դասին էջն ուներ միայն վերնագիր և պարբերություն։ Այսօր ավելացնում ենք ցուցակներ, հղումներ և նկարներ — և հասկանում ենք ֆայլերի ուղիները, որտեղ սայթաքում է գրեթե ամեն սկսնակ։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 01</span>
+    <span>Բլոկ 1 · HTML հիմունքներ</span>
+    <span>Դասարանում՝ բլոգի էջ</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Վերնագրերի հիերարխիան և ինչու է այն կարևոր</li>
+      <li>Տեքստի ձևավորման թեգեր</li>
+      <li>Ցուցակներ՝ <code>ul</code>, <code>ol</code>, ներդրված</li>
+      <li>Հղումներ՝ ներքին, արտաքին, խարիսխներ, <code>mailto</code></li>
+      <li>Ֆայլերի ուղիներ՝ <code>./</code> և <code>../</code></li>
+      <li>Նկարներ և <code>alt</code>-ի կանոնը</li>
+      <li>Հատուկ նշաններ</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Վերնագրերի հիերարխիա</h2>
+    <p>Վեց մակարդակ՝ <code>h1</code>-ից մինչև <code>h6</code>։ Բայց դրանք <strong>չափի</strong> մասին չեն — դրանք <strong>կարևորության</strong> մասին են։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>վեց մակարդակ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">h1</span><span class="p">&gt;</span>Կայքի գլխավոր վերնագիրը<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">h2</span><span class="p">&gt;</span>Բաժին<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">h3</span><span class="p">&gt;</span>Ենթաբաժին<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">h4</span><span class="p">&gt;</span>Ավելի փոքր<span class="p">&lt;/</span><span class="t">h4</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">h5</span><span class="p">&gt;</span>Հազվադեպ<span class="p">&lt;/</span><span class="t">h5</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">h6</span><span class="p">&gt;</span>Գրեթե երբեք<span class="p">&lt;/</span><span class="t">h6</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <p>Պատկերացրու գիրք․ <code>h1</code>-ը գրքի անունն է, <code>h2</code>-ը՝ գլուխները, <code>h3</code>-ը՝ ենթագլուխները։ Բովանդակության ցանկ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>✅ ճիշտ հիերարխիա</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">h1</span><span class="p">&gt;</span>Խոհարարական բլոգ<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">h2</span><span class="p">&gt;</span>Ապուրներ<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">h3</span><span class="p">&gt;</span>Սպաս<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">h3</span><span class="p">&gt;</span>Խաշ<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">h2</span><span class="p">&gt;</span>Աղանդեր<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">h3</span><span class="p">&gt;</span>Գաթա<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երեք կանոն</span>
+      <p><strong>1.</strong> Էջում <code>h1</code>-ը մեկն է։ Մեկ էջ = մեկ գլխավոր թեմա։<br>
+      <strong>2.</strong> Մակարդակ մի՛ բաց թող։ <code>h1</code>-ից հետո <code>h3</code> — սխալ է։<br>
+      <strong>3.</strong> Վերնագիրը մի՛ ընտրիր չափի համար։ Եթե տեքստը մեծ է պետք, դա CSS-ի գործն է, ոչ <code>h2</code>-ի։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ է սա իսկապես կարևոր</span>
+      <p><strong>Էկրանընթերցիչներ։</strong> Անտեսող մարդիկ էջով նավարկում են հենց վերնագրերով՝ ցատկելով բաժնից բաժին։ Կոտրված հիերարխիան նրանց համար կոտրված նավիգացիա է։<br><br>
+      <strong>Որոնողական համակարգեր։</strong> Google-ը վերնագրերով է հասկանում՝ ինչի մասին է էջը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Տեքստի թեգեր</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հիմնականները</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Սովորական պարբերություն։<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Սա <span class="p">&lt;</span><span class="t">strong</span><span class="p">&gt;</span>շատ կարևոր<span class="p">&lt;/</span><span class="t">strong</span><span class="p">&gt;</span> տեղեկություն է։<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Սա <span class="p">&lt;</span><span class="t">em</span><span class="p">&gt;</span>շեշտված<span class="p">&lt;/</span><span class="t">em</span><span class="p">&gt;</span> բառ է։<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Գինը՝ <span class="p">&lt;</span><span class="t">s</span><span class="p">&gt;</span>5000<span class="p">&lt;/</span><span class="t">s</span><span class="p">&gt;</span> 3000 դրամ։<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Ջրի բանաձևը՝ H<span class="p">&lt;</span><span class="t">sub</span><span class="p">&gt;</span>2<span class="p">&lt;/</span><span class="t">sub</span><span class="p">&gt;</span>O<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Մակերես՝ 5մ<span class="p">&lt;</span><span class="t">sup</span><span class="p">&gt;</span>2<span class="p">&lt;/</span><span class="t">sup</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">blockquote</span><span class="p">&gt;</span>Մեջբերում ուրիշի խոսքից։<span class="p">&lt;/</span><span class="t">blockquote</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Թեգ</th><th>Իմաստը</th><th>Ինչպես է երևում</th></tr>
+      <tr><td><code>&lt;strong&gt;</code></td><td>Կարևոր</td><td>Հաստ</td></tr>
+      <tr><td><code>&lt;em&gt;</code></td><td>Շեշտված</td><td>Թեք</td></tr>
+      <tr><td><code>&lt;s&gt;</code></td><td>Այլևս ճիշտ չէ</td><td>Վրայից գծված</td></tr>
+      <tr><td><code>&lt;mark&gt;</code></td><td>Ընդգծված</td><td>Դեղին ֆոն</td></tr>
+      <tr><td><code>&lt;small&gt;</code></td><td>Երկրորդական</td><td>Փոքր</td></tr>
+      <tr><td><code>&lt;sub&gt;</code> / <code>&lt;sup&gt;</code></td><td>Ցածր / բարձր ինդեքս</td><td>H₂O, մ²</td></tr>
+      <tr><td><code>&lt;blockquote&gt;</code></td><td>Մեջբերում</td><td>Շեղում աջ</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">&lt;b&gt; և &lt;i&gt; — հին թեգեր</span>
+      <p>Դրանք միայն <em>տեսքի</em> մասին են՝ «դարձրու հաստ», «դարձրու թեք»։ <code>&lt;strong&gt;</code>-ը և <code>&lt;em&gt;</code>-ը <em>իմաստ</em> են փոխանցում, և էկրանընթերցիչը դրանք արտասանում է շեշտով։ Օգտագործիր <code>strong</code> և <code>em</code>։</p>
+    </div>
+
+    <h3>&lt;br&gt; — երբ և երբ ոչ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ vs ✅</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- ❌ Սխալ՝ br-ով բացակ ստեղծել --&gt;</span>
+<span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Առաջին միտք<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">br</span><span class="p">&gt;&lt;</span><span class="t">br</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Երկրորդ միտք<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- ✅ Ճիշտ՝ առանձին պարբերություններ --&gt;</span>
+<span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Առաջին միտք<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Երկրորդ միտք<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- ✅ br-ը տեղին է հասցեում կամ բանաստեղծության մեջ --&gt;</span>
+<span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>
+  Աբովյան 15<span class="p">&lt;</span><span class="t">br</span><span class="p">&gt;</span>
+  Երևան 0009<span class="p">&lt;</span><span class="t">br</span><span class="p">&gt;</span>
+  Հայաստան
+<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Կանոն</span>
+      <p><code>&lt;br&gt;</code>-ը միայն այն դեպքում, երբ տողադարձը <strong>իմաստի մաս է</strong>։ Բացակների համար՝ CSS (կսովորենք 8-րդ դասին)։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ցուցակներ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երկու տեսակ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- Չհամարակալված — հերթականությունը կարևոր չէ --&gt;</span>
+<span class="p">&lt;</span><span class="t">ul</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>Հաց<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>Կաթ<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>Պանիր<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Համարակալված — հերթականությունը կարևոր է --&gt;</span>
+<span class="p">&lt;</span><span class="t">ol</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>Տաքացրու ջեռոցը<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>Հունցիր խմորը<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>Թխիր 30 րոպե<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">ol</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Խիստ կանոն</span>
+      <p><code>&lt;ul&gt;</code>-ի և <code>&lt;ol&gt;</code>-ի ուղիղ ներսում կարող է լինել <strong>միայն <code>&lt;li&gt;</code></strong>։ Ոչ <code>&lt;p&gt;</code>, ոչ <code>&lt;div&gt;</code>, ոչ տեքստ։ Իսկ <code>&lt;li&gt;</code>-ի ներսում՝ ինչ ուզես։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ներդրված ցուցակ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">ul</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>Մրգեր
+        <span class="p">&lt;</span><span class="t">ul</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>Խնձոր<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>Ծիրան<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>Բանջարեղեն<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <p>Ուշադրություն՝ ներդրված <code>&lt;ul&gt;</code>-ը գտնվում է <code>&lt;li&gt;</code>-ի <strong>ներսում</strong>, ոչ դրա կողքին։</p>
+
+    <div class="note">
+      <span class="tag">Առջևում</span>
+      <p>Ցուցակները շատ ավելի հաճախ կօգտագործես, քան թվում է․ նավիգացիոն մենյուն ցուցակ է, ապրանքների ցանկը՝ ցուցակ, footer-ի հղումները՝ ցուցակ։ 10-րդ դասին կտեսնես, թե ինչպես են դրանք դառնում հորիզոնական մենյու։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Հղումներ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>a — anchor</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- Արտաքին կայք --&gt;</span>
+<span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"https://developer.mozilla.org"</span><span class="p">&gt;</span>MDN<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Նոր ներդիրում --&gt;</span>
+<span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"https://mdn.org"</span> <span class="f">target</span>=<span class="s">"_blank"</span> <span class="f">rel</span>=<span class="s">"noopener"</span><span class="p">&gt;</span>MDN<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Քո կայքի ուրիշ էջ --&gt;</span>
+<span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"about.html"</span><span class="p">&gt;</span>Մեր մասին<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Նույն էջի բաժին --&gt;</span>
+<span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#contacts"</span><span class="p">&gt;</span>Կապ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+...
+<span class="p">&lt;</span><span class="t">h2</span> <span class="f">id</span>=<span class="s">"contacts"</span><span class="p">&gt;</span>Կապ մեզ հետ<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Էլ. փոստ և հեռախոս --&gt;</span>
+<span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"mailto:info@site.am"</span><span class="p">&gt;</span>Գրել մեզ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"tel:+37410123456"</span><span class="p">&gt;</span>+374 10 123456<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ rel="noopener"</span>
+      <p><code>target="_blank"</code>-ով բացված էջը ստանում է սահմանափակ մուտք քո էջին։ <code>rel="noopener"</code>-ը փակում է այդ ճեղքը։ Գրիր դրանք միշտ միասին։</p>
+    </div>
+
+    <h3>Հղումի տեքստը</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ vs ✅</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- ❌ --&gt;</span>
+<span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Մեր ծառայությունների մասին <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"services.html"</span><span class="p">&gt;</span>սեղմեք այստեղ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- ✅ --&gt;</span>
+<span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Ծանոթացեք <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"services.html"</span><span class="p">&gt;</span>մեր ծառայություններին<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ</span>
+      <p>Էկրանընթերցիչի օգտագործողը կարող է հրամայել՝ «թվարկիր բոլոր հղումները»։ Եթե էջում տասը «սեղմեք այստեղ» կա, ցուցակն անօգուտ է։ <strong>Հղումի տեքստը պիտի հասկանալի լինի կոնտեքստից դուրս։</strong></p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Ֆայլերի ուղիներ</h2>
+    <p>Ամենահաճախ սայթաքելու տեղը։ Հասկանանք մեկընդմիշտ։</p>
+
+    <div class="tree">my-site/
+├── index.html
+├── about.html
+├── css/
+│   └── main.css
+├── images/
+│   ├── logo.svg
+│   └── team/
+│       └── ani.jpg
+└── pages/
+    └── contact.html</div>
+
+    <h3>Ուղիները <code>index.html</code>-ից</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.html — արմատում է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- Կողքի ֆայլ --&gt;</span>
+<span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"about.html"</span><span class="p">&gt;</span>Մեր մասին<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Ներքև՝ թղթապանակի մեջ --&gt;</span>
+<span class="p">&lt;</span><span class="t">img</span> <span class="f">src</span>=<span class="s">"images/logo.svg"</span> <span class="f">alt</span>=<span class="s">"Ընկերության լոգո"</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Երկու մակարդակ ներքև --&gt;</span>
+<span class="p">&lt;</span><span class="t">img</span> <span class="f">src</span>=<span class="s">"images/team/ani.jpg"</span> <span class="f">alt</span>=<span class="s">"Անի Սարգսյան"</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"pages/contact.html"</span><span class="p">&gt;</span>Կապ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <h3>Ուղիները <code>pages/contact.html</code>-ից</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>մեկ մակարդակ խորքում ենք</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- Վեր, հետո ներքև --&gt;</span>
+<span class="p">&lt;</span><span class="t">img</span> <span class="f">src</span>=<span class="s">"../images/logo.svg"</span> <span class="f">alt</span>=<span class="s">"Ընկերության լոգո"</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Վեր՝ գլխավոր էջին --&gt;</span>
+<span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"../index.html"</span><span class="p">&gt;</span>Գլխավոր<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Երկու անգամ վեր (եթե ավելի խորն էինք) --&gt;</span>
+<span class="c">&lt;!-- ../../images/logo.svg --&gt;</span></code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Նշանակություն</th></tr>
+      <tr><td><code>logo.svg</code></td><td>Նույն թղթապանակում</td></tr>
+      <tr><td><code>./logo.svg</code></td><td>Նույնը՝ բացահայտ գրված</td></tr>
+      <tr><td><code>images/logo.svg</code></td><td>Ներքև՝ <code>images</code>-ի մեջ</td></tr>
+      <tr><td><code>../logo.svg</code></td><td><strong>Մեկ մակարդակ վեր</strong></td></tr>
+      <tr><td><code>../../logo.svg</code></td><td>Երկու մակարդակ վեր</td></tr>
+      <tr><td><code>/images/logo.svg</code></td><td>Կայքի արմատից ⚠️</td></tr>
+      <tr><td><code>https://...</code></td><td>Ուրիշ կայքից</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Զգույշ շեղագծից սկսվող ուղիների հետ</span>
+      <p><code>/images/logo.svg</code>-ը նշանակում է «<em>կայքի</em> արմատից»։ Live Server-ով աշխատում է, բայց GitHub Pages-ում կայքդ գտնվում է ենթաթղթապանակում, և ուղին կկոտրվի։<br><br>
+      <strong>Կանոն՝ միշտ օգտագործիր հարաբերական ուղիներ</strong>՝ <code>images/...</code> և <code>../images/...</code>։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Երբ նկարը չի երևում</span>
+      <p><strong>1.</strong> Ստուգիր ուղղագրությունը՝ <code>Logo.png</code> ≠ <code>logo.png</code>։<br>
+      <strong>2.</strong> Ստուգիր ընդլայնումը՝ <code>.jpg</code> թե <code>.jpeg</code>։<br>
+      <strong>3.</strong> Հաշվիր՝ քանի՞ մակարդակ վեր պիտի բարձրանաս։<br>
+      <strong>4.</strong> VS Code-ում <kbd>Ctrl</kbd>-ով սեղմիր ուղու վրա — եթե ֆայլը բացվի, ուղին ճիշտ է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Նկարներ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>img</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">img</span> <span class="f">src</span>=<span class="s">"images/cat.jpg"</span> <span class="f">alt</span>=<span class="s">"Սև կատու պատուհանագոգին"</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- width և height — կանխում են էջի «ցատկը» բեռնման ժամանակ --&gt;</span>
+<span class="p">&lt;</span><span class="t">img</span> <span class="f">src</span>=<span class="s">"images/cat.jpg"</span> <span class="f">alt</span>=<span class="s">"Սև կատու"</span> <span class="f">width</span>=<span class="s">"600"</span> <span class="f">height</span>=<span class="s">"400"</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Հեռու նկարները՝ ուշացումով բեռնում --&gt;</span>
+<span class="p">&lt;</span><span class="t">img</span> <span class="f">src</span>=<span class="s">"images/cat.jpg"</span> <span class="f">alt</span>=<span class="s">"Սև կատու"</span> <span class="f">loading</span>=<span class="s">"lazy"</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <h3>alt — ամենակարևոր ատրիբուտը</h3>
+    <p><code>alt</code>-ը նկարի տեքստային փոխարինումն է։ Այն կարդում է էկրանընթերցիչը և ցուցադրում է բրաուզերը, երբ նկարը չի բեռնվում։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Նկարի դերը</th><th>Ի՞նչ գրել</th><th>Օրինակ</th></tr>
+      <tr><td>Փոխանցում է տեղեկություն</td><td>Նկարագրիր բովանդակությունը</td><td><code>alt="Անի Սարգսյան, նախագծի ղեկավար"</code></td></tr>
+      <tr><td>Հղումի կամ կոճակի ներսում</td><td>Նկարագրիր <em>գործողությունը</em></td><td><code>alt="Գլխավոր էջ"</code></td></tr>
+      <tr><td>Զուտ դեկորատիվ</td><td>Թող դատարկ</td><td><code>alt=""</code></td></tr>
+      <tr><td>Տեքստ պարունակող նկար</td><td>Կրկնիր տեքստը</td><td><code>alt="Զեղչ 50%"</code></td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երբեք մի՛ արա այսպես</span>
+      <p><code>alt="նկար"</code>, <code>alt="image"</code>, <code>alt="photo1"</code>, <code>alt="IMG_2049.jpg"</code> — սրանք ոչ մի տեղեկություն չեն տալիս։<br><br>
+      Եվ <strong>մի՛ ջնջիր ատրիբուտը</strong>։ Բացակայող <code>alt</code>-ը և <code>alt=""</code>-ը տարբեր բաներ են․ առաջինի դեպքում էկրանընթերցիչը կարդում է ֆայլի անունը, երկրորդի դեպքում՝ պարզապես անտեսում է նկարը։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ստուգման հեշտ ձև</span>
+      <p>Կարդա էջը բարձրաձայն՝ նկարների փոխարեն արտասանելով <code>alt</code>-ը։ Եթե ամեն ինչ հասկանալի է — <code>alt</code>-երը լավն են։</p>
+    </div>
+
+    <h3>Ձևաչափեր</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ձևաչափ</th><th>Ինչի համար</th></tr>
+      <tr><td><strong>SVG</strong></td><td>Լոգոներ, պատկերակներ։ Չի կորցնում որակը</td></tr>
+      <tr><td><strong>JPG</strong></td><td>Լուսանկարներ</td></tr>
+      <tr><td><strong>PNG</strong></td><td>Երբ պետք է թափանցիկ ֆոն</td></tr>
+      <tr><td><strong>WebP</strong></td><td>Ժամանակակից, ավելի թեթև։ 16-րդ դասին</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Հատուկ նշաններ</h2>
+    <p>Որոշ նշաններ HTML-ում հատուկ իմաստ ունեն։ Դրանք գրվում են կոդով։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Կոդ</th><th>Արդյունք</th><th>Ե՞րբ է պետք</th></tr>
+      <tr><td><code>&amp;lt;</code></td><td>&lt;</td><td>Ցույց տալ թեգ որպես տեքստ</td></tr>
+      <tr><td><code>&amp;gt;</code></td><td>&gt;</td><td>Նույնը</td></tr>
+      <tr><td><code>&amp;amp;</code></td><td>&amp;</td><td>Ամպերսանդ</td></tr>
+      <tr><td><code>&amp;nbsp;</code></td><td>անխզելի բացատ</td><td>«5&nbsp;կգ» — չբաժանվի տողադարձով</td></tr>
+      <tr><td><code>&amp;copy;</code></td><td>©</td><td>Footer-ում</td></tr>
+      <tr><td><code>&amp;mdash;</code></td><td>—</td><td>Երկար գծիկ</td></tr>
+      <tr><td><code>&amp;laquo;</code> <code>&amp;raquo;</code></td><td>« »</td><td>Հայերեն չակերտներ</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>գործնականում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>HTML-ում պարբերությունը գրվում է &amp;lt;p&amp;gt; թեգով։<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Քաշը՝ 5&amp;nbsp;կգ<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>&amp;copy; 2026 Իմ կայքը<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Հայերեն տառերի համար կոդ պետք չէ</span>
+      <p>Շնորհիվ <code>&lt;meta charset="UTF-8"&gt;</code>-ի հայերենը գրվում է ուղիղ։ Կոդերը պետք են միայն վերևի աղյուսակի նշանների համար։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Խաղահրապարակ</h2>
+    <p>Փորձարկիր բոլոր այսօրվա թեգերը։ Արդյունքը թարմանում է գրելիս։</p>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="html">HTML</button>
+      </div>
+      <textarea class="live__code" data-pane="html">&lt;h1&gt;Խոհարարական բլոգ&lt;/h1&gt;
+
+&lt;p&gt;Բարի գալուստ։ Այստեղ կգտնեք &lt;strong&gt;հայկական&lt;/strong&gt;
+և &lt;em&gt;միջազգային&lt;/em&gt; բաղադրատոմսեր։&lt;/p&gt;
+
+&lt;h2&gt;Այսօրվա բաղադրատոմսը&lt;/h2&gt;
+&lt;h3&gt;Բաղադրիչներ&lt;/h3&gt;
+
+&lt;ul&gt;
+    &lt;li&gt;Ալյուր — 500&amp;nbsp;գ&lt;/li&gt;
+    &lt;li&gt;Կարագ — 200&amp;nbsp;գ&lt;/li&gt;
+    &lt;li&gt;Շաքար — 100&amp;nbsp;գ&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Պատրաստման կարգը&lt;/h3&gt;
+
+&lt;ol&gt;
+    &lt;li&gt;Տաքացրու ջեռոցը 180&amp;deg;-ի&lt;/li&gt;
+    &lt;li&gt;Հունցիր խմորը&lt;/li&gt;
+    &lt;li&gt;Թխիր 30 րոպե&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;blockquote&gt;Լավ գաթան համբերություն է պահանջում։&lt;/blockquote&gt;
+
+&lt;p&gt;Գինը՝ &lt;s&gt;3000&lt;/s&gt; 2000 դրամ&lt;/p&gt;
+
+&lt;p&gt;Ավելին՝ &lt;a href="#"&gt;մեր մյուս բաղադրատոմսերում&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;&lt;small&gt;&amp;copy; 2026 Խոհարարական բլոգ&lt;/small&gt;&lt;/p&gt;</textarea>
+      <div class="live__actions">
+        <span>Փոխիր և տես արդյունքը</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Դասարանական · բլոգի էջ</h2>
+    <p>Կառուցում ենք երկէջանոց փոքրիկ կայք՝ ճիշտ ուղիներով։</p>
+
+    <div class="tree">blog/
+├── index.html
+├── pages/
+│   └── recipe.html
+└── images/
+    └── gata.jpg</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.html</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">body</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">h1</span><span class="p">&gt;</span>Խոհարարական բլոգ<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Պարզ բաղադրատոմսեր ամեն օրվա համար։<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- Նավիգացիա --&gt;</span>
+    <span class="p">&lt;</span><span class="t">ul</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"index.html"</span><span class="p">&gt;</span>Գլխավոր<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"pages/recipe.html"</span><span class="p">&gt;</span>Բաղադրատոմս<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#contacts"</span><span class="p">&gt;</span>Կապ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">hr</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- Վերջին գրառումը --&gt;</span>
+    <span class="p">&lt;</span><span class="t">h2</span><span class="p">&gt;</span>Վերջին գրառումը<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">img</span> <span class="f">src</span>=<span class="s">"images/gata.jpg"</span> <span class="f">alt</span>=<span class="s">"Թարմ թխած գաթա սկուտեղի վրա"</span> <span class="f">width</span>=<span class="s">"400"</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">h3</span><span class="p">&gt;</span>Տնական գաթա<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Ամենապարզ ձևը՝ ընդամենը <span class="p">&lt;</span><span class="t">strong</span><span class="p">&gt;</span>4 բաղադրիչ<span class="p">&lt;/</span><span class="t">strong</span><span class="p">&gt;</span>։<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"pages/recipe.html"</span><span class="p">&gt;</span>Կարդալ ամբողջ բաղադրատոմսը<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">hr</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- Կապ --&gt;</span>
+    <span class="p">&lt;</span><span class="t">h2</span> <span class="f">id</span>=<span class="s">"contacts"</span><span class="p">&gt;</span>Կապ<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"mailto:info@blog.am"</span><span class="p">&gt;</span>info@blog.am<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;</span><span class="t">br</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"tel:+37410123456"</span><span class="p">&gt;</span>+374 10 123456<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;&lt;</span><span class="t">small</span><span class="p">&gt;</span>&amp;copy; 2026 Խոհարարական բլոգ<span class="p">&lt;/</span><span class="t">small</span><span class="p">&gt;&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="t">body</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>pages/recipe.html — ուշադրություն ուղիներին</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">body</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- ../ — բարձրանում ենք մեկ մակարդակ վեր --&gt;</span>
+    <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"../index.html"</span><span class="p">&gt;</span>&amp;larr; Գլխավոր<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">h1</span><span class="p">&gt;</span>Տնական գաթա<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- Նաև ../ նկարի համար --&gt;</span>
+    <span class="p">&lt;</span><span class="t">img</span> <span class="f">src</span>=<span class="s">"../images/gata.jpg"</span> <span class="f">alt</span>=<span class="s">"Թարմ թխած գաթա"</span> <span class="f">width</span>=<span class="s">"400"</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">h2</span><span class="p">&gt;</span>Բաղադրիչներ<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">ul</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>Ալյուր &amp;mdash; 500&amp;nbsp;գ<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>Կարագ &amp;mdash; 200&amp;nbsp;գ<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>Շաքար &amp;mdash; 100&amp;nbsp;գ<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>Ձու &amp;mdash; 2 հատ<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">h2</span><span class="p">&gt;</span>Պատրաստման կարգը<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">ol</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>Տաքացրու ջեռոցը 180&amp;deg;-ի<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>Հունցիր խմորը և թող հանգստանա 20 րոպե<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>Թխիր 30 րոպե<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">ol</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="t">body</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ստուգիր</span>
+      <p>Անցիր բոլոր հղումներով երկու ուղղությամբ։ Նկարը երևո՞ւմ է երկու էջում էլ։ Եթե <code>recipe.html</code>-ում նկարը չկա — ուրեմն մոռացել ես <code>../</code>-ը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Կառուցիր էջ ճիշտ վերնագրերի հիերարխիայով՝ մեկ <code>h1</code>, երեք <code>h2</code>, ամեն մեկի տակ երկուական <code>h3</code>։</li>
+      <li>Օգտագործիր բոլոր տեքստային թեգերը՝ <code>strong</code>, <code>em</code>, <code>s</code>, <code>mark</code>, <code>small</code>, <code>sub</code>, <code>sup</code>, <code>blockquote</code>։</li>
+      <li>Կազմիր ներդրված ցուցակ՝ առնվազն երկու մակարդակ, երեք տարրով յուրաքանչյուրում։</li>
+      <li>Կազմիր համարակալված ցուցակ՝ որևէ գործողության քայլերով։</li>
+      <li>Ստեղծիր եռաէջանոց կայք՝ <code>index.html</code>, <code>pages/about.html</code>, <code>pages/contact.html</code>։ Ամեն էջում պիտի լինի նավիգացիա մյուս երկուսին։</li>
+      <li>Ավելացրու <code>images/</code> թղթապանակ և ցուցադրիր նույն նկարը <strong>երկու էջում էլ</strong>՝ ճիշտ ուղիներով։</li>
+      <li>Գրիր իմաստալից <code>alt</code> ամեն նկարի համար։ Ավելացրու նաև մեկ դեկորատիվ նկար՝ <code>alt=""</code>-ով և բացատրիր ընտրությունը մեկնաբանության մեջ։</li>
+      <li>Ավելացրու խարիսխներով նավիգացիա՝ էջի վերևում հղումներ, որոնք տանում են ներքևի բաժիններ (<code>id</code> + <code>#</code>)։</li>
+      <li>Ավելացրու <code>mailto</code> և <code>tel</code> հղումներ։ Ստուգիր՝ սեղմելիս ի՞նչ է կատարվում։</li>
+      <li>Ցույց տուր էջում HTML կոդի օրինակ՝ օգտագործելով <code>&amp;lt;</code> և <code>&amp;gt;</code>։ Ավելացրու նաև <code>&amp;copy;</code> և <code>&amp;nbsp;</code>։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Թեգ</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>&lt;h1&gt;</code>…<code>&lt;h6&gt;</code></td><td>Վերնագրեր՝ ըստ կարևորության</td></tr>
+      <tr><td><code>&lt;p&gt;</code></td><td>Պարբերություն</td></tr>
+      <tr><td><code>&lt;strong&gt;</code> / <code>&lt;em&gt;</code></td><td>Կարևոր / շեշտված</td></tr>
+      <tr><td><code>&lt;ul&gt;</code> + <code>&lt;li&gt;</code></td><td>Չհամարակալված ցուցակ</td></tr>
+      <tr><td><code>&lt;ol&gt;</code> + <code>&lt;li&gt;</code></td><td>Համարակալված ցուցակ</td></tr>
+      <tr><td><code>&lt;a href="..."&gt;</code></td><td>Հղում</td></tr>
+      <tr><td><code>target="_blank" rel="noopener"</code></td><td>Նոր ներդիրում</td></tr>
+      <tr><td><code>href="#id"</code></td><td>Խարիսխ նույն էջում</td></tr>
+      <tr><td><code>href="mailto:"</code> / <code>"tel:"</code></td><td>Փոստ / հեռախոս</td></tr>
+      <tr><td><code>&lt;img src alt&gt;</code></td><td>Նկար ⭐</td></tr>
+      <tr><td><code>&lt;blockquote&gt;</code></td><td>Մեջբերում</td></tr>
+      <tr><td><code>&lt;hr&gt;</code> / <code>&lt;br&gt;</code></td><td>Գիծ / տողադարձ</td></tr>
+    </table>
+    </div>
+
+    <h3>Ուղիներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ուղի</th><th>Ուր է տանում</th></tr>
+      <tr><td><code>file.html</code></td><td>Նույն թղթապանակ</td></tr>
+      <tr><td><code>folder/file.html</code></td><td>Ներքև</td></tr>
+      <tr><td><code>../file.html</code></td><td>Մեկ մակարդակ վեր ⭐</td></tr>
+      <tr><td><code>../../file.html</code></td><td>Երկու մակարդակ վեր</td></tr>
+      <tr><td><code>/file.html</code></td><td>Կայքի արմատից — խուսափիր</td></tr>
+    </table>
+    </div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Էջում ուղիղ մեկ <code>h1</code> կա</li>
+      <li>Վերնագրերի մակարդակները բաց չեն թողնված</li>
+      <li>Բոլոր նկարներն ունեն <code>alt</code></li>
+      <li><code>alt</code>-երը նկարագրական են, ոչ «նկար» կամ «image»</li>
+      <li>Հղումների տեքստը հասկանալի է կոնտեքստից դուրս</li>
+      <li>Բոլոր հղումներն աշխատում են (ստուգված ձեռքով)</li>
+      <li><code>target="_blank"</code>-ի կողքին կա <code>rel="noopener"</code></li>
+      <li>Ուղիները հարաբերական են, ոչ <code>/</code>-ով սկսվող</li>
+      <li><code>&lt;ul&gt;</code>-ի ուղիղ ներսում միայն <code>&lt;li&gt;</code> է</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչու <code>h1</code>-ը մեկն է</li>
+      <li>Գիտե՞մ տարբերությունը <code>&lt;strong&gt;</code>-ի և <code>&lt;b&gt;</code>-ի միջև</li>
+      <li>Հասկանո՞ւմ եմ, ինչ է անում <code>../</code>-ը</li>
+      <li>Գիտե՞մ, ե՞րբ գրել <code>alt=""</code></li>
+      <li>Կարո՞ղ եմ ստեղծել խարիսխներով նավիգացիա</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Աղյուսակներ։ Առաջին անգամ կհանդիպենք <strong>խիստ ներդրվածության</strong>՝ <code>table &gt; tr &gt; td</code>։ Դա նախապատրաստություն է 10-րդ դասի կառուցվածքին, որտեղ նույն տրամաբանությամբ կաշխատենք <code>.row &gt; .col &gt; .wrapper</code>-ի հետ։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 02 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

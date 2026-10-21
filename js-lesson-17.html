@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 17 — Git և GitHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 17 · 2 ժամ</p>
+  <h1>Git և GitHub</h1>
+  <p class="lede">Այսօր JS չենք գրում։ Սովորում ենք այն գործիքը, առանց որի ոչ մի ծրագրավորող չի աշխատում։ Դասի վերջում քո կատալոգը կլինի ինտերնետում՝ իսկական հասցեով։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 15–16-ի նախագիծ</span>
+    <span>Առանձին դաս · գործիքներ</span>
+    <span>Արդյունք՝ հրապարակված կայք</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ինչո՞ւ է պետք տարբերակների կառավարումը</li>
+      <li>Git-ի երեք տարածքը</li>
+      <li><code>init</code>, <code>status</code>, <code>add</code>, <code>commit</code>, <code>log</code></li>
+      <li><code>.gitignore</code></li>
+      <li>Ճյուղեր՝ <code>branch</code>, <code>switch</code>, <code>merge</code></li>
+      <li>Կոնֆլիկտներ և դրանց լուծումը</li>
+      <li>GitHub՝ <code>remote</code>, <code>push</code>, <code>pull</code>, <code>clone</code></li>
+      <li>Կայքի հրապարակում GitHub Pages-ով</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչո՞ւ է պետք Git-ը</h2>
+    <p>Ծանո՞թ է այս պատկերը։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>առանց Git-ի</div><button class="copy">Պատճենել</button></div>
+<pre><code>catalog/
+catalog_2/
+catalog_նոր/
+catalog_վերջնական/
+catalog_վերջնական_2/
+catalog_ՎԵՐՋՆԱԿԱՆ_իսկապես/
+catalog_աշխատողը.zip</code></pre>
+    </div>
+
+    <p>Եվ ամենասարսափելի հարցը՝ <em>«ո՞րն էր այն, որտեղ ֆիլտրերն աշխատում էին»</em>։</p>
+
+    <p><strong>Git</strong>-ը լուծում է հենց այս խնդիրը։ Այն պահում է քո նախագծի <strong>ամբողջ պատմությունը</strong>․ ամեն փոփոխություն, ամեն օր, ամեն տարբերակ։ Ցանկացած պահի կարող ես․</p>
+    <ul>
+      <li>տեսնել՝ ի՞նչ փոխվեց և ե՞րբ</li>
+      <li>վերադառնալ ցանկացած հին վիճակի</li>
+      <li>փորձարկել նոր գաղափար՝ առանց աշխատող տարբերակը վնասելու</li>
+      <li>աշխատել թիմով՝ առանց իրար կոդը ջնջելու</li>
+    </ul>
+
+    <div class="note">
+      <span class="tag">Git ≠ GitHub</span>
+      <p><strong>Git</strong> — ծրագիր քո համակարգչում, որը հետևում է փոփոխություններին։<br>
+      <strong>GitHub</strong> — կայք, որտեղ կարող ես պահել քո Git պահոցները ինտերնետում։<br>
+      Git-ը կարող ես օգտագործել առանց GitHub-ի։ GitHub-ը՝ առանց Git-ի՝ ոչ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Տեղադրում և կարգավորում</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>terminal</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># Ստուգում ենք՝ տեղադրվա՞ծ է</span>
+<span class="f">git</span> --version
+
+<span class="c"># Ներկայանում ենք — մեկ անգամ, ընդմիշտ</span>
+<span class="f">git</span> config --global user.name <span class="s">"Ani Sargsyan"</span>
+<span class="f">git</span> config --global user.email <span class="s">"ani@example.com"</span>
+
+<span class="c"># Ստուգում ենք</span>
+<span class="f">git</span> config --global --list</code></pre>
+<pre class="out"><span class="m">Terminal</span>
+<span class="r">git version 2.45.0</span>
+<span class="r">user.name=Ani Sargsyan</span>
+<span class="r">user.email=ani@example.com</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Որտե՞ղ գրել հրամանները</p></span>
+      <p>VS Code-ում սեղմիր <code>Ctrl + `</code> (հակադարձ ապաթարց) — կբացվի ներկառուցված տերմինալը հենց քո նախագծի թղթապանակում։ Դա ամենահարմար ձևն է։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Էլ. հասցեն</p></span>
+      <p>Օգտագործիր <strong>նույն</strong> հասցեն, որով գրանցվելու ես GitHub-ում։ Հակառակ դեպքում քո commit-երը այնտեղ չեն կապվի քո պրոֆիլին։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Երեք տարածքը</h2>
+    <p>Սա Git-ի ամենակարևոր գաղափարն է։ Եթե սա հասկանաս, մնացածը հեշտ կլինի։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ճանապարհը</div><button class="copy">Պատճենել</button></div>
+<pre><code>  Working Directory        Staging Area          Repository
+  (քո ֆայլերը)            (պատրաստվող փաթեթ)    (պատմությունը)
+
+     main.js  ──── git add ────►  main.js  ──── git commit ────►  📦
+     style.css                                                    📦
+     index.html                                                   📦</code></pre>
+    </div>
+
+    <p>Համեմատություն՝ <strong>ծանրոց ուղարկելը</strong>․</p>
+    <ul>
+      <li><strong>Working Directory</strong> — սեղանիդ վրայի իրերը։ Դու դրանք փոխում ես ազատ։</li>
+      <li><strong>Staging Area</strong> — տուփը, որի մեջ դնում ես այն, ինչ ուզում ես ուղարկել։ Կարող ես դնել և հանել։</li>
+      <li><strong>Repository</strong> — ուղարկված ծանրոցը։ Այն արդեն պատմության մեջ է և չի կորչի։</li>
+    </ul>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ է պետք միջանկյալ քայլը</span>
+      <p>Որովհետև հաճախ մի քանի բան ես փոխում միաժամանակ։ Staging-ը թույլ է տալիս մեկ commit-ում դնել <em>միայն</em> ֆիլտրերի կոդը, իսկ զամբյուղինը՝ առանձին commit-ում։ Այդպես պատմությունը մնում է կարգին։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Առաջին պահոցը</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>init և status</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># Մտնում ենք նախագծի թղթապանակ</span>
+<span class="f">cd</span> catalog
+
+<span class="c"># Ստեղծում ենք պահոց — մեկ անգամ նախագծի համար</span>
+<span class="f">git</span> init
+
+<span class="c"># Ամենակարևոր հրամանը — «որտե՞ղ եմ հիմա»</span>
+<span class="f">git</span> status</code></pre>
+<pre class="out"><span class="m">Terminal</span>
+<span class="r">Initialized empty Git repository in /home/ani/catalog/.git/</span>
+
+<span class="r">On branch main</span>
+<span class="r">No commits yet</span>
+
+<span class="r">Untracked files:</span>
+<span class="e">  index.html</span>
+<span class="e">  css/</span>
+<span class="e">  js/</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">git status</span>
+      <p>Գրիր այն <strong>անընդհատ</strong>։ Ամեն հրամանից առաջ և հետո։ Git-ը ինքն է ասում՝ ինչ վիճակում ես և ինչ կարող ես անել հաջորդը։ Սկսնակների գլխավոր սխալը՝ <code>status</code> չգրելն է։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>add և commit</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># Դնում ենք տուփի մեջ</span>
+<span class="f">git</span> add index.html          <span class="c"># մեկ ֆայլ</span>
+<span class="f">git</span> add css/               <span class="c"># թղթապանակ</span>
+<span class="f">git</span> add .                  <span class="c"># ամեն ինչ</span>
+
+<span class="f">git</span> status
+
+<span class="c"># Ուղարկում ենք պատմություն</span>
+<span class="f">git</span> commit -m <span class="s">"Կատալոգի սկզբնական տարբերակը"</span></code></pre>
+<pre class="out"><span class="m">Terminal</span>
+<span class="r">Changes to be committed:</span>
+<span class="g">  new file:   index.html</span>
+<span class="g">  new file:   css/style.css</span>
+
+<span class="r">[main (root-commit) a3f9c21] Կատալոգի սկզբնական տարբերակը</span>
+<span class="r"> 6 files changed, 412 insertions(+)</span></pre>
+    </div>
+
+    <h3>Commit-ի հաղորդագրությունը</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>❌ Վատ</th><th>✅ Լավ</th></tr>
+      <tr><td><code>"փոփոխություններ"</code></td><td><code>"Ավելացվել է ֆիլտր ըստ կատեգորիայի"</code></td></tr>
+      <tr><td><code>"asdf"</code></td><td><code>"Ուղղվել է զամբյուղի գումարի հաշվարկը"</code></td></tr>
+      <tr><td><code>"վերջապես աշխատեց"</code></td><td><code>"Որոնումն այժմ չի զգում մեծատառերը"</code></td></tr>
+      <tr><td><code>"2-րդ օր"</code></td><td><code>"Զամբյուղը պահպանվում է localStorage-ում"</code></td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Կանոն</span>
+      <p>Հաղորդագրությունը պիտի պատասխանի հարցին՝ <em>«ի՞նչ է անում այս commit-ը»</em>։ Պատկերացրու, որ երեք ամիս հետո փնտրում ես՝ որտեղ կոտրվեց զամբյուղը։ Կօգնի՞ քեզ «asdf»-ը։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>պատմության դիտում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">git</span> log                        <span class="c"># ամբողջ պատմությունը</span>
+<span class="f">git</span> log --oneline              <span class="c"># կարճ՝ մեկ տող յուրաքանչյուրի</span>
+<span class="f">git</span> log --oneline --graph      <span class="c"># գծապատկերով</span>
+<span class="f">git</span> log -3                     <span class="c"># վերջին 3-ը</span></code></pre>
+<pre class="out"><span class="m">Terminal</span>
+<span class="r">c8d1e0f Զամբյուղը պահպանվում է localStorage-ում</span>
+<span class="r">b7a2f45 Ավելացվել է զամբյուղի մոդալը</span>
+<span class="r">e91c3d8 Ավելացվել է ֆիլտր ըստ կատեգորիայի</span>
+<span class="r">a3f9c21 Կատալոգի սկզբնական տարբերակը</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>.gitignore</h2>
+    <p>Որոշ ֆայլեր պահոցում պետք չեն՝ ժամանակավոր ֆայլեր, համակարգային աղբ, գաղտնաբառեր։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>.gitignore</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># Համակարգային</span>
+.DS_Store
+Thumbs.db
+
+<span class="c"># Խմբագրիչներ</span>
+.vscode/
+.idea/
+
+<span class="c"># Կախվածություններ (հետագայում)</span>
+node_modules/
+
+<span class="c"># Գաղտնի տվյալներ</span>
+.env
+
+<span class="c"># Ժամանակավոր</span>
+*.log
+*.tmp</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Երբեք մի՛ դիր Git-ում</span>
+      <p>Գաղտնաբառեր, API բանալիներ, տվյալների բազայի հասցեներ։ Եթե մեկ անգամ commit արեցիր՝ դրանք մնում են <strong>պատմության մեջ ընդմիշտ</strong>, նույնիսկ եթե հետո ջնջես ֆայլը։ Իսկ եթե պահոցը հրապարակային է — ամբողջ աշխարհը կտեսնի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Փոփոխությունների կառավարում</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ի՞նչ եմ փոխել</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">git</span> diff                 <span class="c"># Working vs Staging</span>
+<span class="f">git</span> diff --staged        <span class="c"># Staging vs վերջին commit</span>
+<span class="f">git</span> diff js/main.js      <span class="c"># կոնկրետ ֆայլ</span></code></pre>
+<pre class="out"><span class="m">Terminal</span>
+<span class="m">--- a/js/main.js</span>
+<span class="m">+++ b/js/main.js</span>
+<span class="e">- state.search = searchInput.value;</span>
+<span class="g">+ state.search = searchInput.value.trim();</span></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հետ վերցնել</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># Հանել տուփից (բայց փոփոխությունը մնում է)</span>
+<span class="f">git</span> restore --staged js/main.js
+
+<span class="c"># Չեղարկել փոփոխությունները ֆայլում — ՈՒՇԱԴԻՐ, անվերադարձ է</span>
+<span class="f">git</span> restore js/main.js
+
+<span class="c"># Ուղղել վերջին commit-ի հաղորդագրությունը</span>
+<span class="f">git</span> commit --amend -m <span class="s">"Ճիշտ հաղորդագրություն"</span>
+
+<span class="c"># Վերադառնալ հին վիճակին՝ նոր commit-ով (անվտանգ)</span>
+<span class="f">git</span> revert a3f9c21</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ոսկե կանոն</span>
+      <p>Եթե չգիտես՝ ինչ ես անում, նախ <strong>արա commit</strong>։ Commit արված ամեն ինչ գրեթե միշտ վերականգնելի է։ Commit չարվածը՝ ոչ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Ճյուղեր</h2>
+    <p>Ճյուղը զուգահեռ իրականություն է։ Փորձարկում ես նոր գաղափար, և եթե չստացվի՝ պարզապես ջնջում ես ճյուղը։ Հիմնական տարբերակը մնում է անվնաս։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>գծապատկեր</div><button class="copy">Պատճենել</button></div>
+<pre><code>                    ● ── ● ── ●   feature/wishlist
+                   /             \
+main  ● ── ● ── ● ──────────────── ●
+                                 merge</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հիմնական հրամանները</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">git</span> branch                          <span class="c"># ցուցակ</span>
+<span class="f">git</span> branch feature/wishlist         <span class="c"># ստեղծել</span>
+<span class="f">git</span> switch feature/wishlist         <span class="c"># անցնել</span>
+
+<span class="c"># Կամ երկուսը միասին</span>
+<span class="f">git</span> switch -c feature/wishlist
+
+<span class="c"># ... աշխատում ենք, commit ենք անում ...</span>
+
+<span class="c"># Վերադառնում ենք և միացնում</span>
+<span class="f">git</span> switch main
+<span class="f">git</span> merge feature/wishlist
+
+<span class="c"># Ջնջում ենք ավելորդ ճյուղը</span>
+<span class="f">git</span> branch -d feature/wishlist</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ճյուղերի անվանում</span>
+      <p>Ընդունված է՝ <code>feature/անուն</code> — նոր հնարավորություն, <code>fix/անուն</code> — սխալի ուղղում։ Օրինակ՝ <code>feature/cart</code>, <code>fix/search-case</code>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Կոնֆլիկտներ</h2>
+    <p>Կոնֆլիկտ է լինում, երբ երկու ճյուղում փոխվել է <strong>նույն ֆայլի նույն տողը</strong>։ Git-ը չգիտի՝ որն ընտրի, և հարցնում է քեզ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ինչ ես տեսնում ֆայլում</div><button class="copy">Պատճենել</button></div>
+<pre><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+<span class="k">const</span> SEARCH_DELAY = <span class="n">300</span>;
+=======
+<span class="k">const</span> SEARCH_DELAY = <span class="n">500</span>;
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/wishlist</code></pre>
+    </div>
+
+    <p>Վերևում՝ քո ընթացիկ ճյուղի տարբերակը։ Ներքևում՝ միացվողի։ Քո գործն է․</p>
+    <ol>
+      <li>Ջնջել <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code>, <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> տողերը</li>
+      <li>Թողնել ճիշտ տարբերակը (կամ գրել նոր, երրորդ)</li>
+      <li>Պահպանել ֆայլը</li>
+      <li><code>git add</code> և <code>git commit</code></li>
+    </ol>
+
+    <div class="tip note">
+      <span class="tag">Մի՛ վախեցիր</span>
+      <p>Կոնֆլիկտը <strong>սխալ չէ</strong>։ Դա Git-ի ազնիվ խոստովանությունն է՝ «այստեղ միայն դու կարող ես որոշել»։ VS Code-ը ցույց է տալիս հարմար կոճակներ՝ «Accept Current», «Accept Incoming», «Accept Both»։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>GitHub</h2>
+
+    <h3>Քայլ 1 — պահոց ստեղծել</h3>
+    <ol>
+      <li>Գրանցվիր <code>github.com</code>-ում</li>
+      <li>Սեղմիր <strong>New repository</strong></li>
+      <li>Անուն՝ <code>catalog</code></li>
+      <li>Ընտրիր <strong>Public</strong></li>
+      <li><strong>Մի՛</strong> նշիր «Add a README» — մեր պահոցն արդեն ունի ֆայլեր</li>
+      <li>Սեղմիր <strong>Create repository</strong></li>
+    </ol>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>քայլ 2 — կապել և ուղարկել</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># Կապում ենք տեղական պահոցը GitHub-ի հետ</span>
+<span class="f">git</span> remote add origin https://github.com/ani/catalog.git
+
+<span class="c"># Ստուգում ենք</span>
+<span class="f">git</span> remote -v
+
+<span class="c"># Ուղարկում ենք առաջին անգամ</span>
+<span class="f">git</span> push -u origin main
+
+<span class="c"># Հետագայում բավական է</span>
+<span class="f">git</span> push</code></pre>
+<pre class="out"><span class="m">Terminal</span>
+<span class="r">origin  https://github.com/ani/catalog.git (fetch)</span>
+<span class="r">origin  https://github.com/ani/catalog.git (push)</span>
+<span class="r">Enumerating objects: 24, done.</span>
+<span class="r">To https://github.com/ani/catalog.git</span>
+<span class="r"> * [new branch]      main -&gt; main</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">origin և -u</span>
+      <p><code>origin</code> — հեռավոր պահոցի ընդունված անունը (կարող էր լինել ցանկացած)։<br>
+      <code>-u</code> — «հիշիր այս կապը», որ հետո միայն <code>git push</code> գրես։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>մյուս կողմից</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># Բերել փոփոխությունները GitHub-ից</span>
+<span class="f">git</span> pull
+
+<span class="c"># Ներբեռնել ուրիշի (կամ քո) նախագիծը զրոյից</span>
+<span class="f">git</span> clone https://github.com/ani/catalog.git</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Աշխատանքի ռիթմ</span>
+      <p>Օրվա սկզբում՝ <code>git pull</code>։ Օրվա վերջում՝ <code>git push</code>։ Այս սովորությունը կփրկի քեզ բազում կոնֆլիկտներից, երբ սկսես թիմով աշխատել։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հրապարակում · GitHub Pages</h2>
+    <p>Ամենահաճելի մասը։ GitHub-ը կարող է քո ստատիկ կայքը ցուցադրել ինտերնետում՝ անվճար։</p>
+
+    <ol>
+      <li>Բացիր քո պահոցը GitHub-ում</li>
+      <li>Վերևից՝ <strong>Settings</strong></li>
+      <li>Ձախ մենյուից՝ <strong>Pages</strong></li>
+      <li><strong>Source</strong> → ընտրիր <em>Deploy from a branch</em></li>
+      <li><strong>Branch</strong> → <code>main</code>, թղթապանակ՝ <code>/ (root)</code></li>
+      <li>Սեղմիր <strong>Save</strong></li>
+      <li>Սպասիր 1–2 րոպե և թարմացրու էջը</li>
+    </ol>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>քո հասցեն</div><button class="copy">Պատճենել</button></div>
+<pre><code>https://<span class="s">ՔՈ-ՕԳՏԱՆՈՒՆԸ</span>.github.io/<span class="s">catalog</span>/</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Հաճախ հանդիպող խնդիրներ</span>
+      <p><strong>Էջը դատարկ է։</strong> Հիմնական ֆայլը պիտի կոչվի ուղիղ <code>index.html</code> և լինի պահոցի արմատում։<br>
+      <strong>CSS-ը չի բեռնվում։</strong> Ուղիները պիտի լինեն հարաբերական՝ <code>css/style.css</code>, ոչ <code>/css/style.css</code>։<br>
+      <strong>Հին տարբերակն է երևում։</strong> Սպասիր մի քանի րոպե, ապա թարմացրու <code>Ctrl + Shift + R</code>-ով։<br>
+      <strong>404։</strong> Ստուգիր՝ պահոցը Public է, և Pages-ը միացված է։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Հետագա թարմացումները</span>
+      <p>Այսուհետ ամեն <code>git push</code>-ից 1–2 րոպե հետո կայքն ինքնաբերաբար կթարմանա։ Փոխեցիր կոդը → commit → push → կայքը նոր է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Դասարանական · քո կատալոգը ինտերնետում</h2>
+    <p>Անցիր այս քայլերով քո Դաս 16-ի նախագծի հետ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ամբողջ ճանապարհը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># 1. Մտնում ենք նախագիծ</span>
+<span class="f">cd</span> catalog
+
+<span class="c"># 2. Ստեղծում ենք պահոց</span>
+<span class="f">git</span> init
+<span class="f">git</span> status
+
+<span class="c"># 3. Ստեղծում ենք .gitignore (ձեռքով, խմբագրիչում)</span>
+
+<span class="c"># 4. Առաջին commit</span>
+<span class="f">git</span> add .
+<span class="f">git</span> commit -m <span class="s">"Ապրանքների կատալոգ՝ ֆիլտրերով և զամբյուղով"</span>
+
+<span class="c"># 5. Կապում ենք GitHub-ի հետ</span>
+<span class="f">git</span> remote add origin https://github.com/ՕԳՏԱՆՈՒՆ/catalog.git
+<span class="f">git</span> push -u origin main
+
+<span class="c"># 6. Միացնում ենք Pages-ը կայքից (Settings → Pages)</span>
+
+<span class="c"># 7. Փոփոխություն ենք անում և ստուգում ամբողջ ցիկլը</span>
+<span class="c">#    (փոխիր ինչ-որ բան կոդում)</span>
+<span class="f">git</span> status
+<span class="f">git</span> diff
+<span class="f">git</span> add .
+<span class="f">git</span> commit -m <span class="s">"Ավելացվել է վարկանիշով տեսակավորումը"</span>
+<span class="f">git</span> push
+
+<span class="c"># 8. Փորձարկում ենք ճյուղ</span>
+<span class="f">git</span> switch -c feature/wishlist
+<span class="c">#    (ավելացրու սրտիկի կոճակ)</span>
+<span class="f">git</span> add .
+<span class="f">git</span> commit -m <span class="s">"Ավելացվել է հավանածների ցուցակը"</span>
+<span class="f">git</span> switch main
+<span class="f">git</span> merge feature/wishlist
+<span class="f">git</span> push
+<span class="f">git</span> branch -d feature/wishlist</code></pre>
+    </div>
+
+    <h3>README.md — նախագծի դեմքը</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>README.md</div><button class="copy">Պատճենել</button></div>
+<pre><code># Ապրանքների կատալոգ
+
+Վեբ հավելված ֆիլտրերով, որոնմամբ և զամբյուղով։
+
+## Դիտել
+https://ՕԳՏԱՆՈՒՆ.github.io/catalog/
+
+## Հնարավորություններ
+- Ֆիլտր ըստ կատեգորիայի
+- Որոնում debounce-ով
+- Տեսակավորում գնով, անունով, վարկանիշով
+- Զամբյուղ՝ պահպանմամբ localStorage-ում
+
+## Տեխնոլոգիաներ
+HTML, CSS (Flexbox), JavaScript (ES6+)
+
+## Հեղինակ
+Անուն Ազգանուն</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ է README-ն կարևոր</span>
+      <p>GitHub-ը այն ցուցադրում է պահոցի գլխավոր էջում։ Սա այն առաջին բանն է, որ տեսնում է ցանկացած մարդ՝ ուսուցիչ, ընկեր կամ ապագա գործատու։ Նախագիծ առանց README-ի կիսատ է թվում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 12 ============ -->
+  <section id="s12">
+    <h2><span class="num">12</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Կարգավորիր Git-ը՝ <code>user.name</code> և <code>user.email</code>։ Ուղարկիր <code>git config --global --list</code>-ի արդյունքի սքրինշոթը։</li>
+      <li>Հրապարակիր քո կատալոգը GitHub Pages-ով։ Ուղարկիր աշխատող հասցեն։</li>
+      <li>Գրիր README.md՝ նկարագրությամբ, հնարավորությունների ցուցակով և հասցեով։</li>
+      <li>Կատարիր առնվազն <strong>5 իմաստալից commit</strong>՝ առանձին փոփոխություններով։ Ուղարկիր <code>git log --oneline</code>-ի արդյունքը։</li>
+      <li>Ստեղծիր <code>feature/</code> ճյուղ, ավելացրու նոր հնարավորություն, միացրու <code>main</code>-ին և ջնջիր ճյուղը։</li>
+      <li>Դիտավորյալ ստեղծիր կոնֆլիկտ․ երկու ճյուղում փոխիր նույն տողը և միացրու։ Լուծիր և նկարագրիր՝ ինչ արեցիր։</li>
+      <li>Ավելացրու <code>.gitignore</code> առնվազն 5 կանոնով։</li>
+      <li>Հրապարակիր նաև քո HTML/CSS բլոկի նախագծերից մեկը՝ առանձին պահոցում։</li>
+      <li>Փորձիր <code>git clone</code>-ը՝ ներբեռնիր քո սեփական պահոցը ուրիշ թղթապանակում և համոզվիր, որ ամեն ինչ տեղում է։</li>
+      <li>Գտիր GitHub-ում որևէ հետաքրքիր բաց նախագիծ, նայիր դրա README-ն և commit-երի պատմությունը։ Գրիր՝ ի՞նչ նկատեցիր։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 13 ============ -->
+  <section id="s13">
+    <h2><span class="num">13</span>Հիշելու թերթիկ</h2>
+
+    <h3>Ամենօրյա հրամաններ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հրաման</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>git status</code></td><td>Որտե՞ղ եմ հիմա ⭐</td></tr>
+      <tr><td><code>git add .</code></td><td>Ամեն ինչ՝ staging</td></tr>
+      <tr><td><code>git commit -m "..."</code></td><td>Պահել պատմության մեջ</td></tr>
+      <tr><td><code>git push</code></td><td>Ուղարկել GitHub</td></tr>
+      <tr><td><code>git pull</code></td><td>Բերել GitHub-ից</td></tr>
+      <tr><td><code>git log --oneline</code></td><td>Պատմությունը կարճ</td></tr>
+      <tr><td><code>git diff</code></td><td>Ի՞նչ եմ փոխել</td></tr>
+    </table>
+    </div>
+
+    <h3>Ճյուղեր</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հրաման</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>git branch</code></td><td>Ճյուղերի ցուցակ</td></tr>
+      <tr><td><code>git switch -c անուն</code></td><td>Ստեղծել և անցնել</td></tr>
+      <tr><td><code>git switch main</code></td><td>Անցնել</td></tr>
+      <tr><td><code>git merge անուն</code></td><td>Միացնել ընթացիկին</td></tr>
+      <tr><td><code>git branch -d անուն</code></td><td>Ջնջել</td></tr>
+    </table>
+    </div>
+
+    <h3>Երբ ինչ-որ բան սխալ գնաց</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Իրավիճակ</th><th>Լուծում</th></tr>
+      <tr><td>Ֆայլը սխալ դրեցի staging</td><td><code>git restore --staged ֆայլ</code></td></tr>
+      <tr><td>Ուզում եմ չեղարկել փոփոխությունը</td><td><code>git restore ֆայլ</code> ⚠️</td></tr>
+      <tr><td>Commit-ի հաղորդագրությունը սխալ է</td><td><code>git commit --amend -m "..."</code></td></tr>
+      <tr><td>Ուզում եմ չեղարկել հին commit</td><td><code>git revert հեշ</code></td></tr>
+      <tr><td>Չգիտեմ ինչ է կատարվում</td><td><code>git status</code> և <code>git log --oneline</code></td></tr>
+    </table>
+    </div>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել երեք տարածքի տարբերությունը</li>
+      <li>Գիտե՞մ, ինչո՞վ է Git-ը տարբերվում GitHub-ից</li>
+      <li>Կարո՞ղ եմ ստեղծել պահոց և հրապարակել կայք առանց նայելու</li>
+      <li>Գիտե՞մ ինչ անել կոնֆլիկտի դեպքում</li>
+      <li>Կարո՞ղ եմ գրել լավ commit հաղորդագրություն</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Վերադառնում ենք JavaScript։ ES մոդուլներ՝ <code>import</code> և <code>export</code>։ Դաս 16-ի 6 ֆայլերը վերջապես կդառնան իսկական մոդուլներ՝ առանց գլոբալ փոփոխականների և <code>defer</code>-ի հերթականությունից կախվածության։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 17 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

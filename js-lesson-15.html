@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 15 — Նախագիծ · Օր 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 15 · 2 ժամ · Նախագիծ, օր 1</p>
+  <h1>Ապրանքների կատալոգ</h1>
+  <p class="lede">Տասնչորս դաս սովորեցինք առանձին գործիքներ։ Այսօր և հաջորդ դասին դրանք միանում են մեկ իրական նախագծում՝ կատալոգ ֆիլտրերով, տեսակավորմամբ, որոնմամբ և զամբյուղով։</p>
+
+  <div class="facts">
+    <span>Օգտագործում ենք՝ Դաս 04–14</span>
+    <span>Բլոկ 2 · Նախագիծ</span>
+    <span>Օր 1-ից 2</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք կառուցում</h2>
+
+    <h3>Այսօր (օր 1)</h3>
+    <ul class="goals">
+      <li>Նախագծի կառուցվածք և տվյալներ</li>
+      <li>Քարտերի render՝ <code>.row &gt; .col &gt; .wrapper</code> կառուցվածքով</li>
+      <li>Կենտրոնական վիճակ (state)</li>
+      <li>Ֆիլտր ըստ կատեգորիայի</li>
+      <li>Տեսակավորում ըստ գնի և անվան</li>
+      <li>Որոնում debounce-ով</li>
+      <li>Դատարկ արդյունքի մշակում</li>
+    </ul>
+
+    <h3>Հաջորդ դասին (օր 2)</h3>
+    <ul class="goals">
+      <li>Զամբյուղ՝ ավելացում, քանակ, ջնջում</li>
+      <li>Պահպանում <code>localStorage</code>-ում</li>
+      <li>Զամբյուղի մոդալ պատուհան</li>
+      <li>Ռեֆակտորինգ և կոդի վերանայում</li>
+      <li>Սխալների որոնում DevTools-ով</li>
+    </ul>
+
+    <div class="note">
+      <span class="tag">Աշխատանքի կարգը</span>
+      <p>Դասը կառուցված է <strong>ստուգակետերով</strong>։ Ամեն քայլից հետո կանգ առ, բացիր բրաուզերը և համոզվիր, որ աշխատում է։ Մի՛ գրիր ամբողջ կոդը միանգամից — այդպես սխալ գտնելն անհնար կդառնա։</p>
+    </div>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Նախագծի կառուցվածք</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>թղթապանակներ</div><button class="copy">Պատճենել</button></div>
+<pre><code>catalog/
+├── index.html
+├── css/
+│   └── style.css
+└── js/
+    ├── data.js       ← ապրանքների ցուցակը
+    ├── storage.js    ← save / load (Դաս 14)
+    └── main.js       ← ամբողջ տրամաբանությունը</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.html — միացումները</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">head</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">meta</span> <span class="f">charset</span>=<span class="s">"UTF-8"</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">title</span><span class="p">&gt;</span>Կատալոգ<span class="p">&lt;/</span><span class="t">title</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"stylesheet"</span> <span class="f">href</span>=<span class="s">"css/style.css"</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="t">script</span> <span class="f">src</span>=<span class="s">"js/data.js"</span> <span class="k">defer</span><span class="p">&gt;&lt;/</span><span class="t">script</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">script</span> <span class="f">src</span>=<span class="s">"js/storage.js"</span> <span class="k">defer</span><span class="p">&gt;&lt;/</span><span class="t">script</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">script</span> <span class="f">src</span>=<span class="s">"js/main.js"</span> <span class="k">defer</span><span class="p">&gt;&lt;/</span><span class="t">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">head</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Հերթականությունը կարևոր է</span>
+      <p><code>defer</code>-ով սկրիպտները կատարվում են <strong>հենց այն հերթականությամբ</strong>, ինչ գրված են։ <code>main.js</code>-ը վերջում է, որովհետև այն օգտագործում է մյուսների փոփոխականները։ Դաս 18-ում կսովորենք ավելի ճիշտ ձևը՝ մոդուլներ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Տվյալները</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/data.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> PRODUCTS = [
+  { id: <span class="n">1</span>, name: <span class="s">"Նոութբուք Pro 14"</span>, price: <span class="n">450000</span>, category: <span class="s">"laptop"</span>,   rating: <span class="n">4.8</span>, inStock: <span class="k">true</span>  },
+  { id: <span class="n">2</span>, name: <span class="s">"Անլար մկնիկ"</span>,      price: <span class="n">8000</span>,   category: <span class="s">"accessory"</span>,rating: <span class="n">4.2</span>, inStock: <span class="k">true</span>  },
+  { id: <span class="n">3</span>, name: <span class="s">"Մեխանիկական ստեղնաշար"</span>, price: <span class="n">25000</span>, category: <span class="s">"accessory"</span>, rating: <span class="n">4.6</span>, inStock: <span class="k">false</span> },
+  { id: <span class="n">4</span>, name: <span class="s">"Մոնիտոր 27\""</span>,      price: <span class="n">120000</span>, category: <span class="s">"monitor"</span>,  rating: <span class="n">4.5</span>, inStock: <span class="k">true</span>  },
+  { id: <span class="n">5</span>, name: <span class="s">"Ականջակալ ANC"</span>,     price: <span class="n">15000</span>,  category: <span class="s">"accessory"</span>,rating: <span class="n">4.0</span>, inStock: <span class="k">false</span> },
+  { id: <span class="n">6</span>, name: <span class="s">"Նոութբուք Air 13"</span>,  price: <span class="n">320000</span>, category: <span class="s">"laptop"</span>,   rating: <span class="n">4.7</span>, inStock: <span class="k">true</span>  },
+  { id: <span class="n">7</span>, name: <span class="s">"Մոնիտոր 24\""</span>,      price: <span class="n">75000</span>,  category: <span class="s">"monitor"</span>,  rating: <span class="n">4.1</span>, inStock: <span class="k">true</span>  },
+  { id: <span class="n">8</span>, name: <span class="s">"USB-C հանգույց"</span>,    price: <span class="n">12000</span>,  category: <span class="s">"accessory"</span>,rating: <span class="n">3.9</span>, inStock: <span class="k">true</span>  }
+];
+
+<span class="k">const</span> CATEGORIES = {
+  all:       <span class="s">"Բոլորը"</span>,
+  laptop:    <span class="s">"Նոութբուքեր"</span>,
+  monitor:   <span class="s">"Մոնիտորներ"</span>,
+  accessory: <span class="s">"Աքսեսուարներ"</span>
+};</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ ՄԵԾԱՏԱՌԵՐՈՎ</span>
+      <p>Սովորույթ է․ եթե արժեքը հաստատուն է և ծրագրի ընթացքում չի փոխվում, անունը գրում են <code>UPPER_CASE</code>-ով։ Այդպես կոդը կարդալիս անմիջապես երևում է՝ սա տվյալ է, ոչ վիճակ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>HTML կմախքը</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.html — body</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">main</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="t">section</span> <span class="f">class</span>=<span class="s">"catalog"</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- Վահանակ --&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+
+          <span class="p">&lt;</span><span class="t">h1</span><span class="p">&gt;</span>Տեխնիկայի կատալոգ<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+
+          <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"search"</span> <span class="f">class</span>=<span class="s">"search"</span>
+                 <span class="f">placeholder</span>=<span class="s">"Որոնել ապրանք..."</span><span class="p">&gt;</span>
+
+          <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"filters"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"filter is-active"</span> <span class="f">data-category</span>=<span class="s">"all"</span><span class="p">&gt;</span>Բոլորը<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"filter"</span> <span class="f">data-category</span>=<span class="s">"laptop"</span><span class="p">&gt;</span>Նոութբուքեր<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"filter"</span> <span class="f">data-category</span>=<span class="s">"monitor"</span><span class="p">&gt;</span>Մոնիտորներ<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"filter"</span> <span class="f">data-category</span>=<span class="s">"accessory"</span><span class="p">&gt;</span>Աքսեսուարներ<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+          <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+          <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"controls"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">label</span><span class="p">&gt;</span>
+              <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"checkbox"</span> <span class="f">class</span>=<span class="s">"only-stock"</span><span class="p">&gt;</span>
+              Միայն առկա
+            <span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">select</span> <span class="f">class</span>=<span class="s">"sort"</span><span class="p">&gt;</span>
+              <span class="p">&lt;</span><span class="t">option</span> <span class="f">value</span>=<span class="s">"default"</span><span class="p">&gt;</span>Ըստ կարգի<span class="p">&lt;/</span><span class="t">option</span><span class="p">&gt;</span>
+              <span class="p">&lt;</span><span class="t">option</span> <span class="f">value</span>=<span class="s">"price-asc"</span><span class="p">&gt;</span>Գինը՝ էժանից<span class="p">&lt;/</span><span class="t">option</span><span class="p">&gt;</span>
+              <span class="p">&lt;</span><span class="t">option</span> <span class="f">value</span>=<span class="s">"price-desc"</span><span class="p">&gt;</span>Գինը՝ թանկից<span class="p">&lt;/</span><span class="t">option</span><span class="p">&gt;</span>
+              <span class="p">&lt;</span><span class="t">option</span> <span class="f">value</span>=<span class="s">"name"</span><span class="p">&gt;</span>Անունով<span class="p">&lt;/</span><span class="t">option</span><span class="p">&gt;</span>
+              <span class="p">&lt;</span><span class="t">option</span> <span class="f">value</span>=<span class="s">"rating"</span><span class="p">&gt;</span>Վարկանիշով<span class="p">&lt;/</span><span class="t">option</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">select</span><span class="p">&gt;</span>
+          <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+          <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"stats"</span><span class="p">&gt;&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- Այստեղ JS-ը կլցնի քարտերը --&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span> <span class="f">id</span>=<span class="s">"products"</span><span class="p">&gt;&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">main</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ուշադրություն</span>
+      <p><code>#products</code>-ը դատարկ է և <strong>երբեք չի ջնջվում</strong>։ Հենց դրա վրա կկախենք դելեգացված listener-ը (Դաս 12)։ Ներսի քարտերը կփոխվեն հարյուր անգամ — listener-ը կմնա։</p>
+    </div>
+
+    <h3>CSS — վիճակների դասերը</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>css/style.css — հատված</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Ձեր սովորական կմախքը */</span>
+.row     { display: flex; flex-wrap: wrap; }
+.col     { padding: 12px; flex: 1 1 280px; }
+.wrapper { border: 1px solid #ddd; border-radius: 10px; padding: 20px; height: 100%; }
+
+<span class="c">/* Վիճակներ — JS-ը միայն այս դասերն է փոխում */</span>
+.filter.<span class="k">is-active</span>      { background: #1c489e; color: #fff; }
+.wrapper.<span class="k">is-disabled</span>  { opacity: .5; }
+.badge.<span class="k">is-out</span>          { color: #c62828; }
+.empty                { text-align: center; padding: 40px; }</code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Վիճակը — մեկ ճշմարտության աղբյուր</h2>
+    <p>Ամենակարևոր որոշումը նախագծում։ Ամբողջ ինտերֆեյսի վիճակը պահում ենք <strong>մեկ օբյեկտում</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/main.js — սկիզբ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ---------- Վիճակ ----------</span>
+<span class="k">const</span> state = {
+  category:  <span class="s">"all"</span>,
+  search:    <span class="s">""</span>,
+  sort:      <span class="s">"default"</span>,
+  onlyStock: <span class="k">false</span>
+};
+
+<span class="c">// ---------- Էլեմենտներ ----------</span>
+<span class="k">const</span> container   = document.<span class="f">querySelector</span>(<span class="s">"#products"</span>);
+<span class="k">const</span> statsEl     = document.<span class="f">querySelector</span>(<span class="s">".stats"</span>);
+<span class="k">const</span> searchInput = document.<span class="f">querySelector</span>(<span class="s">".search"</span>);
+<span class="k">const</span> sortSelect  = document.<span class="f">querySelector</span>(<span class="s">".sort"</span>);
+<span class="k">const</span> stockCheck  = document.<span class="f">querySelector</span>(<span class="s">".only-stock"</span>);
+<span class="k">const</span> filtersBox  = document.<span class="f">querySelector</span>(<span class="s">".filters"</span>);</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ օբյեկտ, ոչ 4 առանձին փոփոխական</p></span>
+      <p>Որովհետև հետո միշտ կկարողանաս մեկ տողով տեսնել ամբողջ պատկերը՝ <code>console.log(state)</code>։ Եվ վաղը, երբ ավելացնես «գնի միջակայք» ֆիլտր, պարզապես նոր դաշտ կավելացնես՝ առանց ֆունկցիաների ստորագրությունները փոխելու։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հոսքի սխեմա</div><button class="copy">Պատճենել</button></div>
+<pre><code>Օգտագործողի գործողություն
+        ↓
+  փոխում ենք state-ը
+        ↓
+    render()
+        ↓
+ getVisibleProducts()   ← ֆիլտր + որոնում + տեսակավորում
+        ↓
+  նոր HTML էջում</code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Ստուգակետ 1 · Քարտերի render</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/main.js — render</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> formatPrice = n =&gt; n.<span class="f">toLocaleString</span>(<span class="s">"hy-AM"</span>) + <span class="s">" ֏"</span>;   <span class="c">// Դաս 8</span>
+
+<span class="k">function</span> <span class="f">createCard</span>(product) {
+  <span class="k">const</span> { id, name, price, rating, inStock } = product;      <span class="c">// Դաս 7</span>
+
+  <span class="k">return</span> <span class="s">`
+    &lt;div class="col"&gt;
+      &lt;div class="wrapper </span>${inStock ? <span class="s">""</span> : <span class="s">"is-disabled"</span>}<span class="s">"&gt;
+        &lt;h3 class="card__title"&gt;</span>${name}<span class="s">&lt;/h3&gt;
+        &lt;p class="card__rating"&gt;★ </span>${rating}<span class="s">&lt;/p&gt;
+        &lt;p class="card__price"&gt;</span>${<span class="f">formatPrice</span>(price)}<span class="s">&lt;/p&gt;
+        &lt;span class="badge </span>${inStock ? <span class="s">""</span> : <span class="s">"is-out"</span>}<span class="s">"&gt;
+          </span>${inStock ? <span class="s">"Առկա է"</span> : <span class="s">"Սպառված"</span>}<span class="s">
+        &lt;/span&gt;
+        &lt;button class="btn" data-action="add" data-id="</span>${id}<span class="s">"
+                </span>${inStock ? <span class="s">""</span> : <span class="s">"disabled"</span>}<span class="s">&gt;
+          Ավելացնել
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  `</span>;
+}
+
+<span class="k">function</span> <span class="f">render</span>() {
+  <span class="k">const</span> visible = <span class="f">getVisibleProducts</span>();
+
+  <span class="k">if</span> (visible.length === <span class="n">0</span>) {
+    container.innerHTML = <span class="s">`
+      &lt;div class="col"&gt;
+        &lt;div class="wrapper empty"&gt;
+          &lt;p&gt;Ապրանք չգտնվեց։&lt;/p&gt;
+          &lt;button class="btn" data-action="reset"&gt;Մաքրել ֆիլտրերը&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `</span>;
+  } <span class="k">else</span> {
+    container.innerHTML = visible.<span class="f">map</span>(<span class="f">createCard</span>).<span class="f">join</span>(<span class="s">""</span>);   <span class="c">// Դաս 10</span>
+  }
+
+  <span class="f">renderStats</span>(visible);
+}
+
+<span class="k">function</span> <span class="f">renderStats</span>(visible) {
+  <span class="k">const</span> total = visible.<span class="f">reduce</span>((sum, p) =&gt; sum + p.price, <span class="n">0</span>);   <span class="c">// Դաս 6</span>
+  statsEl.textContent =
+    <span class="s">`Ցուցադրված է </span>${visible.length}<span class="s"> / </span>${PRODUCTS.length}<span class="s"> ապրանք · ընդհանուր </span>${<span class="f">formatPrice</span>(total)}<span class="s">`</span>;
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ստուգակետ</span>
+      <p>Ժամանակավորապես գրիր <code>function getVisibleProducts() { return PRODUCTS; }</code> և կանչիր <code>render()</code>։ Բացիր բրաուզերը։ <strong>8 քարտ պիտի երևա։</strong> Եթե չեն երևում — ստուգիր <code>defer</code>-ը և Console-ի սխալները։ Հետո միայն շարունակիր։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Ստուգակետ 2 · Ֆիլտր և տեսակավորում</h2>
+    <p>Ահա նախագծի սիրտը։ Մեկ ֆունկցիա, որը <code>state</code>-ից պատրաստում է ցուցադրվող ցուցակը։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/main.js — pipeline</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">getVisibleProducts</span>() {
+  <span class="k">let</span> result = [...PRODUCTS];        <span class="c">// պատճեն — բնօրինակը չենք դիպչում (Դաս 5)</span>
+
+  <span class="c">// 1. Կատեգորիա</span>
+  <span class="k">if</span> (state.category !== <span class="s">"all"</span>) {
+    result = result.<span class="f">filter</span>(p =&gt; p.category === state.category);
+  }
+
+  <span class="c">// 2. Միայն առկա</span>
+  <span class="k">if</span> (state.onlyStock) {
+    result = result.<span class="f">filter</span>(p =&gt; p.inStock);
+  }
+
+  <span class="c">// 3. Որոնում</span>
+  <span class="k">if</span> (state.search !== <span class="s">""</span>) {
+    <span class="k">const</span> query = state.search.<span class="f">toLowerCase</span>();      <span class="c">// Դաս 8</span>
+    result = result.<span class="f">filter</span>(p =&gt; p.name.<span class="f">toLowerCase</span>().<span class="f">includes</span>(query));
+  }
+
+  <span class="c">// 4. Տեսակավորում</span>
+  <span class="k">switch</span> (state.sort) {                            <span class="c">// Դաս 2</span>
+    <span class="k">case</span> <span class="s">"price-asc"</span>:
+      result.<span class="f">sort</span>((a, b) =&gt; a.price - b.price);
+      <span class="k">break</span>;
+    <span class="k">case</span> <span class="s">"price-desc"</span>:
+      result.<span class="f">sort</span>((a, b) =&gt; b.price - a.price);
+      <span class="k">break</span>;
+    <span class="k">case</span> <span class="s">"rating"</span>:
+      result.<span class="f">sort</span>((a, b) =&gt; b.rating - a.rating);
+      <span class="k">break</span>;
+    <span class="k">case</span> <span class="s">"name"</span>:
+      result.<span class="f">sort</span>((a, b) =&gt; a.name.<span class="f">localeCompare</span>(b.name, <span class="s">"hy"</span>));
+      <span class="k">break</span>;
+  }
+
+  <span class="k">return</span> result;
+}</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ է սա գեղեցիկ</span>
+      <p>Ֆիլտրերն <strong>իրար չեն խանգարում</strong>։ Ամեն մեկը վերցնում է նախորդի արդյունքը և նեղացնում այն։ Կարող ես միաժամանակ ընտրել «Աքսեսուարներ» + «Միայն առկա» + որոնել «USB» + տեսակավորել գնով։ Ամեն ինչ կաշխատի, և դու ոչինչ լրացուցիչ չես գրել։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">localeCompare</span>
+      <p>Հայերեն տեքստերի ճիշտ այբբենական տեսակավորման համար։ Սովորական <code>a.name &gt; b.name</code>-ը հայերենի հետ սխալ արդյունք կտա։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ուշադրություն</span>
+      <p><code>result.sort(...)</code>-ը փոխում է <code>result</code>-ը, բայց դա անվտանգ է, որովհետև <code>result</code>-ը արդեն <strong>պատճեն</strong> է (առաջին տողում <code>[...PRODUCTS]</code>)։ Առանց այդ պատճենի սկզբնական ցուցակը կփչանար ընդմիշտ (Դաս 6)։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Ստուգակետ 3 · Իրադարձություններ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/main.js — մշակիչներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ---------- Ֆիլտրի կոճակներ (դելեգացիա) ----------</span>
+filtersBox.<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+  <span class="k">const</span> btn = e.target.<span class="f">closest</span>(<span class="s">".filter"</span>);        <span class="c">// Դաս 12</span>
+  <span class="k">if</span> (!btn) <span class="k">return</span>;
+
+  state.category = btn.dataset.category;
+
+  <span class="c">// «հանել բոլորից → ավելացնել ընտրվածին» (Դաս 11)</span>
+  filtersBox.<span class="f">querySelectorAll</span>(<span class="s">".filter"</span>)
+    .<span class="f">forEach</span>(f =&gt; f.classList.<span class="f">remove</span>(<span class="s">"is-active"</span>));
+  btn.classList.<span class="f">add</span>(<span class="s">"is-active"</span>);
+
+  <span class="f">render</span>();
+});
+
+<span class="c">// ---------- Տեսակավորում ----------</span>
+sortSelect.<span class="f">addEventListener</span>(<span class="s">"change"</span>, () =&gt; {
+  state.sort = sortSelect.value;
+  <span class="f">render</span>();
+});
+
+<span class="c">// ---------- Միայն առկա ----------</span>
+stockCheck.<span class="f">addEventListener</span>(<span class="s">"change"</span>, () =&gt; {
+  state.onlyStock = stockCheck.checked;
+  <span class="f">render</span>();
+});
+
+<span class="c">// ---------- Որոնում debounce-ով (Դաս 14) ----------</span>
+<span class="k">let</span> searchTimer;
+
+searchInput.<span class="f">addEventListener</span>(<span class="s">"input"</span>, () =&gt; {
+  <span class="f">clearTimeout</span>(searchTimer);
+
+  searchTimer = <span class="f">setTimeout</span>(() =&gt; {
+    state.search = searchInput.value.<span class="f">trim</span>();
+    <span class="f">render</span>();
+  }, <span class="n">300</span>);
+});
+
+<span class="c">// ---------- Քարտերի կոճակներ (դելեգացիա) ----------</span>
+container.<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+  <span class="k">const</span> btn = e.target.<span class="f">closest</span>(<span class="s">"[data-action]"</span>);
+  <span class="k">if</span> (!btn) <span class="k">return</span>;
+
+  <span class="k">if</span> (btn.dataset.action === <span class="s">"reset"</span>) {
+    <span class="f">resetFilters</span>();
+    <span class="k">return</span>;
+  }
+
+  <span class="k">if</span> (btn.dataset.action === <span class="s">"add"</span>) {
+    <span class="k">const</span> id = <span class="f">Number</span>(btn.dataset.id);          <span class="c">// dataset-ը տող է</span>
+    <span class="k">const</span> product = PRODUCTS.<span class="f">find</span>(p =&gt; p.id === id);
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Զամբյուղ՝"</span>, product.name);    <span class="c">// վաղը կդառնա իսկական</span>
+  }
+});
+
+<span class="c">// ---------- Վերականգնում ----------</span>
+<span class="k">function</span> <span class="f">resetFilters</span>() {
+  state.category  = <span class="s">"all"</span>;
+  state.search    = <span class="s">""</span>;
+  state.sort      = <span class="s">"default"</span>;
+  state.onlyStock = <span class="k">false</span>;
+
+  searchInput.value  = <span class="s">""</span>;
+  sortSelect.value   = <span class="s">"default"</span>;
+  stockCheck.checked = <span class="k">false</span>;
+
+  filtersBox.<span class="f">querySelectorAll</span>(<span class="s">".filter"</span>)
+    .<span class="f">forEach</span>(f =&gt; f.classList.<span class="f">toggle</span>(<span class="s">"is-active"</span>, f.dataset.category === <span class="s">"all"</span>));
+
+  <span class="f">render</span>();
+}
+
+<span class="c">// ---------- Գործարկում ----------</span>
+<span class="f">render</span>();</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Նկատեցի՞ր օրինաչափությունը</span>
+      <p>Ամեն մշակիչ անում է <strong>ուղիղ երկու բան</strong>․<br>
+      <strong>1.</strong> Փոխում է <code>state</code>-ի մեկ դաշտը։<br>
+      <strong>2.</strong> Կանչում է <code>render()</code>։<br><br>
+      Ոչ մի մշակիչ ուղիղ չի դիպչում DOM-ի քարտերին։ Հենց այս կարգապահությունն է թույլ տալիս, որ նախագիծը չվերածվի քաոսի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Ստուգակետ 4 · Փորձարկում</h2>
+    <p>Անցիր այս ցուցակով։ Ամեն կետ պիտի աշխատի, մինչև հաջորդ դաս անցնելը։</p>
+
+    <ul class="goals">
+      <li>Էջը բացվում է, երևում է 8 քարտ</li>
+      <li>«Նոութբուքեր» կոճակը թողնում է 2 քարտ, կոճակը դառնում է ակտիվ</li>
+      <li>Կատեգորիա փոխելիս նախորդ կոճակի ակտիվությունը հանվում է</li>
+      <li>«Միայն առկա»-ն թաքցնում է սպառվածները</li>
+      <li>«Գինը՝ էժանից» ճիշտ է դասավորում (8000 → 450000)</li>
+      <li>«Անունով» դասավորումը հայերեն այբուբենով է</li>
+      <li>Որոնումը աշխատում է, և միայն գրելուց 0.3 վրկ հետո</li>
+      <li>Որոնումը կարգ չի զգում՝ «նոութ» և «ՆՈՒԹ» — երկուսն էլ գտնում են</li>
+      <li>Կատեգորիա + առկա + որոնում + տեսակավորում միասին աշխատում են</li>
+      <li>Անհնար համադրության դեպքում երևում է «Ապրանք չգտնվեց» + «Մաքրել ֆիլտրերը» կոճակը</li>
+      <li>«Մաքրել ֆիլտրերը» կոճակը վերականգնում է ամեն ինչ, ներառյալ դաշտերի տեսքը</li>
+      <li>Սպառված ապրանքի կոճակը <code>disabled</code> է</li>
+      <li>Առկա ապրանքի կոճակը Console-ում տպում է անունը</li>
+      <li>Վիճակագրության տողը թարմացվում է ամեն փոփոխությունից</li>
+    </ul>
+
+    <div class="warn note">
+      <span class="tag">Եթե ինչ-որ բան չի աշխատում</span>
+      <p><strong>1.</strong> Բացիր Console-ը — կա՞ կարմիր սխալ։<br>
+      <strong>2.</strong> <code>console.log(state)</code> մշակիչի ներսում — վիճակը փոխվո՞ւմ է։<br>
+      <strong>3.</strong> <code>console.log(getVisibleProducts())</code> — ցուցակը ճի՞շտ է։<br>
+      <strong>4.</strong> Եթե վիճակը ճիշտ է, իսկ էջը՝ ոչ — խնդիրը <code>render()</code>-ում է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Խաղահրապարակ · pipeline-ը առանց DOM-ի</h2>
+    <p>Փորձիր <code>state</code>-ի տարբեր համադրություններ և տես, թե ինչ ցուցակ է ստացվում։</p>
+
+    <div class="pg">
+      <textarea id="pgCode" spellcheck="false">const PRODUCTS = [
+  { id: 1, name: "Նոութբուք Pro 14", price: 450000, category: "laptop", rating: 4.8, inStock: true },
+  { id: 2, name: "Անլար մկնիկ", price: 8000, category: "accessory", rating: 4.2, inStock: true },
+  { id: 3, name: "Մեխանիկական ստեղնաշար", price: 25000, category: "accessory", rating: 4.6, inStock: false },
+  { id: 4, name: "Մոնիտոր 27", price: 120000, category: "monitor", rating: 4.5, inStock: true },
+  { id: 5, name: "Ականջակալ ANC", price: 15000, category: "accessory", rating: 4.0, inStock: false },
+  { id: 6, name: "Նոութբուք Air 13", price: 320000, category: "laptop", rating: 4.7, inStock: true }
+];
+
+function getVisible(state) {
+  let result = [...PRODUCTS];
+
+  if (state.category !== "all") {
+    result = result.filter(p => p.category === state.category);
+  }
+  if (state.onlyStock) {
+    result = result.filter(p => p.inStock);
+  }
+  if (state.search !== "") {
+    const q = state.search.toLowerCase();
+    result = result.filter(p => p.name.toLowerCase().includes(q));
+  }
+  switch (state.sort) {
+    case "price-asc":  result.sort((a, b) => a.price - b.price); break;
+    case "price-desc": result.sort((a, b) => b.price - a.price); break;
+    case "rating":     result.sort((a, b) => b.rating - a.rating); break;
+    case "name":       result.sort((a, b) => a.name.localeCompare(b.name, "hy")); break;
+  }
+  return result;
+}
+
+const show = s => getVisible(s).map(p => `${p.name} — ${p.price}`);
+
+console.log("1. Բոլորը, էժանից:");
+console.log(show({ category: "all", search: "", sort: "price-asc", onlyStock: false }));
+
+console.log("2. Աքսեսուարներ, միայն առկա:");
+console.log(show({ category: "accessory", search: "", sort: "default", onlyStock: true }));
+
+console.log("3. Որոնում 'նոութ', վարկանիշով:");
+console.log(show({ category: "all", search: "նոութ", sort: "rating", onlyStock: false }));
+
+console.log("4. Անհնար համադրություն:");
+console.log(show({ category: "monitor", search: "մկնիկ", sort: "default", onlyStock: false }));
+
+console.log("5. Բնօրինակը անվնա՞ս է:");
+console.log(PRODUCTS.map(p => p.id));</textarea>
+      <div class="pg__actions">
+        <button class="run" id="runBtn">Կատարել</button>
+        <button class="clr" id="clrBtn">Մաքրել</button>
+      </div>
+<pre class="out" id="pgOut"><span class="m">Console</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Տնային աշխատանք</h2>
+    <p>Ավարտիր այսօրվա մասը և ավելացրու հետևյալը։ Հաջորդ դասին կսկսենք զամբյուղից՝ պատրաստի կատալոգի վրա։</p>
+    <ol class="hw">
+      <li>Ավարտիր բոլոր չորս ստուգակետերը։ Ամեն կետը 08-րդ բաժնի ցուցակից պիտի աշխատի։</li>
+      <li>Ձևավորիր քարտերը CSS-ով՝ քո <code>.row / .col / .wrapper</code> մեթոդաբանությամբ։ JS-ը մի՛ դիպչիր։</li>
+      <li>Ավելացրու առնվազն 4 նոր ապրանք <code>data.js</code>-ում, ներառյալ նոր կատեգորիա։ Ավելացրու համապատասխան ֆիլտրի կոճակ։</li>
+      <li>Ավելացրու «Գինը՝ մինչև» դաշտ (<code>type="number"</code>)։ Ավելացրու <code>state.maxPrice</code> և համապատասխան ֆիլտր pipeline-ում։</li>
+      <li>Որոնումը թող փնտրի նաև կատեգորիայի անվան մեջ (օգտագործիր <code>CATEGORIES</code> օբյեկտը)։</li>
+      <li>Վիճակագրության տողում ավելացրու միջին գինը և ամենաթանկ ապրանքի անունը։</li>
+      <li>Ավելացրու «Ապրանքների քանակը էջում» select՝ 4 / 8 / բոլորը։ Օգտագործիր <code>slice</code>։</li>
+      <li>Ամեն քարտի կոճակի կողքին ավելացրու «Մանրամասն» կոճակ, որը <code>alert</code>-ով ցույց է տալիս ամբողջ տեղեկությունը։ Օգտագործիր <strong>նույն</strong> դելեգացված listener-ը՝ <code>data-action="details"</code>-ով։</li>
+      <li>Պահպանիր ֆիլտրերի վիճակը <code>localStorage</code>-ում։ Էջը թարմացնելիս ֆիլտրերը պիտի վերականգնվեն (և՛ <code>state</code>-ը, և՛ դաշտերի տեսքը)։</li>
+      <li>Ավելացրու URL-ի աջակցություն՝ <code>?category=laptop</code>։ Հուշում՝ <code>new URLSearchParams(location.search).get("category")</code>։ Սա լրացուցիչ բարդության առաջադրանք է։</li>
+    </ol>
+
+    <div class="note">
+      <span class="tag">Հանձնում</span>
+      <p>Թղթապանակ՝ <code>catalog-anun-azganun</code>։ Հաջորդ դասին բեր աշխատող տարբերակը — դրա վրա կկառուցենք զամբյուղը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Ի՞նչ կիրառեցինք այսօր</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դաս</th><th>Ինչ օգտագործեցինք</th></tr>
+      <tr><td>02</td><td><code>switch</code>, պայմաններ, ternary</td></tr>
+      <tr><td>04</td><td>Ֆունկցիաներ, arrow, մեկ ֆունկցիա = մեկ գործ</td></tr>
+      <tr><td>05</td><td><code>[...PRODUCTS]</code> պատճեն, <code>slice</code></td></tr>
+      <tr><td>06</td><td><code>filter</code>, <code>map</code>, <code>sort</code>, <code>reduce</code>, <code>find</code></td></tr>
+      <tr><td>07</td><td>Օբյեկտներ, destructuring, օբյեկտների զանգված</td></tr>
+      <tr><td>08</td><td><code>toLowerCase</code>, <code>includes</code>, <code>toLocaleString</code>, <code>localeCompare</code></td></tr>
+      <tr><td>09</td><td><code>querySelector</code>, <code>closest</code></td></tr>
+      <tr><td>10</td><td><code>innerHTML</code>, <code>map().join("")</code>, <code>classList</code>, <code>dataset</code></td></tr>
+      <tr><td>11</td><td><code>addEventListener</code>, <code>change</code>, «հանել բոլորից»</td></tr>
+      <tr><td>12</td><td>Դելեգացիա, <code>data-action</code>, մեկ ճշմարտության աղբյուր</td></tr>
+      <tr><td>13</td><td><code>value</code>, <code>checked</code>, <code>select.value</code></td></tr>
+      <tr><td>14</td><td>debounce, <code>localStorage</code> (տնային)</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Օր 2՝ զամբյուղ։ Երկրորդ վիճակի օբյեկտ, քանակների կառավարում, մոդալ պատուհան, պահպանում, և վերջում՝ ամբողջ կոդի ռեֆակտորինգ ու վերանայում։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 15 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

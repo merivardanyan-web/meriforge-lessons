@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHP Դաս 24 — Հարցազրույց և եզրափակիչ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>PHP Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">PHP Դաս 24 · 2 ժամ · Կարիերա 3 / 3 · Եզրափակիչ</p>
+  <h1>Հարցազրույց և եզրափակիչ</h1>
+  <p class="lede">CV-ն ուղարկված է, և զանգեցին։ Այսօր պատրաստվում ենք հարցազրույցին․ տեխնիկական հարցեր բոլոր երեք բլոկից, վարքագծային հարցեր, ինչ անել, երբ չգիտես պատասխանը, և աշխատավարձի հարցը։ Վերջում՝ 72 դասի ամփոփումը և այն, ինչ գալիս է դրանից հետո։</p>
+
+  <div class="facts">
+    <span>Բլոկ 3 · Դաս 24 / 24</span>
+    <span>Բեր Դաս 23-ի հարցերը</span>
+    <span>Դասընթացի վերջին դասը</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Հարցազրույցի փուլերը</li>
+      <li>«Tell me about yourself»՝ 60 վայրկյանում</li>
+      <li>Տեխնիկական հարցեր HTML/CSS, JS, PHP/Laravel/SQL բլոկներից</li>
+      <li>Ինչ անել, երբ չգիտես պատասխանը</li>
+      <li>Live coding և թեստային առաջադրանք</li>
+      <li>Վարքագծային հարցեր և STAR</li>
+      <li>Աշխատավարձ, առաջարկ, մերժում</li>
+      <li>Առաջին աշխատանքային շաբաթը</li>
+      <li>72 դասի եզրափակիչ</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Փուլերը</h2>
+
+    <div class="tree">1. HR զանգ           15–30 րոպե   ով ես, ինչ ես փնտրում, լեզու, աշխատավարձի սպասումներ
+2. Տեխնիկական        45–90 րոպե   հարցեր, քո նախագիծը, երբեմն live coding
+3. Թեստային առաջադրանք  1–3 օր    փոքր նախագիծ տանը (ոչ միշտ)
+4. Թիմ / ղեկավար     30–60 րոպե   ինչպես ես աշխատում, վարքագծային հարցեր
+5. Առաջարկ (offer)                 պայմաններ գրավոր
+
+Փոքր ընկերություններում 2–4-ը կարող են լինել մեկ հանդիպման մեջ։</div>
+
+    <div class="tip note">
+      <span class="tag">Junior-ից ի՞նչ են իրականում սպասում</span>
+      <p>Ոչ ոք չի սպասում, որ junior-ը գիտի ամեն ինչ։ Ստուգում են երեք բան․ <strong>1.</strong> հասկանո՞ւմ ես հիմունքները, թե՞ անգիր ես արել, <strong>2.</strong> կարո՞ղ ես բացատրել քո սեփական կոդը, <strong>3.</strong> ինչպե՞ս ես մտածում, երբ չգիտես պատասխանը։<br><br>
+      Երրորդը հաճախ ավելի կարևոր է, քան առաջինը։ Աշխատանքի առաջին ամիսներին դու ամեն օր կհանդիպես բաների, որ չգիտես։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Նախապատրաստություն</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>«Tell me about yourself» — 60 վայրկյան</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">1. Ներկա (15 վ)     ով ես հիմա</span>
+I'm a junior full-stack developer focused on PHP and Laravel.
+
+<span class="c">2. Անցյալ (25 վ)    ինչպես եկար այստեղ և ինչ կառուցեցիր</span>
+Over the last year I completed a 72-lesson program at DiGi School. My main project
+is TechnoMarket, an e-commerce app I built first on my own MVC framework and then
+in Laravel — with authentication, role-based access and a JSON API.
+
+<span class="c">3. Ապագա (20 վ)     ինչու այս դերը</span>
+I'm looking for a team where I can work on real Laravel projects and grow with
+code reviews. Your [product / stack] caught my attention because [...].</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Սա պատմություն է, ոչ CV-ի ընթերցում</span>
+      <p>Ամենատարածված սխալը CV-ն բարձրաձայն կարդալն է՝ «I was born... I studied... then I...»։ Հարցազրուցավարն արդեն ունի CV-ն։ Նա ուզում է լսել <strong>ինչպես ես խոսում քո մասին</strong> և ինչն ես համարում կարևոր։<br><br>
+      Գրիր պատասխանը, ապա <strong>բարձրաձայն ասա այն երեք անգամ ժամացույցով</strong>։ Մի՛ անգիր արա բառացի․ անգիր արված տեքստը լսվում է։ Հիշիր երեք մասը և ասա յուրաքանչյուր անգամ մի փոքր այլ ձևով։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Նախքան հարցազրույցը</th><th>Ինչու</th></tr>
+      <tr><td>Կարդա ընկերության կայքը և հայտարարությունը կրկին</td><td>«Ինչո՞ւ մեզ մոտ» հարցի համար</td></tr>
+      <tr><td>Բացիր քո demo-ն և ստուգիր, որ աշխատում է</td><td>Կարող են խնդրել ցույց տալ էկրանին</td></tr>
+      <tr><td>Կրկնիր Դաս 23-ի ամեն bullet-ի պատասխանը</td><td>Ամեն bullet հարց է</td></tr>
+      <tr><td>Պատրաստիր 2–3 հարց նրանց համար</td><td>Բաժին 07</td></tr>
+      <tr><td>Online՝ ստուգիր տեսախցիկը, միկրոֆոնը, ինտերնետը</td><td>Առաջին 5 րոպեն տեխնիկական խնդիրների վրա չծախսելու համար</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Տեխնիկական հարցեր</h2>
+    <p>Ստորև ամենահաճախ տրվող junior հարցերն են և պատասխանի հիմնական կետերը։ Սա անգիր անելու ցուցակ չէ․ ամեն պատասխան պետք է կարողանաս ասել <strong>քո բառերով և քո նախագծի օրինակով</strong>։ Վերջին սյունակը ցույց է տալիս, թե որ դասում կրկնել։</p>
+
+    <h3>HTML և CSS</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հարց</th><th>Պատասխանի կետերը</th><th>Դաս</th></tr>
+      <tr><td>Ի՞նչ է սեմանտիկ HTML-ը և ինչու է կարևոր</td><td>Թեգը նկարագրում է իմաստը (<code>header</code>, <code>nav</code>, <code>article</code>)։ Օգնում է էկրանընթերցիչներին, SEO-ին, կոդի ընթեռնելիությանը</td><td>HTML 5</td></tr>
+      <tr><td>Ինչպե՞ս ես կայքը հասանելի դարձնում</td><td><code>alt</code>, <code>label</code>, կոնտրաստ, ստեղնաշարով նավիգացիա, <code>aria-current</code>, <code>role="status"</code></td><td>HTML 4, 7, 18 · PHP 6, 17</td></tr>
+      <tr><td>Box model</td><td><code>content + padding + border + margin</code>, <code>box-sizing: border-box</code>-ը ներառում է padding-ը և border-ը լայնության մեջ</td><td>HTML 8</td></tr>
+      <tr><td>Flexbox թե Grid</td><td>Flex՝ մեկ առանցք (տող կամ սյունակ), Grid՝ երկու առանցք։ Քարտերի ցանց՝ Grid, մենյու՝ Flex</td><td>HTML 11, 12, 20</td></tr>
+      <tr><td>Սպեցիֆիկություն</td><td>id &gt; class &gt; tag։ Ինչու <code>!important</code>-ը վատ լուծում է</td><td>HTML 6</td></tr>
+      <tr><td>Ադապտիվ դիզայն</td><td>Media queries, mobile-first, <code>rem</code>, <code>clamp()</code>, ճկուն նկարներ</td><td>HTML 14, 16</td></tr>
+    </table>
+    </div>
+
+    <h3>JavaScript</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հարց</th><th>Պատասխանի կետերը</th><th>Դաս</th></tr>
+      <tr><td><code>var</code>, <code>let</code>, <code>const</code></td><td>Տեսանելիության տիրույթ (function թե block), վերագրում, hoisting։ Լռելյայն՝ <code>const</code></td><td>JS 1, 4</td></tr>
+      <tr><td><code>==</code> թե <code>===</code></td><td><code>==</code>-ը փոխարկում է տիպերը։ Միշտ <code>===</code>։ PHP-ում՝ նույնը</td><td>JS 2 · PHP 2</td></tr>
+      <tr><td>Closure</td><td>Ֆունկցիան «հիշում է» այն տիրույթի փոփոխականները, որտեղ ստեղծվել է։ Օրինակ՝ հաշվիչ, debounce</td><td>JS 14, 23</td></tr>
+      <tr><td>Event loop</td><td>Call stack, առաջադրանքների հերթ, ինչու <code>setTimeout(fn, 0)</code>-ը կատարվում է հետո</td><td>JS 19</td></tr>
+      <tr><td>Promise և <code>async/await</code></td><td>Ասինխրոն արդյունք, <code>try/catch</code>, ինչու <code>fetch</code>-ը 404-ի դեպքում չի գցում սխալ (<code>response.ok</code>)</td><td>JS 19, 20 · PHP 17</td></tr>
+      <tr><td>Event delegation</td><td>Մեկ listener ծնողի վրա, <code>event.target.closest()</code>։ Աշխատում է նաև նոր տարրերի համար</td><td>JS 12</td></tr>
+      <tr><td><code>localStorage</code> թե cookie</td><td>localStorage-ը չի ուղարկվում սերվեր, cookie-ն՝ ուղարկվում է։ Գաղտնի բան localStorage-ում չի պահվում</td><td>JS 14 · PHP 7</td></tr>
+    </table>
+    </div>
+
+    <h3>PHP, SQL և Laravel</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հարց</th><th>Պատասխանի կետերը</th><th>Դաս</th></tr>
+      <tr><td>GET թե POST</td><td>GET-ը կարդում է և չի փոխում վիճակը, POST-ը փոխում է։ PRG օրինաչափությունը</td><td>6</td></tr>
+      <tr><td>Սեսիա թե cookie</td><td>Cookie-ն բրաուզերում է, սեսիան՝ սերվերում, cookie-ում միայն ID-ն։ <code>httponly</code></td><td>7</td></tr>
+      <tr><td>XSS</td><td>Օգտագործողի տվյալը դառնում է HTML/JS։ Պաշտպանություն՝ ելքի փախցում (<code>e()</code>, Blade <code>{{ }}</code>)</td><td>5, 19</td></tr>
+      <tr><td>SQL injection</td><td>Տվյալը դառնում է SQL հրաման։ Prepared statements, սյունակների անունների համար՝ սպիտակ ցուցակ</td><td>10</td></tr>
+      <tr><td>CSRF</td><td>Ուրիշ կայքը ուղարկում է հարցում քո cookie-ով։ Token սեսիայում + ամեն ֆորմայում, <code>SameSite</code></td><td>16</td></tr>
+      <tr><td>Ինչպե՞ս պահել գաղտնաբառը</td><td>Երբեք բաց տեքստով։ <code>password_hash</code>/bcrypt, <code>password_verify</code>, ոչ <code>md5</code></td><td>16</td></tr>
+      <tr><td><code>INNER</code> թե <code>LEFT JOIN</code></td><td>INNER՝ միայն զույգերը, LEFT՝ բոլորը ձախից, նույնիսկ առանց զույգի։ Օրինակ՝ ապրանք առանց կատեգորիայի</td><td>9</td></tr>
+      <tr><td><code>WHERE</code> թե <code>HAVING</code></td><td>WHERE՝ տողեր խմբավորումից առաջ, HAVING՝ խմբեր հետո</td><td>9</td></tr>
+      <tr><td>Ի՞նչ է MVC-ն</td><td>Model՝ տվյալներ, View՝ ներկայացում, Controller՝ կապում է։ Կոնտրոլերում ոչ SQL, ոչ HTML</td><td>15</td></tr>
+      <tr><td>N+1 խնդիրը</td><td>Ցիկլում ամեն տողի համար առանձին հարցում։ Laravel-ում՝ <code>with()</code>, <code>shouldBeStrict()</code></td><td>20</td></tr>
+      <tr><td>Mass assignment</td><td><code>create($request-&gt;all())</code>-ով հարձակվողը փոխում է չնախատեսված դաշտեր։ <code>$fillable</code> + <code>validated()</code></td><td>11, 20, 21</td></tr>
+      <tr><td>401 թե 403</td><td>401՝ չգիտենք ով ես (նույնականացում), 403՝ գիտենք, բայց չես կարող (լիազորում)</td><td>17, 21</td></tr>
+      <tr><td>Ինչո՞ւ միգրացիաներ</td><td>Սխեման տարբերակված է Git-ում, ամեն մշակող և սերվեր ստանում է նույնը մեկ հրամանով</td><td>20</td></tr>
+      <tr><td>Ի՞նչ է middleware-ը</td><td>Կոդ, որ կատարվում է ամեն հարցումից առաջ և կարող է կանգնեցնել այն․ <code>auth</code>, CSRF</td><td>16, 21</td></tr>
+    </table>
+    </div>
+
+    <h3>Git և աշխատանք</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հարց</th><th>Պատասխանի կետերը</th><th>Դաս</th></tr>
+      <tr><td>Ի՞նչ է ճյուղը (branch) և ինչու</td><td>Առանձին աշխատանքային գիծ։ Նոր ֆունկցիա՝ առանձին ճյուղում, ապա merge</td><td>JS 17</td></tr>
+      <tr><td>Ինչպե՞ս ես լուծում կոնֆլիկտը</td><td>Բացում ես ֆայլը, ընտրում ես ճիշտ տարբերակը, ստուգում ես, որ աշխատում է, commit</td><td>JS 17</td></tr>
+      <tr><td>Ի՞նչ չի գնում Git</td><td><code>.env</code>, <code>vendor/</code>, <code>node_modules/</code>։ Ինչու <code>.env</code>-ը ջնջելը բավական չէ</td><td>14, 22</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Լավագույն պատասխանը միշտ ունի «իմ նախագծում»</span>
+      <p>«CSRF-ը... token է» պատասխանը ճիշտ է, բայց սովորական է։ Համեմատիր․ <em>«CSRF-ը այն է, երբ ուրիշ կայքը ուղարկում է հարցում իմ cookie-ով։ ՏեխնոՄարկետում ես ստեղծեցի HTML ֆայլ աշխատասեղանին, որը ջնջում էր ապրանքը, և տեսա, որ առանց token-ի այն աշխատում է։ Հետո ավելացրի ստուգումը, և հարցումը ստացավ 419»</em>։<br><br>
+      Երկրորդը ցույց է տալիս, որ դու ոչ թե կարդացել ես, այլ <strong>տեսել ես</strong>։ Այդ պատճառով էր ամեն վտանգավոր թեմա դասընթացում սկսվում հարձակումից։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Երբ չգիտես պատասխանը</h2>
+
+    <div class="tree">❌ Լռություն 30 վայրկյան
+❌ Հորինված պատասխան վստահ ձայնով
+❌ «Չգիտեմ»։ (և վերջ)
+
+✅ «Ճիշտ չգիտեմ։ Կարծում եմ՝ ..., որովհետև ...։ Ճի՞շտ եմ մտածում»
+✅ «Այս գործիքի հետ չեմ աշխատել, բայց նման խնդիր լուծել եմ ...-ով»
+✅ «Չգիտեմ։ Ես կփնտրեի փաստաթղթում ..., կփորձարկեի tinker-ում ...»</div>
+
+    <div class="tip note">
+      <span class="tag">Դաս 4-ի կանոնը՝ հարցազրույցում</span>
+      <p>Դաս 4-ում ասացինք․ <em>«"Չգիտեմ, բայց ահա ինչպես կպարզեի" պատասխանը շատ ավելի լավ է, քան պատճենված լուծումը, որը չես կարող պաշտպանել»</em>։ Ահա այդ պահը։<br><br>
+      Հորինված պատասխանը ամենավատ տարբերակն է․ փորձառու մշակողը միանգամից տեսնում է այն, և դրանից հետո նա կասկածում է նաև քո ճիշտ պատասխաններին։ Իսկ «ահա ինչպես կպարզեի»-ն ցույց է տալիս հենց այն, ինչ պետք է աշխատանքում։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Մտածիր բարձրաձայն</span>
+      <p>Երբ խնդիր ես լուծում հարցազրույցում, խոսիր այն մասին, ինչ անում ես․ «Նախ կստուգեմ, ապրանքը գոյություն ունի՞... հետո քանակը...»։ Հարցազրուցավարը գնահատում է <strong>մտածողությունը</strong>, ոչ միայն վերջնական պատասխանը։ Եթե սխալ ճանապարհով ես գնում, նա կարող է օգնել, բայց միայն եթե գիտի, թե որտեղ ես։<br><br>
+      Եվ հարց տալը նորմալ է․ «Կարո՞ղ եմ ենթադրել, որ մուտքային տվյալը միշտ վավեր է»։ Իրական աշխատանքում ամենաթանկ սխալները գալիս են չտրված հարցերից։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Live coding և թեստային առաջադրանք</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Junior-ի տիպիկ առաջադրանք</th><th>Որտեղ ես արդեն արել</th></tr>
+      <tr><td>Զանգվածի ֆիլտր և տեսակավորում</td><td>JS 6, PHP 3</td></tr>
+      <tr><td>SQL հարցում JOIN-ով և GROUP BY-ով</td><td>PHP 9</td></tr>
+      <tr><td>Ֆորմա վալիդացիայով</td><td>PHP 6, 21</td></tr>
+      <tr><td>Փոքր CRUD Laravel-ում</td><td>PHP 19–21</td></tr>
+      <tr><td>API endpoint JSON-ով</td><td>PHP 17, 20</td></tr>
+      <tr><td>Սխալ գտնել պատրաստի կոդում</td><td>Ամեն դասի «փորձիր կոտրել» բաժինը</td></tr>
+    </table>
+    </div>
+
+    <div class="tree">Live coding-ի հինգ քայլ
+
+  1. Կրկնիր խնդիրը քո բառերով     «Ուրեմն պետք է վերադարձնել ...»
+  2. Հարցրու եզրային դեպքերը        դատարկ զանգված? null? բացասական թիվ?
+  3. Ասա մոտեցումը, նոր գրիր         «Կանեմ filter, հետո sort»
+  4. Գրիր պարզ տարբերակը             աշխատող > կատարյալ
+  5. Ստուգիր մեկ օրինակով            և ասա, ինչ կբարելավեիր</div>
+
+    <div class="warn note">
+      <span class="tag">Թեստային առաջադրանք տանը և AI-ն</span>
+      <p>Ընկերությունների մեծ մասն այսօր գիտի, որ թեկնածուները օգտագործում են AI։ Որոշները թույլ են տալիս, որոշները՝ ոչ։ <strong>Եթե պայմաններում նշված չէ, հարցրու</strong>։ Եթե օգտագործել ես, ասա README-ում՝ ինչի համար։<br><br>
+      Եվ ամենակարևորը․ թեստային առաջադրանքից հետո սովորաբար լինում է զրույց <em>կոդի մասին</em>։ «Ինչո՞ւ այստեղ <code>LEFT JOIN</code>», «Ինչո՞ւ այս վալիդացիան»։ Եթե կոդը գրել է AI-ն, և դու չես կարող բացատրել այն, դա կերևա առաջին հինգ րոպեում։ Կանոնը նույնն է, ինչ Դաս 23-ի CV-ում․ <strong>քո անունով ներկայացված ամեն ինչ պետք է կարողանաս պաշտպանել</strong>։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Թեստային առաջադրանքի README</span>
+      <p>Կարճ README-ն մեծ առավելություն է․ ինչպես գործարկել, ինչ որոշումներ ես կայացրել և ինչու, ինչ կանեիր, եթե ունենայիր ավելի շատ ժամանակ։ Վերջին կետը ցույց է տալիս, որ դու գիտես սահմանափակումները, ոչ թե չես նկատել դրանք։ Դաս 22-ի README-ի «Security decisions» բաժինը աշխատում է նաև այստեղ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Վարքագծային հարցեր</h2>
+
+    <div class="tree">STAR մեթոդ
+
+  S — Situation   Ինչ էր իրավիճակը
+  T — Task        Ինչ պետք է անեիր
+  A — Action      Ինչ արեցիր ԴՈՒ ⭐
+  R — Result      Ինչ ստացվեց և ինչ սովորեցիր</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>«Tell me about a difficult bug» — STAR օրինակ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">S</span>  In my TechnoMarket project the catalog page became noticeably slower
+   after I added categories and images.
+<span class="c">T</span>  I needed to find out why, without knowing where to start.
+<span class="c">A</span>  I enabled the query log and saw over 50 queries for one page — the
+   classic N+1 problem. I added eager loading with with() and turned on
+   Model::shouldBeStrict() so it would throw an error next time.
+<span class="c">R</span>  The page went down to 3 queries. Now I check the query count whenever
+   I add a relation to a list page.</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հարց</th><th>Ինչ են ստուգում</th></tr>
+      <tr><td>Why do you want to work here?</td><td>Կարդացե՞լ ես ընկերության մասին</td></tr>
+      <tr><td>Tell me about a mistake you made</td><td>Ընդունո՞ւմ ես սխալները և սովորո՞ւմ ես դրանցից</td></tr>
+      <tr><td>How do you learn something new?</td><td>Ինքնուրույնություն, փաստաթղթեր, AI-ի խելամիտ օգտագործում</td></tr>
+      <tr><td>What would you do if you're stuck for hours?</td><td>Գիտե՞ս, երբ հարցնել օգնություն</td></tr>
+      <tr><td>Tell me about a disagreement in a team</td><td>Կարո՞ղ ես աշխատել այլ կարծիք ունեցող մարդկանց հետ</td></tr>
+      <tr><td>Where do you see yourself in 2–3 years?</td><td>Ծրագրեր, որ համընկնում են դերի հետ</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">«Մնացել եմ ժամերով» հարցի ճիշտ պատասխանը</span>
+      <p>Լավ պատասխանը ոչ «երբեք չեմ հարցնում, միշտ ինքս եմ լուծում», ոչ էլ «միանգամից հարցնում եմ»։ Լավը՝ <em>«Փորձում եմ ինքս 30–60 րոպե․ կարդում եմ սխալը, փաստաթուղթը, փորձում եմ փոքր օրինակով։ Եթե չի ստացվում, հարցնում եմ, և հարցիս մեջ նշում եմ, թե ինչ եմ արդեն փորձել»</em>։<br><br>
+      Վերջին մասը ամենակարևորն է։ «Չի աշխատում» հարցը ծախսում է կոլեգայի ժամանակը, իսկ «փորձել եմ X-ը և Y-ը, ստանում եմ այս սխալը» հարցը խնայում է այն։ Դա նույն սկզբունքն է, ինչ Դաս 4-ի լավ պրոմպտում՝ համատեքստ։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Լարվածության մասին</span>
+      <p>Լարվածությունը նորմալ է և հարցազրուցավարը դա գիտի։ Մի քանի բան, որ օգնում են․ <strong>դադարը թույլատրված է</strong>՝ «Մեկ վայրկյան մտածեմ» նախադասությունը ավելի լավ է, քան շտապ պատասխանը։ Եթե հարցը չես հասկացել, խնդրիր կրկնել կամ այլ կերպ ձևակերպել։ Եթե հարցազրույցը անգլերեն է, իսկ բառը չես հիշում, բացատրիր այլ բառերով։ Ամեն հարցազրույց, նույնիսկ անհաջողը, վարժանք է հաջորդի համար։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Քո հարցերը նրանց</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ընտրիր 2–3</div><button class="copy">Պատճենել</button></div>
+<pre><code>What would my first month look like?
+How does code review work in the team?
+Who would I ask when I'm stuck — is there a mentor or a senior I'd work with?
+What does the tech stack look like — which Laravel version, which database?
+How do you decide when a junior is ready for more responsibility?
+What's the biggest challenge the team is working on right now?</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Հարցերը քեզ համար են նաև</span>
+      <p>Junior-ի համար ամենակարևոր հարցը մենթորության մասին է։ Եթե պատասխանը «դու ինքդ կսովորես, մենք բոլորս զբաղված ենք» է, դա նշանակում է, որ առաջին տարին կլինի դժվար, և դու քիչ կսովորես։<br><br>
+      Հարցազրույցը երկկողմանի է․ նրանք քեզ են ընտրում, դու՝ նրանց։ Մի՛ հարցրու առաջին հանդիպմանը միայն արձակուրդի և աշխատավարձի մասին, բայց մի՛ մոռացիր դրանք հարցնել, երբ գալիս է առաջարկը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Աշխատավարձ և առաջարկ</h2>
+
+    <div class="warn note">
+      <span class="tag">Թվեր չենք տալիս դասում, և ահա ինչու</span>
+      <p>Junior-ի աշխատավարձը Հայաստանում կախված է ընկերությունից, տեխնոլոգիայից, անգլերենի մակարդակից և շուկայի վիճակից, և փոխվում է ամեն տարի։ Ցանկացած թիվ, որ գրեինք այստեղ, մեկ տարի հետո սխալ կլիներ։ Փոխարենը սովորում ենք <strong>ինչպես գտնել ընթացիկ թիվը</strong>։</p>
+    </div>
+
+    <div class="tree">Ինչպես պարզել ընթացիկ միջակայքը
+
+  1. Հայտարարություններ, որոնք նշում են աշխատավարձը (staff.am, LinkedIn)
+  2. IT աշխատավարձերի հետազոտություններ (ստուգիր տարեթիվը)
+  3. Շրջանավարտներ և ծանոթներ, որոնք մեկ-երկու տարի առաջ են սկսել ⭐
+  4. Ռեկրուտերներ․ նրանք հաճախ ասում են միջակայքը, եթե հարցնես</div>
+
+    <div class="warn note">
+      <span class="tag">«Մաքուր», թե «համախառն»</span>
+      <p>Հայաստանում աշխատավարձը կարող է քննարկվել «մաքուր» (ձեռքին ստացվող) կամ «համախառն» (մինչև հարկերը) գումարով, և երկուսի տարբերությունը նշանակալի է՝ եկամտային հարկի և սոցիալական վճարի պատճառով։ Միջազգային ընկերությունները սովորաբար խոսում են համախառն գումարով և հաճախ՝ դոլարով կամ եվրոյով։<br><br>
+      Թիվ ասելիս կամ լսելիս <strong>միշտ ճշտիր</strong>․ «Is this gross or net? In which currency? Monthly?»։ Սխալ հասկացված 25%-ը քո առաջին տարվա ամենաթանկ սխալը կլինի։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>«What are your salary expectations?»</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">❌ «Whatever you offer»          — ասում ես, որ չգիտես քո արժեքը
+❌ Մեկ թիվ առանց հետազոտության  — կամ չափազանց բարձր, կամ ցածր
+
+✅</span>
+"Based on what I've seen for junior Laravel roles in Yerevan, I'm looking at
+a range of X to Y net per month. I'm flexible depending on the whole package —
+especially mentorship and learning opportunities."</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Առաջարկում ստուգիր</th><th>Ինչու</th></tr>
+      <tr><td>Գումարը, արժույթը, gross/net</td><td>Վերևի պատճառով</td></tr>
+      <tr><td>Փորձաշրջանը և դրա պայմանները</td><td>Աշխատավարձը փորձաշրջանում կարող է տարբերվել</td></tr>
+      <tr><td>Աշխատանքի ձևը (գրասենյակ, հիբրիդ, remote)</td><td>Եվ ժամերը</td></tr>
+      <tr><td>Պայմանագրի տեսակը (աշխատանքային, թե կապալառու)</td><td>Ով է վճարում հարկերը (Դաս 23)</td></tr>
+      <tr><td>Մենթոր, code review, ուսուցման բյուջե</td><td>Junior-ի համար՝ նույնքան կարևոր, որքան գումարը</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Առաջարկը՝ գրավոր</span>
+      <p>Բանավոր պայմանավորվածությունը առաջարկ չէ։ Խնդրիր գրավոր offer email-ով կամ պայմանագիր, և կարդա այն մինչև ստորագրելը։ Եթե մի կետ անհասկանալի է, հարցրու։ Սա նորմալ է և ցույց է տալիս, որ վերաբերվում ես լուրջ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Մերժում և հաջորդ քայլը</h2>
+
+    <div class="tip note">
+      <span class="tag">Մերժումը վիճակագրություն է</span>
+      <p>Առաջին աշխատանքը գտնելը շատ junior-ների համար տևում է ամիսներ և տասնյակ դիմումներ։ Ամեն մերժում չի նշանակում, որ դու վատն ես։ Հաճախ ընտրել են ավելի փորձառու թեկնածու, կամ դերը փակվել է, կամ CV-ն պարզապես չի բացվել։<br><br>
+      Ինչ անել․ <strong>1.</strong> կարճ շնորհակալություն հարցազրույցից հետո, <strong>2.</strong> մերժումից հետո հարցրու՝ «Could you share one thing I could improve?»։ Ոչ բոլորը կպատասխանեն, բայց պատասխանողները կտան ամենաօգտակար խորհուրդը, <strong>3.</strong> գրանցիր ամեն հարցազրույցի հարցերը, որոնց չէիր պատասխանում, և սովորիր դրանք։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>դիմումների աղյուսակ</div><button class="copy">Պատճենել</button></div>
+<pre><code>Date     | Company | Role               | Where      | Status       | Next step
+---------|---------|--------------------|------------|--------------|----------------
+10/21    | ...     | Junior Laravel Dev | staff.am   | Applied      | follow up 10/28
+10/22    | ...     | PHP Intern         | referral   | HR call 10/25| prepare 60s intro
+10/23    | ...     | Junior Full-Stack  | LinkedIn   | Rejected     | asked feedback</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչու աղյուսակ</span>
+      <p>Երբ դիմումները դառնում են 20, հեշտ է մոռանալ, թե որ ընկերությանը ինչ CV-ով ես դիմել։ Իսկ զանգը կարող է գալ երկու շաբաթ հետո։ Աղյուսակը նաև ցույց է տալիս, որ աղբյուրն է աշխատում․ եթե հինգ referral-ից երկուսը հասել են հարցազրույցի, իսկ քսան online դիմումից մեկը, գիտես, թե որտեղ ծախսել ժամանակդ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Առաջին շաբաթը</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Արա</th><th>Մի՛ արա</th></tr>
+      <tr><td>Կարդա նախագծի README-ն և կարգավորիր լոկալ միջավայրը</td><td>Մի՛ փոխիր կառուցվածքը առաջին շաբաթում «ավելի լավը» դարձնելու համար</td></tr>
+      <tr><td>Գրիր նշումներ․ ով ինչի համար է պատասխանատու, որտեղ ինչ կա</td><td>Մի՛ տուր նույն հարցը երկու անգամ</td></tr>
+      <tr><td>Սկսիր փոքր առաջադրանքից և փոքր pull request-ից</td><td>Մի՛ ուղարկիր 40 ֆայլանոց PR</td></tr>
+      <tr><td>Հարցրու ընկերության AI-ի կանոնների մասին</td><td>Մի՛ դիր ընկերության կոդը կամ տվյալները AI-ում առանց թույլտվության ⭐</td></tr>
+      <tr><td>Կարդա ուրիշների code review-ները</td><td>Մի՛ ընդունիր review-ի մեկնաբանությունը որպես անձնական քննադատություն</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ընկերության կոդը քոնը չէ</span>
+      <p>Դաս 4-ում ասացինք, որ AI գործիքում տեղադրված տվյալը կարող է պահվել և օգտագործվել։ Քո նախագծի համար դա քո որոշումն էր։ Աշխատանքում կոդը, հաճախորդների տվյալները և <code>.env</code>-ը պատկանում են ընկերությանը։ Շատ ընկերություններ ունեն հստակ կանոններ, թե որ AI գործիքներն են թույլատրված։ <strong>Հարցրու առաջին օրը</strong>, ոչ այն ժամանակ, երբ արդեն տեղադրել ես։</p>
+    </div>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>72 դաս</h2>
+
+    <div class="tree">HTML/CSS · 24 դաս
+  Սեմանտիկա, հասանելիություն, box model, Flexbox, Grid, ադապտիվություն,
+  դիզայն-տոկեններ, BEM կոմպոնենտներ
+  → ՏեխնոՄարկետի landing page, GitHub Pages-ում
+        │
+        ▼
+JavaScript · 24 դաս
+  DOM, իրադարձություններ, ֆորմաներ, localStorage, մոդուլներ, Git,
+  async/await, fetch, OOP, closures
+  → կատալոգ և զամբյուղ բրաուզերում
+        │
+        ▼
+PHP · 24 դաս
+  Սերվեր և շաբլոններ → SQL և PDO → OOP → Composer → սեփական MVC
+  → Laravel → deploy → CV → հարցազրույց
+  → ՏեխնոՄարկետը՝ իրական սերվերում, բազայով, ադմինով, մուտքով և API-ով
+
+Մեկ նախագիծ, երեք անգամ կառուցված, ամեն անգամ մեկ շերտ ավելի խորը։</div>
+
+    <div class="tip note">
+      <span class="tag">Ինչ գիտես հիմա, որ շատերը չգիտեն</span>
+      <p>Դու գիտես ոչ միայն <em>ինչպես</em> գրել <code>@csrf</code>, այլ <em>ինչու</em>՝ որովհետև մի անգամ քո սեփական HTML ֆայլը ջնջել է ապրանք քո կայքում։ Գիտես, թե ինչ է անում <code>{{ }}</code>-ը, որովհետև գտել ես <code>e()</code>-ն կոմպիլացված ֆայլում։ Գիտես, թե ինչ կա Laravel-ի <code>Route::get</code>-ի ներսում, որովհետև գրել ես քո Router-ը։<br><br>
+      Հենց դա էր դասընթացի գաղափարը սկզբից․ <strong>մեխանիզմը, հետո գործիքը</strong>։ Գործիքները կփոխվեն։ Laravel 13-ը մի օր կդառնա Laravel 20։ Մեխանիզմները՝ HTTP, SQL, սեսիաներ, XSS, CSRF, մնում են։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ինչ չսովորեցինք</th><th>Ինչու է արժե հաջորդը</th></tr>
+      <tr><td>Ավտոմատ թեստեր (PHPUnit, Pest)</td><td>Հաճախ հանդիպում է junior հայտարարություններում ⭐</td></tr>
+      <tr><td>Docker</td><td>Միջավայրը նույնն է ամեն մշակողի մոտ</td></tr>
+      <tr><td>Git-ի թիմային աշխատանք (pull requests, code review)</td><td>Առաջին շաբաթից պետք կգա</td></tr>
+      <tr><td>Հերթեր և ֆոնային աշխատանքներ (queues)</td><td>Email-ներ, մեծ ֆայլեր, ինտեգրացիաներ</td></tr>
+      <tr><td>Frontend ֆրեյմվորք (Vue, React) կամ Livewire/Inertia</td><td>Laravel-ի starter kit-երը հենց դրանց վրա են (Դաս 21)</td></tr>
+      <tr><td>TypeScript</td><td>Եթե գնում ես frontend-ի կողմը</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Հաջորդ երեք ամիսը</span>
+      <p>Ընտրիր <strong>մեկ</strong> թեմա աղյուսակից, ոչ բոլորը։ Դաս 23-ի MISSING ցուցակը կասի, թե որը։ Օրինակ՝ Pest թեստեր ՏեխնոՄարկետի համար․ այն միանգամից դառնում է նոր bullet CV-ում, նոր բաժին README-ում և պատասխան հարցազրույցի «How do you test your code?» հարցին։<br><br>
+      Եվ շարունակիր դիմել զուգահեռ։ Մի՛ սպասիր, որ «պատրաստ լինես»։ Junior-ը հենց նա է, ով դեռ պատրաստ չէ, և դա նորմալ է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 12 ============ -->
+  <section id="s12">
+    <h2><span class="num">12</span>Դասարանական՝ փորձնական հարցազրույց</h2>
+
+    <ol>
+      <li>Բաժանվեք զույգերի․ մեկը «հարցազրուցավար» է, մյուսը «թեկնածու», 20 րոպե, ապա փոխվեք</li>
+      <li>«Tell me about yourself»՝ 60 վայրկյան, ժամացույցով</li>
+      <li>Հինգ տեխնիկական հարց բաժին 03-ից, որոնցից երկուսը՝ թեկնածուի CV-ի bullet-ներից (Դաս 23-ի տնային)</li>
+      <li>Մեկ վարքագծային հարց STAR-ով և մեկ live coding առաջադրանք (5 րոպե, թղթի վրա կամ խմբագրիչում)</li>
+      <li>«Հարցազրուցավարը» տալիս է երեք դրական և մեկ բարելավման կետ</li>
+    </ol>
+
+    <div class="warn note">
+      <span class="tag">Մեկ հարց հատուկ «չգիտեմ»-ի համար</span>
+      <p>«Հարցազրուցավարը» պետք է տա <strong>մեկ հարց, որի պատասխանը թեկնածուն հաստատ չգիտի</strong> (օրինակ՝ Docker-ի կամ Redis-ի մասին)։ Նպատակը բաժին 04-ի վարժանքն է․ «Ճիշտ չգիտեմ, բայց կարծում եմ... և ահա ինչպես կպարզեի»։<br><br>
+      Սա դասի ամենաանհարմար պահն է և ամենաօգտակարը։ Իրական հարցազրույցում այդ հարցը հաստատ կլինի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 13 ============ -->
+  <section id="s13">
+    <h2><span class="num">13</span>Վերջին տնային աշխատանքը</h2>
+    <ol class="hw">
+      <li>Ձայնագրիր քեզ «Tell me about yourself» պատասխանելիս։ Լսիր, ուղղիր, ձայնագրիր կրկին։</li>
+      <li>Պատասխանիր բաժին 03-ի բոլոր հարցերին գրավոր՝ ամեն մեկը երկու-երեք նախադասությամբ և մեկ օրինակով ՏեխնոՄարկետից։ Սա քո անձնական cheat sheet-ն է հարցազրույցներից առաջ։</li>
+      <li>Գրիր երեք STAR պատմություն քո նախագծից․ դժվար սխալ, անվտանգության խնդիր, մի բան, որ փոխել ես մտքիդ մեջ։</li>
+      <li>Ստեղծիր դիմումների աղյուսակը և դիմիր առնվազն հինգ իրական հայտարարության՝ ամեն մեկի համար Դաս 23-ի հարմարեցված CV-ով։</li>
+      <li>Ընտրիր մեկ թեմա «Ինչ չսովորեցինք» աղյուսակից և գրիր երեք ամսվա պլան՝ ամեն շաբաթ մեկ փոքր քայլ։</li>
+      <li>Խնդրիր AI-ին լինել հարցազրուցավար Junior Laravel դերի համար․ <em>«Ask me one question at a time, wait for my answer, then give honest feedback»</em>։ Պատասխանիր առանց ուրիշ պատուհան բացելու։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 14 ============ -->
+  <section id="s14">
+    <h2><span class="num">14</span>Հիշելու թերթիկ</h2>
+
+    <h3>Հարցազրույցի հինգ կանոն</h3>
+    <div class="tree">1. Պատմիր քո նախագծի օրինակով
+2. Մտածիր բարձրաձայն
+3. «Չգիտեմ, բայց ահա ինչպես կպարզեի» > հորինված պատասխան
+4. Ամեն bullet CV-ում = հարց, որին պատրաստ ես
+5. Հարցրու նրանց․ մենթոր, code review, առաջին ամիս</div>
+
+    <h3>STAR</h3>
+    <div class="tree">Situation → Task → Action (դու) → Result (և ինչ սովորեցիր)</div>
+
+    <h3>Աշխատավարձ</h3>
+    <div class="tree">Հետազոտիր միջակայքը  →  ասա միջակայք, ոչ մեկ թիվ
+Միշտ ճշտիր            →  gross / net · արժույթ · ամսական
+Առաջարկը              →  գրավոր, կարդա մինչև ստորագրելը</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>60 վայրկյանանոց ներկայացումը փորձարկված է բարձրաձայն</li>
+      <li>Բաժին 03-ի ամեն հարցին կարող եմ պատասխանել իմ նախագծի օրինակով</li>
+      <li>Ունեմ երեք STAR պատմություն</li>
+      <li>Ունեմ 2–3 հարց հարցազրուցավարի համար</li>
+      <li>Գիտեմ, թե ինչ միջակայք եմ ասելու և gross է, թե net</li>
+      <li>Demo-ն և GitHub-ը աշխատում են</li>
+      <li>Ունեմ դիմումների աղյուսակ</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել XSS-ը, SQL injection-ը և CSRF-ը օրինակով մեկ րոպեում</li>
+      <li>Կարո՞ղ եմ բացատրել N+1-ը և ինչպես եմ այն լուծել</li>
+      <li>Գիտե՞մ, ինչ ասել, երբ չգիտեմ պատասխանը</li>
+      <li>Կարո՞ղ եմ պատմել մեկ դժվար սխալի մասին STAR-ով</li>
+      <li>Գիտե՞մ, ինչ ստուգել առաջարկում բացի գումարից</li>
+      <li>Գիտե՞մ, որ թեման եմ սովորելու հաջորդ երեք ամսում</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Վերջ, և սկիզբ</span>
+      <p>72 դաս առաջ դու բացեցիր <code>index.html</code> և գրեցիր <code>&lt;h1&gt;</code>։ Այսօր ունես կայք իրական սերվերում, բազայով, ադմին վահանակով, մուտքով, API-ով և CV, որում ամեն տող կարող ես պաշտպանել։<br><br>
+      Դասընթացն ավարտվեց, բայց մշակողի աշխատանքը սովորելն է՝ ամեն օր, ամբողջ կարիերայի ընթացքում։ Դու արդեն գիտես ինչպես․ կարդալ սխալը, փորձել փոքր օրինակով, ստուգել աղբյուրը, հարցնել ճիշտ հարց և չվստահել ոչ մի բանի, ինչ չես ստուգել, ներառյալ AI-ին։<br><br>
+      Հաջողություն հարցազրույցներում։ Եվ երբ գտնես առաջին աշխատանքը, պատմիր հաջորդ խմբին, թե ինչպես։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>PHP Բլոկ · Դաս 24 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

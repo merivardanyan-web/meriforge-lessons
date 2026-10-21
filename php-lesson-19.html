@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHP Դաս 19 — Laravel · Blade և Controllers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>PHP Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">PHP Դաս 19 · 2 ժամ · Laravel 2 / 4</p>
+  <h1>Blade և Controllers</h1>
+  <p class="lede">Դաս 5-ում կառուցեցիր <code>layout.php</code>, <code>render()</code> և <code>$content</code>։ Դաս 15-ում՝ կոնտրոլեր-դասեր, որոնք ձեռքով ստեղծում էինք <code>bootstrap.php</code>-ում։ Այսօր տեսնում ես երկուսի արդյունաբերական տարբերակը — և այն տեղը, որտեղ քո <code>e()</code>-ն բառացիորեն թաքնված է Laravel-ի ներսում։</p>
+
+  <div class="facts">
+    <span>Բլոկ 3 · Դաս 19 / 24</span>
+    <span>Դաս 5 և 15-ի հայելին</span>
+    <span>Layout · կոմպոնենտներ · resource</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Layout՝ <code>@extends</code>, <code>@yield</code>, <code>@section</code></li>
+      <li>Blade-ի դիրեկտիվները՝ Դաս 2-ի այլընտրանքային շարահյուսության փոխարեն</li>
+      <li>Ի՞նչ է կատարվում ներսում՝ կոմպիլացված շաբլոններ</li>
+      <li>Կոմպոնենտներ՝ <code>&lt;x-product-card&gt;</code></li>
+      <li>Ընդհանուր տվյալներ բոլոր շաբլոնների համար</li>
+      <li>Autowiring՝ <code>bootstrap.php</code>-ի ձեռքով <code>new</code>-երի փոխարեն</li>
+      <li>Resource controller՝ CRUD-ի ուղիները մեկ տողով</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Layout-ի հայելին</h2>
+
+    <div class="tree">Դաս 5 — քո մոտեցումը            Laravel — Blade
+
+views/layout.php                  resources/views/layouts/app.blade.php
+  ... &lt;?= $content ?&gt; ...           ... @yield('content') ...
+
+views/pages/home.php              resources/views/products/index.blade.php
+  միայն բովանդակություն             @extends('layouts.app')
+                                    @section('content') ... @endsection
+
+index.php                         ProductController::index()
+  $content = render('pages/home')   return view('products.index', [...])
+  echo render('layout', [...])
+
+render()՝ ob_start + require        Blade-ը ինքն է հավաքում</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>resources/views/layouts/app.blade.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;!DOCTYPE </span><span class="t">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">html</span> <span class="f">lang</span>=<span class="s">"hy"</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">charset</span>=<span class="s">"UTF-8"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">name</span>=<span class="s">"viewport"</span> <span class="f">content</span>=<span class="s">"width=device-width, initial-scale=1"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">name</span>=<span class="s">"csrf-token"</span> <span class="f">content</span>=<span class="s">"{{ csrf_token() }}"</span><span class="p">&gt;</span>   <span class="c">{{-- Դաս 17-ի meta-ն --}}</span>
+
+    <span class="p">&lt;</span><span class="t">title</span><span class="p">&gt;</span><span class="k">@yield</span>(<span class="s">'title'</span>, <span class="f">config</span>(<span class="s">'app.name'</span>))<span class="p">&lt;/</span><span class="t">title</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"stylesheet"</span> <span class="f">href</span>=<span class="s">"{{ asset('css/global.css') }}"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"stylesheet"</span> <span class="f">href</span>=<span class="s">"{{ asset('css/main.css') }}"</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">body</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#main"</span> <span class="f">class</span>=<span class="s">"skip-link"</span><span class="p">&gt;</span>Անցնել բովանդակությանը<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+
+<span class="k">@include</span>(<span class="s">'partials.header'</span>)
+
+<span class="p">&lt;</span><span class="t">main</span> <span class="f">id</span>=<span class="s">"main"</span><span class="p">&gt;</span>
+    <span class="k">@if</span> (<span class="f">session</span>(<span class="s">'success'</span>))
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"alert alert--success"</span> <span class="f">role</span>=<span class="s">"status"</span><span class="p">&gt;</span>{{ <span class="f">session</span>(<span class="s">'success'</span>) }}<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="k">@endif</span>
+
+    <span class="k">@yield</span>(<span class="s">'content'</span>)       <span class="c">{{-- ⭐ քո &lt;?= $content ?&gt;-ն --}}</span>
+<span class="p">&lt;/</span><span class="t">main</span><span class="p">&gt;</span>
+
+<span class="k">@include</span>(<span class="s">'partials.footer'</span>)
+
+<span class="p">&lt;</span><span class="t">p</span> <span class="f">id</span>=<span class="s">"cart-status"</span> <span class="f">class</span>=<span class="s">"visually-hidden"</span> <span class="f">role</span>=<span class="s">"status"</span><span class="p">&gt;&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+<span class="k">@stack</span>(<span class="s">'scripts'</span>)        <span class="c">{{-- էջին հատուկ JS — ներքևում --}}</span>
+<span class="p">&lt;/</span><span class="t">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">html</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>resources/views/products/index.blade.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">@extends</span>(<span class="s">'layouts.app'</span>)
+
+<span class="k">@section</span>(<span class="s">'title'</span>, <span class="s">'ՏեխնոՄարկետ — տեխնիկա Երևանում'</span>)
+
+<span class="k">@section</span>(<span class="s">'content'</span>)
+<span class="p">&lt;</span><span class="t">section</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-100"</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">h1</span> <span class="f">class</span>=<span class="s">"section-title mb-30"</span><span class="p">&gt;</span>Ապրանքներ ({{ <span class="n">$products</span>-&gt;<span class="f">total</span>() }})<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"grid-auto gap-20"</span><span class="p">&gt;</span>
+                <span class="k">@forelse</span> (<span class="n">$products</span> <span class="k">as</span> <span class="n">$p</span>)
+                    <span class="p">&lt;</span><span class="t">x-product-card</span> <span class="f">:product</span>=<span class="s">"$p"</span><span class="p">&gt;</span>
+                        <span class="k">@include</span>(<span class="s">'cart._add-form'</span>, [<span class="s">'product'</span> =&gt; <span class="n">$p</span>])
+                    <span class="p">&lt;/</span><span class="t">x-product-card</span><span class="p">&gt;</span>
+                <span class="k">@empty</span>
+                    <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"text-muted"</span><span class="p">&gt;</span>Ապրանքներ չեն գտնվել։<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+                <span class="k">@endforelse</span>
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+            {{ <span class="n">$products</span>-&gt;<span class="f">withQueryString</span>()-&gt;<span class="f">links</span>() }}
+
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+<span class="k">@endsection</span>
+
+<span class="k">@push</span>(<span class="s">'scripts'</span>)
+    <span class="p">&lt;</span><span class="t">script</span> <span class="f">src</span>=<span class="s">"{{ asset('js/cart.js') }}"</span> <span class="f">defer</span><span class="p">&gt;&lt;/</span><span class="t">script</span><span class="p">&gt;</span>
+<span class="k">@endpush</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ի՞նչ անհետացավ</span>
+      <p><strong><code>ob_start()</code> և <code>ob_get_clean()</code>։</strong> Դաս 5-ում բացատրեցինք բուֆերի մեխանիզմը, Դաս 15-ում՝ ինչու է պետք <code>ob_end_clean()</code> <code>catch</code>-ում։ Blade-ը անում է ճիշտ նույնը, ներսում։<br><br>
+      <strong>Կրկնակի <code>render()</code>։</strong> Կոնտրոլերը այլևս չգիտի, որ layout գոյություն ունի։ Այն ասում է «ցույց տուր <code>products.index</code>», իսկ շաբլոնն ինքն է հայտարարում, թե որ layout-ի մեջ է ապրում։<br><br>
+      <strong>Անվան կետը</strong>․ <code>'products.index'</code> = <code>resources/views/products/index.blade.php</code>։ Կետերը թղթապանակներ են։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag"><code>@stack</code> / <code>@push</code></span>
+      <p>Դաս 17-ի <code>cart.js</code>-ը պետք է միայն այն էջերում, որտեղ «Գնել» կոճակ կա։ <code>@push('scripts')</code>-ը ավելացնում է այն layout-ի <code>@stack('scripts')</code> կետում՝ <code>&lt;/body&gt;</code>-ից առաջ։<br><br>
+      Մեր Դաս 5-ի համակարգում դա պահանջում էր ևս մեկ փոփոխական՝ <code>$scripts</code>, և ձեռքով փոխանցում ամեն էջից։</p>
+    </div>
+
+        <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>resources/views/products/show.blade.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">@extends</span>(<span class="s">'layouts.app'</span>)
+
+<span class="c">{{-- Inline արժեքը @section-ում նույնպես փախցվում է --}}</span>
+<span class="k">@section</span>(<span class="s">'title'</span>, <span class="n">$product</span>-&gt;<span class="n">name</span> . <span class="s">' — '</span> . <span class="f">config</span>(<span class="s">'app.name'</span>))
+
+<span class="k">@section</span>(<span class="s">'content'</span>)
+    <span class="p">&lt;</span><span class="t">section</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-50 w-md-100"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">h1</span><span class="p">&gt;</span>{{ <span class="n">$product</span>-&gt;<span class="n">name</span> }}<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"text-muted"</span><span class="p">&gt;</span>{{ <span class="n">$product</span>-&gt;<span class="n">specs</span> }}<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+                <span class="k">@include</span>(<span class="s">'cart._add-form'</span>, [<span class="s">'product'</span> =&gt; <span class="n">$product</span>])
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+<span class="k">@endsection</span></code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Դիրեկտիվներ</h2>
+    <p>Դաս 2-ում սովորեցիր այլընտրանքային շարահյուսությունը, որ HTML-ը մնա ընթեռնելի։ Blade-ը նույն գաղափարն է՝ ավելի կարճ։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դաս 2, 5, 6 — մաքուր PHP</th><th>Blade</th></tr>
+      <tr><td><code>&lt;?= e($x) ?&gt;</code></td><td><code>{{ $x }}</code> ⭐</td></tr>
+      <tr><td><code>&lt;?= $html ?&gt;</code> (առանց փախցնելու)</td><td><code>{!! $html !!}</code> ⚠️</td></tr>
+      <tr><td><code>&lt;?php if ($a): ?&gt; ... &lt;?php endif; ?&gt;</code></td><td><code>@if ($a) ... @endif</code></td></tr>
+      <tr><td><code>&lt;?php foreach ($xs as $x): ?&gt;</code></td><td><code>@foreach ($xs as $x) ... @endforeach</code></td></tr>
+      <tr><td><code>if (empty($xs)) ... else foreach</code></td><td><code>@forelse ... @empty ... @endforelse</code></td></tr>
+      <tr><td><code>&lt;?php if (isset($x)): ?&gt;</code></td><td><code>@isset($x) ... @endisset</code></td></tr>
+      <tr><td><code>&lt;?php require 'partials/x.php' ?&gt;</code></td><td><code>@include('partials.x')</code></td></tr>
+      <tr><td><code>&lt;?= csrf_field() ?&gt;</code> (Դաս 16)</td><td><code>@csrf</code></td></tr>
+      <tr><td><code>&lt;?= $sel === $k ? 'selected' : '' ?&gt;</code> (Դաս 6)</td><td><code>@selected($sel === $k)</code></td></tr>
+      <tr><td><code>&lt;?= isset($errors['x']) ? 'input--error' : '' ?&gt;</code></td><td><code>@class(['input', 'input--error' =&gt; $bad])</code></td></tr>
+      <tr><td><code>&lt;?php if ($auth-&gt;check()): ?&gt;</code> (Դաս 16)</td><td><code>@auth ... @endauth</code></td></tr>
+      <tr><td><code>// մեկնաբանություն</code></td><td><code>{{-- չի հասնում բրաուզերին --}}</code></td></tr>
+    </table>
+    </div>
+
+        <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>resources/views/partials/header.blade.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">header</span> <span class="f">class</span>=<span class="s">"header"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row align-center justify-between"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"{{ route('home') }}"</span> <span class="f">class</span>=<span class="s">"logo"</span><span class="p">&gt;</span>{{ <span class="f">config</span>(<span class="s">'app.name'</span>) }}<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">nav</span> <span class="f">aria-label</span>=<span class="s">"Գլխավոր մենյու"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">ul</span> <span class="f">class</span>=<span class="s">"menu flex align-center gap-10"</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>
+                        <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"{{ route('home') }}"</span>
+                           <span class="k">@if</span> (<span class="f">request</span>()-&gt;<span class="f">routeIs</span>(<span class="s">'home'</span>)) <span class="f">aria-current</span>=<span class="s">"page"</span> <span class="k">@endif</span><span class="p">&gt;</span>Գլխավոր<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+                    <span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+                    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>
+                        <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"{{ route('cart.index') }}"</span>
+                           <span class="k">@if</span> (<span class="f">request</span>()-&gt;<span class="f">routeIs</span>(<span class="s">'cart.*'</span>)) <span class="f">aria-current</span>=<span class="s">"page"</span> <span class="k">@endif</span><span class="p">&gt;</span>
+                            Զամբյուղ
+                            <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"counter"</span> <span class="f">data-cart-count</span><span class="p">&gt;</span>{{ <span class="n">$cartCount</span> }}<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+                        <span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+                    <span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+                <span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">nav</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">header</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Դաս 15-ի <code>isCurrent()</code>-ը՝ անուններով</span>
+      <p><code>request()-&gt;routeIs('cart.*')</code>-ը համեմատում է <strong>ուղու անունը</strong>, ոչ հասցեն։ Աստղանիշը նշանակում է «ցանկացած ենթաուղի»՝ <code>cart.index</code>, <code>cart.items.store</code> և այլն։<br><br>
+      Մեր <code>isCurrent('/contact')</code>-ը կոտրվում էր, երբ փոխում էինք հասցեն։ Այս ձևը՝ ոչ, ինչպես Դաս 18-ի <code>route()</code>-ը։<br><br>
+      CSS-ը՝ <code>.menu a[aria-current="page"]</code>, HTML բլոկի Դաս 18-ից, մնում է անփոփոխ։ Արդեն երրորդ անգամ։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag"><code>$cartCount</code>-ը որտեղի՞ց</span>
+      <p>Header-ը ներառվում է ամեն էջում, բայց ոչ մի կոնտրոլեր չի փոխանցում <code>$cartCount</code>։ Ինչպե՞ս է այն հայտնվում։ Պատասխանը բաժին 05-ում է, և այնտեղ կա թակարդ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ի՞նչ է կատարվում ներսում</h2>
+
+        <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ինչ ես գրում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">h3</span><span class="p">&gt;</span>{{ <span class="n">$product</span>-&gt;<span class="n">name</span> }}<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+
+<span class="k">@foreach</span> (<span class="n">$products</span> <span class="k">as</span> <span class="n">$p</span>)
+    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>{{ <span class="n">$p</span>-&gt;<span class="n">name</span> }}<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+<span class="k">@endforeach</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>storage/framework/views/3f9a…c1.php — ինչ է կատարվում իրականում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">h3</span><span class="p">&gt;</span><span class="p">&lt;?php</span> <span class="k">echo</span> <span class="f">e</span>(<span class="n">$product</span>-&gt;<span class="n">name</span>); <span class="p">?&gt;</span><span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+
+<span class="p">&lt;?php</span> <span class="k">foreach</span>(<span class="n">$products</span> <span class="k">as</span> <span class="n">$p</span>): <span class="p">?&gt;</span>
+    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span><span class="p">&lt;?php</span> <span class="k">echo</span> <span class="f">e</span>(<span class="n">$p</span>-&gt;<span class="n">name</span>); <span class="p">?&gt;</span><span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+<span class="p">&lt;?php</span> <span class="k">endforeach</span>; <span class="p">?&gt;</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ահա քո <code>e()</code>-ն</span>
+      <p>Բացիր կոմպիլացված ֆայլը և կգտնես <strong>ճիշտ նույն անունով ֆունկցիա</strong>, որ գրեցիր Դաս 5-ում։ Ներսում Laravel-ի <code>e()</code>-ն կանչում է <code>htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')</code> — նույն դրոշները, ինչ մերը։<br><br>
+      Եվ <code>@foreach</code>-ը դառնում է Դաս 2-ի այլընտրանքային շարահյուսությունը՝ <code>foreach(): endforeach;</code>։<br><br>
+      Դաս 5-ում ասացինք․ <em>«Laravel-ում կա նույն ֆունկցիան՝ ճիշտ նույն անունով <code>e()</code>։ Blade-ում <code>{{ $x }}</code>-ը ավտոմատ կանչում է այն»</em>։ Հիմա կարող ես տեսնել դա սեփական աչքով։</p>
+    </div>
+
+              </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Կոմպոնենտներ</h2>
+    <p>HTML բլոկի Դաս 17-ում սովորեցիր BEM քարտը՝ <code>.card</code>, <code>.card__title</code>, <code>.card__price</code>։ Այն կրկնվում էր ամեն տեղ, որտեղ ապրանք կա։ Blade-ը թույլ է տալիս այն դարձնել <strong>մեկ ֆայլ</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ստեղծում</div><button class="copy">Պատճենել</button></div>
+<pre><code>php artisan make:component ProductCard --view
+
+<span class="c"># → resources/views/components/product-card.blade.php
+# --view՝ միայն շաբլոն, առանց PHP դասի (anonymous component)</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>resources/views/components/product-card.blade.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">@props</span>([<span class="s">'product'</span>])          <span class="c">{{-- ⭐ ի՞նչ է ընդունում --}}</span>
+
+<span class="p">&lt;</span><span class="t">article</span> {{ <span class="n">$attributes</span>-&gt;<span class="f">class</span>([<span class="s">'card'</span>, <span class="s">'card--sale'</span> =&gt; <span class="n">$product</span>-&gt;<span class="n">discount</span> &gt; <span class="n">0</span>]) }}<span class="p">&gt;</span>
+
+    <span class="k">@if</span> (<span class="n">$product</span>-&gt;<span class="n">discount</span> &gt; <span class="n">0</span>)
+        <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"card__badge"</span><span class="p">&gt;</span>-{{ <span class="n">$product</span>-&gt;<span class="n">discount</span> }}%<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+    <span class="k">@endif</span>
+
+    <span class="p">&lt;</span><span class="t">picture</span> <span class="f">class</span>=<span class="s">"card__media ratio-3-2"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">img</span> <span class="f">class</span>=<span class="s">"img-cover"</span>
+             <span class="f">src</span>=<span class="s">"{{ asset('images/' . ($product-&gt;image ?? 'placeholder.jpg')) }}"</span>
+             <span class="f">alt</span>=<span class="s">"{{ $product-&gt;name }}"</span>
+             <span class="f">width</span>=<span class="s">"600"</span> <span class="f">height</span>=<span class="s">"400"</span> <span class="f">loading</span>=<span class="s">"lazy"</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">picture</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__body"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"card__title"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"{{ route('product.show', $product-&gt;slug) }}"</span><span class="p">&gt;</span>{{ <span class="n">$product</span>-&gt;<span class="n">name</span> }}<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__meta"</span><span class="p">&gt;</span>{{ <span class="n">$product</span>-&gt;<span class="n">specs</span> }}<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__footer"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__price"</span><span class="p">&gt;</span>
+                {{ <span class="f">number_format</span>(<span class="n">$product</span>-&gt;<span class="n">price</span> * (<span class="n">100</span> - <span class="n">$product</span>-&gt;<span class="n">discount</span>) / <span class="n">100</span>, <span class="n">0</span>, <span class="s">'.'</span>, <span class="s">' '</span>) }} ֏
+            <span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+            {{ <span class="n">$slot</span> }}          <span class="c">{{-- ⭐ այն, ինչ դրված է բացող և փակող թեգերի միջև --}}</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>օգտագործում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">{{-- Գլխավոր էջ՝ «Գնել» կոճակով --}}</span>
+<span class="p">&lt;</span><span class="t">x-product-card</span> <span class="f">:product</span>=<span class="s">"$p"</span><span class="p">&gt;</span>
+    <span class="k">@include</span>(<span class="s">'cart._add-form'</span>, [<span class="s">'product'</span> =&gt; <span class="n">$p</span>])
+<span class="p">&lt;/</span><span class="t">x-product-card</span><span class="p">&gt;</span>
+
+<span class="c">{{-- «Նմանատիպ ապրանքներ» բլոկ՝ առանց կոճակի, լրացուցիչ դասով --}}</span>
+<span class="p">&lt;</span><span class="t">x-product-card</span> <span class="f">:product</span>=<span class="s">"$related"</span> <span class="f">class</span>=<span class="s">"card--compact"</span> <span class="p">/&gt;</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Վերջակետի թակարդը՝ <code>:product</code> vs <code>product</code></span>
+      <p><code>:product="$p"</code> — վերջակետով արժեքը <strong>PHP արտահայտություն</strong> է։ Կոմպոնենտը ստանում է օբյեկտը։<br><br>
+      <code>product="$p"</code> — առանց վերջակետի արժեքը <strong>տող</strong> է՝ բառացի <code>"$p"</code> երեք նիշ։ Կոմպոնենտի ներսում <code>$product-&gt;discount</code>-ը կգցի <em>«Attempt to read property "discount" on string»</em>։<br><br>
+      Սա ամենահաճախ սխալն է կոմպոնենտների հետ։ Սխալի հաղորդագրությունը ցույց է տալիս կոմպոնենտի ֆայլը, ոչ այն տեղը, որտեղ մոռացել ես վերջակետը — ինչը ախտորոշումը դժվարացնում է։</p>
+    </div>
+
+            <div class="warn note">
+      <span class="tag">Էջավորման հղումները՝ Tailwind-ով</span>
+      <p><code>$products-&gt;links()</code>-ը լռելյայն գեներացնում է HTML <strong>Tailwind CSS-ի դասերով</strong>։ Մեր CSS-ը Tailwind չէ, ուստի հղումները կերևան առանց ոճի։<br><br>
+      Լուծումը՝ հրապարակել շաբլոնները և հարմարեցնել մեր դասերին․<br>
+      <code>php artisan vendor:publish --tag=laravel-pagination</code><br>
+      Ֆայլերը կհայտնվեն <code>resources/views/vendor/pagination/</code>-ում։ Սա նույն սկզբունքն է, ինչ ամբողջ դասընթացում՝ <em>CSS-ը մերն է, ֆրեյմվորքը մեզ չի թելադրում</em>։<br><br>
+      Նույն պատճառով չենք օգտագործում Vite-ը (<code>@vite</code>), որ Laravel-ը առաջարկում է CSS/JS-ի համար։ Այն պետք է կառուցման գործիքների համար, իսկ մեր <code>global.css</code>-ը և <code>main.css</code>-ը պարզ ֆայլեր են <code>public/css/</code>-ում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Ընդհանուր տվյալներ</h2>
+    <p>Header-ը պահանջում է <code>$cartCount</code> ամեն էջում։ Մեր նախագծում այն պետք էր փոխանցել ամեն կոնտրոլերից։ Laravel-ում կա երկու ձև, և դրանցից մեկը չի աշխատի։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ առաջին փորձ — միշտ 0</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// app/Providers/AppServiceProvider.php</span>
+<span class="k">public function</span> <span class="f">boot</span>(): <span class="k">void</span>
+{
+    <span class="t">View</span>::<span class="f">share</span>(<span class="s">'cartCount'</span>, <span class="f">app</span>(<span class="t">Cart</span>::<span class="k">class</span>)-&gt;<span class="f">count</span>());
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ միշտ 0</span>
+      <p>Service provider-ների <code>boot()</code>-ը կատարվում է <strong>նախքան middleware-ները</strong>։ Իսկ սեսիան բեռնվում է middleware-ում (<code>StartSession</code>)։<br><br>
+      <code>boot()</code>-ի պահին սեսիան դեռ դատարկ է, զամբյուղը՝ նույնպես։ <code>View::share()</code>-ը հաշվում է արժեքը <em>հենց այդ պահին</em> և պահում այն ամբողջ հարցման համար։<br><br>
+      Ոչ մի սխալ, ոչ մի զգուշացում։ Հաշվիչը պարզապես միշտ ցույց է տալիս 0։ Դաս 18-ի SQLite-ի պես՝ լուռ սխալ։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>✅ View composer — հաշվում է ցուցադրման պահին</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+
+<span class="k">namespace</span> <span class="t">App\Providers</span>;
+
+<span class="k">use</span> <span class="t">App\Services\Cart</span>;
+<span class="k">use</span> <span class="t">Illuminate\Support\Facades\View</span>;
+<span class="k">use</span> <span class="t">Illuminate\Support\ServiceProvider</span>;
+
+<span class="k">class</span> <span class="t">AppServiceProvider</span> <span class="k">extends</span> <span class="t">ServiceProvider</span>
+{
+    <span class="k">public function</span> <span class="f">boot</span>(): <span class="k">void</span>
+    {
+        <span class="t">View</span>::<span class="f">composer</span>(<span class="s">'partials.header'</span>, <span class="k">function</span> (<span class="t">\Illuminate\View\View</span> <span class="n">$view</span>) {
+            <span class="n">$view</span>-&gt;<span class="f">with</span>(<span class="s">'cartCount'</span>, <span class="f">app</span>(<span class="t">Cart</span>::<span class="k">class</span>)-&gt;<span class="f">count</span>());
+        });
+    }
+}</code></pre>
+    </div>
+
+          </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Կոնտրոլերներ և autowiring</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Դաս 15 — bootstrap.php-ում, ձեռքով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="n">$cartController</span> = <span class="k">new</span> <span class="t">CartController</span>(<span class="n">$products</span>, <span class="n">$cart</span>);
+<span class="c">// ... ամեն նոր կոնտրոլեր՝ նոր տող, և պետք է հիշել, թե ինչ է նրան պետք</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Services/Cart.php — Դաս 12-ի դասը Laravel-ում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+
+<span class="k">namespace</span> <span class="t">App\Services</span>;
+
+<span class="k">class</span> <span class="t">Cart</span>
+{
+    <span class="k">private const</span> <span class="n">MAX_QTY</span> = <span class="n">99</span>;
+
+    <span class="k">public function</span> <span class="f">all</span>(): <span class="k">array</span>
+    {
+        <span class="k">return</span> <span class="f">session</span>(<span class="s">'cart'</span>, []);
+    }
+
+    <span class="k">public function</span> <span class="f">add</span>(<span class="k">int</span> <span class="n">$id</span>, <span class="k">int</span> <span class="n">$qty</span> = <span class="n">1</span>): <span class="k">void</span>
+    {
+        <span class="k">if</span> (<span class="n">$qty</span> &lt; <span class="n">1</span>) {
+            <span class="k">return</span>;
+        }
+
+        <span class="n">$items</span> = <span class="n">$this</span>-&gt;<span class="f">all</span>();
+        <span class="n">$items</span>[<span class="n">$id</span>] = <span class="f">min</span>((<span class="n">$items</span>[<span class="n">$id</span>] ?? <span class="n">0</span>) + <span class="n">$qty</span>, <span class="k">self</span>::<span class="n">MAX_QTY</span>);
+
+        <span class="f">session</span>([<span class="s">'cart'</span> =&gt; <span class="n">$items</span>]);
+    }
+
+    <span class="k">public function</span> <span class="f">remove</span>(<span class="k">int</span> <span class="n">$id</span>): <span class="k">void</span>
+    {
+        <span class="n">$items</span> = <span class="n">$this</span>-&gt;<span class="f">all</span>();
+        <span class="k">unset</span>(<span class="n">$items</span>[<span class="n">$id</span>]);
+
+        <span class="f">session</span>([<span class="s">'cart'</span> =&gt; <span class="n">$items</span>]);
+    }
+
+    <span class="k">public function</span> <span class="f">count</span>(): <span class="k">int</span>
+    {
+        <span class="k">return</span> <span class="f">array_sum</span>(<span class="n">$this</span>-&gt;<span class="f">all</span>());
+    }
+}</code></pre>
+    </div>
+
+        <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Http/Controllers/CartController.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+
+<span class="k">namespace</span> <span class="t">App\Http\Controllers</span>;
+
+<span class="k">use</span> <span class="t">App\Services\Cart</span>;
+<span class="k">use</span> <span class="t">Illuminate\Http\Request</span>;
+<span class="k">use</span> <span class="t">Illuminate\Support\Facades\DB</span>;
+
+<span class="k">class</span> <span class="t">CartController</span> <span class="k">extends</span> <span class="t">Controller</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>(
+        <span class="k">private</span> <span class="k">readonly</span> <span class="t">Cart</span> <span class="n">$cart</span>,       <span class="c">// ⭐ ոչ մի գրանցում, ոչ մի match</span>
+    ) {}
+
+    <span class="k">public function</span> <span class="f">store</span>(<span class="t">Request</span> <span class="n">$request</span>)
+    {
+        <span class="n">$id</span>  = <span class="n">$request</span>-&gt;<span class="f">integer</span>(<span class="s">'id'</span>);
+        <span class="n">$qty</span> = <span class="n">$request</span>-&gt;<span class="f">integer</span>(<span class="s">'qty'</span>, <span class="n">1</span>);
+
+        <span class="n">$product</span> = <span class="t">DB</span>::<span class="f">table</span>(<span class="s">'products'</span>)
+            -&gt;<span class="f">where</span>(<span class="s">'id'</span>, <span class="n">$id</span>)
+            -&gt;<span class="f">where</span>(<span class="s">'is_active'</span>, <span class="n">1</span>)
+            -&gt;<span class="f">first</span>();
+
+        <span class="c">// Բիզնես-կանոնները՝ սերվերում (Դաս 17) ⭐</span>
+        <span class="f">abort_if</span>(<span class="n">$product</span> === <span class="k">null</span>, <span class="n">404</span>, <span class="s">'Ապրանքը չի գտնվել'</span>);
+        <span class="f">abort_if</span>(<span class="n">$qty</span> &lt; <span class="n">1</span> || <span class="n">$qty</span> &gt; <span class="n">99</span>, <span class="n">422</span>, <span class="s">'Քանակը՝ 1-ից 99'</span>);
+        <span class="f">abort_if</span>(<span class="n">$product</span>-&gt;<span class="n">stock</span> &lt; <span class="n">1</span>, <span class="n">422</span>, <span class="s">'Ապրանքը առկա չէ'</span>);
+
+        <span class="n">$this</span>-&gt;<span class="n">cart</span>-&gt;<span class="f">add</span>(<span class="n">$id</span>, <span class="n">$qty</span>);
+
+        <span class="c">// Մեկ կոնտրոլեր — երկու ձևաչափ (Դաս 17-ի expectsJson)</span>
+        <span class="k">if</span> (<span class="n">$request</span>-&gt;<span class="f">expectsJson</span>()) {
+            <span class="k">return</span> <span class="f">response</span>()-&gt;<span class="f">json</span>([
+                <span class="s">'data'</span> =&gt; [
+                    <span class="s">'count'</span>   =&gt; <span class="n">$this</span>-&gt;<span class="n">cart</span>-&gt;<span class="f">count</span>(),
+                    <span class="s">'message'</span> =&gt; <span class="s">'Ավելացվեց՝ '</span> . <span class="n">$product</span>-&gt;<span class="n">name</span>,
+                ],
+            ]);
+        }
+
+        <span class="k">return</span> <span class="f">back</span>()-&gt;<span class="f">with</span>(<span class="s">'success'</span>, <span class="s">'Ավելացվեց զամբյուղ'</span>);   <span class="c">// ⭐ Դաս 7-ի flash()</span>
+    }
+
+    <span class="k">public function</span> <span class="f">destroy</span>(<span class="k">int</span> <span class="n">$id</span>)
+    {
+        <span class="n">$this</span>-&gt;<span class="n">cart</span>-&gt;<span class="f">remove</span>(<span class="n">$id</span>);
+
+        <span class="k">return</span> <span class="f">back</span>()-&gt;<span class="f">with</span>(<span class="s">'success'</span>, <span class="s">'Հանվեց զամբյուղից'</span>);
+    }
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Autowiring — ինչ խոստացել էինք Դաս 15-ում</span>
+      <p>Դաս 15-ում ասացինք․ <em>«Laravel-ը կոնտրոլերը ստեղծում է միայն այն ժամանակ, երբ ուղին համընկնում է, և ինքն է կարդում կոնստրուկտորի տիպերը՝ որոշելու, թե ինչ փոխանցել»</em>։<br><br>
+      Ահա այն։ Laravel-ը տեսնում է <code>Cart $cart</code>, ստեղծում է <code>new Cart()</code> և փոխանցում։ Եթե <code>Cart</code>-ի կոնստրուկտորն էլ ինչ-որ բան պահանջեր, Laravel-ը կհավաքեր այն նույնպես՝ շղթայով։ Քո <code>bootstrap.php</code>-ի բոլոր <code>new</code>-երը այժմ անում է ֆրեյմվորքը։<br><br>
+      Նույնը մեթոդների հետ՝ <code>store(Request $request)</code>։ Ոչ ոք <code>Request</code>-ը ձեռքով չի փոխանցում։</p>
+    </div>
+
+        <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>resources/views/cart/_add-form.blade.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">@if</span> (<span class="n">$product</span>-&gt;<span class="n">stock</span> &gt; <span class="n">0</span>)
+    <span class="p">&lt;</span><span class="t">form</span> <span class="f">method</span>=<span class="s">"post"</span> <span class="f">action</span>=<span class="s">"{{ route('cart.items.store') }}"</span> <span class="f">data-cart-add</span><span class="p">&gt;</span>
+        <span class="k">@csrf</span>
+        <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"hidden"</span> <span class="f">name</span>=<span class="s">"id"</span> <span class="f">value</span>=<span class="s">"{{ $product-&gt;id }}"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"btn btn--primary btn--sm"</span><span class="p">&gt;</span>Գնել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">form</span><span class="p">&gt;</span>
+<span class="k">@else</span>
+    <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"text-muted"</span><span class="p">&gt;</span>Առկա չէ<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+<span class="k">@endif</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>routes/web.php — զամբյուղ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="t">Route</span>::<span class="f">get</span>(<span class="s">'/cart'</span>,              [<span class="t">CartController</span>::<span class="k">class</span>, <span class="s">'index'</span>])-&gt;<span class="f">name</span>(<span class="s">'cart.index'</span>);
+<span class="t">Route</span>::<span class="f">post</span>(<span class="s">'/cart/items'</span>,       [<span class="t">CartController</span>::<span class="k">class</span>, <span class="s">'store'</span>])-&gt;<span class="f">name</span>(<span class="s">'cart.items.store'</span>);
+<span class="t">Route</span>::<span class="f">delete</span>(<span class="s">'/cart/items/{id}'</span>, [<span class="t">CartController</span>::<span class="k">class</span>, <span class="s">'destroy'</span>])
+    -&gt;<span class="f">whereNumber</span>(<span class="s">'id'</span>)
+    -&gt;<span class="f">name</span>(<span class="s">'cart.items.destroy'</span>);</code></pre>
+    </div>
+
+        <div class="warn note">
+      <span class="tag">Ինչո՞ւ <code>web.php</code>, ոչ <code>api.php</code></span>
+      <p>Laravel-ում <code>routes/api.php</code>-ը լռելյայն չկա (ավելանում է <code>php artisan install:api</code>-ով), և այն նախատեսված է <strong>առանց սեսիայի</strong> API-ների համար՝ token-ով նույնականացմամբ (Sanctum)։<br><br>
+      Մեր զամբյուղը ապրում է <strong>սեսիայում</strong>, և JS-ը կանչում է այն նույն կայքից։ Ուստի ճիշտ տեղը <code>web.php</code>-ն է, որտեղ կան սեսիան և CSRF-ը։<br><br>
+      Դաս 17-ի <code>cart.js</code>-ում փոխիր միայն հասցեն՝ <code>'/cart/items'</code>, և մեկ տող սխալի հաղորդագրության համար․ Laravel-ի JSON սխալը <code>{"message": "..."}</code> ձևաչափն ունի, ոչ մեր <code>{"error": {"message": ...}}</code>-ը։<br>
+      <code>payload.message ?? payload.error?.message ?? 'Սխալ'</code></p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Resource controller</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ստեղծում</div><button class="copy">Պատճենել</button></div>
+<pre><code>php artisan make:controller Admin/ProductController --resource
+
+<span class="c"># → app/Http/Controllers/Admin/ProductController.php
+# յոթ դատարկ մեթոդով՝ CRUD-ի համար</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>routes/web.php — ադմին</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">use</span> <span class="t">App\Http\Controllers\Admin\ProductController</span> <span class="k">as</span> <span class="t">AdminProductController</span>;
+
+<span class="c">// ⚠️ Դեռ առանց auth — Դաս 21</span>
+<span class="t">Route</span>::<span class="f">prefix</span>(<span class="s">'admin'</span>)-&gt;<span class="f">name</span>(<span class="s">'admin.'</span>)-&gt;<span class="f">group</span>(<span class="k">function</span> () {
+    <span class="t">Route</span>::<span class="f">resource</span>(<span class="s">'products'</span>, <span class="t">AdminProductController</span>::<span class="k">class</span>)-&gt;<span class="f">except</span>([<span class="s">'show'</span>]);
+});</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Մեթոդ</th><th>Հասցե</th><th>Անուն</th><th>Գործողություն</th><th>Դաս 11-ում</th></tr>
+      <tr><td>GET</td><td><code>/admin/products</code></td><td><code>admin.products.index</code></td><td><code>index</code></td><td><code>admin/index.php</code></td></tr>
+      <tr><td>GET</td><td><code>/admin/products/create</code></td><td><code>admin.products.create</code></td><td><code>create</code></td><td><code>form.php</code></td></tr>
+      <tr><td>POST</td><td><code>/admin/products</code></td><td><code>admin.products.store</code></td><td><code>store</code></td><td><code>form.php</code> POST</td></tr>
+      <tr><td>GET</td><td><code>/admin/products/{product}/edit</code></td><td><code>admin.products.edit</code></td><td><code>edit</code></td><td><code>form.php?id=5</code></td></tr>
+      <tr><td>PUT/PATCH</td><td><code>/admin/products/{product}</code></td><td><code>admin.products.update</code></td><td><code>update</code></td><td><code>form.php?id=5</code> POST</td></tr>
+      <tr><td>DELETE</td><td><code>/admin/products/{product}</code></td><td><code>admin.products.destroy</code></td><td><code>destroy</code></td><td><code>delete.php</code></td></tr>
+    </table>
+    </div>
+
+        <div class="warn note">
+      <span class="tag">Ինչո՞ւ դեռ առանց <code>auth</code></span>
+      <p>Դաս 18-ի օրինակում <code>/admin</code>-ը <code>auth</code> middleware-ով էր։ Եթե հիմա այն թողնես և բացես էջը, կստանաս <em>«Route [login] not defined»</em>։<br><br>
+      <code>auth</code>-ը չնույնականացված օգտագործողին ուղարկում է <code>login</code> անունով ուղի, որը դեռ չունենք։ Մուտքի էջը կավելանա Դաս 21-ում Fortify-ի հետ։<br><br>
+      Մինչ այդ ադմինը բաց է — ճիշտ ինչպես Դաս 11-ում։ Նույն կանոնը՝ <strong>միայն լոկալ, երբեք հրապարակված</strong>։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Http/Controllers/Admin/ProductController.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+
+<span class="k">namespace</span> <span class="t">App\Http\Controllers\Admin</span>;
+
+<span class="k">use</span> <span class="t">App\Http\Controllers\Controller</span>;
+<span class="k">use</span> <span class="t">Illuminate\Http\Request</span>;
+<span class="k">use</span> <span class="t">Illuminate\Support\Facades\DB</span>;
+
+<span class="k">class</span> <span class="t">ProductController</span> <span class="k">extends</span> <span class="t">Controller</span>
+{
+    <span class="k">public function</span> <span class="f">index</span>()
+    {
+        <span class="c">// Ադմինը տեսնում է նաև անջատվածները (Դաս 11-ի getAllProducts) ⭐</span>
+        <span class="n">$products</span> = <span class="t">DB</span>::<span class="f">table</span>(<span class="s">'products as p'</span>)
+            -&gt;<span class="f">leftJoin</span>(<span class="s">'categories as c'</span>, <span class="s">'c.id'</span>, <span class="s">'='</span>, <span class="s">'p.category_id'</span>)
+            -&gt;<span class="f">select</span>(<span class="s">'p.id'</span>, <span class="s">'p.name'</span>, <span class="s">'p.price'</span>, <span class="s">'p.stock'</span>, <span class="s">'p.is_active'</span>, <span class="s">'c.name as category_name'</span>)
+            -&gt;<span class="f">orderByDesc</span>(<span class="s">'p.created_at'</span>)
+            -&gt;<span class="f">paginate</span>(<span class="n">20</span>);
+
+        <span class="k">return</span> <span class="f">view</span>(<span class="s">'admin.products.index'</span>, <span class="f">compact</span>(<span class="s">'products'</span>));
+    }
+
+    <span class="k">public function</span> <span class="f">create</span>()
+    {
+        <span class="k">return</span> <span class="f">view</span>(<span class="s">'admin.products.form'</span>, [
+            <span class="s">'product'</span>    =&gt; <span class="k">null</span>,
+            <span class="s">'categories'</span> =&gt; <span class="t">DB</span>::<span class="f">table</span>(<span class="s">'categories'</span>)-&gt;<span class="f">orderBy</span>(<span class="s">'name'</span>)-&gt;<span class="f">get</span>(),
+        ]);
+    }
+
+    <span class="k">public function</span> <span class="f">edit</span>(<span class="k">string</span> <span class="n">$product</span>)
+    {
+        <span class="n">$row</span> = <span class="t">DB</span>::<span class="f">table</span>(<span class="s">'products'</span>)-&gt;<span class="f">find</span>((<span class="k">int</span>) <span class="n">$product</span>);
+
+        <span class="f">abort_if</span>(<span class="n">$row</span> === <span class="k">null</span>, <span class="n">404</span>);
+
+        <span class="k">return</span> <span class="f">view</span>(<span class="s">'admin.products.form'</span>, [
+            <span class="s">'product'</span>    =&gt; <span class="n">$row</span>,
+            <span class="s">'categories'</span> =&gt; <span class="t">DB</span>::<span class="f">table</span>(<span class="s">'categories'</span>)-&gt;<span class="f">orderBy</span>(<span class="s">'name'</span>)-&gt;<span class="f">get</span>(),
+        ]);
+    }
+
+    <span class="k">public function</span> <span class="f">store</span>(<span class="t">Request</span> <span class="n">$request</span>)
+    {
+        <span class="c">// Դաս 21 — $request-&gt;validate() և Eloquent-ով ստեղծում</span>
+        <span class="f">dd</span>(<span class="n">$request</span>-&gt;<span class="f">method</span>(), <span class="n">$request</span>-&gt;<span class="f">except</span>(<span class="s">'_token'</span>));
+    }
+
+    <span class="k">public function</span> <span class="f">update</span>(<span class="t">Request</span> <span class="n">$request</span>, <span class="k">string</span> <span class="n">$product</span>)
+    {
+        <span class="c">// Դաս 21</span>
+        <span class="f">dd</span>(<span class="n">$request</span>-&gt;<span class="f">method</span>(), <span class="n">$product</span>, <span class="n">$request</span>-&gt;<span class="f">except</span>(<span class="s">'_token'</span>));
+    }
+
+    <span class="k">public function</span> <span class="f">destroy</span>(<span class="k">string</span> <span class="n">$product</span>)
+    {
+        <span class="c">// Դաս 20 — փափուկ ջնջում Eloquent-ով</span>
+        <span class="f">dd</span>(<span class="s">'DELETE'</span>, <span class="n">$product</span>);
+    }
+}</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ <code>dd()</code>, ոչ իրական պահպանում</span>
+      <p>Պահպանումը պահանջում է վալիդացիա (Դաս 21) և, ամենից լավ, Eloquent (Դաս 20)։ Մինչ այդ գրել այն <code>DB::table</code>-ով՝ նշանակում է կրկնել Դաս 11-ը և հետո ջնջել։<br><br>
+      <code>dd()</code>-ն այստեղ ծառայում է որպես ստուգում․ կտեսնես, որ ֆորման իսկապես հասնում է ճիշտ մեթոդին, և <code>$request-&gt;method()</code>-ը ասում է <code>PUT</code>, թեև ֆորման ուղարկվել է POST-ով։ Ինչպես՝ ներքևում։<br><br>
+      Իսկ <code>string $product</code>-ը Դաս 20-ում կդառնա <code>Product $product</code>՝ և Laravel-ը ինքը կգտնի ապրանքը բազայում (route model binding)։</p>
+    </div>
+
+    <h3>Մեկ ֆորմա՝ երկու ուղու համար</h3>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>resources/views/admin/products/form.blade.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">@extends</span>(<span class="s">'layouts.app'</span>)
+
+<span class="k">@section</span>(<span class="s">'title'</span>, <span class="n">$product</span> ? <span class="s">'Խմբագրում'</span> : <span class="s">'Նոր ապրանք'</span>)
+
+<span class="k">@section</span>(<span class="s">'content'</span>)
+<span class="p">&lt;</span><span class="t">section</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-50 w-md-100"</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">h1</span> <span class="f">class</span>=<span class="s">"mb-30"</span><span class="p">&gt;</span>{{ <span class="n">$product</span> ? <span class="s">'Խմբագրում'</span> : <span class="s">'Նոր ապրանք'</span> }}<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">form</span> <span class="f">method</span>=<span class="s">"post"</span>
+          <span class="f">action</span>=<span class="s">"{{ $product ? route('admin.products.update', $product-&gt;id) : route('admin.products.store') }}"</span><span class="p">&gt;</span>
+        <span class="k">@csrf</span>
+        <span class="k">@if</span> (<span class="n">$product</span>)
+            <span class="k">@method</span>(<span class="s">'PUT'</span>)          <span class="c">{{-- ⭐ միակ տարբերությունը --}}</span>
+        <span class="k">@endif</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"name"</span><span class="p">&gt;</span>Անվանում<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">input</span> <span class="f">id</span>=<span class="s">"name"</span> <span class="f">name</span>=<span class="s">"name"</span> <span class="f">class</span>=<span class="s">"input"</span> <span class="f">value</span>=<span class="s">"{{ $product-&gt;name ?? '' }}"</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"price"</span><span class="p">&gt;</span>Գին (֏)<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">input</span> <span class="f">id</span>=<span class="s">"price"</span> <span class="f">name</span>=<span class="s">"price"</span> <span class="f">type</span>=<span class="s">"number"</span> <span class="f">min</span>=<span class="s">"1"</span> <span class="f">class</span>=<span class="s">"input"</span>
+                   <span class="f">value</span>=<span class="s">"{{ $product-&gt;price ?? '' }}"</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"category_id"</span><span class="p">&gt;</span>Կատեգորիա<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">select</span> <span class="f">id</span>=<span class="s">"category_id"</span> <span class="f">name</span>=<span class="s">"category_id"</span> <span class="f">class</span>=<span class="s">"input"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">option</span> <span class="f">value</span>=<span class="s">""</span><span class="p">&gt;</span>— առանց կատեգորիայի —<span class="p">&lt;/</span><span class="t">option</span><span class="p">&gt;</span>
+                <span class="k">@foreach</span> (<span class="n">$categories</span> <span class="k">as</span> <span class="n">$c</span>)
+                    <span class="p">&lt;</span><span class="t">option</span> <span class="f">value</span>=<span class="s">"{{ $c-&gt;id }}"</span>
+                        <span class="k">@selected</span>((<span class="k">int</span>) (<span class="n">$product</span>-&gt;<span class="n">category_id</span> ?? <span class="n">0</span>) === (<span class="k">int</span>) <span class="n">$c</span>-&gt;<span class="n">id</span>)<span class="p">&gt;</span>
+                        {{ <span class="n">$c</span>-&gt;<span class="n">name</span> }}
+                    <span class="p">&lt;/</span><span class="t">option</span><span class="p">&gt;</span>
+                <span class="k">@endforeach</span>
+            <span class="p">&lt;/</span><span class="t">select</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">label</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"checkbox"</span> <span class="f">name</span>=<span class="s">"is_active"</span> <span class="f">value</span>=<span class="s">"1"</span> <span class="k">@checked</span>(<span class="n">$product</span>-&gt;<span class="n">is_active</span> ?? <span class="k">true</span>)<span class="p">&gt;</span>
+                Ակտիվ
+            <span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"btn btn--primary"</span><span class="p">&gt;</span>{{ <span class="n">$product</span> ? <span class="s">'Պահպանել'</span> : <span class="s">'Ավելացնել'</span> }}<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">form</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+<span class="k">@endsection</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag"><code>@method('PUT')</code> — ինչու է պետք</span>
+      <p>HTML ֆորման կարող է ուղարկել <strong>միայն GET կամ POST</strong>։ <code>&lt;form method="put"&gt;</code>-ը բրաուզերը պարզապես կվերածի GET-ի։<br><br>
+      <code>@method('PUT')</code>-ը գեներացնում է <code>&lt;input type="hidden" name="_method" value="PUT"&gt;</code>։ Laravel-ը տեսնում է POST <code>_method=PUT</code>-ով և վարվում է դրա հետ որպես PUT։ Սա կոչվում է method spoofing։<br><br>
+      JS-ի <code>fetch</code>-ը նման խնդիր չունի — այն կարող է ուղարկել ցանկացած մեթոդ ուղիղ (Դաս 17)։</p>
+    </div>
+
+          </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Ի՞նչ է փախցնում Blade-ը</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դեպք</th><th>Ապահո՞վ է</th><th>Դաս</th></tr>
+      <tr><td><code>&lt;h3&gt;{{ $x }}&lt;/h3&gt;</code></td><td>✅</td><td>5</td></tr>
+      <tr><td><code>alt="{{ $x }}"</code> — չակերտներով</td><td>✅</td><td>5</td></tr>
+      <tr><td><code>alt={{ $x }}</code> — առանց չակերտների</td><td>❌ <code>x onerror=...</code></td><td>5</td></tr>
+      <tr><td><code>href="{{ $url }}"</code></td><td>❌ <code>javascript:</code></td><td>5</td></tr>
+      <tr><td><code>{!! $x !!}</code></td><td>❌ միայն վստահելի HTML</td><td>5</td></tr>
+      <tr><td><code>&lt;script&gt;let p = @json($p);&lt;/script&gt;</code></td><td>✅</td><td>5</td></tr>
+      <tr><td><code>&lt;script&gt;let n = "{{ $x }}";&lt;/script&gt;</code></td><td>⚠️ սխալ գործիք</td><td>5</td></tr>
+      <tr><td><code>@section('title', $x)</code></td><td>✅ նույնպես փախցվում է</td><td>—</td></tr>
+      <tr><td>Կոմպոնենտի <code>$attributes</code></td><td>✅ արժեքները փախցվում են</td><td>—</td></tr>
+    </table>
+    </div>
+
+                <div class="warn note">
+      <span class="tag"><code>{!! !!}</code>-ի միակ օրինական օգտագործումը</span>
+      <p>Դաս 5-ում <code>$content</code>-ը չէր անցնում <code>e()</code>-ով, որովհետև այն արդեն մեր գեներացրած HTML էր։ Blade-ում <code>@yield</code>-ը և <code>{{ $slot }}</code>-ը ինքնին լուծում են այդ հարցը՝ դրանք չեն կրկնակի փախցնում։<br><br>
+      Ուստի <code>{!! !!}</code>-ի կարիքը գրեթե չկա։ Եթե այն հայտնվում է code review-ում, առաջին հարցը՝ <strong>«որտեղի՞ց է եկել այս HTML-ը»</strong>։ Եթե պատասխանը «բազայից» կամ «օգտագործողից» է՝ դա XSS է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Դասարանական</h2>
+
+    <div class="tree">resources/views/
+├── layouts/
+│   └── app.blade.php            ← @yield, @stack
+├── partials/
+│   ├── header.blade.php         ← $cartCount (composer)
+│   └── footer.blade.php
+├── components/
+│   └── product-card.blade.php   ← &lt;x-product-card&gt;
+├── products/
+│   ├── index.blade.php
+│   └── show.blade.php
+├── cart/
+│   ├── index.blade.php
+│   └── _add-form.blade.php
+└── admin/
+    └── products/
+        ├── index.blade.php
+        └── form.blade.php       ← create + edit
+
+app/
+├── Services/Cart.php
+├── helpers.php                  ← safe_url()
+├── Providers/AppServiceProvider.php
+└── Http/Controllers/
+    ├── ProductController.php
+    ├── CartController.php
+    └── Admin/ProductController.php</div>
+
+    <ol>
+      <li>Ստեղծիր <code>layouts/app.blade.php</code>-ը, <code>partials/header</code> և <code>footer</code>, և վերաշարադրիր Դաս 18-ի երկու շաբլոնը <code>@extends</code>-ով</li>
+      <li>Ստեղծիր <code>&lt;x-product-card&gt;</code>-ը <code>make:component ProductCard --view</code>-ով</li>
+      <li>Ստեղծիր <code>App\Services\Cart</code>, <code>CartController</code>-ը և <code>View::composer</code>-ը <code>$cartCount</code>-ի համար</li>
+      <li>Ավելացրու զամբյուղի ուղիները, պատճենիր <code>cart.js</code>-ը <code>public/js/</code> և փոխիր հասցեն ու սխալի տողը</li>
+      <li>Ստեղծիր <code>Admin/ProductController</code>-ը <code>--resource</code>-ով, ուղիները խմբով և <code>admin/products/index</code> ու <code>form</code> շաբլոնները</li>
+    </ol>
+
+    <div class="warn note">
+      <span class="tag">Հինգ պարտադիր փորձարկում</span>
+      <p><strong>1.</strong> Հանիր վերջակետը՝ <code>product="$p"</code>։ Կարդա սխալի հաղորդագրությունը և գտիր, ինչու է այն ցույց տալիս կոմպոնենտի ֆայլը։<br>
+      <strong>2.</strong> Փոխարինիր <code>View::composer</code>-ը <code>View::share</code>-ով <code>boot()</code>-ում։ Ավելացրու ապրանք զամբյուղ։ Հաշվիչը փոխվե՞ց։ Վերադարձրու composer-ը։<br>
+      <strong>3.</strong> Բացիր <code>/admin/products/1/edit</code>, սեղմիր «Պահպանել»։ <code>dd()</code>-ն պիտի ցույց տա <code>"PUT"</code>։ DevTools → Network-ում ստուգիր, որ իրական մեթոդը POST է։<br>
+      <strong>4.</strong> <code>DELETE /cart/items/abc</code> <code>curl</code>-ով → 404, ոչ 500 (<code>whereNumber</code>)։<br>
+      <strong>5.</strong> Անջատիր JS-ը և սեղմիր «Գնել» → էջը վերբեռնվում է, flash հաղորդագրությունը երևում է, հաշվիչը աճել է ⭐</p>
+    </div>
+
+      </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ավարտիր դասարանականի 5 քայլը և հինգ փորձարկումը։ Ուղարկիր սքրինշոթներ։</li>
+      <li>Գրիր <code>cart/index.blade.php</code>՝ զամբյուղի տողերը, «Հանել» կոճակ (<code>@method('DELETE')</code>) և ընդհանուր գումար։</li>
+      <li>Ստեղծիր <code>&lt;x-alert type="success"&gt;</code> կոմպոնենտ <code>@props</code>-ով և <code>{{ $slot }}</code>-ով։ Փոխարինիր layout-ի flash բլոկը դրանով։</li>
+      <li>Հրապարակիր էջավորման շաբլոնները և հարմարեցրու դրանք <code>main.css</code>-ի <code>.btn</code> դասերին։</li>
+      <li>Բացիր <code>storage/framework/views/</code>-ը և գտիր <code>e(</code>-ն քո քարտի կոմպիլացված ֆայլում։</li>
+      <li>Տեղափոխիր Դաս 5-ի <code>safeUrl()</code>-ը <code>app/helpers.php</code> (<code>composer.json</code> → <code>"autoload": {"files": [...]}</code>, ապա <code>composer dump-autoload</code>) և ստուգիր <code>javascript:</code> հասցեով։</li>
+      <li>Խնդրիր AI-ին գրել Blade կոմպոնենտ։ Ստուգիր՝ օգտագործո՞ւմ է Tailwind դասեր։ Կա՞ <code>{!! !!}</code>։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Հիշելու թերթիկ</h2>
+
+    <h3>Քո կոդը → Blade</h3>
+    <div class="tree">&lt;?= e($x) ?&gt;               →  {{ $x }}
+&lt;?= $content ?&gt;            →  @yield('content')
+render() / page()           →  view('x', [...])
+require 'partials/x.php'    →  @include('partials.x')
+csrf_field()                →  @csrf
+new X(...) bootstrap.php-ում →  autowiring
+flash('success', ...)       →  back()->with('success', ...)
+isCurrent('/x')             →  request()->routeIs('x')</div>
+
+    <h3>Դիրեկտիվներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>@extends</code> / <code>@section</code> / <code>@yield</code></td><td>Layout</td></tr>
+      <tr><td><code>@push</code> / <code>@stack</code></td><td>Էջին հատուկ JS/CSS</td></tr>
+      <tr><td><code>@include('x', [...])</code></td><td>Մասնակի շաբլոն</td></tr>
+      <tr><td><code>&lt;x-name :prop="$v"&gt;</code></td><td>Կոմպոնենտ ⭐ վերջակետ</td></tr>
+      <tr><td><code>@props([...])</code></td><td>Կոմպոնենտի մուտքերը</td></tr>
+      <tr><td><code>{{ $slot }}</code></td><td>Բովանդակությունը թեգերի միջև</td></tr>
+      <tr><td><code>$attributes-&gt;class([...])</code></td><td>Դասերի միավորում</td></tr>
+      <tr><td><code>@csrf</code> / <code>@method('PUT')</code></td><td>Token / method spoofing</td></tr>
+      <tr><td><code>@selected</code> / <code>@checked</code></td><td>Ընտրված վիճակ</td></tr>
+      <tr><td><code>@json($x)</code></td><td>Տվյալ JS-ի համար ⭐</td></tr>
+      <tr><td><code>{{-- --}}</code></td><td>Մեկնաբանություն, որ չի հասնում բրաուզերին</td></tr>
+    </table>
+    </div>
+
+    <h3>Resource-ի յոթ ուղին</h3>
+    <div class="tree">GET     /products              index
+GET     /products/create       create
+POST    /products              store
+GET     /products/{product}    show
+GET     /products/{product}/edit  edit
+PUT     /products/{product}    update
+DELETE  /products/{product}    destroy</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Մեկ layout, էջերը՝ <code>@extends</code>-ով</li>
+      <li>Ապրանքի քարտը մեկ կոմպոնենտ է, ոչ կրկնվող HTML</li>
+      <li>Կոմպոնենտներին օբյեկտները փոխանցվում են <code>:</code>-ով</li>
+      <li><code>$cartCount</code>-ը գալիս է composer-ից, ոչ <code>View::share</code>-ից</li>
+      <li>Կոնտրոլերների կախվածությունները կոնստրուկտորում են</li>
+      <li>Ադմին ուղիները <code>Route::resource</code>-ով և <code>admin.</code> անունով</li>
+      <li>Ֆորմաները ունեն <code>@csrf</code>, խմբագրումը՝ <code>@method('PUT')</code></li>
+      <li>Շաբլոններում չկա <code>{!! !!}</code> օգտագործողի տվյալով</li>
+      <li>Մեկնաբանությունները <code>{{-- --}}</code> են</li>
+      <li>«Գնել»-ը աշխատում է առանց JS-ի</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչ է դառնում <code>{{ $x }}</code>-ը կոմպիլացված ֆայլում</li>
+      <li>Գիտե՞մ, ինչու <code>View::share</code>-ը <code>boot()</code>-ում չի տեսնում սեսիան</li>
+      <li>Հասկանո՞ւմ եմ <code>:product</code>-ի և <code>product</code>-ի տարբերությունը</li>
+      <li>Կարո՞ղ եմ բացատրել method spoofing-ը</li>
+      <li>Գիտե՞մ <code>bind</code>-ի և <code>singleton</code>-ի տարբերությունը</li>
+      <li>Կարո՞ղ եմ նշել երկու դեպք, երբ <code>{{ }}</code>-ը բավարար չէ</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p><strong>Eloquent</strong> — Դաս 9, 11, 12 և 14-ի հայելին։ <code>DB::table</code>-ը կփոխարինվի մոդելներով, և կվերադառնան <code>finalPrice()</code>-ը և Դաս 12-ի մնացած մեթոդները։<br><br>
+      Կտեսնենք միգրացիաները՝ <code>schema.sql</code>-ի տարբերակված տեսքը, կապերը (<code>belongsTo</code>, <code>hasMany</code>), <code>with()</code>-ը Դաս 14-ի N+1 խնդրի դեմ, <code>$fillable</code>-ը Դաս 17-ի mass assignment-ի դեմ, փափուկ ջնջումը (Դաս 11) և route model binding-ը, որով <code>string $product</code>-ը կդառնա <code>Product $product</code>։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>PHP Բլոկ · Դաս 19 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHP Դաս 14 — Composer, namespace, Repository</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>PHP Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">PHP Դաս 14 · 2 ժամ</p>
+  <h1>Composer, namespace, Repository</h1>
+  <p class="lede"><code>bootstrap.php</code>-ում 10 <code>require_once</code> է։ SQL-ը ցրված է գլոբալ ֆունկցիաներում։ Այսօր երկուսն էլ լուծում ենք — և կառուցում այն շերտը, որը Դաս 20-ում Eloquent-ը կփոխարինի։</p>
+
+  <div class="facts">
+    <span>Բլոկ 3 · Դաս 14 / 24</span>
+    <span>Autoload · PSR-4</span>
+    <span>Repository օրինաչափություն</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Composer — ի՞նչ է և ինչո՞ւ</li>
+      <li><code>namespace</code> և <code>use</code></li>
+      <li>PSR-4 autoload</li>
+      <li>Փաթեթների տեղադրում</li>
+      <li>Repository օրինաչափությունը</li>
+      <li>Կախվածությունը՝ կոնստրուկտորով</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Composer</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Composer անում է</th></tr>
+      <tr><td><strong>Autoload</strong> — դասերը բեռնվում են ինքնաբերաբար ⭐</td></tr>
+      <tr><td>Փաթեթների տեղադրում՝ <code>composer require</code></td></tr>
+      <tr><td>Տարբերակների կառավարում</td></tr>
+      <tr><td>Կախվածությունների կախվածությունների լուծում</td></tr>
+      <tr><td>Սկրիպտներ՝ <code>composer test</code></td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">JS-ից եկածների համար</span>
+      <p>Composer = npm PHP-ի համար։<br><br>
+      <code>composer.json</code> ≈ <code>package.json</code><br>
+      <code>composer.lock</code> ≈ <code>package-lock.json</code><br>
+      <code>vendor/</code> ≈ <code>node_modules/</code><br>
+      <code>packagist.org</code> ≈ <code>npmjs.com</code><br><br>
+      Կարևոր տարբերություն՝ <code>vendor/</code>-ը գնում է <code>.gitignore</code>, իսկ <code>composer.lock</code>-ը՝ <strong>պահոցում է</strong>։ Այն երաշխավորում է, որ ամեն ոք ունի ճիշտ նույն տարբերակները։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>սկիզբ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># Laragon-ում Composer-ն արդեն կա</span>
+composer --version
+
+<span class="c"># Նախագծի թղթապանակում</span>
+cd C:\laragon\www\technomarket
+composer init</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>composer.json</div><button class="copy">Պատճենել</button></div>
+<pre><code>{
+    <span class="s">"name"</span>: <span class="s">"meri/technomarket"</span>,
+    <span class="s">"description"</span>: <span class="s">"Ուսումնական նախագիծ՝ տեխնիկայի կատալոգ"</span>,
+    <span class="s">"type"</span>: <span class="s">"project"</span>,
+    <span class="s">"require"</span>: {
+        <span class="s">"php"</span>: <span class="s">"&gt;=8.2"</span>
+    },
+    <span class="s">"autoload"</span>: {
+        <span class="s">"psr-4"</span>: {
+            <span class="s">"App\\"</span>: <span class="s">"src/"</span>
+        }
+    },
+    <span class="s">"config"</span>: {
+        <span class="s">"sort-packages"</span>: <span class="k">true</span>
+    }
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>գեներացնել autoloader-ը</div><button class="copy">Պատճենել</button></div>
+<pre><code>composer dump-autoload
+
+<span class="c"># Ստեղծվում է vendor/autoload.php</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag"><code>.gitignore</code></span>
+      <p><code>vendor/</code><br>
+      <code>config.php</code><br>
+      <code>uploads/*</code><br><br>
+      <code>vendor/</code>-ը երբեք չի գնում պահոցում — այն վերականգնվում է <code>composer install</code>-ով <code>composer.lock</code>-ից։ Հակառակ դեպքում պահոցը կաճի հարյուրավոր մեգաբայթերով։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Namespace</h2>
+
+    <div class="warn note">
+      <span class="tag">Խնդիրը, որ լուծում է</span>
+      <p>Երկու դաս նույն անունով չեն կարող գոյություն ունենալ։<br><br>
+      Քո <code>Product</code>-ը և գրադարանի <code>Product</code>-ը → ֆատալ սխալ։ Քո <code>Cart</code>-ը և վճարային համակարգի <code>Cart</code>-ը → նույնը։<br><br>
+      Namespace-ը տալիս է դասին <strong>լրիվ անուն</strong>՝ <code>App\Models\Product</code>, և բախումն անհնար է դառնում։</p>
+    </div>
+
+    <div class="tree">PSR-4 — ուղին և անվանատարածքը համընկնում են
+
+  composer.json՝  "App\\" : "src/"
+
+  src/Models/Product.php          →  App\Models\Product
+  src/Models/PhysicalProduct.php  →  App\Models\PhysicalProduct
+  src/Repositories/
+      ProductRepository.php       →  App\Repositories\ProductRepository
+  src/Support/Database.php        →  App\Support\Database</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Models/Product.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">namespace</span> <span class="t">App\Models</span>;      <span class="c">// ⭐ առաջին հրահանգը ֆայլում</span>
+
+<span class="k">abstract class</span> <span class="t">Product</span>
+{
+    <span class="c">// ...</span>
+}</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>use — ներմուծում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">namespace</span> <span class="t">App\Repositories</span>;
+
+<span class="k">use</span> <span class="t">App\Models\Product</span>;
+<span class="k">use</span> <span class="t">App\Models\PhysicalProduct</span>;
+<span class="k">use</span> <span class="t">PDO</span>;                      <span class="c">// ⚠️ ներկառուցված դասերն էլ ⭐</span>
+
+<span class="k">class</span> <span class="t">ProductRepository</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>(<span class="k">private</span> <span class="t">PDO</span> <span class="n">$pdo</span>) {}
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ամենահաճախ սխալը namespace-ի հետ</span>
+      <p>Namespace-ի ներսում <code>new PDO()</code>-ն փնտրվում է որպես <code>App\Repositories\PDO</code> — և չի գտնվում։<br><br>
+      Երկու ելք՝ <code>use PDO;</code> վերևում, կամ <code>new \PDO()</code> շեղագծով։<br><br>
+      Նույնը՝ <code>DateTime</code>, <code>Exception</code>, <code>PDOException</code>, բոլոր ներկառուցված դասերի հետ։ Ֆունկցիաների հետ (<code>count</code>, <code>trim</code>) այս խնդիրը չկա։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ամեն ինչի փոխարեն՝ մեկ տող</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ❌ Առաջ — bootstrap.php</span>
+<span class="k">require_once</span> <span class="n">__DIR__</span> . <span class="s">'/src/Product.php'</span>;
+<span class="k">require_once</span> <span class="n">__DIR__</span> . <span class="s">'/src/PhysicalProduct.php'</span>;
+<span class="k">require_once</span> <span class="n">__DIR__</span> . <span class="s">'/src/DigitalProduct.php'</span>;
+<span class="k">require_once</span> <span class="n">__DIR__</span> . <span class="s">'/src/Cart.php'</span>;
+<span class="k">require_once</span> <span class="n">__DIR__</span> . <span class="s">'/src/Shippable.php'</span>;
+<span class="c">// ... ևս 5 տող</span>
+
+<span class="c">// ✅ Հետո</span>
+<span class="k">require_once</span> <span class="n">__DIR__</span> . <span class="s">'/vendor/autoload.php'</span>;</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչպես է աշխատում</span>
+      <p>Երբ PHP-ն հանդիպում է անհայտ դասի, կանչում է autoloader-ը։ Composer-ը վերցնում է լրիվ անունը, փոխարինում է <code>App\</code>-ը <code>src/</code>-ով, <code>\</code>-ը՝ <code>/</code>-ով, ավելացնում <code>.php</code> և բեռնում ֆայլը։<br><br>
+      <code>App\Models\Product</code> → <code>src/Models/Product.php</code><br><br>
+      Դա նշանակում է, որ <strong>ուղին և անվանատարածքը պիտի ճշգրիտ համընկնեն</strong>, ներառյալ ռեգիստրը։ Windows-ում սխալ ռեգիստրը կաշխատի, Linux-ում՝ ոչ — Դաս 3-ի նույն թակարդը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Փաթեթներ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>օգտակար օրինակ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># Կոնֆիգուրացիա .env ֆայլից</span>
+composer require vlucas/phpdotenv
+
+<span class="c"># Միայն զարգացման համար</span>
+composer require --dev phpunit/phpunit</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>.env — Laravel-ի ձևը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># .env  (→ .gitignore)</span>
+DB_HOST=127.0.0.1
+DB_NAME=technomarket
+DB_USER=root
+DB_PASS=
+APP_DEBUG=true
+
+<span class="c"># .env.example  (→ պահոցում)</span>
+DB_HOST=127.0.0.1
+DB_NAME=
+DB_USER=
+DB_PASS=
+APP_DEBUG=false</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>օգտագործում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="n">$dotenv</span> = <span class="t">Dotenv\Dotenv</span>::<span class="f">createImmutable</span>(<span class="n">__DIR__</span>);
+<span class="n">$dotenv</span>-&gt;<span class="f">load</span>();
+
+<span class="n">$host</span> = <span class="n">$_ENV</span>[<span class="s">'DB_HOST'</span>];
+<span class="n">$name</span> = <span class="n">$_ENV</span>[<span class="s">'DB_NAME'</span>];</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Փաթեթի ընտրության չորս չափանիշ</span>
+      <p><strong>1.</strong> Ե՞րբ է վերջին թարմացումը — մեկ տարուց ավելի հին նախագիծը ռիսկ է<br>
+      <strong>2.</strong> Քանի՞ ներբեռնում — packagist-ում երևում է<br>
+      <strong>3.</strong> Բա՞ց խնդիրները — շատ չլուծված issue-ներ վատ նշան են<br>
+      <strong>4.</strong> Կախվածությունների քանակը — մեկ փոքր գործառույթի համար 20 փաթեթ բերելը վնասակար է<br><br>
+      Եվ ամենակարևորը՝ <strong>ամեն կախվածություն պատասխանատվություն է</strong>։ Այն կարող է լքվել, կարող է կոտրվել, կարող է ունենալ խոցելիություն։ Երբ գործառույթը 20 տող է, գրիր ինքդ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Repository</h2>
+
+    <div class="warn note">
+      <span class="tag">Ընթացիկ խնդիրը</span>
+      <p><code>products.php</code>-ում գլոբալ ֆունկցիաներ են՝ <code>getProducts()</code>, <code>getProduct()</code>, <code>createProduct()</code>։<br><br>
+      Ամեն մեկը կանչում է <code>db()</code>։ Ամեն մեկը գլոբալ է։ Փորձարկելը՝ անհնար։ Փոխարինելը՝ նույնպես։<br><br>
+      Իսկ գլխավորը՝ SQL-ը ցրված է, և չկա մեկ տեղ, որտեղ նայելով կհասկանաս, ինչպես է նախագիծը աշխատում տվյալների հետ։</p>
+    </div>
+
+    <div class="tree">Շերտերի բաժանում
+
+  Կոնտրոլեր  →  ի՞նչ պիտի կատարվի
+      │
+  Repository →  ինչպե՞ս ստանալ/պահել տվյալները
+      │
+  PDO        →  բազա
+      │
+  Model      →  ի՞նչ է ապրանքը և ինչ կարող է անել</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Repositories/ProductRepository.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">namespace</span> <span class="t">App\Repositories</span>;
+
+<span class="k">use</span> <span class="t">App\Models\Product</span>;
+<span class="k">use</span> <span class="t">PDO</span>;
+
+<span class="k">class</span> <span class="t">ProductRepository</span>
+{
+    <span class="k">private const</span> <span class="n">SORT_MAP</span> = [
+        <span class="s">'price_asc'</span>  =&gt; <span class="s">'final_price ASC'</span>,
+        <span class="s">'price_desc'</span> =&gt; <span class="s">'final_price DESC'</span>,
+        <span class="s">'name'</span>       =&gt; <span class="s">'p.name ASC'</span>,
+        <span class="s">'newest'</span>     =&gt; <span class="s">'p.created_at DESC'</span>,
+    ];
+
+    <span class="k">private const</span> <span class="n">SELECT_FIELDS</span> = <span class="s">"
+        p.id, p.name, p.slug, p.specs, p.image,
+        p.price, p.discount, p.stock, p.weight, p.type,
+        c.name AS category_name,
+        ROUND(p.price * (100 - p.discount) / 100) AS final_price
+    "</span>;
+
+    <span class="k">public function</span> <span class="f">__construct</span>(<span class="k">private</span> <span class="t">PDO</span> <span class="n">$pdo</span>) {}
+
+    <span class="c">// ---------- Read ----------</span>
+
+    <span class="c">/** @return Product[] */</span>
+    <span class="k">public function</span> <span class="f">all</span>(
+        ?<span class="k">int</span> <span class="n">$categoryId</span> = <span class="k">null</span>,
+        <span class="k">string</span> <span class="n">$sort</span> = <span class="s">'price_asc'</span>,
+        <span class="k">int</span> <span class="n">$limit</span> = <span class="n">12</span>,
+        <span class="k">int</span> <span class="n">$offset</span> = <span class="n">0</span>
+    ): <span class="k">array</span> {
+
+        <span class="n">$order</span> = <span class="k">self</span>::<span class="n">SORT_MAP</span>[<span class="n">$sort</span>] ?? <span class="k">self</span>::<span class="n">SORT_MAP</span>[<span class="s">'price_asc'</span>];
+
+        <span class="n">$where</span> = [<span class="s">'p.is_active = 1'</span>];
+
+        <span class="k">if</span> (<span class="n">$categoryId</span> !== <span class="k">null</span>) {
+            <span class="n">$where</span>[] = <span class="s">'p.category_id = :category'</span>;
+        }
+
+        <span class="n">$sql</span> = <span class="s">"SELECT "</span> . <span class="k">self</span>::<span class="n">SELECT_FIELDS</span> . <span class="s">"
+                FROM products p
+                LEFT JOIN categories c ON c.id = p.category_id
+                WHERE "</span> . <span class="f">implode</span>(<span class="s">' AND '</span>, <span class="n">$where</span>) . <span class="s">"
+                ORDER BY {<span class="n">$order</span>}
+                LIMIT :limit OFFSET :offset"</span>;
+
+        <span class="n">$stmt</span> = <span class="n">$this</span>-&gt;<span class="n">pdo</span>-&gt;<span class="f">prepare</span>(<span class="n">$sql</span>);
+
+        <span class="k">if</span> (<span class="n">$categoryId</span> !== <span class="k">null</span>) {
+            <span class="n">$stmt</span>-&gt;<span class="f">bindValue</span>(<span class="s">':category'</span>, <span class="n">$categoryId</span>, <span class="t">PDO</span>::<span class="n">PARAM_INT</span>);
+        }
+
+        <span class="n">$stmt</span>-&gt;<span class="f">bindValue</span>(<span class="s">':limit'</span>,  <span class="n">$limit</span>,  <span class="t">PDO</span>::<span class="n">PARAM_INT</span>);
+        <span class="n">$stmt</span>-&gt;<span class="f">bindValue</span>(<span class="s">':offset'</span>, <span class="n">$offset</span>, <span class="t">PDO</span>::<span class="n">PARAM_INT</span>);
+        <span class="n">$stmt</span>-&gt;<span class="f">execute</span>();
+
+        <span class="k">return</span> <span class="f">array_map</span>(
+            <span class="k">fn</span>(<span class="k">array</span> <span class="n">$row</span>): <span class="t">Product</span> =&gt; <span class="t">Product</span>::<span class="f">fromRow</span>(<span class="n">$row</span>),
+            <span class="n">$stmt</span>-&gt;<span class="f">fetchAll</span>()
+        );
+    }
+
+    <span class="k">public function</span> <span class="f">find</span>(<span class="k">int</span> <span class="n">$id</span>): ?<span class="t">Product</span>
+    {
+        <span class="n">$stmt</span> = <span class="n">$this</span>-&gt;<span class="n">pdo</span>-&gt;<span class="f">prepare</span>(
+            <span class="s">"SELECT "</span> . <span class="k">self</span>::<span class="n">SELECT_FIELDS</span> . <span class="s">"
+             FROM products p
+             LEFT JOIN categories c ON c.id = p.category_id
+             WHERE p.id = :id AND p.is_active = 1"</span>
+        );
+
+        <span class="n">$stmt</span>-&gt;<span class="f">execute</span>([<span class="s">'id'</span> =&gt; <span class="n">$id</span>]);
+        <span class="n">$row</span> = <span class="n">$stmt</span>-&gt;<span class="f">fetch</span>();
+
+        <span class="k">return</span> <span class="n">$row</span> ? <span class="t">Product</span>::<span class="f">fromRow</span>(<span class="n">$row</span>) : <span class="k">null</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">findBySlug</span>(<span class="k">string</span> <span class="n">$slug</span>): ?<span class="t">Product</span>
+    {
+        <span class="n">$stmt</span> = <span class="n">$this</span>-&gt;<span class="n">pdo</span>-&gt;<span class="f">prepare</span>(
+            <span class="s">"SELECT "</span> . <span class="k">self</span>::<span class="n">SELECT_FIELDS</span> . <span class="s">"
+             FROM products p
+             LEFT JOIN categories c ON c.id = p.category_id
+             WHERE p.slug = :slug AND p.is_active = 1"</span>
+        );
+
+        <span class="n">$stmt</span>-&gt;<span class="f">execute</span>([<span class="s">'slug'</span> =&gt; <span class="n">$slug</span>]);
+        <span class="n">$row</span> = <span class="n">$stmt</span>-&gt;<span class="f">fetch</span>();
+
+        <span class="k">return</span> <span class="n">$row</span> ? <span class="t">Product</span>::<span class="f">fromRow</span>(<span class="n">$row</span>) : <span class="k">null</span>;
+    }
+
+    <span class="c">/** @param int[] $ids  @return Product[] */</span>
+    <span class="k">public function</span> <span class="f">findMany</span>(<span class="k">array</span> <span class="n">$ids</span>): <span class="k">array</span>
+    {
+        <span class="k">if</span> (<span class="n">$ids</span> === []) {
+            <span class="k">return</span> [];
+        }
+
+        <span class="n">$in</span> = <span class="f">implode</span>(<span class="s">','</span>, <span class="f">array_fill</span>(<span class="n">0</span>, <span class="f">count</span>(<span class="n">$ids</span>), <span class="s">'?'</span>));
+
+        <span class="n">$stmt</span> = <span class="n">$this</span>-&gt;<span class="n">pdo</span>-&gt;<span class="f">prepare</span>(
+            <span class="s">"SELECT "</span> . <span class="k">self</span>::<span class="n">SELECT_FIELDS</span> . <span class="s">"
+             FROM products p
+             LEFT JOIN categories c ON c.id = p.category_id
+             WHERE p.id IN (<span class="n">$in</span>)"</span>
+        );
+
+        <span class="n">$stmt</span>-&gt;<span class="f">execute</span>(<span class="f">array_values</span>(<span class="n">$ids</span>));
+
+        <span class="k">return</span> <span class="f">array_map</span>(
+            <span class="k">fn</span>(<span class="k">array</span> <span class="n">$row</span>): <span class="t">Product</span> =&gt; <span class="t">Product</span>::<span class="f">fromRow</span>(<span class="n">$row</span>),
+            <span class="n">$stmt</span>-&gt;<span class="f">fetchAll</span>()
+        );
+    }
+
+    <span class="k">public function</span> <span class="f">count</span>(?<span class="k">int</span> <span class="n">$categoryId</span> = <span class="k">null</span>): <span class="k">int</span>
+    {
+        <span class="n">$sql</span> = <span class="s">"SELECT COUNT(*) FROM products WHERE is_active = 1"</span>;
+        <span class="n">$params</span> = [];
+
+        <span class="k">if</span> (<span class="n">$categoryId</span> !== <span class="k">null</span>) {
+            <span class="n">$sql</span> .= <span class="s">" AND category_id = :category"</span>;
+            <span class="n">$params</span>[<span class="s">'category'</span>] = <span class="n">$categoryId</span>;
+        }
+
+        <span class="n">$stmt</span> = <span class="n">$this</span>-&gt;<span class="n">pdo</span>-&gt;<span class="f">prepare</span>(<span class="n">$sql</span>);
+        <span class="n">$stmt</span>-&gt;<span class="f">execute</span>(<span class="n">$params</span>);
+
+        <span class="k">return</span> (<span class="k">int</span>) <span class="n">$stmt</span>-&gt;<span class="f">fetchColumn</span>();
+    }
+
+    <span class="c">// ---------- Write ----------</span>
+
+    <span class="k">public function</span> <span class="f">create</span>(<span class="k">array</span> <span class="n">$data</span>): <span class="k">int</span>
+    {
+        <span class="c">// ... Դաս 11-ի INSERT-ը</span>
+        <span class="k">return</span> (<span class="k">int</span>) <span class="n">$this</span>-&gt;<span class="n">pdo</span>-&gt;<span class="f">lastInsertId</span>();
+    }
+
+    <span class="k">public function</span> <span class="f">update</span>(<span class="k">int</span> <span class="n">$id</span>, <span class="k">array</span> <span class="n">$data</span>): <span class="k">bool</span>
+    {
+        <span class="c">// ... Դաս 11-ի UPDATE-ը</span>
+    }
+
+    <span class="k">public function</span> <span class="f">archive</span>(<span class="k">int</span> <span class="n">$id</span>): <span class="k">bool</span>
+    {
+        <span class="n">$stmt</span> = <span class="n">$this</span>-&gt;<span class="n">pdo</span>-&gt;<span class="f">prepare</span>(
+            <span class="s">"UPDATE products SET is_active = 0 WHERE id = :id LIMIT 1"</span>
+        );
+
+        <span class="k">return</span> <span class="n">$stmt</span>-&gt;<span class="f">execute</span>([<span class="s">'id'</span> =&gt; <span class="n">$id</span>]);
+    }
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ի՞նչ ձեռք բերեցինք</span>
+      <p><strong>1.</strong> Ամբողջ SQL-ը մեկ ֆայլում է։ Ուզում ես տեսնել, ինչպես է նախագիծը դիմում ապրանքներին — բացիր <code>ProductRepository</code>-ն։<br><br>
+      <strong>2.</strong> <code>SELECT_FIELDS</code>-ը հաստատուն է։ Նոր դաշտ ավելացնելիս փոխում ես մեկ տեղում, ոչ չորսում։<br><br>
+      <strong>3.</strong> <code>PDO</code>-ն գալիս է կոնստրուկտորով, ոչ գլոբալ <code>db()</code>-ից → կարելի է փոխարինել փորձարկումների համար։<br><br>
+      <strong>4.</strong> Անունները կարճացան՝ <code>$products-&gt;all()</code>, <code>$products-&gt;find(5)</code> — համատեքստն արդեն օբյեկտում է։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ Repository-ն չի վերադարձնում զանգվածներ</span>
+      <p>Ամեն մեթոդ վերադարձնում է <code>Product</code> օբյեկտ կամ <code>Product[]</code>։<br><br>
+      Դա նշանակում է, որ բազայի կառուցվածքը <strong>մնում է Repository-ի ներսում</strong>։ Կոնտրոլերը և շաբլոնները չգիտեն, որ դաշտը կոչվում է <code>category_name</code>, ոչ <code>categoryName</code>։<br><br>
+      Վաղը կարող ես վերանվանել աղյուսակի դաշտը կամ ամբողջովին փոխել SQL-ը՝ և ոչ մի շաբլոն չի կոտրվի։ Փոխվում է միայն <code>fromRow()</code>-ը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Կախվածությունը՝ կոնստրուկտորով</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երկու մոտեցում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ❌ Դասը ինքն է ստեղծում կախվածությունը</span>
+<span class="k">class</span> <span class="t">ProductRepository</span>
+{
+    <span class="k">private</span> <span class="t">PDO</span> <span class="n">$pdo</span>;
+
+    <span class="k">public function</span> <span class="f">__construct</span>()
+    {
+        <span class="n">$this</span>-&gt;<span class="n">pdo</span> = <span class="f">db</span>();     <span class="c">// ամուր կապված գլոբալ ֆունկցիային</span>
+    }
+}
+
+<span class="c">// ✅ Կախվածությունը փոխանցվում է դրսից</span>
+<span class="k">class</span> <span class="t">ProductRepository</span>
+{
+    <span class="k">public function</span> <span class="f">__construct</span>(<span class="k">private</span> <span class="t">PDO</span> <span class="n">$pdo</span>) {}
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Կապ Դաս 3-ի հետ</span>
+      <p>Հիշո՞ւմ ես․ <em>«ֆունկցիաները չեն տեսնում արտաքին փոփոխականները, և դա լավ է — կարդալով ստորագրությունը գիտես, ինչից է կախված»</em>։<br><br>
+      Կախվածությունների ներարկումը նույն սկզբունքն է դասերի մակարդակում։ <code>__construct(PDO $pdo)</code>-ն բացահայտ ասում է․ «ինձ բազա է պետք»։<br><br>
+      Իսկ <code>db()</code>-ի ներսում կանչելը հենց այն թաքնված գլոբալ վիճակն է, որից Դաս 3-ում խուսափում էինք։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Support/Database.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">namespace</span> <span class="t">App\Support</span>;
+
+<span class="k">use</span> <span class="t">PDO</span>;
+<span class="k">use</span> <span class="t">PDOException</span>;
+<span class="k">use</span> <span class="t">RuntimeException</span>;
+
+<span class="k">class</span> <span class="t">Database</span>
+{
+    <span class="k">public static function</span> <span class="f">connect</span>(<span class="k">array</span> <span class="n">$config</span>): <span class="t">PDO</span>
+    {
+        <span class="n">$dsn</span> = <span class="f">sprintf</span>(
+            <span class="s">'mysql:host=%s;dbname=%s;charset=%s'</span>,
+            <span class="n">$config</span>[<span class="s">'host'</span>],
+            <span class="n">$config</span>[<span class="s">'name'</span>],
+            <span class="n">$config</span>[<span class="s">'charset'</span>] ?? <span class="s">'utf8mb4'</span>
+        );
+
+        <span class="k">try</span> {
+            <span class="k">return</span> <span class="k">new</span> <span class="t">PDO</span>(<span class="n">$dsn</span>, <span class="n">$config</span>[<span class="s">'user'</span>], <span class="n">$config</span>[<span class="s">'password'</span>], [
+                <span class="t">PDO</span>::<span class="n">ATTR_ERRMODE</span>            =&gt; <span class="t">PDO</span>::<span class="n">ERRMODE_EXCEPTION</span>,
+                <span class="t">PDO</span>::<span class="n">ATTR_DEFAULT_FETCH_MODE</span> =&gt; <span class="t">PDO</span>::<span class="n">FETCH_ASSOC</span>,
+                <span class="t">PDO</span>::<span class="n">ATTR_EMULATE_PREPARES</span>   =&gt; <span class="k">false</span>,
+            ]);
+        } <span class="k">catch</span> (<span class="t">PDOException</span> <span class="n">$e</span>) {
+            <span class="k">error_log</span>(<span class="s">'DB connection failed: '</span> . <span class="n">$e</span>-&gt;<span class="f">getMessage</span>());
+
+            <span class="k">throw</span> <span class="k">new</span> <span class="t">RuntimeException</span>(<span class="s">'Տեխնիկական խնդիր։'</span>, <span class="n">500</span>, <span class="n">$e</span>);
+        }
+    }
+}</code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Ամեն ինչ միասին</h2>
+    <p>Եթե ամեն ինչ փոխանցվում է կոնստրուկտորով, ինչ-որ մեկը պիտի հավաքի այդ ամենը։ Մեր նախագծում դա <code>bootstrap.php</code>-ն է՝ մեկ տեղ, որտեղ գրված է ամեն <code>new</code>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>bootstrap.php — վերջնական</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">use</span> <span class="t">App\Support\Database</span>;
+<span class="k">use</span> <span class="t">App\Repositories\ProductRepository</span>;
+<span class="k">use</span> <span class="t">App\Repositories\CategoryRepository</span>;
+<span class="k">use</span> <span class="t">App\Repositories\OrderRepository</span>;
+<span class="k">use</span> <span class="t">App\Services\Cart</span>;
+
+<span class="k">require_once</span> <span class="n">__DIR__</span> . <span class="s">'/vendor/autoload.php'</span>;   <span class="c">// ⭐ մեկ տող</span>
+
+<span class="c">// --- Կոնֆիգուրացիա ---</span>
+<span class="n">$dotenv</span> = <span class="t">Dotenv\Dotenv</span>::<span class="f">createImmutable</span>(<span class="n">__DIR__</span>);
+<span class="n">$dotenv</span>-&gt;<span class="f">load</span>();
+
+<span class="n">$debug</span> = (<span class="n">$_ENV</span>[<span class="s">'APP_DEBUG'</span>] ?? <span class="s">'false'</span>) === <span class="s">'true'</span>;
+
+<span class="k">ini_set</span>(<span class="s">'display_errors'</span>, <span class="n">$debug</span> ? <span class="s">'1'</span> : <span class="s">'0'</span>);
+<span class="k">error_reporting</span>(<span class="n">$debug</span> ? <span class="k">E_ALL</span> : <span class="n">0</span>);
+
+<span class="c">// --- Սեսիա ---</span>
+<span class="k">session_start</span>([
+    <span class="s">'cookie_httponly'</span> =&gt; <span class="k">true</span>,
+    <span class="s">'cookie_samesite'</span> =&gt; <span class="s">'Lax'</span>,
+    <span class="s">'use_strict_mode'</span> =&gt; <span class="k">true</span>,
+]);
+
+<span class="c">// --- Կախվածությունների հավաքում ---</span>
+<span class="n">$pdo</span> = <span class="t">Database</span>::<span class="f">connect</span>([
+    <span class="s">'host'</span>     =&gt; <span class="n">$_ENV</span>[<span class="s">'DB_HOST'</span>],
+    <span class="s">'name'</span>     =&gt; <span class="n">$_ENV</span>[<span class="s">'DB_NAME'</span>],
+    <span class="s">'user'</span>     =&gt; <span class="n">$_ENV</span>[<span class="s">'DB_USER'</span>],
+    <span class="s">'password'</span> =&gt; <span class="n">$_ENV</span>[<span class="s">'DB_PASS'</span>],
+]);
+
+<span class="n">$products</span>   = <span class="k">new</span> <span class="t">ProductRepository</span>(<span class="n">$pdo</span>);
+<span class="n">$categories</span> = <span class="k">new</span> <span class="t">CategoryRepository</span>(<span class="n">$pdo</span>);
+<span class="n">$orders</span>     = <span class="k">new</span> <span class="t">OrderRepository</span>(<span class="n">$pdo</span>);
+
+<span class="n">$_SESSION</span>[<span class="s">'cart'</span>] ??= [];
+<span class="n">$cart</span> = <span class="k">new</span> <span class="t">Cart</span>(<span class="n">$_SESSION</span>[<span class="s">'cart'</span>]);</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.php — մաքուր</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">require_once</span> <span class="n">__DIR__</span> . <span class="s">'/bootstrap.php'</span>;
+
+<span class="n">$sort</span>       = <span class="n">$_GET</span>[<span class="s">'sort'</span>] ?? <span class="s">'price_asc'</span>;
+<span class="n">$page</span>       = <span class="f">max</span>(<span class="n">1</span>, (<span class="k">int</span>) (<span class="n">$_GET</span>[<span class="s">'page'</span>] ?? <span class="n">1</span>));
+<span class="n">$categoryId</span> = <span class="f">filter_var</span>(<span class="n">$_GET</span>[<span class="s">'category'</span>] ?? <span class="k">null</span>, <span class="k">FILTER_VALIDATE_INT</span>) ?: <span class="k">null</span>;
+
+<span class="n">$perPage</span> = <span class="n">12</span>;
+
+<span class="n">$content</span> = <span class="f">render</span>(<span class="s">'pages/home'</span>, [
+    <span class="s">'products'</span>   =&gt; <span class="n">$products</span>-&gt;<span class="f">all</span>(<span class="n">$categoryId</span>, <span class="n">$sort</span>, <span class="n">$perPage</span>, (<span class="n">$page</span> - <span class="n">1</span>) * <span class="n">$perPage</span>),
+    <span class="s">'total'</span>      =&gt; <span class="n">$products</span>-&gt;<span class="f">count</span>(<span class="n">$categoryId</span>),
+    <span class="s">'categories'</span> =&gt; <span class="n">$categories</span>-&gt;<span class="f">all</span>(),
+    <span class="s">'sort'</span>       =&gt; <span class="n">$sort</span>,
+    <span class="s">'page'</span>       =&gt; <span class="n">$page</span>,
+    <span class="s">'perPage'</span>    =&gt; <span class="n">$perPage</span>,
+]);
+
+<span class="k">echo</span> <span class="f">render</span>(<span class="s">'layout'</span>, [
+    <span class="s">'title'</span>   =&gt; <span class="s">'ՏեխնոՄարկետ — տեխնիկա Երևանում'</span>,
+    <span class="s">'content'</span> =&gt; <span class="n">$content</span>,
+    <span class="s">'cart'</span>    =&gt; <span class="n">$cart</span>,
+]);</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Խորացված · <code>bootstrap.php</code>-ը Laravel-ի սաղմն է</span>
+      <p>Laravel-ում ճիշտ նույն բանն է կատարվում, բայց ավտոմատ․ <strong>service container</strong>-ը նայում է կոնստրուկտորի տիպերին և ինքն է ստեղծում կախվածությունները։<br><br>
+      Երբ Դաս 19-ում գրես <code>public function index(ProductRepository $products)</code>, Laravel-ը ինքը կստեղծի <code>ProductRepository</code>-ն և կփոխանցի <code>PDO</code>-ն դրան։<br><br>
+      Դու հիմա ձեռքով անում ես այն, ինչ ֆրեյմվորքը կանի ինքնաբերաբար։ Հենց դրա համար է այս հերթականությունը՝ մեխանիզմը, հետո գործիքը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Դասարանական</h2>
+
+    <div class="tree">technomarket/
+├── composer.json
+├── composer.lock
+├── vendor/                    ← .gitignore
+├── .env                       ← .gitignore
+├── .env.example
+├── .gitignore
+│
+├── bootstrap.php
+├── index.php
+├── product.php
+├── contact.php
+├── cart.php
+├── admin/
+│
+├── src/
+│   ├── Models/
+│   │   ├── Product.php
+│   │   ├── PhysicalProduct.php
+│   │   ├── DigitalProduct.php
+│   │   ├── Category.php
+│   │   └── Shippable.php
+│   ├── Repositories/
+│   │   ├── ProductRepository.php
+│   │   ├── CategoryRepository.php
+│   │   └── OrderRepository.php
+│   ├── Services/
+│   │   ├── Cart.php
+│   │   └── Validator.php
+│   └── Support/
+│       ├── Database.php
+│       └── Helpers.php
+│
+└── views/</div>
+
+    <ol>
+      <li>Գործարկիր <code>composer init</code>, ավելացրու PSR-4 autoload՝ <code>App\</code> → <code>src/</code>, ստեղծիր <code>.gitignore</code></li>
+      <li>Տեղափոխիր դասերը <code>src/Models/</code>, ավելացրու <code>namespace</code> և գործարկիր <code>composer dump-autoload</code></li>
+      <li>Փոխարինիր բոլոր <code>require_once</code>-երը մեկով</li>
+      <li>Ստեղծիր <code>ProductRepository</code>-ն և <code>CategoryRepository</code>-ն, տեղափոխիր SQL-ը</li>
+      <li>Տեղադրիր <code>phpdotenv</code>, տեղափոխիր կոնֆիգը <code>.env</code> և թարմացրու <code>bootstrap.php</code>-ը</li>
+    </ol>
+
+    <div class="warn note">
+      <span class="tag">Երբ դասը «չի գտնվում»</span>
+      <p><strong>1.</strong> <code>namespace</code>-ը համընկնո՞ւմ է թղթապանակի ուղուն, ներառյալ ռեգիստրը<br>
+      <strong>2.</strong> Ֆայլի անունը ճիշտ նույնն է՞, ինչ դասի անունը<br>
+      <strong>3.</strong> Կանչե՞լ ես <code>composer dump-autoload</code> նոր թղթապանակ ավելացնելուց հետո<br>
+      <strong>4.</strong> Կա՞ <code>use</code> ներկառուցված դասերի համար՝ <code>PDO</code>, <code>DateTime</code><br><br>
+      Այս չորսը ծածկում են սխալների գրեթե 100%-ը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ավարտիր դասարանականի 5 քայլը։</li>
+      <li>Ցուցադրիր <code>use PDO;</code>-ի բացակայության սխալը։</li>
+      <li>Փոխիր թղթապանակի ռեգիստրը (<code>models/</code> փոքրատառով) և տես, աշխատո՞ւմ է Windows-ում։ Բացատրիր, ինչու Linux-ում չի աշխատի։</li>
+      <li>Ստեղծիր <code>OrderRepository</code> տրանզակցիայով (Դաս 11)։</li>
+      <li>Տեղափոխիր <code>Validator</code>-ը դասի՝ <code>App\Services\Validator</code>։</li>
+      <li>Ցուցադրիր, ինչու <code>SELECT_FIELDS</code> հաստատունը օգտակար է՝ ավելացրու նոր դաշտ։</li>
+      <li>Փոխարինիր <code>PDO</code>-ն Repository-ի կոնստրուկտորում փորձնական օբյեկտով և ցուցադրիր, որ դա հնարավոր է։</li>
+      <li>Գտիր packagist-ում փաթեթ նկարների չափափոխման համար։ Գնահատիր չորս չափանիշով։ Արժե՞ օգտագործել, թե՞ գրել ինքդ։</li>
+      <li>Համեմատիր հին և նոր <code>index.php</code>-ը։ Քանի՞ տող, քանի՞ գլոբալ ֆունկցիա։</li>
+      <li>Խնդրիր AI-ին վերանայել քո կառուցվածքը։ Առաջարկե՞ց այլ բաժանում։ Համաձա՞յն ես։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հրաման / գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>composer init</code></td><td>Ստեղծել <code>composer.json</code></td></tr>
+      <tr><td><code>composer require x/y</code></td><td>Տեղադրել փաթեթ</td></tr>
+      <tr><td><code>composer install</code></td><td>Վերականգնել <code>lock</code>-ից</td></tr>
+      <tr><td><code>composer dump-autoload</code></td><td>Թարմացնել autoloader-ը ⭐</td></tr>
+      <tr><td><code>namespace App\Models;</code></td><td>Առաջին հրահանգը ⭐</td></tr>
+      <tr><td><code>use App\Models\Product;</code></td><td>Ներմուծում</td></tr>
+      <tr><td><code>use PDO;</code></td><td>Ներկառուցված դասերի համար ⭐</td></tr>
+      <tr><td><code>\PDO</code></td><td>Այլընտրանք՝ շեղագծով</td></tr>
+    </table>
+    </div>
+
+    <h3>PSR-4</h3>
+    <div class="tree">"App\\": "src/"
+
+App\Models\Product        →  src/Models/Product.php
+App\Repositories\OrderRepository
+                          →  src/Repositories/OrderRepository.php
+
+Ուղին և անվանատարածքը՝ ճշգրիտ համընկնում,
+ներառյալ ռեգիստրը։</div>
+
+    <h3>Շերտերը</h3>
+    <div class="tree">Model       →  ի՞նչ է օբյեկտը, ի՞նչ կարող է անել
+Repository  →  ինչպե՞ս ստանալ և պահել
+Service     →  գործարար տրամաբանություն (Cart)
+Support     →  տեխնիկական օգնականներ
+Controller  →  կապում է ամեն ինչ</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li><code>composer.json</code>-ում կա PSR-4</li>
+      <li><code>vendor/</code>, <code>.env</code>, <code>config.php</code> — <code>.gitignore</code>-ում</li>
+      <li><code>composer.lock</code>-ը պահոցում է</li>
+      <li>Կա <code>.env.example</code></li>
+      <li>Մեկ <code>require</code> ամբողջ նախագծում</li>
+      <li>Ամբողջ SQL-ը Repository-ներում է</li>
+      <li>Կախվածությունները փոխանցվում են կոնստրուկտորով</li>
+      <li>Repository-ները վերադարձնում են օբյեկտներ, ոչ զանգվածներ</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչպես է աշխատում autoload-ը</li>
+      <li>Գիտե՞մ, ինչու <code>use PDO;</code> է պետք</li>
+      <li>Հասկանո՞ւմ եմ, ինչու <code>vendor/</code>-ը չի գնում Git</li>
+      <li>Կարո՞ղ եմ բացատրել, ի՞նչ խնդիր է լուծում Repository-ն</li>
+      <li>Գիտե՞մ, ինչու կախվածությունը փոխանցվում է, ոչ ստեղծվում ներսում</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p><strong>Մինի-MVC՝ Router, Controller, View։</strong><br><br>
+      Հիմա ամեն էջ առանձին ֆայլ է՝ <code>index.php</code>, <code>product.php</code>, <code>contact.php</code>։ Հասցեներում կան <code>.php</code> ընդլայնումներ և հարցի նշաններ։<br><br>
+      Դաս 15-ում ամեն հարցում կանցնի մեկ մուտքով, հասցեները կդառնան <code>/product/noutbuq-pro-14</code>, իսկ էջերը՝ կոնտրոլեր-դասեր։ Այնտեղ վերջապես կպետք գա <code>.htaccess</code>-ը, որի մասին Դաս 1-ում խոսեցինք։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>PHP Բլոկ · Դաս 14 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

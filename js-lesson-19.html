@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 19 — Ասինխրոն JavaScript</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>JS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 19 · 2 ժամ</p>
+  <h1>Ասինխրոն JavaScript</h1>
+  <p class="lede">JS-ը մեկ բան է անում միաժամանակ։ Ուրեմն ինչպե՞ս է հնարավոր, որ էջը չսառչի, երբ սերվերից տվյալներ ենք բերում։ Այսօր բացում ենք այս գաղտնիքը։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 04, 11, 14</span>
+    <span>Բլոկ 3 · Ժամանակակից JS</span>
+    <span>Նախապատրաստում fetch-ին</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ինչո՞ւ է JS-ը «մեկ հերթով»</li>
+      <li>Ի՞նչ է կատարվում, երբ կոդը երկար է աշխատում</li>
+      <li>Event loop — իրադարձությունների հանգույցը</li>
+      <li>Callback-ներ և «callback դժոխք»</li>
+      <li><code>Promise</code> — երեք վիճակը</li>
+      <li><code>then</code>, <code>catch</code>, <code>finally</code></li>
+      <li>Խոստումների շղթա</li>
+      <li><code>Promise.all</code> և ընկերները</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Մեկ հերթ</h2>
+    <p>JavaScript-ը <strong>միաթել</strong> (single-threaded) լեզու է։ Դա նշանակում է՝ նա կարող է կատարել <em>ուղիղ մեկ</em> հրաման միաժամանակ։ Ոչ երկու։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>սովորական՝ սինխրոն կոդ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">console</span>.<span class="f">log</span>(<span class="s">"1. Առավոտ"</span>);
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">"2. Ցերեկ"</span>);
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">"3. Երեկո"</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">1. Առավոտ</span>
+<span class="r">2. Ցերեկ</span>
+<span class="r">3. Երեկո</span></pre>
+    </div>
+
+    <p>Ամեն տող սպասում է նախորդի ավարտին։ Պարզ և կանխատեսելի։ Բայց ահա խնդիրը․</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երբ կոդը երկար է աշխատում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">console</span>.<span class="f">log</span>(<span class="s">"Սկիզբ"</span>);
+
+<span class="c">// Ծանր հաշվարկ — մոտ 2 վայրկյան</span>
+<span class="k">let</span> sum = <span class="n">0</span>;
+<span class="k">for</span> (<span class="k">let</span> i = <span class="n">0</span>; i &lt; <span class="n">3000000000</span>; i++) {
+  sum += i;
+}
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">"Վերջ"</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Սկիզբ</span>
+<span class="m">(2 վայրկյան էջը սառած է)</span>
+<span class="r">Վերջ</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Այդ 2 վայրկյանում</span>
+      <p>Կոճակները չեն սեղմվում։ Անիմացիաները կանգնում են։ Սքրոլը չի աշխատում։ Տեքստը չի ընտրվում։ <strong>Ամբողջ էջը սառած է</strong>, որովհետև JS-ը զբաղված է։</p>
+    </div>
+
+    <p>Հիմա պատկերացրու՝ սերվերից տվյալներ բերելը կարող է տևել 1–3 վայրկյան։ Եթե JS-ը սպասեր, ամեն կայք անօգտագործելի կլիներ։ Ուրեմն ինչպե՞ս է դա լուծված։</p>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Event loop</h2>
+    <p>JS-ը մենակ չէ։ Բրաուզերն ունի լրացուցիչ մեխանիզմներ, որոնք աշխատում են <strong>զուգահեռ</strong>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>մեխանիզմը</div><button class="copy">Պատճենել</button></div>
+<pre><code>   ┌──────────────┐
+   │  Call Stack  │  ← JS-ի միակ հերթը
+   │  (կույտ)     │
+   └──────┬───────┘
+          │  «սա երկար է, վերցրու»
+          ▼
+   ┌──────────────┐
+   │  Web APIs    │  ← բրաուզերի մասը (ոչ JS)
+   │  ժամաչափեր   │     աշխատում է զուգահեռ
+   │  ցանց, DOM   │
+   └──────┬───────┘
+          │  «պատրաստ է»
+          ▼
+   ┌──────────────┐
+   │    Queue     │  ← հերթ՝ սպասող callback-ներ
+   └──────┬───────┘
+          │
+     Event Loop  ← «Կույտը դատա՞րկ է։ Ուրեմն վերցնում եմ հերթից»
+          │
+          └──────► Call Stack</code></pre>
+    </div>
+
+    <p>Ահա ամբողջ գաղտնիքը։ Երբ գրում ես <code>setTimeout(fn, 2000)</code>․</p>
+    <ol>
+      <li>JS-ը <strong>չի սպասում</strong>։ Նա հանձնում է ժամաչափը բրաուզերին և անմիջապես գնում առաջ։</li>
+      <li>Բրաուզերը հաշվում է 2 վայրկյանը <em>զուգահեռ</em>։</li>
+      <li>Ժամանակը լրանալիս callback-ը գնում է <strong>հերթ</strong>։</li>
+      <li>Event loop-ը սպասում է, մինչև Call Stack-ը դատարկվի, և միայն այդ ժամանակ վերցնում է հերթից։</li>
+    </ol>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Դաս 14-ի օրինակը՝ հիմա պարզ է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">console</span>.<span class="f">log</span>(<span class="s">"1"</span>);
+
+<span class="f">setTimeout</span>(() =&gt; <span class="f">console</span>.<span class="f">log</span>(<span class="s">"2"</span>), <span class="n">2000</span>);
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">"3"</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">1</span>
+<span class="r">3</span>
+<span class="m">(2 վրկ անց)</span>
+<span class="r">2</span></pre>
+    </div>
+
+    <h3>Ամենահայտնի հարցազրույցի հարցը</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>setTimeout 0 միլիվայրկյան</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">console</span>.<span class="f">log</span>(<span class="s">"1"</span>);
+
+<span class="f">setTimeout</span>(() =&gt; <span class="f">console</span>.<span class="f">log</span>(<span class="s">"2"</span>), <span class="n">0</span>);   <span class="c">// ← զրո</span>
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">"3"</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">1</span>
+<span class="r">3</span>
+<span class="r">2</span></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ 2-ը կրկին վերջում է</span>
+      <p><code>0</code>-ն նշանակում է <em>«հնարավորինս շուտ»</em>, ոչ <em>«հենց հիմա»</em>։ Callback-ը միևնույն է անցնում է հերթով։ Իսկ event loop-ը հերթից վերցնում է <strong>միայն այն ժամանակ</strong>, երբ ամբողջ սինխրոն կոդն ավարտվել է։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Հիշիր այս կանոնը</span>
+      <p><strong>Ամբողջ սինխրոն կոդն աշխատում է առաջինը։ Ասինխրոնը՝ միշտ հետո։</strong> Անկախ ամեն ինչից։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Callback-ներ</h2>
+    <p>Դաս 6-ից գիտենք՝ callback-ը ֆունկցիա է, որ փոխանցում ենք ուրիշին։ Ասինխրոն աշխարհում դա նշանակում է՝ <em>«երբ պատրաստ լինի, կանչիր սա»</em>։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>նմանակենք սերվերի հարցում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">getUser</span>(id, callback) {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Հարցում ուղարկվեց..."</span>);
+
+  <span class="f">setTimeout</span>(() =&gt; {
+    <span class="k">const</span> user = { id, name: <span class="s">"Անի"</span> };
+    <span class="f">callback</span>(user);
+  }, <span class="n">1000</span>);
+}
+
+<span class="f">getUser</span>(<span class="n">1</span>, (user) =&gt; {
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Ստացվեց՝"</span>, user.name);
+});
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">"Ծրագիրը շարունակում է աշխատել"</span>);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Հարցում ուղարկվեց...</span>
+<span class="r">Ծրագիրը շարունակում է աշխատել</span>
+<span class="m">(1 վրկ անց)</span>
+<span class="r">Ստացվեց՝ Անի</span></pre>
+    </div>
+
+    <h3>Սխալների մշակում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>error-first սովորույթ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">getUser</span>(id, callback) {
+  <span class="f">setTimeout</span>(() =&gt; {
+    <span class="k">if</span> (id &lt;= <span class="n">0</span>) {
+      <span class="f">callback</span>(<span class="s">"Սխալ id"</span>, <span class="k">null</span>);      <span class="c">// առաջինը՝ սխալը</span>
+      <span class="k">return</span>;
+    }
+    <span class="f">callback</span>(<span class="k">null</span>, { id, name: <span class="s">"Անի"</span> });
+  }, <span class="n">1000</span>);
+}
+
+<span class="f">getUser</span>(-<span class="n">5</span>, (error, user) =&gt; {
+  <span class="k">if</span> (error) {
+    <span class="f">console</span>.<span class="f">error</span>(<span class="s">"Չստացվեց՝"</span>, error);
+    <span class="k">return</span>;
+  }
+  <span class="f">console</span>.<span class="f">log</span>(user.name);
+});</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="e">Չստացվեց՝ Սխալ id</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Callback դժոխք</h2>
+    <p>Խնդիրը սկսվում է, երբ գործողությունները պիտի կատարվեն <strong>հերթականությամբ</strong>․ նախ վերցնել օգտագործողին, հետո նրա պատվերները, հետո ամեն պատվերի ապրանքները։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>💀 callback hell</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">getUser</span>(<span class="n">1</span>, (err, user) =&gt; {
+  <span class="k">if</span> (err) <span class="k">return</span> <span class="f">console</span>.<span class="f">error</span>(err);
+
+  <span class="f">getOrders</span>(user.id, (err, orders) =&gt; {
+    <span class="k">if</span> (err) <span class="k">return</span> <span class="f">console</span>.<span class="f">error</span>(err);
+
+    <span class="f">getProducts</span>(orders[<span class="n">0</span>].id, (err, products) =&gt; {
+      <span class="k">if</span> (err) <span class="k">return</span> <span class="f">console</span>.<span class="f">error</span>(err);
+
+      <span class="f">getReviews</span>(products[<span class="n">0</span>].id, (err, reviews) =&gt; {
+        <span class="k">if</span> (err) <span class="k">return</span> <span class="f">console</span>.<span class="f">error</span>(err);
+
+        <span class="f">console</span>.<span class="f">log</span>(reviews);
+      });
+    });
+  });
+});</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ է սա վատ</span>
+      <p>Կոդը գնում է <strong>աջ</strong>, ոչ ներքև։ Սխալի մշակումը կրկնվում է ամեն մակարդակում։ Ամեն նոր քայլ ավելացնում է մեկ մակարդակ։ Կարդալ, փոփոխել կամ փորձարկել գրեթե անհնար է։ Այս ձևը ստացել է իր անունը՝ <em>«callback դժոխք»</em> կամ «մահվան բուրգ»։</p>
+    </div>
+
+    <p>Հենց այս խնդիրը լուծելու համար 2015-ին JS-ում հայտնվեցին <strong>խոստումները</strong>։</p>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Promise — խոստում</h2>
+    <p>Պատվիրում ես սուրճ։ Բարիստան <em>անմիջապես</em> տալիս է քեզ չեկ։ Չեկը սուրճ չէ — դա <strong>խոստում է</strong>, որ սուրճը կլինի։ Դու գնում ես նստելու, ոչ թե կանգնում վաճառասեղանի մոտ։</p>
+
+    <p>Հետո երկու բան կարող է լինել․ քեզ տալիս են սուրճը (<strong>հաջողություն</strong>), կամ ասում են՝ «կաթը վերջացավ» (<strong>ձախողում</strong>)։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Վիճակ</th><th>Նշանակություն</th></tr>
+      <tr><td><code>pending</code></td><td>Սպասում է — դեռ հայտնի չէ</td></tr>
+      <tr><td><code>fulfilled</code></td><td>Կատարվեց — կա արդյունք</td></tr>
+      <tr><td><code>rejected</code></td><td>Ձախողվեց — կա սխալ</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Կարևոր</span>
+      <p>Վիճակը փոխվում է <strong>ուղիղ մեկ անգամ</strong>՝ <code>pending</code>-ից դեպի <code>fulfilled</code> կամ <code>rejected</code>։ Հետ ճանապարհ չկա։ Խոստումը «նորից չի սպասում»։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ստեղծել խոստում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> promise = <span class="k">new</span> <span class="f">Promise</span>((resolve, reject) =&gt; {
+  <span class="c">// Այս կոդն աշխատում է ԱՆՄԻՋԱՊԵՍ</span>
+  <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Պատրաստում ենք սուրճը..."</span>);
+
+  <span class="f">setTimeout</span>(() =&gt; {
+    <span class="k">const</span> success = <span class="k">true</span>;
+
+    <span class="k">if</span> (success) {
+      <span class="f">resolve</span>(<span class="s">"☕ Ձեր սուրճը"</span>);      <span class="c">// հաջողություն</span>
+    } <span class="k">else</span> {
+      <span class="f">reject</span>(<span class="s">"Կաթը վերջացավ"</span>);       <span class="c">// ձախողում</span>
+    }
+  }, <span class="n">2000</span>);
+});
+
+<span class="f">console</span>.<span class="f">log</span>(promise);</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Պատրաստում ենք սուրճը...</span>
+<span class="m">Promise { &lt;pending&gt; }</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">resolve և reject</span>
+      <p>Դրանք ֆունկցիաներ են, որոնք JS-ն ինքն է տալիս քեզ։ Անունները սովորույթ են — կարող էիր գրել <code>ok</code> և <code>fail</code>։ <code>resolve</code>-ը կանչելով ասում ես՝ «պատրաստ է, ահա արդյունքը»։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>then · catch · finally</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>արդյունքի ստացում</div><button class="copy">Պատճենել</button></div>
+<pre><code>promise
+  .<span class="f">then</span>(result =&gt; {
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Ստացվեց՝"</span>, result);
+  })
+  .<span class="f">catch</span>(error =&gt; {
+    <span class="f">console</span>.<span class="f">error</span>(<span class="s">"Սխալ՝"</span>, error);
+  })
+  .<span class="f">finally</span>(() =&gt; {
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Ամեն դեպքում կատարվում է"</span>);
+  });</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Ստացվեց՝ ☕ Ձեր սուրճը</span>
+<span class="r">Ամեն դեպքում կատարվում է</span></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Մեթոդ</th><th>Ե՞րբ է աշխատում</th><th>Տիպիկ կիրառություն</th></tr>
+      <tr><td><code>.then()</code></td><td><code>resolve</code>-ի դեպքում</td><td>Ցուցադրել տվյալները</td></tr>
+      <tr><td><code>.catch()</code></td><td><code>reject</code>-ի կամ սխալի դեպքում</td><td>Ցույց տալ սխալի հաղորդագրություն</td></tr>
+      <tr><td><code>.finally()</code></td><td>Միշտ</td><td>Թաքցնել բեռնման ցուցիչը</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>իրական օրինակ՝ բեռնման ցուցիչ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> loader = document.<span class="f">querySelector</span>(<span class="s">".loader"</span>);
+
+loader.classList.<span class="f">add</span>(<span class="s">"is-visible"</span>);
+
+<span class="f">getUser</span>(<span class="n">1</span>)
+  .<span class="f">then</span>(user =&gt; {
+    document.<span class="f">querySelector</span>(<span class="s">".name"</span>).textContent = user.name;
+  })
+  .<span class="f">catch</span>(error =&gt; {
+    document.<span class="f">querySelector</span>(<span class="s">".error"</span>).textContent = <span class="s">"Չհաջողվեց բեռնել"</span>;
+  })
+  .<span class="f">finally</span>(() =&gt; {
+    loader.classList.<span class="f">remove</span>(<span class="s">"is-visible"</span>);   <span class="c">// և՛ հաջողության, և՛ սխալի դեպքում</span>
+  });</code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Շղթա — դժոխքի ելքը</h2>
+    <p>Ահա գլխավոր հնարքը․ <code>.then()</code>-ը <strong>վերադարձնում է նոր խոստում</strong>։ Ուստի դրանք կարելի է շարել իրար հետևից՝ առանց ներդրման։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>նույն խնդիրը՝ խոստումներով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">getUser</span>(<span class="n">1</span>)
+  .<span class="f">then</span>(user =&gt; <span class="f">getOrders</span>(user.id))
+  .<span class="f">then</span>(orders =&gt; <span class="f">getProducts</span>(orders[<span class="n">0</span>].id))
+  .<span class="f">then</span>(products =&gt; <span class="f">getReviews</span>(products[<span class="n">0</span>].id))
+  .<span class="f">then</span>(reviews =&gt; <span class="f">console</span>.<span class="f">log</span>(reviews))
+  .<span class="f">catch</span>(error =&gt; <span class="f">console</span>.<span class="f">error</span>(<span class="s">"Ինչ-որ տեղ սխալ եղավ՝"</span>, error));</code></pre>
+    </div>
+
+    <p>Համեմատիր Բաժին 04-ի բուրգի հետ։ Կոդը գնում է <strong>ներքև</strong>, ոչ աջ։ Իսկ սխալի մշակումը՝ <strong>մեկ տեղում ամբողջ շղթայի համար</strong>։</p>
+
+    <div class="warn note">
+      <span class="tag">Ամենակարևոր կանոնը</span>
+      <p><code>.then()</code>-ի ներսում <strong>պարտադիր վերադարձրու</strong> հաջորդ խոստումը։ Առանց <code>return</code>-ի շղթան կկոտրվի, և հաջորդ <code>.then()</code>-ը կստանա <code>undefined</code>։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>մոռացված return</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ❌ շղթան կոտրված է</span>
+<span class="f">getUser</span>(<span class="n">1</span>)
+  .<span class="f">then</span>(user =&gt; {
+    <span class="f">getOrders</span>(user.id);        <span class="c">// return չկա</span>
+  })
+  .<span class="f">then</span>(orders =&gt; <span class="f">console</span>.<span class="f">log</span>(orders));
+
+<span class="c">// ✅ ճիշտ</span>
+<span class="f">getUser</span>(<span class="n">1</span>)
+  .<span class="f">then</span>(user =&gt; {
+    <span class="k">return</span> <span class="f">getOrders</span>(user.id);
+  })
+  .<span class="f">then</span>(orders =&gt; <span class="f">console</span>.<span class="f">log</span>(orders));
+
+<span class="c">// ✅ նույնը՝ կարճ arrow-ով (return-ը ենթադրվում է — Դաս 4)</span>
+<span class="f">getUser</span>(<span class="n">1</span>)
+  .<span class="f">then</span>(user =&gt; <span class="f">getOrders</span>(user.id))
+  .<span class="f">then</span>(orders =&gt; <span class="f">console</span>.<span class="f">log</span>(orders));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="m">undefined</span>
+<span class="r">[{...}, {...}]</span>
+<span class="r">[{...}, {...}]</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Ֆունկցիա, որ վերադարձնում է խոստում</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>callback → Promise</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Հին ձև՝ callback-ով</span>
+<span class="k">function</span> <span class="f">getUserOld</span>(id, callback) {
+  <span class="f">setTimeout</span>(() =&gt; <span class="f">callback</span>(<span class="k">null</span>, { id, name: <span class="s">"Անի"</span> }), <span class="n">1000</span>);
+}
+
+<span class="c">// Նոր ձև՝ Promise-ով</span>
+<span class="k">function</span> <span class="f">getUser</span>(id) {
+  <span class="k">return</span> <span class="k">new</span> <span class="f">Promise</span>((resolve, reject) =&gt; {
+    <span class="f">setTimeout</span>(() =&gt; {
+      <span class="k">if</span> (id &lt;= <span class="n">0</span>) {
+        <span class="f">reject</span>(<span class="k">new</span> <span class="f">Error</span>(<span class="s">"Սխալ id"</span>));
+        <span class="k">return</span>;
+      }
+      <span class="f">resolve</span>({ id, name: <span class="s">"Անի"</span> });
+    }, <span class="n">1000</span>);
+  });
+}
+
+<span class="f">getUser</span>(<span class="n">1</span>)
+  .<span class="f">then</span>(user =&gt; <span class="f">console</span>.<span class="f">log</span>(user.name))
+  .<span class="f">catch</span>(err =&gt; <span class="f">console</span>.<span class="f">error</span>(err.message));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">Անի</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">new Error(...)</span>
+      <p><code>reject</code>-ին ավելի լավ է փոխանցել <code>Error</code> օբյեկտ, ոչ պարզ տող։ Այն պարունակում է նաև <code>.stack</code>՝ սխալի ամբողջ ճանապարհը, ինչը շատ օգնում է դեբագի ժամանակ։ Մանրամասն՝ Դաս 23-ում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>օգտակար՝ delay ֆունկցիա</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> delay = ms =&gt; <span class="k">new</span> <span class="f">Promise</span>(resolve =&gt; <span class="f">setTimeout</span>(resolve, ms));
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">"Սկիզբ"</span>);
+
+<span class="f">delay</span>(<span class="n">1000</span>)
+  .<span class="f">then</span>(() =&gt; {
+    <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Անցավ 1 վայրկյան"</span>);
+    <span class="k">return</span> <span class="f">delay</span>(<span class="n">1000</span>);
+  })
+  .<span class="f">then</span>(() =&gt; <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Անցավ 2 վայրկյան"</span>));</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>պատրաստի խոստումներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">Promise</span>.<span class="f">resolve</span>(<span class="n">42</span>).<span class="f">then</span>(v =&gt; <span class="f">console</span>.<span class="f">log</span>(v));
+<span class="f">Promise</span>.<span class="f">reject</span>(<span class="k">new</span> <span class="f">Error</span>(<span class="s">"Սխալ"</span>)).<span class="f">catch</span>(e =&gt; <span class="f">console</span>.<span class="f">log</span>(e.message));</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="r">42</span>
+<span class="r">Սխալ</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Promise.all և ընկերները</h2>
+    <p>Երբեմն մի քանի հարցում իրար կախված չեն։ Հերթով սպասելն այդ դեպքում ժամանակի վատնում է։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հերթով — 3 վայրկյան</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">getUser</span>(<span class="n">1</span>)                                  <span class="c">// 1 վրկ</span>
+  .<span class="f">then</span>(() =&gt; <span class="f">getProducts</span>())               <span class="c">// + 1 վրկ</span>
+  .<span class="f">then</span>(() =&gt; <span class="f">getCategories</span>())             <span class="c">// + 1 վրկ</span>
+  .<span class="f">then</span>(() =&gt; <span class="f">console</span>.<span class="f">log</span>(<span class="s">"Պատրաստ"</span>));</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>զուգահեռ — 1 վայրկյան ✅</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">Promise</span>.<span class="f">all</span>([
+  <span class="f">getUser</span>(<span class="n">1</span>),
+  <span class="f">getProducts</span>(),
+  <span class="f">getCategories</span>()
+])
+  .<span class="f">then</span>(([user, products, categories]) =&gt; {   <span class="c">// destructuring — Դաս 7</span>
+    <span class="f">console</span>.<span class="f">log</span>(user.name);
+    <span class="f">console</span>.<span class="f">log</span>(products.length);
+    <span class="f">console</span>.<span class="f">log</span>(categories.length);
+  })
+  .<span class="f">catch</span>(error =&gt; <span class="f">console</span>.<span class="f">error</span>(<span class="s">"Մեկը ձախողվեց՝"</span>, error));</code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Մեթոդ</th><th>Ե՞րբ է ավարտվում</th><th>Եթե մեկը ձախողվի</th></tr>
+      <tr><td><code>Promise.all</code></td><td>Երբ <strong>բոլորը</strong> հաջողվեն</td><td>Ամբողջը ձախողվում է</td></tr>
+      <tr><td><code>Promise.allSettled</code></td><td>Երբ բոլորն ավարտվեն</td><td>Ոչինչ — տալիս է բոլորի արդյունքը</td></tr>
+      <tr><td><code>Promise.race</code></td><td>Երբ <strong>առաջինն</strong> ավարտվի</td><td>Կախված է՝ ով առաջինն էր</td></tr>
+      <tr><td><code>Promise.any</code></td><td>Երբ առաջինը <strong>հաջողվի</strong></td><td>Անտեսում է ձախողվածները</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>allSettled — երբ մասնակի արդյունքն էլ է լավ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">Promise</span>.<span class="f">allSettled</span>([
+  <span class="f">Promise</span>.<span class="f">resolve</span>(<span class="s">"Ա"</span>),
+  <span class="f">Promise</span>.<span class="f">reject</span>(<span class="k">new</span> <span class="f">Error</span>(<span class="s">"Բ ձախողվեց"</span>)),
+  <span class="f">Promise</span>.<span class="f">resolve</span>(<span class="s">"Գ"</span>)
+]).<span class="f">then</span>(results =&gt; {
+  results.<span class="f">forEach</span>(r =&gt; {
+    <span class="k">if</span> (r.status === <span class="s">"fulfilled"</span>) {
+      <span class="f">console</span>.<span class="f">log</span>(<span class="s">"✓"</span>, r.value);
+    } <span class="k">else</span> {
+      <span class="f">console</span>.<span class="f">log</span>(<span class="s">"✗"</span>, r.reason.message);
+    }
+  });
+});</code></pre>
+<pre class="out"><span class="m">Console</span>
+<span class="g">✓ Ա</span>
+<span class="e">✗ Բ ձախողվեց</span>
+<span class="g">✓ Գ</span></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ե՞րբ որը</span>
+      <p>Էջի բեռնման համար բոլոր տվյալները պարտադիր են → <code>Promise.all</code>։<br>
+      Ցուցադրում ես այն, ինչ ստացվեց, մնացածի փոխարեն՝ սխալի հաղորդագրություն → <code>Promise.allSettled</code>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Խաղահրապարակ</h2>
+
+    <div class="warn note">
+      <span class="tag">Կարդա սա ուշադիր</span>
+      <p>Այս խաղահրապարակը ցույց է տալիս <strong>միայն սինխրոն</strong> տողերը։ Ասինխրոն արդյունքները չեն երևա, որովհետև դրանք գալիս են <em>ավելի ուշ</em>՝ արդեն այն բանից հետո, երբ պատուհանն արդեն նկարվել է։<br><br>
+      Եվ դա <strong>հենց այսօրվա դասն է</strong>։ Իսկական արդյունքը տես բրաուզերի Console-ում՝ <code>F12</code>։</p>
+    </div>
+
+    <div class="pg">
+      <textarea id="pgCode" spellcheck="false">// ===== ՀԵՐԹԱԿԱՆՈՒԹՅՈՒՆ =====
+console.log("1 — սինխրոն");
+
+setTimeout(() => console.log("2 — setTimeout 0"), 0);
+
+Promise.resolve().then(() => console.log("3 — Promise"));
+
+console.log("4 — սինխրոն");
+
+// Ի՞նչ ես սպասում։ Կանխագուշակիր, հետո ստուգիր F12-ով։
+// Ճիշտ պատասխանը՝ 1, 4, 3, 2
+
+// ===== ԽՈՍՏՈՒՄԻ ՎԻՃԱԿՆԵՐԸ =====
+const pending = new Promise(() => {});
+const ok = Promise.resolve("արդյունք");
+const bad = Promise.reject(new Error("սխալ"));
+bad.catch(() => {});   // որ չբողոքի
+
+console.log("--- վիճակներ ---");
+console.log(String(pending));
+console.log(String(ok));
+
+// ===== ԱՅՍ ՄԱՍՆ ԱՇԽԱՏՈՒՄ Է ԱՆՄԻՋԱՊԵՍ =====
+console.log("--- Promise-ի ներսի կոդը ---");
+const p = new Promise((resolve) => {
+  console.log("Այս տողն աշխատում է ՀԻՄԱ, ոչ հետո");
+  setTimeout(() => resolve("պատրաստ է"), 1000);
+});
+console.log("Իսկ սա՝ դրանից հետո");
+
+// Այս տողի արդյունքը կտեսնես միայն F12-ում
+p.then(v => console.log("Ստացվեց:", v));</textarea>
+      <div class="pg__actions">
+        <button class="run" id="runBtn">Կատարել</button>
+        <button class="clr" id="clrBtn">Մաքրել</button>
+      </div>
+<pre class="out" id="pgOut"><span class="m">Console</span></pre>
+    </div>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Կանխագուշակիր հերթականությունը, հետո ստուգիր․ <code>console.log("A")</code>, <code>setTimeout(...,0)</code> «B»-ով, <code>Promise.resolve().then()</code> «C»-ով, <code>console.log("D")</code>։ Բացատրիր արդյունքը մեկնաբանության մեջ։</li>
+      <li>Գրիր <code>delay(ms)</code> ֆունկցիան։ Օգտագործիր այն 3 վայրկյանանոց հետհաշվարկի համար՝ 3, 2, 1, «Մեկնարկ»։</li>
+      <li>Գրիր <code>getRandomNumber()</code>, որը 1 վայրկյան հետո <code>resolve</code> է անում պատահական թիվ։ 50% դեպքերում՝ <code>reject</code>։ Մշակիր երկու դեպքն էլ։</li>
+      <li>Գրիր <code>getUser(id)</code>, որը վերադարձնում է Promise։ Անվավեր <code>id</code>-ի դեպքում՝ <code>reject(new Error(...))</code>։</li>
+      <li>Ավելացրու <code>getOrders(userId)</code> և կապիր շղթայով՝ նախ օգտագործող, հետո նրա պատվերները։</li>
+      <li>Կրկնիր նույն շղթան, բայց մոռացիր <code>return</code>-ը մեկ <code>.then</code>-ում։ Գրիր՝ ինչ ստացվեց և ինչու։</li>
+      <li>Օգտագործիր <code>Promise.all</code>՝ երեք «հարցում» զուգահեռ։ Չափիր ժամանակը <code>console.time</code>-ով և համեմատիր հերթականի հետ։</li>
+      <li>Կրկնիր նույնը <code>Promise.allSettled</code>-ով, որտեղ մեկը ձախողվում է։ Ցուցադրիր՝ որոնք հաջողվեցին և որը՝ ոչ։</li>
+      <li>Կառուցիր էջ՝ կոճակով, բեռնման ցուցիչով և արդյունքի բլոկով։ Սեղմելիս ցուցիչը հայտնվում է, 2 վրկ հետո՝ արդյունքը։ Օգտագործիր <code>.finally()</code>։</li>
+      <li>Նույն էջում 30% հավանականությամբ նմանակիր սխալ և ցույց տուր հաղորդագրություն՝ «Կրկին փորձել» կոճակով։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 12 ============ -->
+  <section id="s12">
+    <h2><span class="num">12</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գրառում</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>new Promise((res, rej) =&gt; {})</code></td><td>Ստեղծում է խոստում</td></tr>
+      <tr><td><code>resolve(value)</code></td><td>Հաջողություն</td></tr>
+      <tr><td><code>reject(new Error(...))</code></td><td>Ձախողում</td></tr>
+      <tr><td><code>.then(v =&gt; {})</code></td><td>Հաջողության մշակիչ</td></tr>
+      <tr><td><code>.catch(e =&gt; {})</code></td><td>Սխալի մշակիչ</td></tr>
+      <tr><td><code>.finally(() =&gt; {})</code></td><td>Միշտ</td></tr>
+      <tr><td><code>Promise.resolve(v)</code></td><td>Պատրաստի հաջողված</td></tr>
+      <tr><td><code>Promise.all([...])</code></td><td>Բոլորը զուգահեռ, բոլորը պարտադիր</td></tr>
+      <tr><td><code>Promise.allSettled([...])</code></td><td>Բոլորը, անկախ արդյունքից</td></tr>
+      <tr><td><code>Promise.race([...])</code></td><td>Առաջին ավարտվածը</td></tr>
+    </table>
+    </div>
+
+    <h3>Երեք կանոն, որ պիտի հիշես</h3>
+    <ol>
+      <li><strong>Ամբողջ սինխրոն կոդն առաջինն է։</strong> Ասինխրոնը՝ միշտ հետո։</li>
+      <li><strong><code>.then</code>-ում վերադարձրու խոստումը։</strong> Առանց <code>return</code>-ի շղթան կոտրվում է։</li>
+      <li><strong>Միշտ գրիր <code>.catch</code>։</strong> Առանց դրա սխալը լուռ կկորչի։</li>
+    </ol>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել՝ ինչու <code>setTimeout(fn, 0)</code>-ը վերջում է աշխատում</li>
+      <li>Գիտե՞մ խոստումի երեք վիճակը</li>
+      <li>Հասկանո՞ւմ եմ, ինչո՞ւ է callback դժոխքը վատ</li>
+      <li>Կարո՞ղ եմ գրել ֆունկցիա, որ վերադարձնում է Promise</li>
+      <li>Գիտե՞մ տարբերությունը <code>all</code>-ի և <code>allSettled</code>-ի միջև</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p><code>fetch</code> և <code>async/await</code>։ Վերջապես կխոսենք իսկական սերվերի հետ և կստանանք իրական տվյալներ։ Իսկ <code>async/await</code>-ը թույլ կտա խոստումները գրել այնպես, ասես սովորական սինխրոն կոդ լինեն։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>JS Բլոկ · Դաս 19 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

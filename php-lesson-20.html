@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHP Դաս 20 — Laravel · Eloquent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>PHP Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">PHP Դաս 20 · 2 ժամ · Laravel 3 / 4</p>
+  <h1>Eloquent</h1>
+  <p class="lede">Դաս 9-ում գրեցիր <code>schema.sql</code>, Դաս 12-ում՝ <code>Product</code> դասը, Դաս 14-ում՝ <code>ProductRepository</code>։ Այսօր երեքը միանում են մեկ բանի մեջ՝ Eloquent մոդելի։ Եվ վերջապես շաբլոնում վերադառնում է <code>$product-&gt;finalPrice()</code>-ը։</p>
+
+  <div class="facts">
+    <span>Բլոկ 3 · Դաս 20 / 24</span>
+    <span>Դաս 9, 11, 12, 14-ի հայելին</span>
+    <span>Միգրացիաներ · կապեր · N+1</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Միգրացիաներ՝ սխեման որպես կոդ</li>
+      <li>Seeder-ներ և factory-ներ</li>
+      <li>Մոդել՝ <code>$fillable</code>, cast-եր, մեթոդներ, scope-ներ</li>
+      <li>Հարցումներ և Collection-ներ</li>
+      <li>Կապեր և N+1 խնդիրը</li>
+      <li>Mass assignment</li>
+      <li>Փափուկ ջնջում</li>
+      <li>Route model binding</li>
+      <li>API resource՝ Դաս 17-ի <code>toArray()</code>-ի փոխարեն</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Հայելին</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դու գրեցիր</th><th>Դաս</th><th>Eloquent</th></tr>
+      <tr><td><code>schema.sql</code> HeidiSQL-ում</td><td>8, 9</td><td>Միգրացիաներ՝ <code>database/migrations/</code></td></tr>
+      <tr><td><code>data.php</code>-ի ապրանքները</td><td>2</td><td>Seeder</td></tr>
+      <tr><td><code>Product::fromRow()</code> + <code>(int)</code></td><td>12</td><td><code>casts()</code></td></tr>
+      <tr><td><code>finalPrice()</code>, <code>inStock()</code></td><td>12</td><td>Նույն մեթոդները մոդելում ⭐</td></tr>
+      <tr><td><code>ProductRepository::all()</code></td><td>14</td><td><code>Product::active()-&gt;paginate()</code></td></tr>
+      <tr><td><code>findBySlug()</code> + <code>NotFoundException</code></td><td>14, 15</td><td><code>firstOrFail()</code> կամ route model binding</td></tr>
+      <tr><td><code>findMany()</code> — N+1-ի դեմ</td><td>14</td><td><code>with()</code>, <code>findMany()</code></td></tr>
+      <tr><td><code>LEFT JOIN categories</code></td><td>9</td><td><code>belongsTo</code> կապ</td></tr>
+      <tr><td><code>is_active = 0</code> որպես արխիվ</td><td>8, 11</td><td><code>SoftDeletes</code></td></tr>
+      <tr><td><code>$data</code>-ն դաշտ առ դաշտ</td><td>11, 17</td><td><code>$fillable</code></td></tr>
+      <tr><td><code>toArray()</code> բացահայտ ցանկով</td><td>17</td><td>API Resource</td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչ է իրականում Eloquent-ը</span>
+      <p>Eloquent-ը <strong>Active Record</strong> օրինաչափություն է․ մոդելը միաժամանակ <em>տվյալն է</em> (Դաս 12-ի <code>Product</code>) և <em>բազայի հետ աշխատելու միջոցը</em> (Դաս 14-ի Repository)։<br><br>
+      Մենք Դաս 14-ում դրանք դիտավորյալ բաժանեցինք։ Eloquent-ը դրանք կրկին միավորում է՝ հարմարության համար։ Դա փոխզիջում է, ոչ ճշմարտություն․ որոշ մեծ նախագծեր Laravel-ում էլ պահում են Repository շերտը։ Սովորական նախագծերի համար Active Record-ը բավական է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Միգրացիաներ</h2>
+
+    <div class="warn note">
+      <span class="tag"><code>schema.sql</code>-ի խնդիրը</span>
+      <p>Դաս 8–9-ում սխեման ստեղծեցիր HeidiSQL-ում։ Դաս 13-ում ավելացրիր <code>type</code> և <code>weight</code>, Դաս 16-ում՝ <code>users</code>։ Ամեն անգամ ձեռքով։<br><br>
+      Հիմա պատկերացրու, որ թիմում երեք ծրագրավորող կա և մեկ սերվեր։ Ո՞վ գիտի, որ սերվերի բազայում արդեն կա <code>weight</code>, իսկ Անիի մեքենայում՝ ոչ։ Ոչ ոք։ Սխալը կհայտնվի production-ում։<br><br>
+      Միգրացիան սխեմայի փոփոխությունն է՝ <strong>գրված կոդով և պահված Git-ում</strong>։ Ով քաշում է նախագիծը, գործարկում է մեկ հրաման և ստանում ճիշտ նույն բազան։</p>
+    </div>
+
+    <h3>Նոր բազա՝ միգրացիաների համար</h3>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ նոր բազա</span>
+      <p>Դաս 18-ում կապեցինք հին <code>technomarket</code> բազային, որ անմիջապես տեսնենք տվյալներ։ Բայց այն ստեղծված է ձեռքով, և Laravel-ի ստանդարտ միգրացիաները կբախվեն դրան․ <code>users</code> աղյուսակը արդեն կա Դաս 16-ից՝ այլ սյունակներով։<br><br>
+      Ուստի այսօր ստեղծում ենք <code>technomarket_laravel</code> և թողնում, որ <strong>ամբողջ սխեման ստեղծեն միգրացիաները</strong>։ Իսկ տվյալները կլցնի seeder-ը։ Հին բազան մնում է Դաս 1–17-ի նախագծի համար։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>.env</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># phpMyAdmin-ում՝ նոր բազա technomarket_laravel, utf8mb4_unicode_ci</span>
+DB_DATABASE=technomarket_laravel
+
+<span class="c"># Հիմա կարելի է վերադառնալ database դրայվերներին՝
+# միգրացիաները կստեղծեն sessions և cache աղյուսակները</span>
+SESSION_DRIVER=database
+CACHE_STORE=database</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ստեղծում</div><button class="copy">Պատճենել</button></div>
+<pre><code>php artisan make:migration create_categories_table
+php artisan make:migration create_products_table
+
+<span class="c"># Ֆայլի անունը սկսվում է ամսաթվով՝ 2026_10_19_120000_create_products_table.php
+# Միգրացիաները կատարվում են այդ ամսաթվերի ՀԵՐԹՈՎ ⭐</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>database/migrations/…_create_products_table.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+
+<span class="k">use</span> <span class="t">Illuminate\Database\Migrations\Migration</span>;
+<span class="k">use</span> <span class="t">Illuminate\Database\Schema\Blueprint</span>;
+<span class="k">use</span> <span class="t">Illuminate\Support\Facades\Schema</span>;
+
+<span class="k">return new class extends</span> <span class="t">Migration</span>
+{
+    <span class="k">public function</span> <span class="f">up</span>(): <span class="k">void</span>
+    {
+        <span class="t">Schema</span>::<span class="f">create</span>(<span class="s">'products'</span>, <span class="k">function</span> (<span class="t">Blueprint</span> <span class="n">$table</span>) {
+            <span class="n">$table</span>-&gt;<span class="f">id</span>();
+
+            <span class="c">// FOREIGN KEY ... ON DELETE SET NULL — Դաս 9</span>
+            <span class="n">$table</span>-&gt;<span class="f">foreignId</span>(<span class="s">'category_id'</span>)-&gt;<span class="f">nullable</span>()-&gt;<span class="f">constrained</span>()-&gt;<span class="f">nullOnDelete</span>();
+
+            <span class="n">$table</span>-&gt;<span class="f">string</span>(<span class="s">'name'</span>, <span class="n">200</span>);
+            <span class="n">$table</span>-&gt;<span class="f">string</span>(<span class="s">'slug'</span>, <span class="n">200</span>)-&gt;<span class="f">unique</span>();
+            <span class="n">$table</span>-&gt;<span class="f">string</span>(<span class="s">'specs'</span>)-&gt;<span class="f">nullable</span>();
+            <span class="n">$table</span>-&gt;<span class="f">text</span>(<span class="s">'description'</span>)-&gt;<span class="f">nullable</span>();
+
+            <span class="n">$table</span>-&gt;<span class="f">unsignedInteger</span>(<span class="s">'price'</span>);                   <span class="c">// դրամով ⭐</span>
+            <span class="n">$table</span>-&gt;<span class="f">unsignedTinyInteger</span>(<span class="s">'discount'</span>)-&gt;<span class="f">default</span>(<span class="n">0</span>);
+            <span class="n">$table</span>-&gt;<span class="f">unsignedInteger</span>(<span class="s">'stock'</span>)-&gt;<span class="f">default</span>(<span class="n">0</span>);
+
+            <span class="n">$table</span>-&gt;<span class="f">enum</span>(<span class="s">'type'</span>, [<span class="s">'physical'</span>, <span class="s">'digital'</span>])-&gt;<span class="f">default</span>(<span class="s">'physical'</span>);   <span class="c">// Դաս 13</span>
+            <span class="n">$table</span>-&gt;<span class="f">unsignedInteger</span>(<span class="s">'weight'</span>)-&gt;<span class="f">default</span>(<span class="n">0</span>);
+
+            <span class="n">$table</span>-&gt;<span class="f">string</span>(<span class="s">'image'</span>)-&gt;<span class="f">nullable</span>();
+            <span class="n">$table</span>-&gt;<span class="f">boolean</span>(<span class="s">'is_active'</span>)-&gt;<span class="f">default</span>(<span class="k">true</span>);
+
+            <span class="n">$table</span>-&gt;<span class="f">timestamps</span>();      <span class="c">// created_at + updated_at</span>
+            <span class="n">$table</span>-&gt;<span class="f">softDeletes</span>();     <span class="c">// deleted_at — բաժին 08</span>
+
+            <span class="n">$table</span>-&gt;<span class="f">index</span>([<span class="s">'is_active'</span>, <span class="s">'price'</span>]);    <span class="c">// ինդեքս կատալոգի համար — Դաս 9</span>
+        });
+    }
+
+    <span class="k">public function</span> <span class="f">down</span>(): <span class="k">void</span>
+    {
+        <span class="t">Schema</span>::<span class="f">dropIfExists</span>(<span class="s">'products'</span>);
+    }
+};</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Մեկ որոշում փոխվեց՝ գինը</span>
+      <p>Դաս 8-ում գինը <code>DECIMAL(10,2)</code> էր, և նույն դասում նշեցինք այլընտրանքը՝ <em>«գումարը պահել <code>INT</code>-ով, դրամով։ Հայկական դրամի դեպքում դա հաճախ ամենապարզն է»</em>։<br><br>
+      Eloquent-ում <code>decimal</code> cast-ը վերադարձնում է <strong>տող</strong> (<code>"450000.00"</code>), և Դաս 10-ի տիպերի թակարդը կվերադառնար ամեն տեղ։ <code>unsignedInteger</code> + <code>integer</code> cast-ը տալիս է իսկական թիվ։ Ուստի ընտրում ենք այլընտրանքը։ Կարևորը՝ <strong>երբեք <code>float</code></strong>, այդ կանոնը չի փոխվում։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դաս 8–9-ի SQL</th><th>Միգրացիայում</th></tr>
+      <tr><td><code>INT UNSIGNED AUTO_INCREMENT PRIMARY KEY</code></td><td><code>$table-&gt;id()</code></td></tr>
+      <tr><td><code>VARCHAR(200) NOT NULL UNIQUE</code></td><td><code>-&gt;string('slug', 200)-&gt;unique()</code></td></tr>
+      <tr><td><code>... NULL</code></td><td><code>-&gt;nullable()</code></td></tr>
+      <tr><td><code>FOREIGN KEY ... REFERENCES categories(id) ON DELETE SET NULL</code></td><td><code>-&gt;foreignId('category_id')-&gt;constrained()-&gt;nullOnDelete()</code></td></tr>
+      <tr><td><code>TINYINT(1) DEFAULT 1</code></td><td><code>-&gt;boolean('is_active')-&gt;default(true)</code></td></tr>
+      <tr><td><code>INDEX idx_active_price (is_active, price)</code></td><td><code>-&gt;index(['is_active', 'price'])</code></td></tr>
+      <tr><td><code>ENGINE=InnoDB</code>, <code>utf8mb4</code></td><td>Լռելյայն՝ <code>config/database.php</code>-ում</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>database/migrations/0001_01_01_000000_create_users_table.php — մեկ տող</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="t">Schema</span>::<span class="f">create</span>(<span class="s">'users'</span>, <span class="k">function</span> (<span class="t">Blueprint</span> <span class="n">$table</span>) {
+    <span class="n">$table</span>-&gt;<span class="f">id</span>();
+    <span class="n">$table</span>-&gt;<span class="f">string</span>(<span class="s">'name'</span>);
+    <span class="n">$table</span>-&gt;<span class="f">string</span>(<span class="s">'email'</span>)-&gt;<span class="f">unique</span>();
+    <span class="n">$table</span>-&gt;<span class="f">timestamp</span>(<span class="s">'email_verified_at'</span>)-&gt;<span class="f">nullable</span>();
+    <span class="n">$table</span>-&gt;<span class="f">string</span>(<span class="s">'password'</span>);
+    <span class="n">$table</span>-&gt;<span class="f">enum</span>(<span class="s">'role'</span>, [<span class="s">'admin'</span>, <span class="s">'manager'</span>])-&gt;<span class="f">default</span>(<span class="s">'manager'</span>);   <span class="c">// ⭐ Դաս 16-ից</span>
+    <span class="n">$table</span>-&gt;<span class="f">rememberToken</span>();
+    <span class="n">$table</span>-&gt;<span class="f">timestamps</span>();
+});</code></pre>
+    </div>
+
+        <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հրամաններ</div><button class="copy">Պատճենել</button></div>
+<pre><code>php artisan migrate               <span class="c"># կատարել նորերը</span>
+php artisan migrate:status        <span class="c"># որոնք են կատարված</span>
+php artisan migrate:rollback      <span class="c"># հետ գլորել վերջին խումբը (down())</span>
+php artisan migrate:fresh --seed  <span class="c"># ⚠️ ՋՆՋԵԼ ԲՈԼՈՐ աղյուսակները, ստեղծել նորից, լցնել</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag"><code>migrate:fresh</code>-ը production-ում՝ աղետ</span>
+      <p>Այն անվերադարձ ջնջում է բոլոր աղյուսակները՝ պատվերների և օգտագործողների հետ։ Լոկալ աշխատանքի համար այն հիանալի է․ ամեն ինչ կոտրեցիր՝ մեկ հրամանով սկսում ես մաքուր։<br><br>
+      Production-ում Laravel-ը այն կհարցնի հաստատում, բայց <code>--force</code>-ով հաստատումը շրջանցվում է։ Դա Դաս 11-ի <code>UPDATE</code>-ը առանց <code>WHERE</code>-ի է՝ ավելի մեծ մասշտաբով։ Կանոն՝ <strong>սերվերում միայն <code>php artisan migrate</code></strong>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Seeder-ներ և factory-ներ</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>database/seeders/DatabaseSeeder.php — Դաս 2-ի data.php-ը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+
+<span class="k">namespace</span> <span class="t">Database\Seeders</span>;
+
+<span class="k">use</span> <span class="t">App\Models\Category</span>;
+<span class="k">use</span> <span class="t">App\Models\Product</span>;
+<span class="k">use</span> <span class="t">App\Models\User</span>;
+<span class="k">use</span> <span class="t">Illuminate\Database\Seeder</span>;
+
+<span class="k">class</span> <span class="t">DatabaseSeeder</span> <span class="k">extends</span> <span class="t">Seeder</span>
+{
+    <span class="k">public function</span> <span class="f">run</span>(): <span class="k">void</span>
+    {
+        <span class="n">$laptops</span>  = <span class="t">Category</span>::<span class="f">create</span>([<span class="s">'name'</span> =&gt; <span class="s">'Նոութբուքեր'</span>, <span class="s">'slug'</span> =&gt; <span class="s">'noutbuqner'</span>]);
+        <span class="n">$monitors</span> = <span class="t">Category</span>::<span class="f">create</span>([<span class="s">'name'</span> =&gt; <span class="s">'Մոնիտորներ'</span>, <span class="s">'slug'</span> =&gt; <span class="s">'monitorner'</span>]);
+
+        <span class="n">$laptops</span>-&gt;<span class="f">products</span>()-&gt;<span class="f">create</span>([
+            <span class="s">'name'</span>     =&gt; <span class="s">'Նոութբուք Pro 14'</span>,
+            <span class="s">'slug'</span>     =&gt; <span class="s">'noutbuq-pro-14'</span>,
+            <span class="s">'specs'</span>    =&gt; <span class="s">'16 ԳԲ / 512 ԳԲ SSD'</span>,
+            <span class="s">'price'</span>    =&gt; <span class="n">450000</span>,
+            <span class="s">'discount'</span> =&gt; <span class="n">30</span>,
+            <span class="s">'stock'</span>    =&gt; <span class="n">5</span>,
+        ]);
+
+        <span class="n">$monitors</span>-&gt;<span class="f">products</span>()-&gt;<span class="f">create</span>([
+            <span class="s">'name'</span>  =&gt; <span class="s">'Մոնիտոր 27" 4K'</span>,
+            <span class="s">'slug'</span>  =&gt; <span class="s">'monitor-27-4k'</span>,
+            <span class="s">'specs'</span> =&gt; <span class="s">'IPS, 144 Հց'</span>,
+            <span class="s">'price'</span> =&gt; <span class="n">120000</span>,
+            <span class="s">'stock'</span> =&gt; <span class="n">2</span>,
+        ]);
+
+        <span class="c">// ⚠️ Միայն լոկալ մեքենայում</span>
+        <span class="k">if</span> (<span class="f">app</span>()-&gt;<span class="f">environment</span>(<span class="s">'local'</span>)) {
+
+            <span class="c">// 30 պատահական ապրանք էջավորումը ստուգելու համար</span>
+            <span class="t">Product</span>::<span class="f">factory</span>()-&gt;<span class="f">count</span>(<span class="n">30</span>)-&gt;<span class="f">create</span>();
+
+            <span class="c">// Ադմին — role-ը սահմանվում է ՈՒՂԻՂ, ոչ create([...])-ով (բաժին 07) ⭐</span>
+            <span class="n">$admin</span> = <span class="t">User</span>::<span class="f">create</span>([
+                <span class="s">'name'</span>     =&gt; <span class="s">'Ադմին'</span>,
+                <span class="s">'email'</span>    =&gt; <span class="s">'admin@technomarket.test'</span>,
+                <span class="s">'password'</span> =&gt; <span class="s">'password'</span>,
+            ]);
+            <span class="n">$admin</span>-&gt;<span class="n">role</span> = <span class="s">'admin'</span>;
+            <span class="n">$admin</span>-&gt;<span class="f">save</span>();
+        }
+    }
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag"><code>'password' =&gt; 'password'</code> — և Դաս 16-ը</span>
+      <p>Laravel-ի ստանդարտ <code>User</code> մոդելում կա cast <code>'password' =&gt; 'hashed'</code>։ Այն ինքն է կանչում bcrypt-ը պահպանելիս․ բազայում կլինի <code>$2y$12$...</code>, ոչ <code>password</code>։ Դա Դաս 16-ի <code>password_hash()</code>-ն է՝ ավտոմատ։<br><br>
+      Բայց <strong>«password» գաղտնաբառով ադմինը</strong> հրապարակված կայքում բաց դուռ է։ Ամեն ոք փորձում է <code>admin@...</code> / <code>password</code>։ Seeder-ի այս մասը միայն լոկալ մեքենայի համար է։ Իրական սերվերում ադմինը ստեղծվում է մեկ անգամ՝ ձեռքով, ուժեղ գաղտնաբառով։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>database/factories/ProductFactory.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ֆայլի սկզբում՝ use Illuminate\Support\Str;</span>
+
+<span class="k">public function</span> <span class="f">definition</span>(): <span class="k">array</span>
+{
+    <span class="n">$name</span> = <span class="f">fake</span>()-&gt;<span class="f">unique</span>()-&gt;<span class="f">words</span>(<span class="n">3</span>, <span class="k">true</span>);
+
+    <span class="k">return</span> [
+        <span class="s">'name'</span>     =&gt; <span class="f">ucfirst</span>(<span class="n">$name</span>),
+        <span class="s">'slug'</span>     =&gt; <span class="t">Str</span>::<span class="f">slug</span>(<span class="n">$name</span>),
+        <span class="s">'specs'</span>    =&gt; <span class="f">fake</span>()-&gt;<span class="f">sentence</span>(<span class="n">4</span>),
+        <span class="s">'price'</span>    =&gt; <span class="f">fake</span>()-&gt;<span class="f">numberBetween</span>(<span class="n">5000</span>, <span class="n">900000</span>),
+        <span class="s">'discount'</span> =&gt; <span class="f">fake</span>()-&gt;<span class="f">randomElement</span>([<span class="n">0</span>, <span class="n">0</span>, <span class="n">0</span>, <span class="n">10</span>, <span class="n">20</span>, <span class="n">30</span>]),
+        <span class="s">'stock'</span>    =&gt; <span class="f">fake</span>()-&gt;<span class="f">numberBetween</span>(<span class="n">0</span>, <span class="n">20</span>),
+    ];
+}</code></pre>
+    </div>
+
+      </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Մոդելը</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ստեղծում</div><button class="copy">Պատճենել</button></div>
+<pre><code>php artisan make:model Category
+php artisan make:model Product --factory
+
+<span class="c"># -mfs → միանգամից migration, factory և seeder</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Models/Product.php — Դաս 12-ի դասը վերադառնում է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+
+<span class="k">namespace</span> <span class="t">App\Models</span>;
+
+<span class="k">use</span> <span class="t">Illuminate\Database\Eloquent\Builder</span>;
+<span class="k">use</span> <span class="t">Illuminate\Database\Eloquent\Factories\HasFactory</span>;
+<span class="k">use</span> <span class="t">Illuminate\Database\Eloquent\Model</span>;
+<span class="k">use</span> <span class="t">Illuminate\Database\Eloquent\Relations\BelongsTo</span>;
+<span class="k">use</span> <span class="t">Illuminate\Database\Eloquent\SoftDeletes</span>;
+
+<span class="k">class</span> <span class="t">Product</span> <span class="k">extends</span> <span class="t">Model</span>
+{
+    <span class="k">use</span> <span class="t">HasFactory</span>, <span class="t">SoftDeletes</span>;
+
+    <span class="c">/** Mass assignment-ի սպիտակ ցուցակ — բաժին 07 */</span>
+    <span class="k">protected</span> <span class="n">$fillable</span> = [
+        <span class="s">'category_id'</span>, <span class="s">'name'</span>, <span class="s">'slug'</span>, <span class="s">'specs'</span>, <span class="s">'description'</span>,
+        <span class="s">'price'</span>, <span class="s">'discount'</span>, <span class="s">'stock'</span>, <span class="s">'type'</span>, <span class="s">'weight'</span>, <span class="s">'image'</span>, <span class="s">'is_active'</span>,
+    ];
+
+    <span class="c">/** Դաս 12-ի fromRow()-ի (int)-երը ⭐ */</span>
+    <span class="k">protected function</span> <span class="f">casts</span>(): <span class="k">array</span>
+    {
+        <span class="k">return</span> [
+            <span class="s">'price'</span>     =&gt; <span class="s">'integer'</span>,
+            <span class="s">'discount'</span>  =&gt; <span class="s">'integer'</span>,
+            <span class="s">'stock'</span>     =&gt; <span class="s">'integer'</span>,
+            <span class="s">'weight'</span>    =&gt; <span class="s">'integer'</span>,
+            <span class="s">'is_active'</span> =&gt; <span class="s">'boolean'</span>,
+        ];
+    }
+
+    <span class="c">// ---------- Կապեր ----------</span>
+
+    <span class="k">public function</span> <span class="f">category</span>(): <span class="t">BelongsTo</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="f">belongsTo</span>(<span class="t">Category</span>::<span class="k">class</span>);
+    }
+
+    <span class="c">// ---------- Scope-ներ ----------</span>
+
+    <span class="k">public function</span> <span class="f">scopeActive</span>(<span class="t">Builder</span> <span class="n">$query</span>): <span class="k">void</span>
+    {
+        <span class="n">$query</span>-&gt;<span class="f">where</span>(<span class="s">'is_active'</span>, <span class="k">true</span>);
+    }
+
+    <span class="c">// ---------- Դաս 12-ի մեթոդները ----------</span>
+
+    <span class="k">public function</span> <span class="f">finalPrice</span>(): <span class="k">int</span>
+    {
+        <span class="k">return</span> (<span class="k">int</span>) <span class="f">round</span>(<span class="n">$this</span>-&gt;<span class="n">price</span> * (<span class="n">100</span> - <span class="n">$this</span>-&gt;<span class="n">discount</span>) / <span class="n">100</span>);
+    }
+
+    <span class="k">public function</span> <span class="f">hasDiscount</span>(): <span class="k">bool</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">discount</span> &gt; <span class="n">0</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">inStock</span>(): <span class="k">bool</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">type</span> === <span class="s">'digital'</span> || <span class="n">$this</span>-&gt;<span class="n">stock</span> &gt; <span class="n">0</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">isLowStock</span>(): <span class="k">bool</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">type</span> === <span class="s">'physical'</span> &amp;&amp; <span class="n">$this</span>-&gt;<span class="n">stock</span> &gt; <span class="n">0</span> &amp;&amp; <span class="n">$this</span>-&gt;<span class="n">stock</span> &lt;= <span class="n">3</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">formattedPrice</span>(): <span class="k">string</span>
+    {
+        <span class="k">return</span> <span class="f">number_format</span>(<span class="n">$this</span>-&gt;<span class="f">finalPrice</span>(), <span class="n">0</span>, <span class="s">'.'</span>, <span class="s">"\u{00A0}"</span>) . <span class="s">"\u{00A0}֏"</span>;
+    }
+
+    <span class="k">public function</span> <span class="f">imageUrl</span>(): <span class="k">string</span>
+    {
+        <span class="k">return</span> <span class="f">asset</span>(<span class="s">'images/'</span> . (<span class="n">$this</span>-&gt;<span class="n">image</span> ?? <span class="s">'placeholder.jpg'</span>));
+    }
+}</code></pre>
+    </div>
+
+                <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Providers/AppServiceProvider.php — խիստ ռեժիմ զարգացման ժամանակ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">use</span> <span class="t">Illuminate\Database\Eloquent\Model</span>;
+
+<span class="k">public function</span> <span class="f">boot</span>(): <span class="k">void</span>
+{
+    <span class="t">Model</span>::<span class="f">shouldBeStrict</span>(! <span class="n">$this</span>-&gt;<span class="n">app</span>-&gt;<span class="f">isProduction</span>());
+
+    <span class="c">// ... Դաս 19-ի View::composer</span>
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag"><code>shouldBeStrict</code> — երեք լուռ սխալը դարձնում է բարձրաձայն</span>
+      <p><strong>1.</strong> Գոյություն չունեցող հատկություն՝ <code>$product-&gt;prise</code> → բացառություն, ոչ <code>null</code>։ Դաս 12-ի պաշտպանությունը վերադարձավ։<br>
+      <strong>2.</strong> N+1 հարցումներ → բացառություն, երբ կապին դիմում ես մեկից ավելի մոդելի ցիկլում (բաժին 06)։<br>
+      <strong>3.</strong> <code>$fillable</code>-ում չեղած դաշտը <code>create()</code>-ում → բացառություն, ոչ լուռ անտեսում (բաժին 07)։<br><br>
+      <code>! isProduction()</code>-ը նշանակում է՝ միայն զարգացման ժամանակ։ Production-ում օգտագործողը չպիտի տեսնի 500 էջ այն պատճառով, որ ինչ-որ տեղ լրացուցիչ հարցում կա։ Նույն տրամաբանությունը, ինչ <code>APP_DEBUG</code>-ի դեպքում։</p>
+    </div>
+
+      </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Հարցումներ և Collection-ներ</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դաս 14-ի Repository</th><th>Eloquent</th></tr>
+      <tr><td><code>$repo-&gt;all(null, $sort, 12, $offset)</code></td><td><code>Product::active()-&gt;orderBy($col, $dir)-&gt;paginate(12)</code></td></tr>
+      <tr><td><code>$repo-&gt;find($id)</code></td><td><code>Product::find($id)</code></td></tr>
+      <tr><td><code>$repo-&gt;findBySlug($slug) ?? throw ...</code></td><td><code>Product::where('slug', $slug)-&gt;firstOrFail()</code></td></tr>
+      <tr><td><code>$repo-&gt;findMany($ids)</code></td><td><code>Product::findMany($ids)-&gt;keyBy('id')</code></td></tr>
+      <tr><td><code>$repo-&gt;count()</code></td><td><code>Product::active()-&gt;count()</code></td></tr>
+      <tr><td><code>$repo-&gt;create($data)</code></td><td><code>Product::create($data)</code></td></tr>
+      <tr><td><code>$repo-&gt;update($id, $data)</code></td><td><code>$product-&gt;update($data)</code></td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Http/Controllers/ProductController.php — Դաս 18-ի DB::table-ի փոխարեն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">use</span> <span class="t">App\Models\Product</span>;
+
+<span class="k">public function</span> <span class="f">index</span>(<span class="t">Request</span> <span class="n">$request</span>)
+{
+    <span class="c">// Սպիտակ ցուցակը մնում է — Eloquent-ը նույնպես չի պարամետրացնում սյունակի անունը ⭐</span>
+    <span class="n">$key</span> = <span class="n">$request</span>-&gt;<span class="f">query</span>(<span class="s">'sort'</span>, <span class="s">'price_asc'</span>);
+    [<span class="n">$column</span>, <span class="n">$direction</span>] = <span class="k">self</span>::<span class="n">SORTS</span>[<span class="n">$key</span>] ?? <span class="k">self</span>::<span class="n">SORTS</span>[<span class="s">'price_asc'</span>];
+
+    <span class="n">$products</span> = <span class="t">Product</span>::<span class="f">active</span>()
+        -&gt;<span class="f">with</span>(<span class="s">'category'</span>)               <span class="c">// բաժին 06</span>
+        -&gt;<span class="f">orderBy</span>(<span class="n">$column</span>, <span class="n">$direction</span>)
+        -&gt;<span class="f">paginate</span>(<span class="n">12</span>);
+
+    <span class="k">return</span> <span class="f">view</span>(<span class="s">'products.index'</span>, [<span class="s">'products'</span> =&gt; <span class="n">$products</span>, <span class="s">'sort'</span> =&gt; <span class="n">$key</span>]);
+}</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Քարտը կրկին մաքուր է</span>
+      <p>Դաս 19-ի <code>&lt;x-product-card&gt;</code>-ում գնի հաշվարկը շաբլոնում էր, որովհետև <code>DB::table</code>-ը տալիս էր <code>stdClass</code>։ Հիմա կոմպոնենտը ստանում է <code>Product</code> մոդել, և տողը դառնում է <code>{{ $product-&gt;formattedPrice() }}</code>։<br><br>
+      <code>@if ($product-&gt;discount &gt; 0)</code>-ը՝ <code>@if ($product-&gt;hasDiscount())</code>։ Դաս 12-ի գաղափարը՝ <em>շաբլոնը ասում է ինչ է նշանակում պայմանը, ոչ ինչպես է այն հաշվվում</em>՝ վերականգնված։</p>
+    </div>
+
+    <h3>Collection-ներ</h3>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Դաս 3-ի զանգվածների ֆունկցիաները՝ շղթայով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="n">$products</span> = <span class="t">Product</span>::<span class="f">active</span>()-&gt;<span class="f">get</span>();      <span class="c">// Collection, ոչ զանգված</span>
+
+<span class="c">// Դաս 3՝ array_filter($products, fn...) — կարգը՝ անհետևողական</span>
+<span class="n">$sale</span> = <span class="n">$products</span>-&gt;<span class="f">filter</span>(<span class="k">fn</span> (<span class="t">Product</span> <span class="n">$p</span>) =&gt; <span class="n">$p</span>-&gt;<span class="f">hasDiscount</span>());
+
+<span class="c">// Դաս 3՝ array_map(fn, $products)</span>
+<span class="n">$names</span> = <span class="n">$products</span>-&gt;<span class="f">map</span>(<span class="k">fn</span> (<span class="t">Product</span> <span class="n">$p</span>) =&gt; <span class="n">$p</span>-&gt;<span class="n">name</span>);
+
+<span class="c">// Դաս 3՝ array_reduce(...)</span>
+<span class="n">$total</span> = <span class="n">$products</span>-&gt;<span class="f">sum</span>(<span class="k">fn</span> (<span class="t">Product</span> <span class="n">$p</span>) =&gt; <span class="n">$p</span>-&gt;<span class="f">finalPrice</span>());
+
+<span class="c">// Դաս 3-ի groupByCategory() տնայինը</span>
+<span class="n">$byCategory</span> = <span class="n">$products</span>-&gt;<span class="f">groupBy</span>(<span class="s">'category_id'</span>);</code></pre>
+    </div>
+
+        <div class="note">
+      <span class="tag"><code>get()</code>-ը ամեն ինչ բեռնում է հիշողություն</span>
+      <p><code>Product::all()</code> կամ <code>-&gt;get()</code> առանց սահմանի բեռնում է ամբողջ աղյուսակը՝ 10 000 ապրանքը որպես 10 000 օբյեկտ։ Ֆիլտրումը և տեսակավորումը պետք է կատարել <strong>հարցման մեջ</strong> (<code>where</code>, <code>orderBy</code>, <code>paginate</code>), ոչ Collection-ում։<br><br>
+      Դաս 8-ի կանոնը՝ <em>«ֆիլտրում և տեսակավորում՝ բազայում, ձևաչափում՝ PHP-ում»</em>, մնում է ուժի մեջ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Կապեր և N+1</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Models/Category.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="t">Category</span> <span class="k">extends</span> <span class="t">Model</span>
+{
+    <span class="k">protected</span> <span class="n">$fillable</span> = [<span class="s">'name'</span>, <span class="s">'slug'</span>];
+
+    <span class="k">public function</span> <span class="f">products</span>(): <span class="t">HasMany</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="f">hasMany</span>(<span class="t">Product</span>::<span class="k">class</span>);
+    }
+}</code></pre>
+    </div>
+
+    <div class="tree">categories                 products
+┌──────────┐  hasMany   ┌──────────────┐
+│ id       │──────────▶│ category_id  │
+│ name     │◀──────────│              │
+└──────────┘ belongsTo  └──────────────┘
+
+$category->products   →  Collection ապրանքների
+$product->category    →  մեկ Category կամ null</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ անվնաս թվացող շաբլոն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">{{-- Կոնտրոլերում՝ Product::active()-&gt;paginate(12), առանց with() --}}</span>
+
+<span class="k">@foreach</span> (<span class="n">$products</span> <span class="k">as</span> <span class="n">$p</span>)
+    <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>{{ <span class="n">$p</span>-&gt;<span class="n">category</span>?-&gt;<span class="n">name</span> }}<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+<span class="k">@endforeach</span></code></pre>
+    </div>
+
+    <div class="tree">Ի՞նչ է կատարվում բազայում
+
+  SELECT * FROM products WHERE is_active = 1 LIMIT 12   ← 1 հարցում
+
+  SELECT * FROM categories WHERE id = 3                  ← +1
+  SELECT * FROM categories WHERE id = 1                  ← +1
+  SELECT * FROM categories WHERE id = 3                  ← +1  (նորից!)
+  ... ևս 9 անգամ
+
+  Ընդհանուր՝ 1 + 12 = 13 հարցում   ← N+1
+
+with('category')-ով
+
+  SELECT * FROM products WHERE is_active = 1 LIMIT 12
+  SELECT * FROM categories WHERE id IN (1, 3, 5)
+
+  Ընդհանուր՝ 2 հարցում ✅</div>
+
+    <div class="warn note">
+      <span class="tag">Ինչո՞ւ սա այդքան վտանգավոր է</span>
+      <p>Կոդը <strong>ճիշտ է աշխատում</strong>։ Էջը ցույց է տալիս ճիշտ կատեգորիաները։ Լոկալ մեքենայում, 12 ապրանքով, տարբերությունը աննկատ է։<br><br>
+      Բայց երբ էջում 50 ապրանք կա, և ամեն քարտ ցույց է տալիս կատեգորիան, արտադրողին և առաջին նկարը՝ դա 151 հարցում է ամեն էջի բացմանը։ Կայքը դանդաղում է աստիճանաբար, և ոչ ոք չգիտի ինչու։<br><br>
+      Դաս 14-ում գրեցինք <code>findMany()</code> հենց այս խնդրի համար և ասացինք․ <em>«N+1-ը ամենահաճախ հանդիպող կատարողականության խնդիրն է։ Laravel-ում այն լուծվում է <code>with()</code>-ով»</em>։ Ահա այն։</p>
+    </div>
+
+        <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Order և OrderItem — Դաս 9-ի սառեցված գինը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="t">Order</span> <span class="k">extends</span> <span class="t">Model</span>
+{
+    <span class="k">public function</span> <span class="f">items</span>(): <span class="t">HasMany</span>
+    {
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="f">hasMany</span>(<span class="t">OrderItem</span>::<span class="k">class</span>);
+    }
+}
+
+<span class="k">class</span> <span class="t">OrderItem</span> <span class="k">extends</span> <span class="t">Model</span>
+{
+    <span class="k">protected function</span> <span class="f">casts</span>(): <span class="k">array</span>
+    {
+        <span class="k">return</span> [<span class="s">'price'</span> =&gt; <span class="s">'integer'</span>, <span class="s">'quantity'</span> =&gt; <span class="s">'integer'</span>];
+    }
+
+    <span class="k">public function</span> <span class="f">product</span>(): <span class="t">BelongsTo</span>
+    {
+        <span class="c">// ⭐ Ջնջված ապրանքը չպիտի կոտրի հին պատվերը — Դաս 11</span>
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="f">belongsTo</span>(<span class="t">Product</span>::<span class="k">class</span>)-&gt;<span class="f">withTrashed</span>();
+    }
+
+    <span class="k">public function</span> <span class="f">lineTotal</span>(): <span class="k">int</span>
+    {
+        <span class="c">// $this-&gt;price — գինը ԳՆՄԱՆ ՊԱՀԻՆ, ոչ $this-&gt;product-&gt;price ⭐ Դաս 9</span>
+        <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="n">price</span> * <span class="n">$this</span>-&gt;<span class="n">quantity</span>;
+    }
+}
+
+<span class="c">// Պատվերի էջ՝ երեք աղյուսակ, երկու մակարդակ, երեք հարցում</span>
+<span class="n">$order</span> = <span class="t">Order</span>::<span class="f">with</span>(<span class="s">'items.product'</span>)-&gt;<span class="f">findOrFail</span>(<span class="n">$id</span>);</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Երկու հին որոշում՝ իրենց տեղում</span>
+      <p><strong><code>-&gt;withTrashed()</code> կապում</strong> — Դաս 11-ում ասացինք․ <em>«եթե ապրանքը իրականում ջնջվի, երեք ամիս առաջվա պատվերի էջը կկոտրվի»</em>։ Փափուկ ջնջումով ապրանքը մնում է բազայում, իսկ <code>withTrashed()</code>-ը թույլ է տալիս պատվերին դեռ տեսնել այն։<br><br>
+      <strong><code>$this-&gt;price</code>, ոչ <code>$this-&gt;product-&gt;price</code></strong> — Դաս 9-ի <em>«պատմությունը սառեցվում է, ընթացիկ վիճակը՝ ոչ»</em>։ Eloquent-ը դարձնում է <code>$item-&gt;product-&gt;price</code> գրելը շատ հեշտ։ Հենց դրա համար պետք է իմանալ, որ դա սխալ գին է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Mass assignment</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ Դաս 17-ի զգուշացումը՝ իրականում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Գրանցման կոնտրոլեր</span>
+<span class="t">User</span>::<span class="f">create</span>(<span class="n">$request</span>-&gt;<span class="f">all</span>());
+
+<span class="c">// Հարձակվողը DevTools-ում ավելացնում է ֆորմային մեկ դաշտ՝
+//   &lt;input name="role" value="admin"&gt;
+// կամ curl-ով՝ -d "role=admin"</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչ է տեղի ունենում</span>
+      <p>Եթե <code>role</code>-ը թույլատրված լիներ զանգվածային վերագրման համար, նոր օգտագործողը կդառնար <strong>ադմին</strong>՝ մեկ ավելորդ դաշտով։ Դաս 6-ի դասը՝ <em>«սերվերը չի կարող վստահել այն ամենին, ինչ գալիս է բրաուզերից»</em>, այստեղ դառնում է իրավունքների հարց։<br><br>
+      Սա իրական խոցելիությունների դասական տեսակ է, և հենց դրա պատճառով է Laravel-ը լռելյայն արգելում զանգվածային վերագրումը, մինչև դու բացահայտ չթվարկես թույլատրված դաշտերը։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Կարգավորում</th><th>Ինչ է նշանակում</th></tr>
+      <tr><td><code>$fillable = ['name', 'email']</code></td><td>Միայն այս դաշտերը ⭐ սպիտակ ցուցակ</td></tr>
+      <tr><td><code>$guarded = ['role']</code></td><td>Բոլորը, բացի սրանից՝ արգելքների ցուցակ</td></tr>
+      <tr><td><code>$guarded = []</code></td><td>⚠️ Ամեն ինչ թույլատրված է</td></tr>
+    </table>
+    </div>
+
+        <div class="warn note">
+      <span class="tag"><code>$fillable</code>-ը երկրորդ շերտն է, ոչ առաջինը</span>
+      <p>Մեր <code>Product</code>-ում <code>discount</code>-ը և <code>is_active</code>-ը <code>$fillable</code>-ում են, որովհետև ադմինը օրինական կերպով փոխում է դրանք։ Ուստի <code>$fillable</code>-ը չի պաշտպանի, եթե ինչ-որ հանրային էջում գրես <code>Product::create($request-&gt;all())</code>։<br><br>
+      Իրական պաշտպանությունը՝ <strong>փոխանցել միայն վավերացված դաշտերը</strong>։ Դաս 11-ում <code>$data</code>-ն կառուցում էինք դաշտ առ դաշտ, և Դաս 17-ում ասացինք, որ դա այս սովորության արժեքն է։ Laravel-ում դա <code>$request-&gt;validated()</code>-ն է՝ Դաս 21-ում։<br><br>
+      Կանոն՝ <strong>երբեք <code>$request-&gt;all()</code> մոդելի մեջ</strong>։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ seeder-ում <code>$admin-&gt;role = 'admin'</code></span>
+      <p><code>role</code>-ը <code>User</code>-ի <code>$fillable</code>-ում <strong>չկա</strong>, և պետք է այդպես մնա։ Ուստի <code>User::create(['role' =&gt; 'admin', ...])</code>-ը այն պարզապես կանտեսեր (իսկ խիստ ռեժիմում՝ կգցեր սխալ)։<br><br>
+      Ուղիղ վերագրումը՝ <code>$admin-&gt;role = 'admin'</code>, <code>$fillable</code>-ից կախված չէ։ Դա դիտավորյալ է․ զանգվածային վերագրումը դրսից եկող տվյալների համար է, իսկ ուղիղը՝ կոդի, որին վստահում ես։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Փափուկ ջնջում</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>use SoftDeletes — և մեթոդները</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="n">$product</span>-&gt;<span class="f">delete</span>();
+<span class="c">// UPDATE products SET deleted_at = NOW() WHERE id = 5  ← ոչ DELETE ⭐</span>
+
+<span class="t">Product</span>::<span class="f">all</span>();                <span class="c">// ջնջվածները ԻՆՔՆԱԲԵՐԱԲԱՐ բացառված են</span>
+<span class="t">Product</span>::<span class="f">withTrashed</span>()-&gt;<span class="f">get</span>();  <span class="c">// բոլորը</span>
+<span class="t">Product</span>::<span class="f">onlyTrashed</span>()-&gt;<span class="f">get</span>();  <span class="c">// միայն ջնջվածները — «զամբյուղ» ադմինում</span>
+
+<span class="n">$product</span>-&gt;<span class="f">restore</span>();           <span class="c">// վերականգնել</span>
+<span class="n">$product</span>-&gt;<span class="f">forceDelete</span>();       <span class="c">// ⚠️ իսկական DELETE</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag"><code>is_active</code> և <code>deleted_at</code> — երկու տարբեր բան</span>
+      <p>Դաս 11-ում <code>is_active = 0</code>-ն էր փափուկ ջնջումը։ Հիմա դրանք բաժանվում են․<br><br>
+      <strong><code>is_active = false</code></strong> — ժամանակավորապես թաքցված։ Մենեջերը միացնում-անջատում է (ապրանքը սպասվում է, սեզոնային է)։ Ադմին ցուցակում երևում է։<br><br>
+      <strong><code>deleted_at</code></strong> — հեռացված։ Ադմին ցուցակից էլ անհետանում է, բայց մնում է պատվերների պատմության համար և կարող է վերականգնվել։<br><br>
+      Երկու սյունակ, երկու իմաստ։ Մեկ սյունակով դրանք խառնվում էին։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Թակարդ՝ եզակի slug և ջնջված ապրանքներ</span>
+      <p>Ջնջված ապրանքը <strong>ֆիզիկապես մնում է</strong> աղյուսակում՝ իր <code>slug</code>-ով։ Իսկ <code>slug</code>-ը <code>unique</code> է բազայի մակարդակով։<br><br>
+      Ջնջում ես «Նոութբուք Pro 14»-ը, հետո ստեղծում ես նորը՝ նույն անունով։ Դաս 11-ի <code>uniqueSlug()</code>-ը, եթե ստուգի <code>Product::where('slug', ...)</code>, ջնջվածը <em>չի տեսնի</em> (այն բացառված է ինքնաբերաբար), կվերադարձնի <code>noutbuq-pro-14</code>, և <code>INSERT</code>-ը կընկնի <em>«Duplicate entry»</em> սխալով։<br><br>
+      Լուծումը՝ եզակիությունը ստուգել <code>Product::withTrashed()-&gt;where('slug', ...)</code>-ով։ Ֆրեյմվորքի հարմարությունը (ջնջվածների ավտոմատ բացառումը) այստեղ թաքցնում է այն, ինչ բազան տեսնում է։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Admin\ProductController::destroy — Դաս 19-ի dd()-ի փոխարեն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">public function</span> <span class="f">destroy</span>(<span class="t">Product</span> <span class="n">$product</span>)
+{
+    <span class="n">$product</span>-&gt;<span class="f">delete</span>();     <span class="c">// փափուկ</span>
+
+    <span class="k">return</span> <span class="f">redirect</span>()
+        -&gt;<span class="f">route</span>(<span class="s">'admin.products.index'</span>)
+        -&gt;<span class="f">with</span>(<span class="s">'success'</span>, <span class="s">'Ապրանքը հեռացվեց'</span>);
+}</code></pre>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Route model binding</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>routes/web.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Դաս 18՝ '/product/{slug}'  →  show(string $slug)
+// Հիմա՝ ըստ slug սյունակի</span>
+<span class="t">Route</span>::<span class="f">get</span>(<span class="s">'/product/{product:slug}'</span>, [<span class="t">ProductController</span>::<span class="k">class</span>, <span class="s">'show'</span>])
+    -&gt;<span class="f">name</span>(<span class="s">'product.show'</span>);
+
+<span class="c">// Admin resource-ը արդեն ունի {product} — ըստ id</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>կոնտրոլերը՝ առաջ և հետո</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// Դաս 18</span>
+<span class="k">public function</span> <span class="f">show</span>(<span class="k">string</span> <span class="n">$slug</span>)
+{
+    <span class="n">$product</span> = <span class="t">DB</span>::<span class="f">table</span>(<span class="s">'products'</span>)-&gt;<span class="f">where</span>(<span class="s">'slug'</span>, <span class="n">$slug</span>)-&gt;<span class="f">where</span>(<span class="s">'is_active'</span>, <span class="n">1</span>)-&gt;<span class="f">first</span>();
+    <span class="f">abort_if</span>(<span class="n">$product</span> === <span class="k">null</span>, <span class="n">404</span>);
+    <span class="c">// ...</span>
+}
+
+<span class="c">// Դաս 20</span>
+<span class="k">public function</span> <span class="f">show</span>(<span class="t">Product</span> <span class="n">$product</span>)
+{
+    <span class="f">abort_unless</span>(<span class="n">$product</span>-&gt;<span class="n">is_active</span>, <span class="n">404</span>);     <span class="c">// ⭐ չմոռանալ</span>
+
+    <span class="n">$product</span>-&gt;<span class="f">load</span>(<span class="s">'category'</span>);
+
+    <span class="k">return</span> <span class="f">view</span>(<span class="s">'products.show'</span>, <span class="f">compact</span>(<span class="s">'product'</span>));
+}</code></pre>
+    </div>
+
+        <div class="warn note">
+      <span class="tag">Binding-ը չգիտի <code>is_active</code>-ի մասին</span>
+      <p>Laravel-ը բացառում է <em>ջնջվածները</em>, բայց ոչինչ չգիտի մեր <code>is_active</code> սյունակի մասին։ Առանց <code>abort_unless</code>-ի անջատված ապրանքը կբացվի հանրային էջում՝ ուղիղ հասցեով։<br><br>
+      Դա ճիշտ Դաս 11-ի իրավիճակն է․ <code>getProduct()</code>-ը ուներ <code>AND is_active = 1</code>, իսկ ադմինի <code>getProductForAdmin()</code>-ը՝ ոչ։ Ադմին <code>edit(Product $product)</code>-ում ստուգում պետք չէ (ադմինը խմբագրում է նաև անջատվածները), հանրային <code>show</code>-ում՝ պարտադիր։<br><br>
+      Ֆրեյմվորքը հեռացրեց կոդը, բայց ոչ որոշումը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>API Resource</h2>
+
+    <div class="warn note">
+      <span class="tag">Դաս 17-ի վտանգը՝ նոր տեսքով</span>
+      <p><code>return response()-&gt;json($product)</code> կամ <code>return $product</code> կոնտրոլերից — Eloquent-ը կվերադարձնի <strong>բոլոր սյունակները</strong>՝ <code>stock</code>, <code>deleted_at</code>, <code>created_at</code>, և ամեն սյունակ, որ վաղը կավելանա։<br><br>
+      Դաս 17-ում ասացինք․ <em>«երբեք <code>json_encode($product)</code> ուղիղ — API-ի ձևաչափը հստակ ցանկ է, ոչ "ամեն ինչ, ինչ կա"»</em>։ Eloquent-ի մոդելի դեպքում դա նույնիսկ ավելի վտանգավոր է, որովհետև նոր սյունակը ավելանում է միգրացիայով, և ոչ ոք չի մտածում API-ի մասին։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>php artisan make:resource ProductResource</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="t">ProductResource</span> <span class="k">extends</span> <span class="t">JsonResource</span>
+{
+    <span class="k">public function</span> <span class="f">toArray</span>(<span class="t">Request</span> <span class="n">$request</span>): <span class="k">array</span>
+    {
+        <span class="c">// Դաս 17-ի Product::toArray()-ը՝ բառացի ⭐</span>
+        <span class="k">return</span> [
+            <span class="s">'id'</span>          =&gt; <span class="n">$this</span>-&gt;<span class="n">id</span>,
+            <span class="s">'name'</span>        =&gt; <span class="n">$this</span>-&gt;<span class="n">name</span>,
+            <span class="s">'slug'</span>        =&gt; <span class="n">$this</span>-&gt;<span class="n">slug</span>,
+            <span class="s">'price'</span>       =&gt; <span class="n">$this</span>-&gt;<span class="n">price</span>,
+            <span class="s">'final_price'</span> =&gt; <span class="n">$this</span>-&gt;<span class="f">finalPrice</span>(),
+            <span class="s">'discount'</span>    =&gt; <span class="n">$this</span>-&gt;<span class="n">discount</span>,
+            <span class="s">'in_stock'</span>    =&gt; <span class="n">$this</span>-&gt;<span class="f">inStock</span>(),      <span class="c">// bool, ոչ stock-ի քանակ</span>
+            <span class="s">'url'</span>         =&gt; <span class="f">route</span>(<span class="s">'product.show'</span>, <span class="n">$this</span>-&gt;<span class="n">resource</span>),
+            <span class="s">'image'</span>       =&gt; <span class="n">$this</span>-&gt;<span class="f">imageUrl</span>(),
+            <span class="s">'category'</span>    =&gt; <span class="n">$this</span>-&gt;<span class="f">whenLoaded</span>(<span class="s">'category'</span>, <span class="k">fn</span> () =&gt; <span class="n">$this</span>-&gt;<span class="n">category</span>?-&gt;<span class="n">name</span>),
+        ];
+    }
+}
+
+<span class="c">// Կոնտրոլերում</span>
+<span class="k">return</span> <span class="t">ProductResource</span>::<span class="f">collection</span>(
+    <span class="t">Product</span>::<span class="f">active</span>()-&gt;<span class="f">with</span>(<span class="s">'category'</span>)-&gt;<span class="f">paginate</span>(<span class="n">12</span>)
+);</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Դաս 17-ի ծրարը՝ ինքնաբերաբար</span>
+      <p>Էջավորված Collection-ից resource-ը վերադարձնում է <code>{"data": [...], "links": {...}, "meta": {...}}</code>։ <code>data</code> և <code>meta</code>՝ ճիշտ այն ծրարը, որ ձեռքով կառուցեցինք Դաս 17-ում։<br><br>
+      <code>whenLoaded('category')</code>-ը ավելացնում է կատեգորիան <strong>միայն</strong> եթե այն բեռնված է <code>with()</code>-ով։ Այդպես resource-ը ինքը չի առաջացնում N+1 հարցումներ։<br><br>
+      <code>route('product.show', $this-&gt;resource)</code>-ը փոխանցում է մոդելը, և Laravel-ը ինքն է վերցնում <code>slug</code>-ը՝ ուղու <code>{product:slug}</code>-ից։</p>
+    </div>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>Դասարանական</h2>
+
+    <ol>
+      <li>Ստեղծիր <code>technomarket_laravel</code> բազան, թարմացրու <code>.env</code>-ը և ավելացրու <code>role</code>-ը <code>users</code> միգրացիայում</li>
+      <li>Գրիր <code>categories</code>, <code>products</code>, <code>orders</code>, <code>order_items</code> միգրացիաները և գործարկիր <code>php artisan migrate</code></li>
+      <li>Ստեղծիր չորս մոդելը կապերով, տեղափոխիր Դաս 12-ի մեթոդները <code>Product</code>, ավելացրու <code>scopeActive</code> և <code>shouldBeStrict()</code></li>
+      <li>Գրիր <code>ProductFactory</code>-ն և <code>DatabaseSeeder</code>-ը, գործարկիր <code>php artisan migrate:fresh --seed</code></li>
+      <li>Փոխարինիր բոլոր <code>DB::table</code>-երը Eloquent-ով, միացրու route model binding-ը և իրագործիր <code>destroy</code>-ը</li>
+    </ol>
+
+    <div class="warn note">
+      <span class="tag">Հինգ պարտադիր փորձարկում</span>
+      <p><strong>1.</strong> Հանիր <code>with('category')</code>-ը և բացիր գլխավոր էջը։ Պիտի տեսնես <em>LazyLoadingViolationException</em>։ Վերադարձրու։<br>
+      <strong>2.</strong> tinker-ում՝ <code>Product::first()-&gt;prise</code>։ Խիստ ռեժիմով և առանց դրա։<br>
+      <strong>3.</strong> tinker-ում՝ <code>User::create(['name'=&gt;'X','email'=&gt;'x@x.test','password'=&gt;'x','role'=&gt;'admin'])</code>։ Ի՞նչ եղավ <code>role</code>-ի հետ։ ⭐<br>
+      <strong>4.</strong> Ադմինում անջատիր ապրանքը (<code>is_active = false</code>) և բացիր դրա հանրային հասցեն → 404։ Ապա հանիր <code>abort_unless</code>-ը և կրկնիր։<br>
+      <strong>5.</strong> Ջնջիր ապրանքը և tinker-ում ստեղծիր նորը նույն <code>slug</code>-ով։ Կարդա սխալը։ Ապա ստուգիր <code>Product::withTrashed()-&gt;where('slug', ...)-&gt;exists()</code>։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Երրորդը՝ բլոկի կարևորագույն փորձերից</span>
+      <p>Խիստ ռեժիմում կստանաս սխալ <code>role</code>-ի մասին։ Առանց դրա օգտագործողը կստեղծվի որպես <code>manager</code>՝ <code>role</code>-ը լուռ կանտեսվի։<br><br>
+      Երկու դեպքում էլ <strong>հարձակումը չանցավ</strong>։ Իսկ հիմա փորձիր նույնը՝ <code>role</code>-ը ավելացնելով <code>$fillable</code>-ում։ Այդ մեկ բառը տարբերությունն է օգտագործողի և ադմինի միջև։ Ջնջիր այն անմիջապես։</p>
+    </div>
+  </section>
+
+  <!-- ============ 12 ============ -->
+  <section id="s12">
+    <h2><span class="num">12</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ավարտիր դասարանականի 5 քայլը և հինգ փորձարկումը։ Ուղարկիր սքրինշոթներ։</li>
+      <li>Փոխիր <code>&lt;x-product-card&gt;</code>-ը՝ <code>formattedPrice()</code>, <code>hasDiscount()</code>, <code>imageUrl()</code>։</li>
+      <li>Ստեղծիր նոր միգրացիա <code>add_brand_to_products_table</code>։ Գործարկիր, ապա <code>migrate:rollback</code>։ Ի՞նչ արեց <code>down()</code>-ը։</li>
+      <li>Ավելացրու <code>/category/{category:slug}</code> էջ <code>$category-&gt;products()-&gt;active()-&gt;paginate(12)</code>-ով։</li>
+      <li>Ցուցադրիր N+1-ը թվերով․ <code>DB::enableQueryLog()</code>, ապա <code>count(DB::getQueryLog())</code>՝ <code>with()</code>-ով և առանց դրա։</li>
+      <li>Ավելացրու ադմինում «Ջնջվածներ» էջ <code>onlyTrashed()</code>-ով և «Վերականգնել» կոճակ <code>restore()</code>-ով։</li>
+      <li>Ստեղծիր <code>/api/products</code> ուղի <code>ProductResource</code>-ով և համեմատիր պատասխանը Դաս 17-ի հետ։</li>
+      <li>Խնդրիր AI-ին գրել Eloquent հարցում կատեգորիաներով և ապրանքներով։ Ստուգիր՝ կա՞ <code>with()</code>, թե՞ N+1։ Կա՞ <code>$guarded = []</code>։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 13 ============ -->
+  <section id="s13">
+    <h2><span class="num">13</span>Հիշելու թերթիկ</h2>
+
+    <h3>Քո կոդը → Eloquent</h3>
+    <div class="tree">schema.sql                  →  database/migrations/
+data.php                    →  DatabaseSeeder
+fromRow() + (int)           →  casts()
+ProductRepository           →  Product մոդել
+findBySlug() ?? throw       →  {product:slug} binding
+findMany()                  →  with() / findMany()
+LEFT JOIN categories        →  belongsTo + with('category')
+is_active = 0 (արխիվ)       →  SoftDeletes
+$data դաշտ առ դաշտ          →  $fillable + validated()
+toArray() բացահայտ           →  JsonResource
+array_filter + array_values →  ->filter()->values()</div>
+
+    <h3>Հրամաններ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հրաման</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>php artisan make:model X -mfs</code></td><td>Մոդել + migration + factory + seeder</td></tr>
+      <tr><td><code>php artisan make:migration add_x_to_y_table</code></td><td>Նոր միգրացիա ⭐</td></tr>
+      <tr><td><code>php artisan migrate</code></td><td>Կատարել նորերը</td></tr>
+      <tr><td><code>php artisan migrate:rollback</code></td><td>Հետ գլորել վերջինը</td></tr>
+      <tr><td><code>php artisan migrate:fresh --seed</code></td><td>⚠️ Միայն լոկալ</td></tr>
+      <tr><td><code>php artisan db:seed</code></td><td>Լցնել տվյալներ</td></tr>
+      <tr><td><code>php artisan make:resource X</code></td><td>API resource</td></tr>
+    </table>
+    </div>
+
+    <h3>Eloquent-ի վտանգավոր տեղերը</h3>
+    <div class="tree">$p->category առանց with()     →  N+1
+$request->all() մոդելի մեջ    →  mass assignment
+$guarded = []                 →  ամեն ինչ բաց է
+return $product (JSON)        →  բոլոր սյունակները դուրս
+{product:slug} առանց is_active →  անջատվածը հանրային է
+unique slug + SoftDeletes     →  Duplicate entry
+$item->product->price         →  սխալ (ընթացիկ) գին
+->filter() առանց ->values()   →  JSON-ում օբյեկտ
+migrate:fresh սերվերում        →  բոլոր տվյալները կորած</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Ամբողջ սխեման միգրացիաներում է, ոչ ձեռքով</li>
+      <li>Կատարված միգրացիաները չեն խմբագրվում</li>
+      <li>Ամեն մոդել ունի <code>$fillable</code>, ոչ <code>$guarded = []</code></li>
+      <li><code>role</code>-ը <code>$fillable</code>-ում չէ</li>
+      <li>Գները <code>integer</code> են, ոչ <code>float</code></li>
+      <li><code>shouldBeStrict()</code>-ը միացված է զարգացման ժամանակ</li>
+      <li>Կապերը բեռնվում են <code>with()</code>-ով</li>
+      <li>Ապրանքները ջնջվում են փափուկ</li>
+      <li>Հին պատվերները ցույց են տալիս գինը գնման պահին</li>
+      <li>Հանրային <code>show</code>-ը ստուգում է <code>is_active</code></li>
+      <li>API-ն վերադարձնում է Resource, ոչ մոդել</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչու միգրացիաները լավ են <code>schema.sql</code>-ից</li>
+      <li>Գիտե՞մ, ինչու չի կարելի խմբագրել կատարված միգրացիան</li>
+      <li>Կարո՞ղ եմ բացատրել N+1-ը և դրա լուծումը</li>
+      <li>Հասկանո՞ւմ եմ <code>$fillable</code>-ի և <code>$guarded</code>-ի տարբերությունը և ինչու սպիտակ ցուցակ</li>
+      <li>Գիտե՞մ <code>is_active</code>-ի և <code>deleted_at</code>-ի տարբերությունը</li>
+      <li>Կարո՞ղ եմ նշել երկու բան, որ կորցրինք Դաս 12–13-ից Eloquent-ին անցնելիս</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p><strong>Վալիդացիա և auth</strong> — Laravel-ի վերջին դասը և Դաս 6-ի ու 16-ի հայելին։<br><br>
+      <code>validateProduct()</code>-ը կդառնա <code>$request-&gt;validate([...])</code> կամ Form Request դաս, <code>$old</code>-ը՝ <code>old()</code>, սխալները դաշտերի կողքին՝ <code>@error</code>։ Ադմինի <code>store</code>-ը և <code>update</code>-ը վերջապես կաշխատեն <code>$request-&gt;validated()</code>-ով։<br><br>
+      Fortify-ը կավելացնի մուտքը, և <code>/admin</code> խումբը կստանա <code>auth</code> middleware՝ Դաս 19-ի ժամանակավոր բացը կփակվի։ Կտեսնենք նաև <code>Gate</code>-երը, որ <code>role = 'admin'</code>-ը իրականում ինչ-որ բան նշանակի։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>PHP Բլոկ · Դաս 20 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

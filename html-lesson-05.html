@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 5 — Սեմանտիկ HTML</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>HTML/CSS Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Դաս 5 · 2 ժամ · HTML-ի եզրափակիչ</p>
+  <h1>Սեմանտիկ HTML</h1>
+  <p class="lede">Մինչ այժմ ամեն ինչ դնում էինք <code>div</code>-երի մեջ։ Այսօր սովորում ենք թեգեր, որոնք <strong>իմաստ ունեն</strong>՝ և կառուցում ենք էջի կմախքը, որին 10-րդ դասին կավելացնենք մեր դասավորության համակարգը։</p>
+
+  <div class="facts">
+    <span>Նախապայման՝ Դաս 01–04</span>
+    <span>Բլոկ 1 · HTML հիմունքներ</span>
+    <span>Կամուրջ Դաս 10-ին</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ինչո՞ւ <code>div</code>-ը միշտ բավարար չէ</li>
+      <li>Էջի ուղենիշները՝ <code>header</code>, <code>nav</code>, <code>main</code>, <code>footer</code></li>
+      <li><code>section</code> vs <code>article</code> vs <code>div</code></li>
+      <li><code>figure</code>, <code>time</code>, <code>address</code></li>
+      <li><code>main &gt; section</code> — մեր կառուցվածքի սկիզբը</li>
+      <li>Meta թեգեր որոնողական համակարգերի համար</li>
+      <li>Skip link — բաց թողնել նավիգացիան</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>div-ների ապուրը</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ ամեն ինչ div է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"header"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"nav"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"main"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"article"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"sidebar"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"footer"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>✅ նույնը՝ իմաստով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">header</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">nav</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">nav</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">header</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">main</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">article</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">aside</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">aside</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">main</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">footer</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">footer</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <p>Երկուսն էլ էկրանին նույն տեսքն ունեն։ Ամբողջ տարբերությունը <strong>իմաստի</strong> մեջ է։</p>
+
+    <div class="note">
+      <span class="tag">Ո՞ւմ համար է իմաստը</span>
+      <p><strong>Էկրանընթերցիչ։</strong> Կարող է անմիջապես ցատկել «հիմնական բովանդակություն»։ <code>div class="main"</code>-ը նրա համար պարզապես տուփ է — դասի անունը նա չի կարդում։<br><br>
+      <strong>Որոնողական համակարգեր։</strong> Հասկանում են՝ որտեղ է հոդվածը, որտեղ՝ մենյուն։<br><br>
+      <strong>Այլ ծրագրավորողներ։</strong> Եվ դու ինքդ՝ երեք ամիս հետո։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">div-ը վատը չէ</span>
+      <p><code>div</code>-ը դեռ պետք է — երբ պարզապես պետք է <strong>խմբավորել ինչ-որ բան ոճավորման համար</strong> և հատուկ իմաստ չկա։ Մեր <code>.row</code>-ը, <code>.col</code>-ը և <code>.wrapper</code>-ը հենց այդպիսին կլինեն։<br><br>
+      Կանոնը՝ եթե կա իմաստալից թեգ, օգտագործիր այն։ Եթե չկա՝ <code>div</code>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Էջի ուղենիշները</h2>
+
+    <div class="tree">┌────────────────────────────────────────┐
+│  &lt;header&gt;                              │
+│    լոգո, &lt;nav&gt; մենյու                  │
+├────────────────────────────────────────┤
+│  &lt;main&gt;                    │ &lt;aside&gt;  │
+│    հիմնական բովանդակությունը│  կողքի   │
+│    &lt;section&gt;, &lt;article&gt;     │  բլոկ    │
+├────────────────────────────────────────┤
+│  &lt;footer&gt;                              │
+│    կոնտակտներ, հեղինակային իրավունք     │
+└────────────────────────────────────────┘</div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Թեգ</th><th>Ինչի համար</th><th>Քանի՞սը էջում</th></tr>
+      <tr><td><code>&lt;header&gt;</code></td><td>Վերին մաս՝ լոգո, մենյու</td><td>Կարող է լինել մի քանիսը</td></tr>
+      <tr><td><code>&lt;nav&gt;</code></td><td>Նավիգացիա</td><td>Մի քանիսը (գլխավոր, footer-ի)</td></tr>
+      <tr><td><code>&lt;main&gt;</code></td><td>Հիմնական բովանդակությունը</td><td><strong>Ուղիղ մեկը</strong> ⭐</td></tr>
+      <tr><td><code>&lt;aside&gt;</code></td><td>Կողքի, երկրորդական</td><td>Մի քանիսը</td></tr>
+      <tr><td><code>&lt;footer&gt;</code></td><td>Ստորին մաս</td><td>Կարող է լինել մի քանիսը</td></tr>
+    </table>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">main-ը մեկն է</span>
+      <p>Էջում պիտի լինի <strong>ուղիղ մեկ <code>&lt;main&gt;</code></strong>, և դրա մեջ չեն մտնում կրկնվող տարրերը՝ header-ը, footer-ը, գլխավոր նավիգացիան։ Միայն այն, ինչ <em>յուրահատուկ</em> է այս էջին։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">header-ը միայն էջի վերևում չէ</span>
+      <p><code>&lt;header&gt;</code>-ը կարող է լինել նաև <code>&lt;article&gt;</code>-ի ներսում՝ որպես հոդվածի վերնագիր և ամսաթիվ։ Նույնը՝ <code>&lt;footer&gt;</code>-ի դեպքում։ Դրանք նշանակում են «այս բլոկի վերին/ստորին մաս», ոչ պարտադիր՝ ամբողջ էջի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>section vs article vs div</h2>
+    <p>Այս երեքի միջև ընտրությունը շփոթեցնում է բոլորին։ Կա պարզ ստուգում։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Թեգ</th><th>Ե՞րբ</th><th>Ստուգում</th></tr>
+      <tr><td><code>&lt;article&gt;</code></td><td>Ինքնուրույն միավոր</td><td>Կարո՞ղ ես այն վերցնել և տեղադրել ուրիշ էջում՝ իմաստը կպահպանվի՞</td></tr>
+      <tr><td><code>&lt;section&gt;</code></td><td>Էջի թեմատիկ բաժին</td><td>Ունի՞ վերնագիր, որը կմտներ բովանդակության ցանկ</td></tr>
+      <tr><td><code>&lt;div&gt;</code></td><td>Խմբավորում ոճավորման համար</td><td>Իմաստ չկա, միայն CSS-ի կարիք</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>article — ինքնուրույն միավոր</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">article</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">header</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">h3</span><span class="p">&gt;</span>Տնական գաթա<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">time</span> <span class="f">datetime</span>=<span class="s">"2026-08-10"</span><span class="p">&gt;</span>10 օգոստոսի<span class="p">&lt;/</span><span class="t">time</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">header</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Ամենապարզ բաղադրատոմսը...<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">footer</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Հեղինակ՝ Անի<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">footer</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <p>Բլոգի գրառում, ապրանքի քարտ, մեկնաբանություն, նորություն — բոլորն էլ <code>article</code> են։ Դրանք կարելի է վերցնել և դնել ուրիշ էջում առանց իմաստը կորցնելու։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>section — էջի բաժին</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">section</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">h2</span><span class="p">&gt;</span>Վերջին բաղադրատոմսերը<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">article</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">article</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">article</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">section-ը պիտի ունենա վերնագիր</span>
+      <p>Եթե բլոկը վերնագիր չունի, հավանաբար դա <code>section</code> չէ, այլ <code>div</code>։<br><br>
+      Եթե դիզայնում վերնագիր չկա, բայց իմաստով բաժին է՝ ավելացրու թաքնված վերնագիր՝ <code>&lt;h2 class="visually-hidden"&gt;</code>։ Այն կերևա միայն էկրանընթերցիչին։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Չափից շատ մի՛ մտածիր</span>
+      <p>Երբեմն ընտրությունը <code>section</code>-ի և <code>div</code>-ի միջև իսկապես երկիմաստ է։ Դա նորմալ է։ Կարևորը՝ <code>main</code>, <code>nav</code>, <code>header</code>, <code>footer</code> ուղենիշները ճիշտ դնելն է — դրանք տալիս են օգուտի 90%-ը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Այլ իմաստալից թեգեր</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>figure — նկար բացատրությամբ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">figure</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">img</span> <span class="f">src</span>=<span class="s">"images/gata.jpg"</span> <span class="f">alt</span>=<span class="s">"Թարմ թխած գաթա սկուտեղին"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">figcaption</span><span class="p">&gt;</span>Գաթան պատրաստ է 30 րոպեում<span class="p">&lt;/</span><span class="t">figcaption</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">figure</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">figcaption ≠ alt</span>
+      <p><code>alt</code>-ը <em>փոխարինում</em> է նկարին այն մարդկանց համար, ովքեր չեն տեսնում այն։<br>
+      <code>figcaption</code>-ը <em>լրացնում</em> է նկարը — այն տեսնում են բոլորը։<br><br>
+      Ուստի դրանք չպիտի կրկնեն իրար։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>time, address, mark</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- Ամսաթիվ՝ մեքենայի համար ընթեռնելի ձևաչափով --&gt;</span>
+<span class="p">&lt;</span><span class="t">time</span> <span class="f">datetime</span>=<span class="s">"2026-08-10"</span><span class="p">&gt;</span>10 օգոստոսի 2026<span class="p">&lt;/</span><span class="t">time</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">time</span> <span class="f">datetime</span>=<span class="s">"2026-08-10T19:30"</span><span class="p">&gt;</span>Այսօր 19:30-ին<span class="p">&lt;/</span><span class="t">time</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Կոնտակտային տվյալներ --&gt;</span>
+<span class="p">&lt;</span><span class="t">address</span><span class="p">&gt;</span>
+    Աբովյան 15, Երևան<span class="p">&lt;</span><span class="t">br</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"mailto:info@blog.am"</span><span class="p">&gt;</span>info@blog.am<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">address</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչո՞ւ datetime</span>
+      <p>«10 օգոստոսի» մարդն է հասկանում։ <code>datetime="2026-08-10"</code>-ը հասկանում է մեքենան։ Դրա շնորհիվ որոնողական համակարգը կարող է ցույց տալ գրառման ամսաթիվը, իսկ բրաուզերը՝ առաջարկել ավելացնել օրացույցում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>main &gt; section — կառուցվածքի սկիզբը</h2>
+    <p>Ահա այն օրինաչափությունը, որը կօգտագործես <strong>ամեն նախագծում</strong> մինչև դասընթացի վերջ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>հիմնական կմախքը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">body</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">header</span><span class="p">&gt;</span>
+        ...
+    <span class="p">&lt;/</span><span class="t">header</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">main</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">section</span> <span class="f">id</span>=<span class="s">"hero"</span><span class="p">&gt;</span>
+            ...
+        <span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">section</span> <span class="f">id</span>=<span class="s">"products"</span><span class="p">&gt;</span>
+            ...
+        <span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">section</span> <span class="f">id</span>=<span class="s">"contacts"</span><span class="p">&gt;</span>
+            ...
+        <span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;/</span><span class="t">main</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">footer</span><span class="p">&gt;</span>
+        ...
+    <span class="p">&lt;/</span><span class="t">footer</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="t">body</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <p>Էջը բաժանվում է <strong>հորիզոնական շերտերի</strong>։ Ամեն <code>section</code>-ը մեկ շերտ է՝ իր թեմայով և իր <code>id</code>-ով։</p>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ id ամեն section-ին</span>
+      <p><strong>1.</strong> Նավիգացիայի խարիսխներ՝ <code>&lt;a href="#contacts"&gt;</code> (Դաս 2)։<br>
+      <strong>2.</strong> CSS-ում հեշտ է դիմել կոնկրետ բաժնին՝ <code>#products .wrapper { ... }</code>։<br>
+      <strong>3.</strong> Երկրորդ բլոկում JavaScript-ը դրանցով կգտնի բաժինները։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ուր ենք գնում</span>
+      <p>10-րդ դասին ամեն <code>section</code>-ի ներսում կհայտնվի ևս երեք շերտ․<br><br>
+      <code>main &gt; section &gt; .row &gt; .col &gt; .wrapper</code><br><br>
+      <code>.row</code>-ը կպատասխանի պատերի համար, <code>.col</code>-ը՝ սյուների բացակների, <code>.wrapper</code>-ը՝ տեսքի։ Այսօր դու դնում ես դրա առաջին երկու շերտը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>head-ի լրացումը</h2>
+    <p>Դաս 1-ում <code>head</code>-ում ունեինք երեք տող։ Ահա մնացածը, որ պետք է իրական կայքին։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ամբողջական head</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">charset</span>=<span class="s">"UTF-8"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">name</span>=<span class="s">"viewport"</span> <span class="f">content</span>=<span class="s">"width=device-width, initial-scale=1.0"</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">title</span><span class="p">&gt;</span>Տնական գաթա — Խոհարարական բլոգ<span class="p">&lt;/</span><span class="t">title</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- Նկարագրություն Google-ի արդյունքներում --&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">name</span>=<span class="s">"description"</span>
+          <span class="f">content</span>=<span class="s">"Պարզ բաղադրատոմս տնական գաթայի համար՝ 4 բաղադրիչ և 30 րոպե։"</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- Ինչպես կերևա սոցցանցերում կիսվելիս --&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">property</span>=<span class="s">"og:title"</span> <span class="f">content</span>=<span class="s">"Տնական գաթա"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">property</span>=<span class="s">"og:description"</span> <span class="f">content</span>=<span class="s">"4 բաղադրիչ և 30 րոպե"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">property</span>=<span class="s">"og:image"</span> <span class="f">content</span>=<span class="s">"images/gata.jpg"</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- Պատկերակը ներդիրում --&gt;</span>
+    <span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"icon"</span> <span class="f">href</span>=<span class="s">"images/favicon.svg"</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- Ոճեր --&gt;</span>
+    <span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"stylesheet"</span> <span class="f">href</span>=<span class="s">"css/global.css"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"stylesheet"</span> <span class="f">href</span>=<span class="s">"css/main.css"</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">head</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Թեգ</th><th>Որտե՞ղ է երևում</th></tr>
+      <tr><td><code>&lt;title&gt;</code></td><td>Ներդիրում + Google-ի արդյունքի վերնագիր</td></tr>
+      <tr><td><code>description</code></td><td>Google-ի արդյունքի տակի տեքստը</td></tr>
+      <tr><td><code>og:*</code></td><td>Facebook, Telegram, WhatsApp-ում կիսվելիս</td></tr>
+      <tr><td><code>favicon</code></td><td>Ներդիրի պատկերակը</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Երկու CSS ֆայլ</span>
+      <p>Նկատեցի՞ր <code>global.css</code>-ը և <code>main.css</code>-ը։ Հաջորդ դասին կսկսենք դրանք լրացնել։ <code>global.css</code>-ը կաճի ամեն դասին և կմնա անփոփոխ նոր նախագծերում, իսկ <code>main.css</code>-ը յուրահատուկ կլինի ամեն նախագծի համար։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Skip link</h2>
+    <p>Ստեղնաշարով նավարկող մարդը ամեն էջում պիտի անցնի ամբողջ մենյուով, նախքան բովանդակությանը հասնելը։ 20 հղում × ամեն էջ։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>լուծումը՝ 3 տող</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">body</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"#main"</span> <span class="f">class</span>=<span class="s">"skip-link"</span><span class="p">&gt;</span>Անցնել բովանդակությանը<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">header</span><span class="p">&gt;</span> ... <span class="p">&lt;/</span><span class="t">header</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">main</span> <span class="f">id</span>=<span class="s">"main"</span><span class="p">&gt;</span> ... <span class="p">&lt;/</span><span class="t">main</span><span class="p">&gt;</span></code></pre>
+<pre><code><span class="c">/* css/global.css — կավելացնենք 6-րդ դասին */</span>
+.skip-link {
+    position: absolute;
+    left: -9999px;
+}
+
+.skip-link:focus {
+    left: 10px;
+    top: 10px;
+    background: white;
+    padding: 10px;
+    z-index: 100;
+}</code></pre>
+    </div>
+
+    <p>Հղումը թաքնված է, մինչև որ ստեղնաշարով ֆոկուս ստանա։ Այդ ժամանակ այն հայտնվում է վերին անկյունում։</p>
+
+    <div class="tip note">
+      <span class="tag">Ստուգիր հենց հիմա</span>
+      <p>Բացիր որևէ մեծ կայք և սեղմիր <kbd>Tab</kbd> մեկ անգամ։ Շատ լավ կայքերում առաջինը հայտնվում է հենց այդպիսի հղում։</p>
+    </div>
+
+    <h3>Նավիգացիաների անվանում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>երբ nav-երը մի քանիսն են</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">nav</span> <span class="f">aria-label</span>=<span class="s">"Գլխավոր մենյու"</span><span class="p">&gt;</span> ... <span class="p">&lt;/</span><span class="t">nav</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="t">nav</span> <span class="f">aria-label</span>=<span class="s">"Footer-ի հղումներ"</span><span class="p">&gt;</span> ... <span class="p">&lt;/</span><span class="t">nav</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">aria-label</span>
+      <p>Առաջին անգամ հանդիպում ենք <code>aria-*</code> ատրիբուտներին։ Դրանք տեսանելի չեն, բայց տալիս են լրացուցիչ տեղեկություն էկրանընթերցիչին։ Երբ էջում մի քանի <code>nav</code> կա, առանց <code>aria-label</code>-ի օգտագործողը կլսի պարզապես «նավիգացիա, նավիգացիա» և չի հասկանա՝ որն է որը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Խաղահրապարակ</h2>
+    <p>Ամբողջական էջի կմախք։ Փոխիր բովանդակությունը, ավելացրու նոր <code>section</code>։</p>
+
+    <div class="live">
+      <div class="live__tabs">
+        <button class="live__tab is-active" data-pane="html">HTML</button>
+        <button class="live__tab" data-pane="css">CSS</button>
+      </div>
+      <textarea class="live__code" data-pane="html">&lt;a href="#main" class="skip-link"&gt;Անցնել բովանդակությանը&lt;/a&gt;
+
+&lt;header&gt;
+    &lt;h1&gt;Խոհարարական բլոգ&lt;/h1&gt;
+    &lt;nav aria-label="Գլխավոր մենյու"&gt;
+        &lt;ul&gt;
+            &lt;li&gt;&lt;a href="#recipes"&gt;Բաղադրատոմսեր&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#about"&gt;Մեր մասին&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/nav&gt;
+&lt;/header&gt;
+
+&lt;main id="main"&gt;
+
+    &lt;section id="recipes"&gt;
+        &lt;h2&gt;Վերջին բաղադրատոմսերը&lt;/h2&gt;
+
+        &lt;article&gt;
+            &lt;header&gt;
+                &lt;h3&gt;Տնական գաթա&lt;/h3&gt;
+                &lt;time datetime="2026-08-10"&gt;10 օգոստոսի&lt;/time&gt;
+            &lt;/header&gt;
+            &lt;p&gt;Ամենապարզ ձևը՝ ընդամենը 4 բաղադրիչ։&lt;/p&gt;
+            &lt;footer&gt;&lt;small&gt;Հեղինակ՝ Անի&lt;/small&gt;&lt;/footer&gt;
+        &lt;/article&gt;
+
+        &lt;article&gt;
+            &lt;header&gt;
+                &lt;h3&gt;Ամառային սպաս&lt;/h3&gt;
+                &lt;time datetime="2026-08-05"&gt;5 օգոստոսի&lt;/time&gt;
+            &lt;/header&gt;
+            &lt;p&gt;Թարմ և թեթև՝ շոգ օրերի համար։&lt;/p&gt;
+            &lt;footer&gt;&lt;small&gt;Հեղինակ՝ Դավիթ&lt;/small&gt;&lt;/footer&gt;
+        &lt;/article&gt;
+    &lt;/section&gt;
+
+    &lt;section id="about"&gt;
+        &lt;h2&gt;Մեր մասին&lt;/h2&gt;
+        &lt;p&gt;Մենք հավաքում ենք պարզ բաղադրատոմսեր։&lt;/p&gt;
+    &lt;/section&gt;
+
+    &lt;aside&gt;
+        &lt;h2&gt;Հետաքրքիր փաստ&lt;/h2&gt;
+        &lt;p&gt;Գաթան ունի ավելի քան 20 տարածաշրջանային տարբերակ։&lt;/p&gt;
+    &lt;/aside&gt;
+
+&lt;/main&gt;
+
+&lt;footer&gt;
+    &lt;address&gt;
+        Աբովյան 15, Երևան&lt;br&gt;
+        &lt;a href="mailto:info@blog.am"&gt;info@blog.am&lt;/a&gt;
+    &lt;/address&gt;
+    &lt;p&gt;&lt;small&gt;&amp;copy; 2026 Խոհարարական բլոգ&lt;/small&gt;&lt;/p&gt;
+&lt;/footer&gt;</textarea>
+      <textarea class="live__code is-hidden" data-pane="css">/* Ցուցադրում ենք սահմանները, որ կառուցվածքը երևա */
+header, main, footer, aside {
+    border: 2px solid;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+header { border-color: #c62828; }
+main   { border-color: #003459; }
+aside  { border-color: #0f7b4f; }
+footer { border-color: #8a5a00; }
+
+section {
+    border: 1px dashed #999;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+article {
+    background: #f5f5f5;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+    padding: 0;
+}
+
+.skip-link {
+    position: absolute;
+    left: -9999px;
+}
+
+.skip-link:focus {
+    left: 10px;
+    top: 10px;
+    background: yellow;
+    padding: 8px;
+}</textarea>
+      <div class="live__actions">
+        <span>Գունավոր շրջանակները ցույց են տալիս ուղենիշները</span>
+        <button class="live__reset">Վերականգնել</button>
+      </div>
+      <iframe class="live__out" title="Արդյունք" sandbox=""></iframe>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Վերցրու Դաս 2-ի բլոգի էջը և վերաշարադրիր սեմանտիկ թեգերով՝ <code>header</code>, <code>nav</code>, <code>main</code>, <code>section</code>, <code>article</code>, <code>footer</code>։</li>
+      <li>Ամեն <code>section</code>-ի տուր <code>id</code> և կապիր նավիգացիայի հետ խարիսխներով։</li>
+      <li>Փաթեթավորիր առնվազն երեք բլոգային գրառում <code>article</code>-ի մեջ՝ ներսում <code>header</code>-ով և <code>footer</code>-ով։</li>
+      <li>Օգտագործիր <code>time</code>՝ <code>datetime</code> ատրիբուտով ամեն գրառման ամսաթվի համար։</li>
+      <li>Ավելացրու <code>figure</code> և <code>figcaption</code>։ Համոզվիր, որ <code>alt</code>-ը և <code>figcaption</code>-ը չեն կրկնում իրար։</li>
+      <li>Ավելացրու <code>aside</code>՝ կողքի բլոկ։ Բացատրիր մեկնաբանության մեջ՝ ինչո՞ւ այն <code>section</code> չէ։</li>
+      <li>Լրացրու <code>head</code>-ը՝ իմաստալից <code>title</code>, <code>description</code>, երեք <code>og:</code> թեգ, favicon։</li>
+      <li>Ավելացրու skip link։ Ստուգիր <kbd>Tab</kbd>-ով, որ այն հայտնվում է։</li>
+      <li>Ավելացրու երկրորդ <code>nav</code> footer-ում։ Երկուսին էլ տուր <code>aria-label</code>։</li>
+      <li>Բացիր որևէ մեծ կայք DevTools-ով և գտիր՝ որտե՞ղ են <code>main</code>-ը, <code>nav</code>-ը, <code>article</code>-ները։ Կա՞ skip link։ Գրիր արդյունքը 4–5 նախադասությամբ։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Թեգ</th><th>Ինչ է</th></tr>
+      <tr><td><code>&lt;header&gt;</code></td><td>Վերին մաս (էջի կամ բլոկի)</td></tr>
+      <tr><td><code>&lt;nav&gt;</code></td><td>Նավիգացիա</td></tr>
+      <tr><td><code>&lt;main&gt;</code></td><td>Հիմնական բովանդակություն — մեկը էջում ⭐</td></tr>
+      <tr><td><code>&lt;section&gt;</code></td><td>Թեմատիկ բաժին՝ վերնագրով</td></tr>
+      <tr><td><code>&lt;article&gt;</code></td><td>Ինքնուրույն միավոր</td></tr>
+      <tr><td><code>&lt;aside&gt;</code></td><td>Երկրորդական բովանդակություն</td></tr>
+      <tr><td><code>&lt;footer&gt;</code></td><td>Ստորին մաս</td></tr>
+      <tr><td><code>&lt;figure&gt;</code> + <code>&lt;figcaption&gt;</code></td><td>Նկար բացատրությամբ</td></tr>
+      <tr><td><code>&lt;time datetime&gt;</code></td><td>Ամսաթիվ</td></tr>
+      <tr><td><code>&lt;address&gt;</code></td><td>Կոնտակտային տվյալներ</td></tr>
+      <tr><td><code>&lt;div&gt;</code></td><td>Խմբավորում ոճավորման համար</td></tr>
+      <tr><td><code>aria-label</code></td><td>Անուն էկրանընթերցիչի համար</td></tr>
+    </table>
+    </div>
+
+    <h3>Ընտրության ալգորիթմ</h3>
+    <div class="tree">Կարո՞ղ ես տեղափոխել ուրիշ էջ՝ իմաստը պահպանելով
+   │
+   ├── Այո  →  &lt;article&gt;
+   │
+   └── Ոչ
+        │
+        Ունի՞ վերնագիր և առանձին թեմա
+           │
+           ├── Այո  →  &lt;section&gt;
+           │
+           └── Ոչ   →  &lt;div&gt;</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li>Էջում ուղիղ մեկ <code>&lt;main&gt;</code> կա</li>
+      <li><code>header</code>-ը և <code>footer</code>-ը <code>main</code>-ից դուրս են</li>
+      <li>Ամեն <code>section</code> ունի վերնագիր</li>
+      <li>Կրկնվող միավորները <code>article</code> են</li>
+      <li>Մենյուն <code>nav &gt; ul &gt; li &gt; a</code> է</li>
+      <li>Մի քանի <code>nav</code>-ի դեպքում կան <code>aria-label</code>-եր</li>
+      <li>Կա skip link</li>
+      <li><code>head</code>-ում կա <code>description</code> և իմաստալից <code>title</code></li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչու <code>div class="header"</code>-ը վատ է</li>
+      <li>Գիտե՞մ տարբերությունը <code>section</code>-ի և <code>article</code>-ի միջև</li>
+      <li>Հասկանո՞ւմ եմ, ինչու <code>main</code>-ը մեկն է</li>
+      <li>Գիտե՞մ, ինչ է skip link-ը և ինչու է պետք</li>
+    </ul>
+  </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>HTML-ի ամփոփում</h2>
+    <p>Հինգ դասով անցանք ամբողջ HTML-ը։ Ահա ինչ գիտես հիմա։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դաս</th><th>Ինչ սովորեցինք</th></tr>
+      <tr><td>01</td><td>Ինչպես է աշխատում վեբը, էջի կմախքը, ներդրվածություն</td></tr>
+      <tr><td>02</td><td>Տեքստ, ցուցակներ, հղումներ, նկարներ, ուղիներ</td></tr>
+      <tr><td>03</td><td>Աղյուսակներ և խիստ ներդրվածություն</td></tr>
+      <tr><td>04</td><td>Ֆորմաներ և <code>label</code></td></tr>
+      <tr><td>05</td><td>Սեմանտիկա և էջի կմախքը</td></tr>
+    </table>
+    </div>
+
+    <div class="note">
+      <span class="tag">Երեք բան, որ պիտի մնա քեզ հետ</span>
+      <p><strong>1.</strong> HTML-ը <em>իմաստի</em> մասին է, ոչ տեսքի։ Տեսքը՝ CSS-ի գործն է։<br>
+      <strong>2.</strong> Ներդրվածությունը կարևոր է․ ինչ վերջինն է բացվել, առաջինը պիտի փակվի։<br>
+      <strong>3.</strong> Հասանելիությունը մանրուք չէ։ <code>alt</code>, <code>label</code>, վերնագրերի հիերարխիա, <code>scope</code> — դրանք ամեն օր օգնում են իրական մարդկանց։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p><strong>CSS-ի սկիզբը։</strong> Սելեկտորներ, կասկադ, սպեցիֆիկություն։ Եվ այնտեղ կծնվի քո <code>global.css</code>-ը, որը կաճի ամեն դասին և կուղեկցի քեզ բոլոր հետագա նախագծերում։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>HTML/CSS Բլոկ · Դաս 05 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

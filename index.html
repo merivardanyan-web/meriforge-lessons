@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Full Stack Web Development · 72 դաս</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<style>
+/* ---------- Բլոկի վերնագիր ---------- */
+.blk{margin:44px 0 0}
+.blk__head{
+  display:flex; align-items:baseline; justify-content:space-between;
+  gap:14px; flex-wrap:wrap;
+  border-bottom:2px solid var(--rule); padding-bottom:10px; margin-bottom:6px;
+}
+.blk__title{
+  font-family:"Noto Serif Armenian", serif; font-weight:700;
+  font-size:1.5rem; line-height:1.2; margin:0;
+}
+.blk__meta{
+  font-family:"JetBrains Mono", monospace; font-size:11px;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--muted);
+}
+.blk__note{color:var(--muted); font-size:.9rem; margin:10px 0 16px}
+
+/* ---------- Առաջընթացի գիծ ---------- */
+.bar{height:5px; border-radius:99px; background:var(--rule); overflow:hidden; margin:12px 0 18px}
+.bar i{display:block; height:100%; background:var(--pen); border-radius:99px}
+
+/* ---------- Դասերի ցանկ ---------- */
+.lessons{
+  display:grid; gap:8px;
+  grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+  margin:0; padding:0; list-style:none;
+}
+.lessons li{margin:0}
+
+.les{
+  display:flex; align-items:center; gap:12px;
+  padding:11px 14px; border:1px solid var(--rule); border-radius:9px;
+  background:var(--card); text-decoration:none; color:inherit;
+  transition:border-color .15s, transform .15s, box-shadow .15s;
+  height:100%;
+}
+.les:hover{border-color:var(--pen); transform:translateY(-1px); box-shadow:var(--shadow)}
+.les:focus-visible{outline:2px solid var(--pen); outline-offset:2px}
+
+.les__n{
+  flex:0 0 auto; width:34px; height:34px; border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:"JetBrains Mono", monospace; font-size:13px; font-weight:700;
+  background:color-mix(in srgb, var(--pen) 12%, transparent); color:var(--pen);
+}
+.les__t{font-size:.94rem; line-height:1.35}
+.les__sub{display:block; font-size:.78rem; color:var(--muted); margin-top:1px}
+
+/* Հավելված */
+.les--extra .les__n{
+  background:color-mix(in srgb, var(--ok) 14%, transparent); color:var(--ok);
+  font-size:15px;
+}
+
+/* Դեռ պատրաստ չէ */
+.les--soon{
+  opacity:.5; cursor:default; border-style:dashed;
+  pointer-events:none;
+}
+.les--soon .les__n{background:color-mix(in srgb, var(--ink) 8%, transparent); color:var(--muted)}
+
+/* ---------- Ամփոփիչ վիճակագրություն ---------- */
+.stats{
+  display:grid; gap:10px; grid-template-columns:repeat(auto-fit, minmax(140px,1fr));
+  margin:26px 0 6px;
+}
+.stat{
+  border:1px solid var(--rule); border-radius:10px; padding:14px 16px;
+  background:var(--card);
+}
+.stat b{display:block; font-size:1.7rem; line-height:1.1; font-family:"Noto Serif Armenian", serif}
+.stat span{font-size:.8rem; color:var(--muted)}
+
+/* ---------- Ընդհանուր ֆայլեր ---------- */
+.assets{
+  display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 0;
+  padding:0; list-style:none;
+}
+.assets a{
+  display:inline-block; padding:7px 13px; border-radius:7px;
+  border:1px solid var(--rule); background:var(--card);
+  font-family:"JetBrains Mono", monospace; font-size:12.5px;
+  text-decoration:none; color:inherit;
+}
+.assets a:hover{border-color:var(--pen); color:var(--pen)}
+
+@media (max-width:640px){
+  .lessons{grid-template-columns:1fr}
+  .blk__title{font-size:1.25rem}
+}
+</style>
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բոլոր դասերը</b></div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Ուսումնական ծրագիր · 3 բլոկ · 144 ժամ</p>
+  <h1>Full Stack Web Development</h1>
+  <p class="lede">72 դաս՝ երկուական ժամ։ Զրոյից մինչև լիարժեք վեբ ծրագրավորող՝ HTML-ից և CSS-ից մինչև Laravel։ Ամեն դաս առանձին ֆայլ է՝ բացատրություններով, կենդանի օրինակներով և տնային աշխատանքով։</p>
+
+  <div class="stats">
+    <div class="stat"><b>72</b><span>դաս ընդհանուր</span></div>
+    <div class="stat"><b>72</b><span>պատրաստ է</span></div>
+    <div class="stat"><b>3</b><span>բլոկ</span></div>
+    <div class="stat"><b>144</b><span>ակադեմիական ժամ</span></div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- ԲԼՈԿ 1 · HTML / CSS                                          -->
+  <!-- ============================================================ -->
+  <section class="blk">
+    <div class="blk__head">
+      <h2 class="blk__title">Բլոկ 1 · HTML և CSS</h2>
+      <span class="blk__meta">24 / 24 · ✓ ավարտված</span>
+    </div>
+    <p class="blk__note">Կմախքից մինչև ամբողջական ադապտիվ կայք։ Կենտրոնական թեման՝ <code>main &gt; section &gt; .row &gt; .col &gt; .wrapper</code> կառուցվածքային համակարգը և <code>global.css</code> / <code>main.css</code> բաժանումը։</p>
+
+    <div class="bar"><i style="width:100%"></i></div>
+
+    <ul class="lessons">
+      <li><a class="les" href="html-lesson-01.html">
+        <span class="les__n">01</span>
+        <span class="les__t">Ինչպես է աշխատում վեբը<span class="les__sub">Կմախք, թեգեր, ներդրվածություն</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-02.html">
+        <span class="les__n">02</span>
+        <span class="les__t">Տեքստ և բովանդակություն<span class="les__sub">Ցուցակներ, հղումներ, նկարներ, ուղիներ</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-03.html">
+        <span class="les__n">03</span>
+        <span class="les__t">Աղյուսակներ<span class="les__sub">Խիստ ներդրվածություն, colspan, scope</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-04.html">
+        <span class="les__n">04</span>
+        <span class="les__t">Ֆորմաներ<span class="les__sub">input, label, select, վալիդացիա</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-05.html">
+        <span class="les__n">05</span>
+        <span class="les__t">Սեմանտիկ HTML<span class="les__sub">header, main, section, article</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-06.html">
+        <span class="les__n">06</span>
+        <span class="les__t">Սելեկտորներ և կասկադ<span class="les__sub">Սպեցիֆիկություն · ծնվում է global.css-ը</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-07.html">
+        <span class="les__n">07</span>
+        <span class="les__t">Գույն և տիպոգրաֆիա<span class="les__sub">Կոնտրաստ, տառատեսակներ, rem</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-08.html">
+        <span class="les__n">08</span>
+        <span class="les__t">Box model<span class="les__sub">padding, margin, box-sizing</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-09.html">
+        <span class="les__n">09</span>
+        <span class="les__t">display և նորմալ հոսք<span class="les__sub">block, inline, overflow</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-10.html">
+        <span class="les__n">10</span>
+        <span class="les__t">Կառուցվածքի համակարգը<span class="les__sub">.row · .col · .wrapper — հիմնարար դաս</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-11.html">
+        <span class="les__n">11</span>
+        <span class="les__t">Կառուցվածք և Flexbox I<span class="les__sub">Առանցքներ, justify, align</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-12.html">
+        <span class="les__n">12</span>
+        <span class="les__t">Կառուցվածք և Flexbox II<span class="les__sub">flex-grow, gap, wrap</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-13.html">
+        <span class="les__n">13</span>
+        <span class="les__t">Դիզայնից դեպի կոդ<span class="les__sub">Մակետի չափում → main.css → HTML</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-14.html">
+        <span class="les__n">14</span>
+        <span class="les__t">Ադապտիվություն<span class="les__sub">Media queries, breakpoint-ներ, clamp</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-15.html">
+        <span class="les__n">15</span>
+        <span class="les__t">position և z-index<span class="les__sub">sticky, absolute, stacking context</span></span></a></li>
+
+      <li><a class="les les--extra" href="html-lesson-15-practice.html">
+        <span class="les__n">＋</span>
+        <span class="les__t">Հավելված · position-ի 16 օրինակ<span class="les__sub">Գործնական ձևանմուշներ և ախտորոշում</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-16.html">
+        <span class="les__n">16</span>
+        <span class="les__t">Նկարներ և media<span class="les__sub">object-fit, aspect-ratio, SVG, srcset</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-17.html">
+        <span class="les__n">17</span>
+        <span class="les__t">Կոմպոնենտներ<span class="les__sub">Քարտեր, կոճակներ, BEM, ::before</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-18.html">
+        <span class="les__n">18</span>
+        <span class="les__t">Նավիգացիա<span class="les__sub">Բուրգեր-մենյու, dropdown, footer</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-19.html">
+        <span class="les__n">19</span>
+        <span class="les__t">CSS փոփոխականներ և թեմաներ<span class="les__sub">Դիզայն-տոկեններ, մուգ/բաց թեմա</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-20.html">
+        <span class="les__n">20</span>
+        <span class="les__t">Grid<span class="les__sub">auto-fit, minmax · ե՞րբ Grid, ե՞րբ Flex</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-21.html">
+        <span class="les__n">21</span>
+        <span class="les__t">Անցումներ և անիմացիաներ<span class="les__sub">transition, transform, keyframes</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-22.html">
+        <span class="les__n">22</span>
+        <span class="les__t">Նախագիծ · օր 1<span class="les__sub">Landing page-ի կմախք և դասավորություն</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-23.html">
+        <span class="les__n">23</span>
+        <span class="les__t">Նախագիծ · օր 2<span class="les__sub">Ադապտիվություն, հղկում, հրապարակում</span></span></a></li>
+
+      <li><a class="les" href="html-lesson-24.html">
+        <span class="les__n">24</span>
+        <span class="les__t">Եզրափակիչ<span class="les__sub">Ամփոփում և կամուրջ JS բլոկին</span></span></a></li>
+    </ul>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- ԲԼՈԿ 2 · JavaScript                                          -->
+  <!-- ============================================================ -->
+  <section class="blk">
+    <div class="blk__head">
+      <h2 class="blk__title">Բլոկ 2 · JavaScript</h2>
+      <span class="blk__meta">24 / 24 · ✓ ավարտված</span>
+    </div>
+    <p class="blk__note">Հիմունքներից մինչև OOP և API-ներ։ Կենտրոնական գաղափարը՝ <strong>վիճակի փոփոխություն → render()</strong>, մեկ ճշմարտության աղբյուր և իրադարձությունների դելեգացիա — նույն օրինաչափությունները, որոնց վրա կառուցված են React-ը և Vue-ն։</p>
+
+    <div class="bar"><i style="width:100%"></i></div>
+
+    <ul class="lessons">
+      <li><a class="les" href="js-lesson-01.html">
+        <span class="les__n">01</span>
+        <span class="les__t">Ներածություն<span class="les__sub">Console, փոփոխականներ, տիպեր</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-02.html">
+        <span class="les__n">02</span>
+        <span class="les__t">Օպերատորներ և պայմաններ<span class="les__sub">truthy/falsy, if, switch, ternary</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-03.html">
+        <span class="les__n">03</span>
+        <span class="les__t">Ցիկլեր<span class="les__sub">for, while, break, ներդրված ցիկլեր</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-04.html">
+        <span class="les__n">04</span>
+        <span class="les__t">Ֆունկցիաներ<span class="les__sub">DRY, return, arrow, տեսանելիության տիրույթ</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-05.html">
+        <span class="les__n">05</span>
+        <span class="les__t">Զանգվածներ<span class="les__sub">push, slice, splice, հղումով փոխանցում</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-06.html">
+        <span class="les__n">06</span>
+        <span class="les__t">Զանգվածների մեթոդներ<span class="les__sub">map, filter, reduce, sort</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-07.html">
+        <span class="les__n">07</span>
+        <span class="les__t">Օբյեկտներ<span class="les__sub">Բանալիներ, this, destructuring, spread</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-08.html">
+        <span class="les__n">08</span>
+        <span class="les__t">Տողեր, Math, Date<span class="les__sub">Ներկառուցված գործիքներ</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-09.html">
+        <span class="les__n">09</span>
+        <span class="les__t">DOM · ընտրություն<span class="les__sub">querySelector, նավարկում, closest</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-10.html">
+        <span class="les__n">10</span>
+        <span class="les__t">DOM · փոփոխում<span class="les__sub">classList, dataset, render()</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-11.html">
+        <span class="les__n">11</span>
+        <span class="les__t">Իրադարձություններ I<span class="les__sub">addEventListener, մոդալ, թաբեր</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-12.html">
+        <span class="les__n">12</span>
+        <span class="les__t">Իրադարձություններ II<span class="les__sub">Bubbling, դելեգացիա, to-do ցուցակ</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-13.html">
+        <span class="les__n">13</span>
+        <span class="les__t">Ֆորմաներ և վալիդացիա<span class="les__sub">FormData, regex, սխալների ցուցադրում</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-14.html">
+        <span class="les__n">14</span>
+        <span class="les__t">Բրաուզերի API-ներ<span class="les__sub">localStorage, ժամաչափեր, debounce</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-15.html">
+        <span class="les__n">15</span>
+        <span class="les__t">Մինի նախագիծ · օր 1<span class="les__sub">Կատալոգ՝ ֆիլտր, որոնում, տեսակավորում</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-16.html">
+        <span class="les__n">16</span>
+        <span class="les__t">Մինի նախագիծ · օր 2<span class="les__sub">Զամբյուղ, ռեֆակտորինգ, դեբագ</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-17.html">
+        <span class="les__n">17</span>
+        <span class="les__t">Git և GitHub<span class="les__sub">Commit, ճյուղեր, GitHub Pages</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-18.html">
+        <span class="les__n">18</span>
+        <span class="les__t">ES մոդուլներ<span class="les__sub">import / export, նախագծի բաժանում</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-19.html">
+        <span class="les__n">19</span>
+        <span class="les__t">Ասինխրոն JS I<span class="les__sub">Event loop, callbacks, Promise</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-20.html">
+        <span class="les__n">20</span>
+        <span class="les__t">fetch և async/await<span class="les__sub">HTTP, երեք վիճակ, սխալների մշակում</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-21.html">
+        <span class="les__n">21</span>
+        <span class="les__t">Առաջադեմ API աշխատանք<span class="les__sub">Էջավորում, AbortController, CORS</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-22.html">
+        <span class="les__n">22</span>
+        <span class="les__t">OOP JavaScript-ում<span class="les__sub">class, ժառանգում, #private</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-23.html">
+        <span class="les__n">23</span>
+        <span class="les__t">Փակույթներ և սխալներ<span class="les__sub">Closures, custom errors, Set, Map</span></span></a></li>
+
+      <li><a class="les" href="js-lesson-24.html">
+        <span class="les__n">24</span>
+        <span class="les__t">Ամփոփում և վերջնական նախագիծ<span class="les__sub">Գնահատում և ճանապարհային քարտեզ</span></span></a></li>
+    </ul>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- ԲԼՈԿ 3 · PHP                                                 -->
+  <!-- ============================================================ -->
+  <section class="blk">
+    <div class="blk__head">
+      <h2 class="blk__title">Բլոկ 3 · PHP, MVC, Laravel և կարիերա</h2>
+      <span class="blk__meta">24 / 24 պատրաստ</span>
+    </div>
+    <p class="blk__note">Սերվերի կողմը՝ մաքուր PHP-ից մինչև Laravel։ Անվտանգությունը բաժանված է չորս դասի վրա (05, 06, 10, 16)։ Վերջին երեք դասը կարիերայի մասին են և կառուցվում են աշակերտի սեփական նախագծի վրա։</p>
+
+    <div class="bar"><i style="width:100%"></i></div>
+
+    <ul class="lessons">
+      <li><a class="les" href="php-lesson-01.html"><span class="les__n">01</span><span class="les__t">Սերվերը և միջավայրը<span class="les__sub">Laragon, առաջին PHP էջ, var_dump</span></span></a></li>
+      <li><a class="les" href="php-lesson-02.html"><span class="les__n">02</span><span class="les__t">Շարահյուսություն JS-ից հետո<span class="les__sub">Տիպեր, == vs ===, պայմաններ, ցիկլեր</span></span></a></li>
+      <li><a class="les" href="php-lesson-03.html"><span class="les__n">03</span><span class="les__t">Զանգվածներ և ֆունկցիաներ<span class="les__sub">Ասոցիատիվ, foreach, տիպերի հայտարարում</span></span></a></li>
+      <li><a class="les" href="php-lesson-04.html"><span class="les__n">04</span><span class="les__t">AI որպես աշխատանքային գործիք<span class="les__sub">Պրոմպտինգ, ստուգում, էթիկա, սահմաններ</span></span></a></li>
+      <li><a class="les" href="php-lesson-05.html"><span class="les__n">05</span><span class="les__t">Շաբլոններ և XSS<span class="les__sub">layout, render(), htmlspecialchars</span></span></a></li>
+      <li><a class="les" href="php-lesson-06.html"><span class="les__n">06</span><span class="les__t">Ֆորմաներ և վալիդացիա<span class="les__sub">GET, POST, սերվերային ստուգում, PRG</span></span></a></li>
+      <li><a class="les" href="php-lesson-07.html"><span class="les__n">07</span><span class="les__t">Սեսիաներ, cookie, ֆայլեր<span class="les__sub">Վիճակ, flash, զամբյուղ, վերբեռնում</span></span></a></li>
+      <li><a class="les" href="php-lesson-08.html"><span class="les__n">08</span><span class="les__t">SQL I · աղյուսակներ և հարցումներ<span class="les__sub">Մեկ աղյուսակ, INSERT, SELECT, UPDATE, DELETE</span></span></a></li>
+      <li><a class="les" href="php-lesson-09.html"><span class="les__n">09</span><span class="les__t">SQL II · կապեր և JOIN<span class="les__sub">Foreign key, JOIN, GROUP BY</span></span></a></li>
+      <li><a class="les" href="php-lesson-10.html"><span class="les__n">10</span><span class="les__t">PDO և SQL injection<span class="les__sub">Prepared statements, անվտանգություն</span></span></a></li>
+      <li><a class="les" href="php-lesson-11.html"><span class="les__n">11</span><span class="les__t">CRUD · ադմին վահանակ<span class="les__sub">INSERT, UPDATE, DELETE, տրանզակցիաներ</span></span></a></li>
+      <li><a class="les" href="php-lesson-12.html"><span class="les__n">12</span><span class="les__t">OOP · դասեր և օբյեկտներ<span class="les__sub">class, $this, readonly, ֆաբրիկա</span></span></a></li>
+      <li><a class="les" href="php-lesson-13.html"><span class="les__n">13</span><span class="les__t">OOP · ժառանգում և ինտերֆեյս<span class="les__sub">extends, interface, abstract, կոմպոզիցիա</span></span></a></li>
+      <li><a class="les" href="php-lesson-14.html"><span class="les__n">14</span><span class="les__t">Composer, namespace, Repository<span class="les__sub">Autoload, PSR-4, կախվածություններ</span></span></a></li>
+      <li><a class="les" href="php-lesson-15.html"><span class="les__n">15</span><span class="les__t">Մինի-MVC<span class="les__sub">Router, կոնտրոլերներ, front controller</span></span></a></li>
+      <li><a class="les" href="php-lesson-16.html"><span class="les__n">16</span><span class="les__t">Նույնականացում և CSRF<span class="les__sub">password_hash, մուտք, token</span></span></a></li>
+      <li><a class="les" href="php-lesson-17.html"><span class="les__n">17</span><span class="les__t">Սեփական REST API<span class="les__sub">JSON, կարգավիճակի կոդեր, fetch</span></span></a></li>
+      <li><a class="les" href="php-lesson-18.html"><span class="les__n">18</span><span class="les__t">Laravel · ներածություն<span class="les__sub">Artisan, routing · քո Router-ի հայելին</span></span></a></li>
+      <li><a class="les" href="php-lesson-19.html"><span class="les__n">19</span><span class="les__t">Laravel · Blade և Controllers<span class="les__sub">Layout, կոմպոնենտներ, autowiring, resource</span></span></a></li>
+      <li><a class="les" href="php-lesson-20.html"><span class="les__n">20</span><span class="les__t">Laravel · Eloquent<span class="les__sub">Միգրացիաներ, կապեր, N+1, mass assignment</span></span></a></li>
+      <li><a class="les" href="php-lesson-21.html"><span class="les__n">21</span><span class="les__t">Laravel · վալիդացիա և auth<span class="les__sub">Form Request, Fortify, Gate-եր</span></span></a></li>
+      <li><a class="les" href="php-lesson-22.html"><span class="les__n">22</span><span class="les__t">Նախագիծ → պորտֆոլիո<span class="les__sub">Deploy, README, GitHub, LinkedIn</span></span></a></li>
+      <li><a class="les" href="php-lesson-23.html"><span class="les__n">23</span><span class="les__t">CV, ATS և աշխատաշուկա<span class="les__sub">AI-հարմարեցում, Հայաստան, remote, freelance</span></span></a></li>
+      <li><a class="les" href="php-lesson-24.html"><span class="les__n">24</span><span class="les__t">Հարցազրույց և եզրափակիչ<span class="les__sub">Հարցեր, հոգեբանություն, աշխատավարձ</span></span></a></li>
+    </ul>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- ՎԵՐՋՆԱԿԱՆ ՆԱԽԱԳԻԾ                                            -->
+  <!-- ============================================================ -->
+  <section class="blk">
+    <div class="blk__head">
+      <h2 class="blk__title">Վերջնական նախագիծ</h2>
+      <span class="blk__meta">4 շաբաթ · պաշտպանություն</span>
+    </div>
+    <p class="blk__note">Սեփական full-stack հավելված նոր թեմայով՝ երեք բլոկի բոլոր հմտություններով։ Վեց տարբերակ, պարտադիր պահանջներ՝ դասերի հղումներով, ժամանակացույց, 100 միավորանոց գնահատում և պաշտպանության կառուցվածք։</p>
+
+    <ul class="lessons">
+      <li><a class="les" href="final-project.html"><span class="les__n">★</span><span class="les__t">Քո սեփական full-stack հավելվածը<span class="les__sub">Laravel + JS + սեփական CSS · deploy · README · պաշտպանություն</span></span></a></li>
+    </ul>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="blk">
+    <div class="blk__head">
+      <h2 class="blk__title">Ընդհանուր ֆայլեր</h2>
+      <span class="blk__meta">Assets</span>
+    </div>
+    <p class="blk__note">Բոլոր դասերը հենվում են այս ֆայլերի վրա։ Դասընթացի ընթացքում կառուցվող <code>global.css</code>-ը և <code>main.css</code>-ը՝ որպես նմուշ։</p>
+
+    <ul class="assets">
+      <li><a href="lesson.css">lesson.css</a></li>
+      <li><a href="lesson.js">lesson.js</a></li>
+      <li><a href="lesson-css.js">lesson-css.js</a></li>
+      <li><a href="global.css">global.css</a></li>
+      <li><a href="main.css">main.css</a></li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>Full Stack Web Development · 72 դաս · 3 բլոկ</span>
+    <span>Ուսումնական ծրագիր</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

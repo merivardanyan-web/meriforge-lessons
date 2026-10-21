@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHP Դաս 22 — Նախագիծ → պորտֆոլիո</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<script src="lesson-css.js" defer></script>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>PHP Block</b> · 24 դաս</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">PHP Դաս 22 · 2 ժամ · Կարիերա 1 / 3</p>
+  <h1>Նախագիծ → պորտֆոլիո</h1>
+  <p class="lede">ՏեխնոՄարկետը աշխատում է <code>technomarket-laravel.test</code>-ում, այսինքն միայն քո համակարգչում։ Գործատուն այն չի տեսնի։ Այսօր նախագիծը հրապարակում ենք իրական հասցեով, գրում ենք README, որը կարդացվում է 60 վայրկյանում, դասավորում ենք GitHub պրոֆիլը և LinkedIn-ը։ Սա կարիերայի երեք դասից առաջինն է, և ամբողջը կատարվում է քո նախագծի վրա։</p>
+
+  <div class="facts">
+    <span>Բլոկ 3 · Դաս 22 / 24</span>
+    <span>Deploy · README · GitHub · LinkedIn</span>
+    <span>Գները ստուգված են 2026-ի հոկտեմբերին</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ի՞նչ ենք սովորելու այսօր</h2>
+    <ul class="goals">
+      <li>Ինչ է տեսնում ռեկրուտերը առաջին րոպեում</li>
+      <li>Git-ի հիգիենա․ գաղտնիքները պահոցում չեն</li>
+      <li>Laravel-ի production կարգավորումը</li>
+      <li>Հարձակում՝ սխալ document root և բաց <code>.env</code></li>
+      <li>Որտեղ հրապարակել․ երեք ազնիվ տարբերակ</li>
+      <li>Deploy-ից հետո՝ ադմին, դեմո հաշիվ և ստուգում</li>
+      <li>README, որը կարդում են մինչև վերջ</li>
+      <li>GitHub պրոֆիլ և LinkedIn</li>
+    </ul>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>60 վայրկյան</h2>
+
+    <div class="tree">Ռեկրուտերը կամ թիմլիդը բացում է քո CV-ի հղումը
+
+  0–10 վ   GitHub պրոֆիլ  →  ամրացված պահոցներ, նկարագրություններ
+  10–25 վ  README         →  ի՞նչ է սա, սքրինշոթ, demo հղում
+  25–45 վ  Demo           →  բացվու՞մ է, աշխատու՞մ է, արագ է՞
+  45–60 վ  Կոդ            →  մեկ-երկու ֆայլ, commit-ների պատմություն
+
+  Եթե քայլերից մեկը կոտրված է, հաջորդին չեն հասնում ⭐</div>
+
+        <div class="warn note">
+      <span class="tag">Ազնիվ փաստ․ ձեր խմբում 15 ՏեխնոՄարկետ կա</span>
+      <p>Դասընթացի նախագիծը բոլորի մոտ նույնն է։ Եթե ռեկրուտերը մեկ ամսում տեսնի DiGi School-ի երեք շրջանավարտի պրոֆիլ, և երեքում էլ լինի նույն ՏեխնոՄարկետը, նույն README-ով, ոչ մեկն էլ չի առանձնանա։<br><br>
+      Լուծումը <strong>ոչ թե նախագիծը թաքցնելն է, այլ այն ընդլայնելը</strong>։ Ավելացրու մեկ բան, որ դասընթացում չկար, և գրիր այդ մասին README-ում։ Թեմաներ՝ բաժին 13-ի տնայինում։<br><br>
+      «Ես կառուցեցի MVC ֆրեյմվորք զրոյից, ապա նույն նախագիծը տեղափոխեցի Laravel» արդեն լավ պատմություն է։ «…և ավելացրի ապրանքների գնահատականներ Policy-ով և թեստերով» արդեն <em>քո</em> պատմությունն է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Գաղտնիքները պահոցում չեն</h2>
+    <p>JS Դաս 17-ում սովորեցիր <code>.gitignore</code>։ Այնտեղ ամենավատ բանը, որ կարող էր հայտնվել պահոցում, <code>node_modules</code>-ն էր։ Այստեղ դա <code>.env</code>-ն է՝ բազայի գաղտնաբառով և <code>APP_KEY</code>-ով։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>.gitignore — Laravel-ը այն ստեղծում է ինքը (հատված)</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="s">/vendor</span>           <span class="c"># composer install-ը կվերականգնի</span>
+<span class="s">/node_modules</span>
+<span class="s">/public/storage</span>   <span class="c"># symlink, storage:link-ը կստեղծի</span>
+<span class="s">.env</span>              <span class="c"># ⭐ գաղտնիքներ</span>
+<span class="s">.env.backup</span>
+<span class="s">.env.production</span>
+<span class="c"># ...</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ստուգում․ .env-ը երբևէ commit արվե՞լ է</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># Ներկայիս վիճակը. պետք է լինի դատարկ</span>
+git ls-files .env
+
+<span class="c"># ԱՄԲՈՂՋ պատմությունը. պետք է լինի դատարկ ⭐</span>
+git log --all --oneline -- .env
+
+<span class="c"># Գաղտնաբառեր կոդում (օրինակ՝ config/database.php-ում ձեռքով գրված)</span>
+git grep -n -i "password" -- "*.php" ":!vendor"</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Հարձակում․ բոտերը կարդում են GitHub-ը</span>
+      <p>Հրապարակային պահոցները անընդհատ սկանավորվում են ավտոմատ բոտերով, որոնք փնտրում են բանալիներ և գաղտնաբառեր։ Եթե <code>.env</code>-ը գոնե մեկ անգամ commit արվել է, պետք է ենթադրել, որ այն արդեն կարդացվել է։<br><br>
+      Եվ ամենակարևորը․ <strong>ֆայլը ջնջելը և նոր commit անելը չի օգնում</strong>։ Հին commit-ը մնում է պատմության մեջ, և <code>git log -p -- .env</code>-ը ցույց է տալիս դրա պարունակությունը ցանկացածին, ով clone է անում պահոցը։<br><br>
+      Ճիշտ արձագանքը․ <strong>փոխել գաղտնիքը</strong> (բազայի գաղտնաբառը, <code>php artisan key:generate</code>, API բանալիները)։ Պատմությունը մաքրելը երկրորդական է, իսկ արտահոսած գաղտնիքը մնում է վտանգավոր, քանի դեռ այն չի փոխվել։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>.env.example — ի՞նչ է պահոցում</div><button class="copy">Պատճենել</button></div>
+<pre><code>APP_NAME=TechnoMarket
+APP_ENV=local
+APP_KEY=                      <span class="c"># դատարկ — key:generate</span>
+APP_DEBUG=true
+APP_URL=http://technomarket-laravel.test
+APP_LOCALE=hy
+
+DB_CONNECTION=mysql
+DB_DATABASE=technomarket_laravel
+DB_USERNAME=root
+DB_PASSWORD=                  <span class="c"># դատարկ</span>
+
+SESSION_DRIVER=database</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag"><code>.env.example</code>-ը փաստաթուղթ է</span>
+      <p>Այն ասում է նոր մշակողին (կամ քեզ՝ վեց ամիս հետո), թե <em>ինչ</em> փոփոխականներ են պետք, առանց ասելու դրանց <em>արժեքները</em>։ Դաս 21-ում ավելացրիր <code>APP_LOCALE=hy</code>։ Եթե այն չկա <code>.env.example</code>-ում, clone անողի մոտ սխալները անգլերեն կլինեն, և նա չի հասկանա ինչու։<br><br>
+      Կանոն․ <strong>ամեն անգամ, երբ ավելացնում ես տող <code>.env</code>-ում, ավելացրու այն նաև <code>.env.example</code>-ում՝ առանց գաղտնի արժեքի</strong>։</p>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Production կարգավորում</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>.env սերվերում</div><button class="copy">Պատճենել</button></div>
+<pre><code>APP_ENV=production
+APP_DEBUG=false               <span class="c"># ⭐ Դաս 1, 10, 15, 17, 18 — վեցերորդ անգամ</span>
+APP_URL=https://technomarket.example.am
+APP_KEY=base64:...            <span class="c"># key:generate ՍԵՐՎԵՐՈՒՄ, ոչ պատճենված լոկալից</span>
+
+LOG_LEVEL=error
+
+DB_DATABASE=...
+DB_USERNAME=...               <span class="c"># ոչ root</span>
+DB_PASSWORD=...               <span class="c"># երկար, պատահական</span>
+
+SESSION_DRIVER=database
+SESSION_SECURE_COOKIE=true    <span class="c"># cookie միայն HTTPS-ով — Դաս 7</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag"><code>APP_DEBUG=true</code> production-ում</span>
+      <p>Դաս 18-ում ցույց տվեցինք, որ debug ռեժիմում սխալի էջը ցույց է տալիս ֆայլը, տողը և stack trace-ը։ Production-ում դա նշանակում է՝ ցանկացած այցելու, որ կառաջացնի սխալ (օրինակ՝ բազան մի պահ անհասանելի է), կտեսնի քո ֆայլերի կառուցվածքը, SQL հարցումները և երբեմն շրջակա միջավայրի փոփոխականները։<br><br>
+      Սա այն սխալն է, որ ամենից հաճախ հանդիպում է սկսնակների առաջին deploy-ում։ Սա նաև առաջին բանն է, որ փորձառու մշակողը կստուգի քո demo-ում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>deploy-ի հրամանները</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># 1. Կախվածություններ՝ առանց dev փաթեթների, օպտիմիզացված autoload-ով (Դաս 14)</span>
+composer install --no-dev --optimize-autoloader
+
+<span class="c"># 2. Միայն առաջին անգամ</span>
+php artisan key:generate
+php artisan storage:link
+
+<span class="c"># 3. Միգրացիաներ. --force, որովհետև production-ում Laravel-ը հարցնում է հաստատում</span>
+php artisan migrate --force
+
+<span class="c"># 4. Քեշ՝ config, routes, views, events</span>
+php artisan optimize
+
+<span class="c"># Ստուգում</span>
+php artisan about</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag"><code>optimize</code>-ից հետո <code>env()</code>-ը վերադարձնում է <code>null</code></span>
+      <p><code>php artisan optimize</code>-ը (և <code>config:cache</code>-ը) միավորում է բոլոր <code>config/*.php</code> ֆայլերը մեկ քեշավորված ֆայլում և այլևս <strong>չի կարդում <code>.env</code>-ը</strong>։<br><br>
+      Եթե կոնտրոլերում կամ seeder-ում գրել ես <code>env('ADMIN_EMAIL')</code>, լոկալ այն աշխատում է, իսկ սերվերում՝ <code>null</code>։ Կանոն՝ <strong><code>env()</code>-ը միայն <code>config/</code> ֆայլերում</strong>, իսկ մնացած տեղերում՝ <code>config('app.name')</code>։<br><br>
+      Եվ <code>.env</code>-ը փոխելուց հետո սերվերում պետք է նորից գործարկել <code>php artisan optimize</code>, հակառակ դեպքում փոփոխությունը չի երևա։ Սա production-ի «ինչո՞ւ չի աշխատում» հարցերի առաջին պատճառն է։</p>
+    </div>
+
+      </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Հարձակում․ սխալ document root</h2>
+    <p>Դաս 15-ում <code>public/</code>-ը դարձրինք միակ թղթապանակը, որը տեսանելի է ինտերնետից։ Այսօր տեսնում ենք, թե ինչ է կատարվում, երբ դա մոռացվում է սերվերում։</p>
+
+    <div class="tree">Document root = ~/technomarket   (ՍԽԱԼ)
+
+  https://site.am/            →  ցուցակ կամ 403
+  https://site.am/public/     →  կայքը աշխատում է ⚠️ «ամեն ինչ լավ է»
+  https://site.am/.env        →  DB_PASSWORD=..., APP_KEY=...  💥
+  https://site.am/storage/logs/laravel.log  →  սխալներ, հարցումներ, email-ներ 💥
+  https://site.am/composer.json             →  բոլոր փաթեթները և տարբերակները
+
+Document root = ~/technomarket/public   (ՃԻՇՏ)
+
+  https://site.am/            →  կայքը
+  https://site.am/.env        →  404
+  https://site.am/storage/... →  միայն public/storage-ի symlink-ը (նկարներ)</div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ստուգիր քո demo-ն</div><button class="copy">Պատճենել</button></div>
+<pre><code>curl -I https://technomarket.example.am/.env
+<span class="c"># HTTP/2 404   ← ճիշտ</span>
+
+curl -I https://technomarket.example.am/storage/logs/laravel.log
+<span class="c"># HTTP/2 404   ← ճիշտ</span>
+
+curl -I https://technomarket.example.am/composer.json
+<span class="c"># HTTP/2 404   ← ճիշտ</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչու է սա այդքան տարածված</span>
+      <p>Էժան shared hosting-ում հաճախ document root-ը ֆիքսված է <code>public_html</code>-ի վրա և չի փոխվում։ Ամենապարզ «լուծումը», որը կգտնես ֆորումներում, ամբողջ նախագիծը <code>public_html</code>-ի մեջ գցելն է և <code>.htaccess</code>-ով վերահղելը <code>public/</code>։ Կայքը կաշխատի, բայց <code>.env</code>-ը մնում է հասանելի, եթե վերահղումը մեկ տեղ սխալ է։<br><br>
+      Ճիշտ տարբերակը Դաս 15-ից է․ <strong>նախագիծը՝ <code>public_html</code>-ից դուրս</strong>, իսկ <code>public_html</code>-ում՝ միայն <code>public/</code>-ի պարունակությունը (կամ symlink)։ Եթե հոսթինգը թույլ չի տալիս ոչ մեկը, ոչ մյուսը, ընտրիր ուրիշ հոսթինգ։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Որտեղ հրապարակել</h2>
+
+    <div class="warn note">
+      <span class="tag">Ստուգված է 2026-ի հոկտեմբերին — ստուգիր կրկին</span>
+      <p>Հոսթինգների գները և անվճար պլանները փոխվում են ամեն տարի, երբեմն՝ ամեն եռամսյակ։ 2024–2026-ին մի քանի հայտնի ծառայություններ ընդհանրապես հանեցին իրենց անվճար պլանները։ Ստորև աղյուսակը ճիշտ է դասի գրման պահին։ <strong>Նախքան ընտրելը բացիր ծառայության գների էջը</strong>։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ի՞նչ</th><th>Որտեղ</th><th>Գին</th><th>Լավ է</th><th>Թույլ կողմ</th></tr>
+      <tr><td>HTML/CSS և JS նախագծեր</td><td>GitHub Pages (JS Դաս 17)</td><td>Անվճար</td><td>Push → կայքը թարմացվում է</td><td>Միայն ստատիկ, PHP չկա</td></tr>
+      <tr><td><strong>A</strong> · Laravel</td><td>Laravel Cloud, Starter</td><td>$5/ամիս, ներառում է $5 օգտագործման կրեդիտ, առաջին ամիսը անվճար</td><td>Պաշտոնական, Git-ով, MySQL, «քնում է», երբ այցելու չկա</td><td>Պետք է վճարային քարտ, ֆայլային համակարգը մշտական չէ</td></tr>
+      <tr><td><strong>B</strong> · Laravel</td><td>Վճարովի shared hosting SSH-ով</td><td>Մոտ $2–5/ամիս (հաճախ՝ դրամով, հայկական ընկերություններում)</td><td>Իրական աշխատանքում ամենից շատ հանդիպող միջավայրը, <code>.am</code> դոմեն</td><td>Ամեն ինչ ձեռքով, որակը տարբեր է</td></tr>
+      <tr><td><strong>C</strong> · Laravel</td><td>Անվճար shared hosting (օր.՝ InfinityFree)</td><td>Անվճար</td><td>PHP 8.4 և MySQL, քարտ պետք չէ</td><td>SSH և cron չկա, մեկ հարցումը կարող է տևել առավելագույնը մոտ 10 վայրկյան, կարող է կասեցվել</td></tr>
+    </table>
+    </div>
+
+        <div class="tip note">
+      <span class="tag">Ո՞րն ընտրել</span>
+      <p><strong>Եթե կարող ես վճարել ամսական մի քանի դոլար</strong>, ընտրիր A-ն կամ B-ն։ A-ն ավելի արագ է կարգավորվում, B-ն ավելի շատ է սովորեցնում։ Եթե պատրաստվում ես PHP-ով աշխատել հայկական գործակալությունում, B-ն գրեթե անպայման կհանդիպես աշխատանքում։<br><br>
+      <strong>Եթե ոչ</strong>, C-ն աշխատում է demo-ի համար։ README-ում ազնվորեն գրիր, որ demo-ն անվճար հոսթինգում է։ Դա ոչ ոքի չի խանգարում, իսկ երբ կայքը չի բացվում, պատճառը պարզ է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Deploy՝ երեք ճանապարհ</h2>
+
+    <h3>A · Laravel Cloud</h3>
+    <div class="tree">1. github.com-ում push արա պահոցը
+2. cloud.laravel.com → New application → ընտրիր պահոցը
+3. Միացրու MySQL բազա → կապի տվյալները ավելանում են env-ում ինքնաբերաբար
+4. Environment → ավելացրու APP_LOCALE=hy և մնացածը .env.example-ից
+5. Deploy commands → ստուգիր, որ կա  php artisan migrate --force
+6. Deploy → ստանում ես *.laravel.cloud հասցե
+7. Հետագա ամեն push main ճյուղում → ավտոմատ deploy ⭐</div>
+
+    <div class="warn note">
+      <span class="tag">Նկարները կարող են անհետանալ</span>
+      <p>Cloud ծառայություններում սերվերի ֆայլային համակարգը <strong>մշտական չէ</strong>․ ամեն deploy ստեղծում է նոր, մաքուր միջավայր։ Եթե Դաս 21-ի տնայինում նկարները պահում ես <code>storage/app/public</code>-ում, հաջորդ push-ից հետո դրանք կկորեն։<br><br>
+      Լուծումը օբյեկտային պահոցն է (S3-համատեղելի, Laravel Cloud-ում կա որպես առանձին ռեսուրս) և <code>FILESYSTEM_DISK</code>-ի փոփոխությունը։ Demo-ի համար ավելի պարզ է demo նկարները պահել <code>public/images</code>-ում և commit անել դրանք։ Laravel-ի <code>Storage</code>-ը նույնն է մնում, փոխվում է միայն disk-ը։ Սա Դաս 13-ի ինտերֆեյսի գաղափարն է ֆրեյմվորքի մակարդակում։</p>
+    </div>
+
+    <h3>B · Shared hosting SSH-ով</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>առաջին deploy — SSH-ով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># Նախագիծը՝ public_html-ից ԴՈՒՐՍ ⭐</span>
+cd ~
+git clone https://github.com/USERNAME/technomarket-laravel.git technomarket
+cd technomarket
+
+php -v                                   <span class="c"># ≥ 8.3, հակառակ դեպքում փոխիր վահանակում</span>
+composer install --no-dev --optimize-autoloader
+
+cp .env.example .env
+nano .env                                <span class="c"># production արժեքներ — բաժին 03</span>
+php artisan key:generate
+php artisan migrate --force
+php artisan storage:link
+php artisan optimize
+
+<span class="c"># Վահանակում․ Document root → ~/technomarket/public
+# Վահանակում․ SSL (Let's Encrypt) → միացնել</span></code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>deploy.sh — հաջորդ թարմացումները մեկ հրամանով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">#!/usr/bin/env bash</span>
+set -e                                   <span class="c"># ցանկացած սխալ → կանգ</span>
+
+cd ~/technomarket
+php artisan down                         <span class="c"># «Կայքը թարմացվում է» էջ</span>
+
+git pull origin main
+composer install --no-dev --optimize-autoloader
+php artisan migrate --force
+php artisan optimize
+
+php artisan up</code></pre>
+    </div>
+
+        <h3>C · Անվճար hosting առանց SSH-ի</h3>
+    <div class="tree">Լոկալ (Laragon)
+  1. composer install --no-dev --optimize-autoloader
+  2. HeidiSQL → Export → technomarket_laravel.sql  (կառուցվածք + տվյալներ)
+  3. Զիպ արա նախագիծը  (vendor-ը ՆԵՐԱՌՅԱԼ, .env-ը՝ ոչ)
+
+Hosting-ի վահանակում
+  4. Ստեղծիր MySQL բազա → phpMyAdmin → Import .sql
+  5. File Manager → վերբեռնիր և բացիր զիպը public_html-ից դուրս, եթե թույլ է տալիս
+  6. Ստեղծիր .env ձեռքով · APP_KEY-ը պատճենիր  php artisan key:generate --show-ից
+  7. Document root → public/  (եթե հնարավոր չէ → բաժին 04 ⚠️)
+  8. Ստուգիր /.env → 404</div>
+
+    <div class="warn note">
+      <span class="tag">Ինչ չի աշխատի C-ում</span>
+      <p>Առանց SSH-ի <code>artisan</code> հրամաններ չկան, ուստի ամեն միգրացիա նշանակում է նոր SQL export և import։ Cron չկա, ուստի Laravel-ի scheduler-ը և հերթերը չեն աշխատի։ <code>storage:link</code> չկա, ուստի վերբեռնված նկարները ցույց տալու համար պետք կլինի այլ լուծում։<br><br>
+      Demo-ի համար սա բավական է։ Աշխատանքի համար՝ ոչ։ Եվ եթե հարցազրույցում հարցնեն «ինչպե՞ս ես deploy անում», C-ն լավ պատասխան չէ, իսկ A-ն կամ B-ն՝ լավ է։</p>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="s7">
+    <h2><span class="num">07</span>Deploy-ից հետո</h2>
+
+    <h3>Իրական ադմին</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>սերվերում — php artisan tinker</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="n">$u</span> = <span class="k">new</span> <span class="t">App\Models\User</span>([
+    <span class="s">'name'</span>     =&gt; <span class="s">'Admin'</span>,
+    <span class="s">'email'</span>    =&gt; <span class="s">'admin@technomarket.example.am'</span>,
+    <span class="s">'password'</span> =&gt; <span class="s">'...'</span>,          <span class="c">// երկար, գաղտնաբառերի կառավարիչից — hashed cast-ը կհեշավորի</span>
+]);
+<span class="n">$u</span>-&gt;<span class="n">role</span> = <span class="s">'admin'</span>;                <span class="c">// ⭐ ուղիղ վերագրում — role-ը $fillable-ում չէ (Դաս 20)</span>
+<span class="n">$u</span>-&gt;<span class="f">save</span>();</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag"><code>db:seed</code> production-ում՝ զգույշ</span>
+      <p>Դաս 20-ի <code>DatabaseSeeder</code>-ը ստեղծում է <code>admin@technomarket.test</code> / <code>password</code>։ Եթե այն գործարկես սերվերում, քո demo-ն կունենա ադմին ամենահայտնի գաղտնաբառով։ Դաս 21-ում ասացինք․ <em>«Fortify-ը չի խանգարի քեզ հրապարակել կայքը այդ զույգով»</em>։<br><br>
+      Ապրանքներով demo-ի համար ստեղծիր առանձին <code>DemoSeeder</code>, որը ստեղծում է միայն կատեգորիաներ և ապրանքներ, և գործարկիր այն <code>php artisan db:seed --class=DemoSeeder --force</code>-ով։</p>
+    </div>
+
+    <h3>Դեմո հաշիվ ռեկրուտերի համար</h3>
+    <div class="tip note">
+      <span class="tag">Դաս 21-ի Gate-երը որպես առավելություն</span>
+      <p>Ռեկրուտերը ուզում է տեսնել ադմին վահանակը, բայց դու չես ուզում, որ ինչ-որ մեկը ջնջի բոլոր ապրանքները։ Ստեղծիր <code>demo@technomarket.example.am</code> հաշիվ <strong><code>role = 'manager'</code></strong>-ով և գրիր գաղտնաբառը README-ում։<br><br>
+      Մենեջերը կարող է բացել վահանակը, ավելացնել և խմբագրել ապրանքներ, բայց <strong>չի կարող ջնջել</strong>, որովհետև <code>delete-products</code>-ը միայն ադմինի համար է։ README-ում գրիր դա որպես ֆունկցիոնալություն․ <em>«Demo account has the manager role: it can create and edit, but deletion is restricted to admins via a Gate.»</em> Դա ցույց է տալիս, որ հասկանում ես լիազորումը։<br><br>
+      Ժամանակ առ ժամանակ բաց տեսքը վերականգնելու համար ստուգիր ապրանքները և ուղղիր այն, ինչ փոխվել է։</p>
+    </div>
+
+    <h3>Smoke test — 10 ստուգում</h3>
+    <ol>
+      <li>Հասցեն բացվում է <code>https://</code>-ով, բրաուզերը նախազգուշացում չի տալիս</li>
+      <li><code>/.env</code>, <code>/composer.json</code>, <code>/storage/logs/laravel.log</code> → 404</li>
+      <li>Անգոյ ապրանք → ընդհանուր 404 էջ, ոչ stack trace (<code>APP_DEBUG=false</code>)</li>
+      <li>Կատալոգ, ապրանքի էջ, որոնում → աշխատում են, հայերեն տեքստը ճիշտ է</li>
+      <li>Զամբյուղ → ավելացնել, թարմացնել էջը, ապրանքը մնում է (սեսիաներ)</li>
+      <li><code>/admin/products</code> առանց մուտքի → <code>/login</code></li>
+      <li><code>/register</code> → 404</li>
+      <li>Սխալ գաղտնաբառ վեց անգամ → արգելափակում</li>
+      <li>Demo հաշիվ → ջնջել չի ստացվում</li>
+      <li>Lighthouse (DevTools) → Performance, Accessibility, Best Practices, SEO՝ HTML Դաս 23-ի նման</li>
+    </ol>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>README</h2>
+
+    <div class="note">
+      <span class="tag">Ինչու անգլերեն</span>
+      <p>README-ն կարդում են ռեկրուտերները, միջազգային թիմերը և ATS համակարգերը (Դաս 23), որոնք որոնում են բանալի բառեր՝ <em>Laravel, Eloquent, REST API, MySQL</em>։ Անգլերեն README-ն բացում է ավելի շատ դռներ։<br><br>
+      Եթե ուզում ես հայերեն տարբերակ, ավելացրու <code>README.hy.md</code> և հղում վերևում։ Կայքը հայերեն է, ինչը լավ է․ դա ցույց է տալիս, որ աշխատել ես Unicode-ի, <code>mb_</code> ֆունկցիաների և slug-ի իրական խնդիրների հետ (Դաս 2, 11)։ Գրիր դա README-ում։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>README.md</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k"># TechnoMarket</span>
+
+An Armenian-language electronics store built with Laravel 13 —
+after first building the same app on a hand-written PHP MVC framework.
+
+**Live demo:** https://technomarket.example.am
+**Demo admin:** demo@technomarket.example.am / demo-password (manager role, cannot delete)
+
+![Catalog and admin panel](docs/screenshot.png)
+
+<span class="k">## Features</span>
+
+- Catalog with categories, search, pagination and discounts
+- Session-based cart with AJAX updates (JSON API, 422 validation errors)
+- Admin panel: product CRUD with soft deletes and unique Armenian slugs
+- Authentication with Laravel Fortify, rate-limited login, no public registration
+- Role-based authorization with Gates (admin / manager)
+- Fully localized validation messages (hy)
+
+<span class="k">## What I added beyond the course</span>
+
+- Product reviews with a Policy: one review per user per product
+- Feature tests for the cart and admin authorization (Pest)
+
+<span class="k">## Tech stack</span>
+
+PHP 8.3 · Laravel 13 · MySQL 8 · Blade · Fortify · vanilla JS · custom CSS
+
+<span class="k">## Security decisions</span>
+
+| Threat | How it is handled |
+|---|---|
+| XSS | Blade escaping everywhere, no unescaped output |
+| SQL injection | Eloquent / bound parameters only |
+| CSRF | @csrf on every form, logout via POST |
+| Mass assignment | `$fillable` + `validated()` only; `role` is not fillable |
+| Brute force | Login throttled per email + IP |
+| N+1 queries | Eager loading + `Model::shouldBeStrict()` in development |
+
+<span class="k">## How it was built</span>
+
+1. Plain PHP with templates, sessions and PDO
+2. A custom MVC framework: router, controllers, auth and CSRF checks, REST API
+   → [technomarket-mvc](https://github.com/USERNAME/technomarket-mvc)
+3. Rebuilt in Laravel — this repository
+
+<span class="k">## Run locally</span>
+
+```bash
+git clone https://github.com/USERNAME/technomarket-laravel.git
+cd technomarket-laravel
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan storage:link
+php artisan serve
+```
+
+Default local admin: admin@technomarket.test / password (local only).</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ամենաուժեղ բաժինը՝ «Security decisions»</span>
+      <p>Կրտսեր մշակողների պորտֆոլիոների մեծ մասում README-ն ցուցակագրում է ֆունկցիաները։ Շատ քչերն են բացատրում <em>որոշումները</em>։ Այդ աղյուսակը Դաս 5, 10, 16, 20 և 21-ի ամփոփումն է։ Հարցազրույցում ամեն տող կարող է դառնալ հարց, և դու կունենաս պատասխանը (Դաս 24)։<br><br>
+      «How it was built» բաժինը ասում է այն, ինչ ոչ մի ֆունկցիաների ցուցակ չի ասի․ <strong>դու գիտես, թե ինչ է անում ֆրեյմվորքը, որովհետև մեկ անգամ ինքդ ես այն գրել</strong>։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ինչ չգրել README-ում</span>
+      <p>Մի՛ գրիր այն, ինչ չես անում։ Եթե թեստեր չկան, «Fully tested» մի՛ գրիր։ Եթե «What I added» բաժինը դեռ դատարկ է, ջնջիր այն, քան լրացնես երևակայական ֆունկցիաներով։<br><br>
+      README-ն կարդացող մշակողը կբացի <code>tests/</code> թղթապանակը։ Եթե այն դատարկ է, նա կդադարի վստահել նաև մնացած տողերին։ Սա Դաս 4-ի կանոնն է AI-ի մասին, բայց վերաբերում է նաև քեզ․ <strong>պնդումը, որը հեշտ է ստուգել և սխալ է, ավելի վատ է, քան պնդման բացակայությունը</strong>։</p>
+    </div>
+
+    <h3>Սքրինշոթ և GIF</h3>
+    <div class="tip note">
+      <span class="tag">Մեկ նկարը փոխարինում է «Features»-ի կեսին</span>
+      <p>Windows-ում՝ <strong>ShareX</strong> կամ <strong>ScreenToGif</strong>։ Ձայնագրիր 10–15 վայրկյան․ կատալոգ → ավելացնել զամբյուղ → ադմին → խմբագրել ապրանք։ Պահիր <code>docs/</code> թղթապանակում և հղիր README-ից։<br><br>
+      Երեք կանոն․ նկարը լավ լրացված տվյալներով է (<code>DemoSeeder</code>), ոչ «Test product 1»-ով, պատուհանը նեղ է, որ տեքստը կարդացվի, և GIF-ը 5 ՄԲ-ից փոքր է, որ արագ բեռնվի։</p>
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>GitHub պրոֆիլ</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ամրացված պահոց</th><th>Ինչ է ցույց տալիս</th><th>Demo</th></tr>
+      <tr><td><code>technomarket-laravel</code> ⭐</td><td>Ֆրեյմվորք, auth, լիազորում, API</td><td>A / B / C</td></tr>
+      <tr><td><code>technomarket-mvc</code></td><td>Router, կոնտրոլերներ, auth, API՝ զրոյից (Դաս 14–17)</td><td>Ըստ ցանկության</td></tr>
+      <tr><td><code>technomarket-js</code></td><td>DOM, fetch, մոդուլներ, OOP (JS բլոկ)</td><td>GitHub Pages</td></tr>
+      <tr><td><code>technomarket-html</code></td><td>Սեմանտիկա, ադապտիվություն, հասանելիություն (HTML բլոկ)</td><td>GitHub Pages</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ամեն պահոցի «About» դաշտը</div><button class="copy">Պատճենել</button></div>
+<pre><code>Description:  Armenian e-commerce store in Laravel 13 — Fortify auth, Gates, Eloquent, REST API
+Website:      https://technomarket.example.am
+Topics:       laravel  php  mysql  eloquent  blade  e-commerce  armenian</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Պրոֆիլի README</span>
+      <p>Ստեղծիր պահոց, որի անունը ճիշտ համընկնում է քո օգտանվան հետ (<code>USERNAME/USERNAME</code>)։ Դրա <code>README.md</code>-ը կցուցադրվի պրոֆիլի վերևում։ Բավական է երեք-չորս տող․ ով ես, ինչով ես զբաղվում, ինչ ես փնտրում և ինչպես կապվել։<br><br>
+      Մի՛ լցրու այն վիճակագրության widget-ներով, անիմացիաներով և 40 տեխնոլոգիաների լոգոներով։ Դա աչք է գրավում, բայց ոչինչ չի ասում։ Չորս ամրացված պահոցը հաշվում է ավելի շատ, քան ամենագեղեցիկ պրոֆիլը։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>USERNAME/README.md</div><button class="copy">Պատճենել</button></div>
+<pre><code>Hi, I'm Anna — a junior full-stack developer from Yerevan.
+
+I build web apps with **PHP / Laravel**, **MySQL** and **vanilla JavaScript**.
+My main project, [TechnoMarket](https://github.com/USERNAME/technomarket-laravel),
+started as a hand-written MVC framework and was rebuilt in Laravel.
+
+Open to junior roles in Armenia and remote. · anna@example.com · [LinkedIn](https://linkedin.com/in/...)</code></pre>
+    </div>
+
+      </section>
+
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>LinkedIn</h2>
+
+    <div class="warn note">
+      <span class="tag">Ստուգված է 2026-ի հոկտեմբերին</span>
+      <p>LinkedIn-ը հաճախ փոխում է ինտերֆեյսը և բաժինների անունները։ Ստորև նկարագրված են բաժինները, որոնք կային դասի գրման պահին։ Եթե ինչ-որ բան այլ տեղում է, գաղափարը մնում է նույնը։</p>
+    </div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Բաժին</th><th>Ինչ գրել</th><th>Սխալ</th></tr>
+      <tr><td>Լուսանկար</td><td>Դեմք, պարզ ֆոն, լավ լույս</td><td>Խմբային նկար, լոգո, առանց նկարի</td></tr>
+      <tr><td>Headline</td><td>Դեր + տեխնոլոգիաներ + ինչ ես փնտրում</td><td>«Student», «Looking for opportunities»</td></tr>
+      <tr><td>Custom URL</td><td><code>linkedin.com/in/anna-petrosyan</code></td><td>Թվերով լռելյայն հասցեն</td></tr>
+      <tr><td>About</td><td>3 կարճ պարբերություն՝ ով, ինչ ես կառուցել, ինչ ես փնտրում</td><td>Ընդհանուր բառեր առանց փաստերի</td></tr>
+      <tr><td>Featured</td><td>Demo հղում, GitHub պահոց, նախագծի մասին գրառում</td><td>Դատարկ</td></tr>
+      <tr><td>Projects</td><td>ՏեխնոՄարկետ՝ նկարագրությամբ և հղումով</td><td>Միայն անվանում</td></tr>
+      <tr><td>Education / Licenses</td><td>DiGi School, դասընթացը և ամսաթվերը</td><td>Մոռանալ</td></tr>
+      <tr><td>Skills</td><td>Laravel, PHP, MySQL, JavaScript, Git՝ վերևում</td><td>50 հմտություն, ամենակարևորները ներքևում</td></tr>
+      <tr><td>Open to Work</td><td>Դերերը և վայրը (Yerevan, Remote)</td><td>Չնշված դերեր</td></tr>
+    </table>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Headline — երեք օրինակ</div><button class="copy">Պատճենել</button></div>
+<pre><code>Junior Full-Stack Developer · PHP / Laravel · MySQL · JavaScript
+Junior PHP Developer · Laravel, REST APIs, MySQL · Open to roles in Yerevan & remote
+Full-Stack Developer (Laravel) · Built an e-commerce app from a custom MVC framework to Laravel</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>About — կաղապար</div><button class="copy">Պատճենել</button></div>
+<pre><code>I'm a junior full-stack developer focused on PHP and Laravel.
+
+Over a 72-lesson program at DiGi School I built TechnoMarket, an Armenian-language
+online store, three times: as a static HTML/CSS site, as a JavaScript app, and as a
+PHP application — first on a framework I wrote myself (router, controllers,
+auth and CSRF, REST API), then in Laravel with Fortify auth, Gates and Eloquent.
+[One sentence about what you added yourself.]
+
+I care about security basics (XSS, CSRF, SQL injection, rate limiting) and
+accessible forms. I'm looking for a junior role in Yerevan or remote.
+
+Live demo and code: see Featured.</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Մեկ գրառում նախագծի մասին</span>
+      <p>Featured բաժնում ամենաուժեղ տարրը քո <strong>սեփական գրառումն է</strong> նախագծի մասին՝ GIF-ով, երեք-չորս նախադասությամբ և հղումներով։ Լավագույն թեման ոչ թե «ես ավարտեցի դասընթացը» է, այլ մեկ կոնկրետ բան, որ սովորեցիր․ <em>«I wrote my own DI container before learning Laravel. Here's what clicked when I saw autowiring for the first time.»</em><br><br>
+      Նման գրառումը ցույց է տալիս մտածողություն, ոչ միայն վկայական։ Նշիր DiGi School-ը։ Դա հաճախ բերում է կապեր և արձագանքներ։</p>
+    </div>
+
+      </section>
+
+  <!-- ============ 11 ============ -->
+  <section id="s11">
+    <h2><span class="num">11</span>AI-ն այս դասում</h2>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>պրոմպտ — README-ի վերանայում (Դաս 4-ի «վերանայման» ռեժիմ)</div><button class="copy">Պատճենել</button></div>
+<pre><code>You are a senior Laravel developer screening junior candidates.
+Below is the README of my portfolio project and the list of files in the repo.
+
+Review it as you would in a 60-second screen:
+1. What is unclear or missing in the first 10 lines?
+2. Which claims would you want to verify in the code? List the files you would open.
+3. Is any claim not supported by the file list?
+4. Suggest wording fixes, but do NOT add features or skills I didn't list.
+
+README:
+[paste]
+
+Files:
+[paste output of: git ls-files | grep -v vendor]</code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Երրորդ և չորրորդ կետերը կարևորագույնն են</span>
+      <p>Երրորդ կետը AI-ին դարձնում է ստուգող, ոչ գովաբանող։ Եթե README-ում գրված է «tested», իսկ ֆայլերի ցուցակում <code>tests/Feature/</code> չկա, նա դա կնկատի։<br><br>
+      Չորրորդ կետը պաշտպանում է ամենատարածված խնդրից․ AI-ն սիրում է «բարելավել» տեքստը՝ ավելացնելով <em>Docker, CI/CD, Redis, microservices</em>, որ քո նախագծում չկան։ Դաս 4-ի կանոնը՝ <strong>AI-ն խմբագրում է ձևը, փաստերը քոնն են</strong>։ Այն նույն ձևով կօգնի Դաս 23-ում, երբ CV-ն կհարմարեցնենք ATS-ի համար։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">LinkedIn-ի About-ը AI-ով</span>
+      <p>Եթե About-ը գրում ես AI-ով, այն կհնչի այնպես, ինչպես հազարավոր այլ պրոֆիլներ՝ <em>«passionate», «dedicated», «leveraging cutting-edge technologies»</em>։ Ռեկրուտերները տեսնում են այս բառերը օրական տասնյակ անգամ։<br><br>
+      Ավելի լավ աշխատող ձևը․ <strong>գրիր ինքդ</strong>, նույնիսկ եթե անգլերենը կատարյալ չէ, ապա խնդրիր AI-ին ուղղել միայն քերականությունը՝ <em>«fix grammar only, keep my wording and sentence structure»</em>։ Արդյունքը կհնչի քո ձայնով։</p>
+    </div>
+  </section>
+
+  <!-- ============ 12 ============ -->
+  <section id="s12">
+    <h2><span class="num">12</span>Դասարանական</h2>
+
+    <ol>
+      <li>Գործարկիր <code>git log --all --oneline -- .env</code> բոլոր պահոցներում, թարմացրու <code>.env.example</code>-ը և ստեղծիր <code>DemoSeeder</code></li>
+      <li>Ընտրիր hosting-ը (A, B կամ C), կատարիր առաջին deploy-ը, ստեղծիր ադմինը և demo հաշիվը</li>
+      <li>Անցիր smoke test-ի 10 կետը և ուղղիր այն, ինչ ձախողվեց</li>
+      <li>Ձայնագրիր GIF, գրիր README-ն կաղապարով և անցկացրու այն բաժին 11-ի պրոմպտով</li>
+      <li>Լրացրու պահոցների About դաշտը, ամրացրու դրանք և թարմացրու LinkedIn-ի headline-ը, URL-ը և Featured-ը</li>
+    </ol>
+
+    <div class="warn note">
+      <span class="tag">Զույգերով՝ 60 վայրկյանի թեստ</span>
+      <p>Տուր քո GitHub պրոֆիլի հղումը հարևանիդ։ Նա ունի 60 վայրկյան և պետք է պատասխանի երեք հարցի․<br><br>
+      <strong>1.</strong> Ի՞նչ է անում նախագիծը (մեկ նախադասությամբ)։<br>
+      <strong>2.</strong> Որտե՞ղ է demo-ն, և աշխատու՞մ է այն։<br>
+      <strong>3.</strong> Ի՞նչն է այս նախագծում եզակի՝ համեմատած իր սեփականի հետ։<br><br>
+      Եթե նա չի պատասխանում որևէ մեկին, դա ռեկրուտերը նույնպես չի անի։ Ուղղիր և փոխվեք։</p>
+    </div>
+  </section>
+
+  <!-- ============ 13 ============ -->
+  <section id="s13">
+    <h2><span class="num">13</span>Տնային աշխատանք</h2>
+    <ol class="hw">
+      <li>Ավարտիր դասարանականի 5 քայլը։ Ուղարկիր demo հղումը, GitHub պրոֆիլը և LinkedIn-ը։</li>
+      <li>Ավելացրու <strong>մեկ ֆունկցիա, որ դասընթացում չկար</strong>, և նկարագրիր այն README-ի «What I added» բաժնում։ Տարբերակներ․
+        ապրանքների գնահատականներ ·
+        ցանկությունների ցուցակ (wishlist) մուտք գործած օգտատերերի համար ·
+        պատվերի ձևակերպում և email <code>Mail</code>-ով (լոկալ՝ <code>MAIL_MAILER=log</code>) ·
+        ֆիլտրեր գնի և կատեգորիայի համար՝ query string-ով ·
+        API փաստաթուղթ Դաս 17-ի endpoint-ների համար։</li>
+      <li>Հրապարակիր HTML և JS բլոկի նախագծերը GitHub Pages-ում (եթե դեռ չես արել) և ավելացրու հղումները README-ներում։ Ստուգիր HTML Դաս 2-ի ուղիների սխալը։</li>
+      <li>Ստեղծիր պրոֆիլի README։ Չորս տողից ոչ ավելի։</li>
+      <li>Գործարկիր Lighthouse-ը demo-ում։ Գրիր չորս թվերը և ուղղիր Accessibility-ի առնվազն մեկ սխալ։</li>
+      <li>Գրիր LinkedIn-ի About-ը ինքդ, ապա ուղղիր AI-ով «grammar only» հրահանգով։ Համեմատիր երկու տարբերակը։</li>
+      <li>Պատրաստիր Դաս 23-ի համար․ գտիր երեք իրական աշխատանքային հայտարարություն (մեկը Հայաստանից, մեկը remote, մեկը freelance) Laravel կամ PHP դերի համար և պահիր դրանց տեքստը։</li>
+    </ol>
+  </section>
+
+  <!-- ============ 14 ============ -->
+  <section id="s14">
+    <h2><span class="num">14</span>Հիշելու թերթիկ</h2>
+
+    <h3>Production .env</h3>
+    <div class="tree">APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://...
+APP_KEY=        → key:generate սերվերում
+LOG_LEVEL=error
+DB_USERNAME=    → ոչ root
+SESSION_SECURE_COOKIE=true</div>
+
+    <h3>Deploy հրամաններ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Հրաման</th><th>Ինչ է անում</th></tr>
+      <tr><td><code>composer install --no-dev --optimize-autoloader</code></td><td>Միայն production փաթեթները</td></tr>
+      <tr><td><code>php artisan migrate --force</code></td><td>Միգրացիաներ առանց հարցի</td></tr>
+      <tr><td><code>php artisan optimize</code></td><td>Config, routes, views քեշ</td></tr>
+      <tr><td><code>php artisan optimize:clear</code></td><td>Մաքրել քեշը</td></tr>
+      <tr><td><code>php artisan down</code> / <code>up</code></td><td>Թարմացման ռեժիմ</td></tr>
+      <tr><td><code>php artisan about</code></td><td>Միջավայրի ամփոփում</td></tr>
+      <tr><td><code>git log --all -- .env</code></td><td>Գաղտնիքներ պատմության մեջ</td></tr>
+    </table>
+    </div>
+
+    <h3>Պորտֆոլիոյի շղթա</h3>
+    <div class="tree">GitHub պրոֆիլ  →  4 ամրացված պահոց + About + Topics
+     │
+README         →  1 նախադասություն · demo · GIF · security · beyond the course
+     │
+Demo           →  HTTPS · .env 404 · debug off · demo հաշիվ (manager)
+     │
+LinkedIn       →  Headline · URL · About · Featured · Open to Work</div>
+
+    <h3>Ստուգաթերթ</h3>
+    <ul class="goals">
+      <li><code>.env</code>-ը չկա ոչ պահոցում, ոչ պատմության մեջ</li>
+      <li><code>.env.example</code>-ը ամբողջական է</li>
+      <li>Demo-ն բացվում է HTTPS-ով</li>
+      <li><code>/.env</code>-ը վերադարձնում է 404</li>
+      <li><code>APP_DEBUG=false</code></li>
+      <li>Ադմինի գաղտնաբառը <code>password</code> չէ</li>
+      <li>Demo հաշիվը ջնջել չի կարող</li>
+      <li>README-ն ունի demo հղում, նկար և «beyond the course»</li>
+      <li>README-ում ամեն պնդում ստուգելի է</li>
+      <li>Ամրացված են չորս պահոց՝ նկարագրություններով</li>
+      <li>LinkedIn-ն ունի headline, custom URL և Featured</li>
+    </ul>
+
+    <h3>Ինքնաստուգում</h3>
+    <ul class="goals">
+      <li>Կարո՞ղ եմ բացատրել, ինչու <code>.env</code>-ը ջնջելը բավարար չէ</li>
+      <li>Գիտե՞մ, ինչ է բացահայտվում սխալ document root-ի դեպքում</li>
+      <li>Հասկանո՞ւմ եմ, ինչու <code>env()</code>-ը <code>optimize</code>-ից հետո <code>null</code> է</li>
+      <li>Կարո՞ղ եմ համեմատել A, B և C ճանապարհները և ընտրել ըստ իրավիճակի</li>
+      <li>Գիտե՞մ, թե ինչ կտեսնի ռեկրուտերը իմ պրոֆիլում առաջին 60 վայրկյանում</li>
+      <li>Կարո՞ղ եմ մեկ նախադասությամբ ասել, ինչն է իմ նախագծում եզակի</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հաջորդ դասին</span>
+      <p>Պորտֆոլիոն պատրաստ է։ Հիմա պետք է այն տանել մարդկանց մոտ։ <strong>Դաս 23</strong>՝ CV, որը անցնում է ATS ֆիլտրերը, և ամեն հայտարարության համար այն AI-ով հարմարեցնելու ազնիվ ձևը։ Կխոսենք նաև Հայաստանի աշխատաշուկայի, remote աշխատանքի, freelance հարթակների և վճարումներ ստանալու մասին։<br><br>
+      Բեր տնայինի 10-րդ կետի երեք հայտարարությունը։ Դրանց վրա ենք աշխատելու։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>PHP Բլոկ · Դաս 22 / 24</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>
