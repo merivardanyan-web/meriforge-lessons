@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Բլոկ 2 · տնային աշխատանքներ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lesson.css">
+<script src="../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · JavaScript</b> · տնային</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Բլոկ 2 · տնային աշխատանքներ · 21 / 21 պատրաստ</p>
+  <h1>Մինի-նախագծեր ամեն դասից հետո</h1>
+  <p class="lede">Ամեն դասի տնային աշխատանքը ունի մեկ մինի-նախագիծ՝ քայլերով, starter ֆայլերով և պատրաստի օրինակով։ Բոլորը մեկ նախագիծ են՝ Անիի ընթերցանության օրագիրը, որը Console-ից տեղափոխվում է կայք, իսկ վերջում որոնում է գրքեր աշխարհի բաց գրադարանում։ Յուրաքանչյուր առաջադրանք օգտագործում է միայն այն, ինչ անցել ենք մինչև այդ դասը։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Դաս 01–08՝ Console, 09–23՝ Անիի կայքը</span>
+    <span>Դաս 15–16 և 24՝ ՏեխնոՄարկետ</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչպես աշխատել</h2>
+    <div class="tree">lesson-NN/
+├── task.html       ← առաջադրանքը․ սկսիր այստեղից
+├── starter/        ← տվյալներ, markup և CSS, որ չգրես ձեռքով
+├── example/        ← պատրաստի օրինակ․ բացիր միայն ավարտելուց հետո
+└── screenshots/    ← ինչ պետք է ստացվի (Դաս 09-ից)</div>
+    <div class="warn note">
+      <span class="tag">Կանոն</span>
+      <p>Նախ կատարիր առաջադրանքը և անցիր ստուգաթերթով, հետո բացիր օրինակը։ Եթե բաց ես թողել դասը կամ տնայինը, հաջորդ դասի առաջադրանքը կարող ես սկսել նախորդի օրինակից։</p>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Մեկ նախագիծ, որը աճում է</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դասեր</th><th>Որտեղ</th><th>Ինչ է աճում</th></tr>
+      <tr><td>01–08</td><td>Console</td><td>Մեկ գիրք → պայմաններ → պլան ցիկլերով → ֆունկցիաներ → դարակ զանգվածով → վիճակագրություն → օբյեկտներ → ամսաթվեր</td></tr>
+      <tr><td>09–14</td><td>Անիի կայքի «Գրքեր» էջը</td><td>DOM-ի ընթերցում → render → իրադարձություններ → դելեգացիա → ֆորմա → localStorage և ժամաչափ</td></tr>
+      <tr><td>17–18</td><td>GitHub, մոդուլներ</td><td>Պահոց և Pages → ES մոդուլներ, դինամիկ import</td></tr>
+      <tr><td>19–23</td><td>API և դասեր</td><td>Promise → fetch և POST → Open Library որոնում → դասեր → Set, Map, սխալներ</td></tr>
+    </table>
+    </div>
+    <div class="note">
+      <span class="tag">Ինչու Անիի կայքը</span>
+      <p>Դաս 9-ի տնայինը ասում է՝ «օգտագործիր քո HTML/CSS նախագիծը»։ Անին նույն ուսանողն է, որի կայքը աճեց Բլոկ 1-ի տնայիններում։ Հիմա այն ստանում է «Գրքեր» էջ, որը աշխատում է JavaScript-ով։ Նախագծային դասերը (15–16, 24)՝ ՏեխնոՄարկետում։</p>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Բոլոր դասերը</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դաս</th><th>Թեմա</th><th>Մինի-նախագիծ</th><th></th></tr>
+      <tr><td>01</td><td><a href="../js-lesson-01.html">JavaScript-ի առաջին քայլերը</a></td><td><a href="lesson-01/task.html">Առաջին գիրքը Console-ում</a></td><td><a href="lesson-01/example/index.html">օրինակ</a></td></tr>
+      <tr><td>02</td><td><a href="../js-lesson-02.html">Օպերատորներ և պայմաններ</a></td><td><a href="lesson-02/task.html">Կարգավիճակ, նպատակ և զեղչ</a></td><td><a href="lesson-02/example/index.html">օրինակ</a></td></tr>
+      <tr><td>03</td><td><a href="../js-lesson-03.html">Ցիկլեր</a></td><td><a href="lesson-03/task.html">Ընթերցանության պլան</a></td><td><a href="lesson-03/example/index.html">օրինակ</a></td></tr>
+      <tr><td>04</td><td><a href="../js-lesson-04.html">Ֆունկցիաներ</a></td><td><a href="lesson-04/task.html">Ֆունկցիաների գրադարան</a></td><td><a href="lesson-04/example/index.html">օրինակ</a></td></tr>
+      <tr><td>05</td><td><a href="../js-lesson-05.html">Զանգվածներ</a></td><td><a href="lesson-05/task.html">Իմ դարակը</a></td><td><a href="lesson-05/example/index.html">օրինակ</a></td></tr>
+      <tr><td>06</td><td><a href="../js-lesson-06.html">Զանգվածների մեթոդներ</a></td><td><a href="lesson-06/task.html">Դարակի վիճակագրություն</a></td><td><a href="lesson-06/example/index.html">օրինակ</a></td></tr>
+      <tr><td>07</td><td><a href="../js-lesson-07.html">Օբյեկտներ</a></td><td><a href="lesson-07/task.html">Գիրքը որպես օբյեկտ</a></td><td><a href="lesson-07/example/index.html">օրինակ</a></td></tr>
+      <tr><td>08</td><td><a href="../js-lesson-08.html">Տողեր, թվեր, Math և Date</a></td><td><a href="lesson-08/task.html">Տեքստեր և ամսաթվեր</a></td><td><a href="lesson-08/example/index.html">օրինակ</a></td></tr>
+      <tr><td>09</td><td><a href="../js-lesson-09.html">DOM · Էլեմենտների ընտրություն</a></td><td><a href="lesson-09/task.html">Իմ կայքը DOM-ի աչքերով</a></td><td><a href="lesson-09/example/pages/books.html">օրինակ</a></td></tr>
+      <tr><td>10</td><td><a href="../js-lesson-10.html">DOM · Փոփոխում և ստեղծում</a></td><td><a href="lesson-10/task.html">Դարակը JS-ով</a></td><td><a href="lesson-10/example/pages/books.html">օրինակ</a></td></tr>
+      <tr><td>11</td><td><a href="../js-lesson-11.html">Իրադարձություններ</a></td><td><a href="lesson-11/task.html">Ֆիլտրեր, որոնում, մոդալ, թեմա</a></td><td><a href="lesson-11/example/pages/books.html">օրինակ</a></td></tr>
+      <tr><td>12</td><td><a href="../js-lesson-12.html">Փուչիկացում և դելեգացիա</a></td><td><a href="lesson-12/task.html">Մեկ listener ամբողջ դարակի համար</a></td><td><a href="lesson-12/example/pages/books.html">օրինակ</a></td></tr>
+      <tr><td>13</td><td><a href="../js-lesson-13.html">Ֆորմաներ և վալիդացիա</a></td><td><a href="lesson-13/task.html">Նոր գրքի ֆորմա</a></td><td><a href="lesson-13/example/pages/books.html">օրինակ</a></td></tr>
+      <tr><td>14</td><td><a href="../js-lesson-14.html">Բրաուզերի API-ներ և պահպանում</a></td><td><a href="lesson-14/task.html">Ոչինչ չի կորչում</a></td><td><a href="lesson-14/example/pages/books.html">օրինակ</a></td></tr>
+      <tr><td>15–16</td><td>Նախագիծ</td><td><a href="../block-2-project/task-1.html">ՏեխնոՄարկետ · Առաջադրանք 1</a></td><td><a href="../block-2-project/example-1-catalog-cart/index.html">օրինակ</a></td></tr>
+      <tr><td>17</td><td><a href="../js-lesson-17.html">Git և GitHub</a></td><td><a href="lesson-17/task.html">Կայքը GitHub-ում</a></td><td><a href="lesson-17/example/pages/books.html">օրինակ</a></td></tr>
+      <tr><td>18</td><td><a href="../js-lesson-18.html">ES մոդուլներ</a></td><td><a href="lesson-18/task.html">Մոդուլներ</a></td><td><a href="lesson-18/example/pages/books.html">օրինակ</a></td></tr>
+      <tr><td>19</td><td><a href="../js-lesson-19.html">Ասինխրոն JavaScript</a></td><td><a href="lesson-19/task.html">Ինչ կարդալ հետո՝ ասինխրոն</a></td><td><a href="lesson-19/example/pages/books.html">օրինակ</a></td></tr>
+      <tr><td>20</td><td><a href="../js-lesson-20.html">fetch և async/await</a></td><td><a href="lesson-20/task.html">fetch և POST</a></td><td><a href="lesson-20/example/pages/books.html">օրինակ</a></td></tr>
+      <tr><td>21</td><td><a href="../js-lesson-21.html">API-ների հետ խորը աշխատանք</a></td><td><a href="lesson-21/task.html">Որոնում Open Library-ում</a></td><td><a href="lesson-21/example/pages/books.html">օրինակ</a></td></tr>
+      <tr><td>22</td><td><a href="../js-lesson-22.html">OOP JavaScript-ում</a></td><td><a href="lesson-22/task.html">Գրքերը որպես դասեր</a></td><td><a href="lesson-22/example/pages/books.html">օրինակ</a></td></tr>
+      <tr><td>23</td><td><a href="../js-lesson-23.html">Փակույթներ, սխալներ, Set և Map</a></td><td><a href="lesson-23/task.html">Փակույթներ, Set, Map, սխալներ</a></td><td><a href="lesson-23/example/pages/books.html">օրինակ</a></td></tr>
+      <tr><td>24</td><td>Ամփոփում</td><td><a href="../block-2-project/task-3.html#s6">ՏեխնոՄարկետի պաշտպանություն</a></td><td><a href="../block-2-project/example-2-final/index.html">օրինակ</a></td></tr>
+    </table>
+    </div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · տնային աշխատանքներ</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

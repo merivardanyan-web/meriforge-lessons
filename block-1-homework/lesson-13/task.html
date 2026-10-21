@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Տնային · Դաս 13 — էջ մակետից</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:#fff}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule); background:var(--paper)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  @media (max-width:700px){.shots{grid-template-columns:1fr}}
+  .lede a, .note a, .pager a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code){white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 1 · տնային</b> · Դաս 13</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../html-lesson-13.html">HTML Դաս 13</a> · մինի-նախագիծ</p>
+  <h1>Նախագծերի էջ մակետից</h1>
+  <p class="lede">Կառուցում ենք նոր էջ ճիշտ հերթականությամբ․ չափումներ → <code>main.css</code> ութ բաժնով և տոկեններով → HTML։</p>
+
+  <div class="facts">
+    <span>Ժամանակ՝ ~2 ժամ</span>
+    <span>Սկսիր Դաս 12-ի արդյունքից</span>
+    <span>Արդյունք՝ pages/projects.html + նոր main.css</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Օգտագործիր միայն Դաս 01–13-ը։ Մակետը համակարգչի համար է․ ադապտիվությունը Դաս 14-ում է։</p>
+  </div>
+
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Նոր էջ՝ «Նախագծեր», որը կառուցում ես մակետից։ Ամբողջ էջի տեսքը որոշվում է <code>main.css</code>-ի տոկեններով, իսկ HTML-ը գրվում է վերջում։</p>
+    <figure class="shot">
+      <img src="screenshots/projects.jpg" alt="Նախագծերի էջ․ սպիտակ բաժին վերնագրով և տեքստով, տակը չորս քարտ երեք սյունով" width="900" height="1425" loading="lazy">
+      <figcaption>pages/projects.html՝ 1280px · նույնը, ինչ starter/mockup.jpg</figcaption>
+    </figure>
+  </section>
+
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <div class="tree">starter/
+├── mockup.jpg          ← մակետը
+├── content.md          ← չափումների աղյուսակ և տեքստեր
+└── images/
+    └── project-compare.jpg</div>
+    <p>Սկսիր Դաս 12-ի քո կայքից։ Եթե այն չունես, վերցրու <a href="../lesson-12/example/index.html">Դաս 12-ի օրինակը</a>։</p>
+  </section>
+
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+
+    <h3>Քայլ 1 · Չափումների աղյուսակ</h3>
+    <p>Բացիր <code>mockup.jpg</code>-ը և համեմատիր <code>content.md</code>-ի աղյուսակի հետ։ Իրական աշխատանքում աղյուսակը դու ես լրացնում Figma-ում կամ DevTools-ով (Դաս 13, բաժին 04)։ Ուշադրություն դարձրու․ բոլոր հեռավորությունները 10-ի բազմապատիկ են, տառաչափերը՝ չորսը։</p>
+
+    <h3>Քայլ 2 · main.css-ը ութ բաժնով</h3>
+    <div class="tree">1. Դիզայնի արժեքներ   :root — գույներ + --wall, --gap
+2. Բազա               body
+3. Կմախք              section, .row, .col — միայն տոկեններով
+4. Տիպոգրաֆիա         h1–h4, .text-muted
+5. Հեռավորություններ  .gap-*, .mb-*
+6. Ֆոներ              .bg-*
+7. Կոմպոնենտներ       .btn, .pill, .box, .card, ֆորմա, աղյուսակ
+8. Բաժիններ           header, footer, #intro</div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css — բաժին 3</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">section</span> { <span class="f">padding</span>: <span class="s">40px 0</span>; }
+<span class="k">.row</span>    { <span class="f">padding</span>: <span class="s">0 calc(var(--wall) - var(--gap))</span>; }
+<span class="k">.col</span>    { <span class="f">padding</span>: <span class="s">var(--gap)</span>; }</code></pre>
+    </div>
+    <div class="tip note"><span class="tag">Ստուգում</span><p>Փոխիր <code>--wall</code>-ը 100px և <code>--gap</code>-ը 20px։ Բոլոր էջերի պատերը և սյուների միջև բացակները պետք է փոխվեն միանգամից։ Վերադարձրու 60px և 10px։</p></div>
+
+    <h3>Քայլ 3 · Եվ միայն հիմա՝ HTML</h3>
+    <p>Ստեղծիր <code>pages/projects.html</code>․ վերնագրի բաժին (<code>bg-surface</code>) և չորս քարտ <code>w-33</code> սյուներում։ Հաշվիր, թե քանի նոր CSS կանոն ստիպված եղար ավելացնել։ Եթե main.css-ը ճիշտ է, պատասխանը մոտ զրո է։</p>
+
+    <h3>Քայլ 4 · Քարտը BEM-ով</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>BEM անուններ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">article</span> <span class="f">class</span>=<span class="s">"wrapper card"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">img</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__body"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"card__title"</span><span class="p">&gt;</span>Այս կայքը<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__text"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__footer"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span></code></pre>
+    </div>
+    <p>Համեմատիր նախորդ տարբերակի հետ (<code>title-4</code>, <code>text-muted</code>)։ Ո՞րն է ավելի հեշտ կարդալ HTML-ում, և որն է ավելի հեշտ փոխել CSS-ում։</p>
+
+    <h3>Քայլ 5 · Մենյու</h3>
+    <p>Մենյուում «Դասացուցակ»-ը և «Համեմատություն»-ը փոխարինիր մեկ «Նախագծեր» կետով, իսկ գլխավոր էջի «Բոլոր նախագծերը» հղումը տար <code>projects.html</code>։</p>
+  </section>
+
+  <section id="s3">
+    <h2><span class="num">03</span>Ընդունման ստուգաթերթ</h2>
+    <h3>Հերթականություն</h3>
+    <ul class="goals">
+      <li>Չափումների աղյուսակը կարդացված է մինչև կոդը</li>
+      <li><code>main.css</code>-ը ութ բաժնով է</li>
+      <li>HTML-ը գրված է CSS-ից հետո</li>
+    </ul>
+
+    <h3>Տոկեններ</h3>
+    <ul class="goals">
+      <li><code>--wall</code>-ը և <code>--gap</code>-ը <code>:root</code>-ում են</li>
+      <li><code>.row</code>-ը և <code>.col</code>-ը օգտագործում են միայն դրանք</li>
+      <li>Փոփոխելիս ամբողջ կայքը հարմարվում է</li>
+    </ul>
+
+    <h3>Էջ</h3>
+    <ul class="goals">
+      <li>Համապատասխանում է մակետին</li>
+      <li>Քարտը BEM անուններով է</li>
+      <li>Մենյուն թարմացված է բոլոր էջերում</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Պատը 60px չէ, այլ 70px</td><td><code>.row</code>-ի padding-ին գումարվում է <code>.col</code>-ի padding-ը։ Դրա համար՝ <code>calc(var(--wall) - var(--gap))</code></td></tr>
+      <tr><td>Էջի համար շատ նոր կանոններ պետք եղան</td><td>Ինչ-որ արժեք գրված է ուղիղ էջի համար, ոչ կոմպոնենտում։ Տեղափոխիր այն բաժին 7</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 13-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում կամ նույն թղթապանակում։</p>
+    <ol class="hw">
+      <li>Վերցրու ցանկացած կայք, որը քեզ դուր է գալիս։ Չափիր DevTools-ով և լրացրու չափումների աղյուսակը՝ վեց կատեգորիայով։</li>
+      <li>Գտիր դրա հեռավորությունների սանդղակը։ Արդյո՞ք դա 4-ի կամ 10-ի բազմապատիկ է։</li>
+      <li>Հաշվիր՝ քանի՞ տարբեր տառաչափ է օգտագործվում։ Եթե 6-ից շատ է, առաջարկիր, թե ինչպես կկրճատեիր։</li>
+      <li>Կառուցիր <code>:root</code> բլոկ այդ կայքի գույներով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Այս դասի մակետի հիման վրա գրիր <strong>ամբողջ <code>main.css</code>-ը</strong>՝ ութ բաժնով, ինչպես 05-րդ բաժնում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Եվ միայն դրանից հետո գրիր HTML-ը։ Հաշվիր՝ քանի՞ նոր CSS կանոն ստիպված եղար ավելացնել։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Փոխիր <code>--wall</code>-ը և <code>--gap</code>-ը։ Համոզվիր, որ ամեն ինչ հարմարվում է ինքնաբերաբար։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Վերաշարադրիր ապրանքի քարտը BEM-ով։ Համեմատիր երկու տարբերակի HTML-ը և CSS-ը։ Ո՞րն է քեզ ավելի հարմար և ինչու։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Փորձիր <code>.row</code>-ի Բ տարբերակը (<code>max-width: 1200px; margin: 0 auto</code>)։ Համեմատիր լայն էկրանին։</li>
+      <li>Գտիր իրական մակետ (Dribbble, Behance) և կրկնիր այն մեր համակարգով։ Նախ չափումների աղյուսակը, հետո CSS-ը, հետո HTML-ը։</li>
+    </ol>
+  </section>
+
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/index.html">օրինակը</a> և քո էջը կողք կողքի։ Բացիր երկուսի կոդն էլ խմբագրիչում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-12/task.html">← Դաս 12</a><a href="../index.html">Բոլոր տնայինները</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 1 · տնային աշխատանք · Դաս 13</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

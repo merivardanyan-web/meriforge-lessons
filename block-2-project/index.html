@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Բլոկ 2-ի նախագիծ — ՏեխնոՄարկետ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lesson.css">
+<script src="../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · JavaScript</b> · նախագիծ</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Բլոկ 2-ի նախագիծ · JS Դաս 15–24</p>
+  <h1>ՏեխնոՄարկետ · կենդանի խանութ</h1>
+  <p class="lede">Բլոկ 1-ում կառուցեցիր 9 էջանոց ստատիկ խանութ։ Բլոկ 2-ում այն նույն HTML-ով և CSS-ով կենդանանում է․ ֆիլտրում է, հաշվում, հիշում, ստուգում և տվյալներ է բերում «սերվերից»։ Նախագիծը բաժանված է երեք առաջադրանքի, որոնք գալիս են դասերի հետ, և ավարտվում է պաշտպանությամբ Դաս 24-ում։</p>
+
+  <div class="facts">
+    <span>3 առաջադրանք · 2 օրինակ · 9 էջ</span>
+    <span>0 գրադարան, միայն JavaScript</span>
+    <span>Արդյունքը՝ GitHub Pages-ում</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչպես աշխատել այս թղթապանակի հետ</h2>
+    <div class="tree">block-2-project/
+│
+├── index.html                  ← դու այստեղ ես
+├── starter/                    ← data.js, products.json, content.md
+│
+├── task-1.html                 ← Առաջադրանք 1 · կատալոգ և զամբյուղ (JS Դաս 15–16)
+├── example-1-catalog-cart/     ← Օրինակ 1 · սովորական սկրիպտներ, աշխատում է file://-ով
+│
+├── task-2.html                 ← Առաջադրանք 2 · Git, մոդուլներ, ապրանքի էջ, ֆորմաներ (JS Դաս 17–18)
+├── task-3.html                 ← Առաջադրանք 3 · fetch, դասեր, Set/Map (JS Դաս 19–23, տնային)
+├── example-2-final/            ← Օրինակ 2 · վերջնական կայքը, պահանջում է Live Server
+│   ├── index.html … register.html     ← նույն 9 էջը
+│   ├── data/products.json
+│   ├── css/main.css            ← բաժին 13–14՝ JS-ի վիճակների դասերը
+│   └── js/  config · api · errors · storage · utils · validation · store
+│            models/ · ui/ · catalog/ · pages/
+│
+└── screenshots/</div>
+    <div class="warn note">
+      <span class="tag">Կանոն․ նախ առաջադրանքը, հետո օրինակը</span>
+      <p>Աշխատում ես <strong>քո</strong> Բլոկ 1-ի նախագծի վրա․ HTML-ը և CSS-ը արդեն քոնն են, հիմա նրանց ավելանում է JS։ Օրինակը բացիր միայն ստուգաթերթն անցնելուց հետո։<br><br>Օրինակ 2-ը օգտագործում է մոդուլներ և <code>fetch</code>, ուստի բացիր այն Live Server-ով (JS Դաս 18), ոչ ֆայլից։</p>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Երեք քայլ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Երբ</th><th>Առաջադրանք</th><th>Օրինակ</th><th>Ինչ է ավելանում</th></tr>
+      <tr><td>Դաս 15–16</td><td><a href="task-1.html">task-1.html</a></td><td><a href="example-1-catalog-cart/index.html">example-1-catalog-cart</a></td><td>Կատալոգի ֆիլտրեր, որոնում, էջավորում, զամբյուղ localStorage-ով, «Ավելացվեց» մոդալ, header-ի թիվ</td></tr>
+      <tr><td>Դաս 17–18</td><td><a href="task-2.html">task-2.html</a></td><td><a href="example-2-final/index.html">example-2-final</a></td><td>Git և Pages, ES մոդուլներ, ապրանքի էջ <code>?id=</code>-ով, պատկերասրահ, բուրգեր, թեմա, ֆորմաների ստուգում, պատվեր</td></tr>
+      <tr><td>Դաս 19–23 → 24</td><td><a href="task-3.html">task-3.html</a></td><td><a href="example-2-final/index.html">example-2-final</a></td><td><code>products.json</code> և API շերտ, երեք վիճակ, <code>Cart</code> և <code>Wishlist</code> դասեր, Set/Map, <code>ValidationError</code>, պաշտպանություն</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Ինչպես է այն կապված դասերի հետ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դաս</th><th>Դասի թեման</th><th>Նախագծում</th></tr>
+      <tr><td>15</td><td>Կատալոգ՝ վիճակ, pipeline, render</td><td>catalog.html-ը Բլոկ 1-ի markup-ով</td></tr>
+      <tr><td>16</td><td>Զամբյուղ, ռեֆակտորինգ, DevTools</td><td>cart.js, cart.html, checkout-ի ամփոփում</td></tr>
+      <tr><td>17</td><td>Git և GitHub</td><td>Պահոց, ճյուղեր, Pages</td></tr>
+      <tr><td>18</td><td>ES մոդուլներ</td><td>js/pages/*.js, ui/, կախվածությունների գրաֆ</td></tr>
+      <tr><td>19</td><td>Promise</td><td>Ի՞նչն է դառնում ասինխրոն</td></tr>
+      <tr><td>20</td><td>fetch, async/await</td><td>api.js, երեք վիճակ</td></tr>
+      <tr><td>21</td><td>API-ների հետ աշխատանք</td><td>Քեշ, «Կրկին փորձել», API շերտ</td></tr>
+      <tr><td>22</td><td>OOP</td><td>Cart դաս</td></tr>
+      <tr><td>23</td><td>Փակույթներ, սխալներ, Set, Map</td><td>Wishlist, ֆիլտրեր տվյալներից, ValidationError</td></tr>
+      <tr><td>24</td><td>Ամփոփում</td><td>Պաշտպանություն</td></tr>
+    </table>
+    </div>
+    <div class="note">
+      <span class="tag">Միայն անցածը</span>
+      <p>Ամեն առաջադրանք օգտագործում է միայն այն, ինչ անցել ենք մինչև այդ դասը։ Առաջադրանք 1-ում չկան մոդուլներ և fetch, Առաջադրանք 2-ում չկան դասեր։ Միակ բացառությունը՝ <code>URLSearchParams</code>-ը, որը տրված է որպես հուշում Դաս 15-ի տնայինում։</p>
+    </div>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ինչ է ուղղվում Բլոկ 1-ի README-ից</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Բլոկ 1-ի սահմանափակում</th><th>Որտեղ է ուղղվում</th></tr>
+      <tr><td>Ֆիլտրերը, դասավորումը և էջավորումը փոխում են միայն հասցեն</td><td>Առաջադրանք 1</td></tr>
+      <tr><td>Զամբյուղի քանակը և «Հեռացնել»-ը չեն փոխում գումարները</td><td>Առաջադրանք 1</td></tr>
+      <tr><td>Բուրգերը չի փակվում Esc-ով և հղման սեղմելիս</td><td>Առաջադրանք 2</td></tr>
+      <tr><td>Պատկերասրահի փոքր նկարները սեղմելի չեն</td><td>Առաջադրանք 2</td></tr>
+      <tr><td>Մուգ թեման հետևում է միայն համակարգին</td><td>Առաջադրանք 2</td></tr>
+      <tr><td>HTML-ը չի կարող համեմատել երկու գաղտնաբառ</td><td>Առաջադրանք 2 (հարմարություն), PHP Դաս 16 (պաշտպանություն)</td></tr>
+      <tr><td>Պատվերի ֆորման ուղարկվում է GET-ով</td><td>Առաջադրանք 2-ում այլևս չի ուղարկվում հասցեով, իսկական ուղարկումը՝ PHP բլոկում</td></tr>
+      <tr><td>Header-ը կրկնվում է 9 էջում</td><td>Մնում է․ կլուծվի PHP-ի layout-ով (PHP Դաս 15)</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Վերջնական արդյունքը</h2>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/ex2-catalog.jpg" alt="Վերջնական կատալոգ սրտիկներով և ֆիլտրերով" width="900" height="1055" loading="lazy">
+      <figcaption>Կատալոգ</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/ex2-product.jpg" alt="Ապրանքի էջ պատկերասրահով, գնով, բնութագրերով և նման ապրանքներով" width="900" height="1195" loading="lazy">
+      <figcaption>Ապրանքի էջ</figcaption>
+    </figure>
+    </div>
+    <p>Պաշտպանության կարգը և գնահատումը՝ <a href="task-3.html#s6" style="color:var(--pen);text-decoration:underline">Առաջադրանք 3, բաժին 06</a>։</p>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · նախագիծ</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+/* Ավելացրու main.css-ի վերջում՝ «9. ԱԴԱՊՏԻՎՈՒԹՅՈՒՆ»-ից առաջ */
+/* Գնահատական աստղերով — Դաս 12 */
+.stars { display: flex; gap: 2px; }
+.stars button {
+    padding: 0 2px;
+    border: 0;
+    background: none;
+    color: var(--border);
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+}
+.stars button.is-on { color: #e0a100; }

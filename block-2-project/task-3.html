@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Առաջադրանք 3 — տվյալներ API-ից և դասեր</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lesson.css">
+<script src="../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · նախագիծ</b> · առաջադրանք 3</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Առաջադրանք 3 / 3 · JS Դաս 19–23 · տնային շաբաթ → պաշտպանություն Դաս 24</p>
+  <h1>Տվյալներ API-ից, դասեր և ամբողջական վիճակներ</h1>
+  <p class="lede">Դաս 19–23-ի ընթացքում նախագիծը աճում է ամեն դասի հետ՝ ասինխրոնություն, fetch, API շերտ, դասեր, փակույթներ, Set և Map։ Դաս 24-ում այն պաշտպանում ես։ Ավարտելուց հետո համեմատիր <a href="example-2-final/index.html">վերջնական օրինակի</a> հետ։</p>
+
+  <div class="facts">
+    <span>Արդյունք՝ data/products.json + js/ մոդուլներ</span>
+    <span>Պահանջ՝ Live Server</span>
+    <span>Պաշտպանություն՝ բաժին 06</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Ապրանքները գալիս են «սերվերից»՝ <code>data/products.json</code>-ից։ Ամեն էջ ունի երեք վիճակ՝ բեռնում, տվյալներ, սխալ։ Զամբյուղը դաս է, հավանածները՝ <code>Set</code>, ֆիլտրերի ցուցակները կառուցվում են տվյալներից, ստուգումը՝ սեփական սխալների դասերով։ Արտաքինից կայքը համարյա չի փոխվում, բայց կոդը պատրաստ է PHP բլոկին․ այնտեղ կփոխվի միայն <code>api.js</code>-ը։</p>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/ex2-skeleton.jpg" alt="Կատալոգը բեռնման ժամանակ․ վեց մոխրագույն կմախքային քարտ" width="900" height="633" loading="lazy">
+      <figcaption>Բեռնում՝ կմախքներ</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/ex2-error.jpg" alt="Կատալոգի սխալի վիճակ՝ «Սերվերի խնդիր» և «Կրկին փորձել» կոճակ" width="900" height="633" loading="lazy">
+      <figcaption>Սխալ՝ «Կրկին փորձել»</figcaption>
+    </figure>
+    </div>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/ex2-catalog.jpg" alt="Կատալոգ սրտիկներով քարտերի վրա, ֆիլտրերում կատեգորիաները քանակներով" width="900" height="1055" loading="lazy">
+      <figcaption>Սրտիկներ և ֆիլտրեր քանակներով</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/ex2-thanks.jpg" alt="Շնորհակալության էջ պատվերի համարով TM-48213 և պատվերի նկարագրությամբ" width="900" height="633" loading="lazy">
+      <figcaption>Պատվերի համարը sessionStorage-ից</figcaption>
+    </figure>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Շաբաթվա պլան</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դաս</th><th>Ինչ ես ավելացնում</th><th>Մոտավոր ժամ</th></tr>
+      <tr><td>19</td><td>Մտածիր․ որ ֆունկցիաները կդառնան ասինխրոն։ Փորձիր <code>delay()</code>-ով նմանակել դանդաղ բեռնում</td><td>1</td></tr>
+      <tr><td>20</td><td><code>products.json</code>, <code>api.js</code>, երեք վիճակ կատալոգում, զամբյուղում և ապրանքի էջում</td><td>3</td></tr>
+      <tr><td>21</td><td>Քեշ, «Կրկին փորձել», <code>Promise.all</code> ապրանքի էջում</td><td>1.5</td></tr>
+      <tr><td>22</td><td><code>Cart</code> դաս, <code>store.js</code>, header-ի բաժանորդագրություն</td><td>2</td></tr>
+      <tr><td>23</td><td><code>Wishlist</code>՝ <code>Set</code>-ով, ֆիլտրեր տվյալներից՝ <code>Map</code>-ով, <code>ValidationError</code>, անփոփոխ թարմացումներ</td><td>2.5</td></tr>
+      <tr><td>24</td><td>Ստուգաթերթ (բաժին 05), README, պաշտպանություն (բաժին 06)</td><td>—</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · data.js → products.json · Դաս 20</h3>
+    <p>JSON-ը ձեռքով մի գրիր։ Բաց արա կայքը, Console-ում գրիր <code>copy(JSON.stringify(PRODUCTS, null, 2))</code> (կամ <code>console.log</code> և պատճենիր) և պահիր <code>data/products.json</code>։ <code>starter/</code>-ի JSON-ում արդեն կան <code>gallery</code>, <code>description</code> և <code>specs</code> դաշտերը։ <code>data.js</code>-ից մնում են միայն <code>CATEGORIES</code>-ը և <code>BRANDS</code>-ը՝ <code>config.js</code>-ում, <code>Object.freeze</code>-ով (Դաս 23)։</p>
+
+    <h3>Քայլ 2 · API շերտ · Դաս 20, 21, 23</h3>
+    <p>Բոլոր հարցումները անցնում են մեկ ֆայլով։ <code>response.ok</code>-ը ստուգվում է մեկ անգամ, սխալները՝ սեփական դասերով։ Քեշում պահում ենք <strong>խոստումը</strong>, ոչ պատասխանը․ եթե էջի երկու մաս միաժամանակ ուզեն ապրանքները, հարցումը կգնա մեկ անգամ։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/api.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> cache = <span class="k">new</span> <span class="f">Map</span>();
+
+<span class="k">async</span> <span class="k">function</span> <span class="f">fetchJson</span>(url) {
+    <span class="k">const</span> response = <span class="k">await</span> <span class="f">fetch</span>(url);
+    <span class="k">if</span> (!response.ok) {                              <span class="c">// 404-ը catch չի ընկնում ինքնաբերաբար (JS Դաս 20)</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="f">ApiError</span>(response.status, <span class="s">`Հարցումը ձախողվեց՝ </span>${url}<span class="s">`</span>);
+    }
+    <span class="k">return</span> response.<span class="f">json</span>();
+}
+
+<span class="k">function</span> <span class="f">request</span>(url) {
+    <span class="k">if</span> (!cache.<span class="f">has</span>(url)) {
+        <span class="k">const</span> promise = <span class="f">fetchJson</span>(url).<span class="k">catch</span>(error =&gt; {
+            cache.<span class="k">delete</span>(url);                       <span class="c">// ձախողվածը չենք պահում՝ «Կրկին փորձել»-ը նորից կհարցնի</span>
+            <span class="k">throw</span> error;
+        });
+        cache.<span class="k">set</span>(url, promise);
+    }
+    <span class="k">return</span> cache.<span class="k">get</span>(url);
+}
+
+<span class="k">export</span> <span class="k">const</span> api = {
+    <span class="f">getProducts</span>() {
+        <span class="k">return</span> <span class="f">request</span>(PRODUCTS_URL);
+    },
+
+    <span class="k">async</span> <span class="f">getProduct</span>(id) {
+        <span class="k">const</span> products = <span class="k">await</span> <span class="f">request</span>(PRODUCTS_URL);
+        <span class="k">const</span> product = products.<span class="f">find</span>(p =&gt; p.id === id);
+        <span class="k">if</span> (!product) <span class="k">throw</span> <span class="k">new</span> <span class="f">NotFoundError</span>(<span class="s">"Այդպիսի ապրանք չկա։"</span>);
+        <span class="k">return</span> product;
+    }
+};</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/errors.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">export</span> <span class="k">class</span> ApiError <span class="k">extends</span> Error {
+    <span class="f">constructor</span>(status, message) {
+        <span class="k">super</span>(message);
+        <span class="k">this</span>.name = <span class="s">"ApiError"</span>;
+        <span class="k">this</span>.status = status;
+    }
+
+    <span class="k">get</span> <span class="f">isServerError</span>() {
+        <span class="k">return</span> <span class="k">this</span>.status &gt;= <span class="n">500</span>;
+    }
+}
+
+<span class="k">export</span> <span class="k">class</span> NotFoundError <span class="k">extends</span> Error {
+    <span class="f">constructor</span>(message) {
+        <span class="k">super</span>(message);
+        <span class="k">this</span>.name = <span class="s">"NotFoundError"</span>;
+    }
+}
+
+<span class="c">// ValidationError — քայլ 7</span></code></pre>
+    </div>
+
+    <h3>Քայլ 3 · Երեք վիճակ · Դաս 20</h3>
+    <ul class="goals">
+      <li>Բեռնում՝ 6 կմախքային քարտ (CSS-ը՝ HTML Դաս 21-ի shimmer անիմացիան), «Բեռնվում է…»</li>
+      <li>Տվյալներ՝ նույն render-ը, ինչ Առաջադրանք 1-ում, միայն <code>products</code>-ը հիմա փոփոխական է, որ լցվում է <code>await</code>-ից հետո</li>
+      <li>Սխալ՝ հասկանալի տեքստ (<code>getErrorMessage</code>) և «Կրկին փորձել», որը նորից կանչում է բեռնումը։ Դելեգացիա, որովհետև կոճակը ստեղծվում է <code>innerHTML</code>-ով</li>
+      <li>Ստուգիր՝ DevTools → Network → <em>Offline</em> և <em>Slow 4G</em>։ Ֆայլի անունը սխալ գրիր (<code>product.json</code>) և տես 404-ի մշակումը</li>
+    </ul>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/pages/catalog.js — բեռնում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">async</span> <span class="k">function</span> <span class="f">loadProducts</span>() {
+    productsEl.innerHTML = <span class="f">createSkeletonCards</span>(PAGE_SIZE);
+    productsEl.<span class="f">setAttribute</span>(<span class="s">"aria-busy"</span>, <span class="s">"true"</span>);
+    statsEl.textContent = <span class="s">"Բեռնվում է…"</span>;
+    paginationEl.innerHTML = <span class="s">""</span>;
+
+    <span class="k">try</span> {
+        products = <span class="k">await</span> api.<span class="f">getProducts</span>();
+        <span class="f">renderFilterOptions</span>();
+        <span class="f">readFilters</span>();
+        <span class="f">render</span>();
+    } <span class="k">catch</span> (error) {
+        productsEl.innerHTML = <span class="f">createErrorState</span>(<span class="f">getErrorMessage</span>(error));
+        statsEl.textContent = <span class="s">""</span>;
+        console.<span class="f">error</span>(error);
+    } <span class="k">finally</span> {
+        productsEl.<span class="f">removeAttribute</span>(<span class="s">"aria-busy"</span>);
+    }
+}</code></pre>
+    </div>
+    <p>Ապրանքի էջում՝ <code>Promise.all([api.getProduct(id), api.getProducts()])</code> (Դաս 19)․ ապրանքը և «նման ապրանքների» ցուցակը։ Քեշի շնորհիվ ֆայլը կբեռնվի մեկ անգամ։ <code>NotFoundError</code>-ի դեպքում «Կրկին փորձել» կոճակ պետք չէ։</p>
+
+    <h3>Քայլ 4 · Cart դաս · Դաս 22</h3>
+    <p>Ինչպես Դաս 22-ի դասարանականում, բայց մի տարբերությամբ․ ապրանքները գալիս են ավելի ուշ, քան ստեղծվում է զամբյուղը (header-ի թվի համար դրանք պետք չեն)։ Ուստի <code>getItems(products)</code>-ը և <code>getTotals(products)</code>-ը ստանում են դրանք պարամետրով։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/models/Cart.js — հատված</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">export</span> <span class="k">class</span> Cart {
+    #items;                      <span class="c">// փակ — դրսից ոչ ոք չի փչացնի (JS Դաս 22)</span>
+    #storageKey;
+    #listeners = [];
+
+    <span class="f">constructor</span>(storageKey) {
+        <span class="k">this</span>.#storageKey = storageKey;
+        <span class="k">this</span>.#items = <span class="f">load</span>(storageKey, []);
+    }
+
+    <span class="c">// ---------- Կարդալու համար ----------</span>
+    <span class="k">get</span> <span class="f">count</span>() {
+        <span class="k">return</span> <span class="k">this</span>.#items.<span class="f">reduce</span>((sum, item) =&gt; sum + item.qty, <span class="n">0</span>);
+    }
+
+    <span class="c">// ...</span>
+
+    <span class="f">add</span>(id, qty = <span class="n">1</span>) {
+        <span class="k">const</span> existing = <span class="k">this</span>.#items.<span class="f">find</span>(item =&gt; item.id === id);
+        <span class="c">// Անփոփոխ թարմացում՝ նոր զանգված, ոչ push (JS Դաս 23)</span>
+        <span class="k">this</span>.#items = existing
+            ? <span class="k">this</span>.#items.<span class="f">map</span>(item =&gt; item.id === id ? { ...item, qty: Math.<span class="f">min</span>(item.qty + qty, MAX_QTY) } : item)
+            : [...<span class="k">this</span>.#items, { id, qty: Math.<span class="f">min</span>(qty, MAX_QTY) }];
+        <span class="k">this</span>.<span class="f">#save</span>();
+        <span class="k">return</span> <span class="k">this</span>;
+    }
+
+    <span class="c">// ...</span>
+
+    <span class="f">onChange</span>(listener) {
+        <span class="k">this</span>.#listeners.<span class="f">push</span>(listener);
+    }
+
+    <span class="c">// ---------- Ներքին ----------</span>
+    <span class="f">#save</span>() {
+        <span class="f">save</span>(<span class="k">this</span>.#storageKey, <span class="k">this</span>.#items);
+        <span class="k">this</span>.#listeners.<span class="f">forEach</span>(listener =&gt; <span class="f">listener</span>(<span class="k">this</span>));
+    }
+}</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/store.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">import</span> անենք (JS Դաս <span class="n">18</span>), ուստի օբյեկտները ընդհանուր են։
+
+<span class="k">import</span> { Cart } <span class="k">from</span> <span class="s">"./models/Cart.js"</span>;
+<span class="k">import</span> { Wishlist } <span class="k">from</span> <span class="s">"./models/Wishlist.js"</span>;
+<span class="k">import</span> { KEYS } <span class="k">from</span> <span class="s">"./config.js"</span>;
+
+<span class="k">export</span> <span class="k">const</span> cart = <span class="k">new</span> <span class="f">Cart</span>(KEYS.cart);
+<span class="k">export</span> <span class="k">const</span> wishlist = <span class="k">new</span> <span class="f">Wishlist</span>(KEYS.wishlist);</code></pre>
+    </div>
+    <div class="tip note">
+      <span class="tag">Ինչու onChange</span>
+      <p>Առաջադրանք 1-ում <code>saveCart()</code>-ը ինքն էր թարմացնում header-ի թիվը, այսինքն զամբյուղը «գիտեր» header-ի մասին։ Հիմա <code>Cart</code>-ը ոչինչ չգիտի DOM-ի մասին․ այն պարզապես կանչում է բոլոր բաժանորդներին։ Header-ը բաժանորդագրվում է <code>cart.onChange(renderCartCount)</code>-ով։ Այդպես դասը հեշտ է փորձարկել Console-ում՝ առանց էջի։</p>
+    </div>
+
+    <h3>Քայլ 5 · Հավանածներ՝ Set · Դաս 23</h3>
+    <ul class="goals">
+      <li><code>Wishlist</code> դաս՝ <code>#ids = new Set(...)</code>, <code>has</code>, <code>toggle</code>, <code>size</code>։ JSON-ը չգիտի <code>Set</code>, ուստի պահում ենք <code>[...this.#ids]</code>, բեռնում՝ <code>new Set(array)</code></li>
+      <li>Սրտիկ քարտի անկյունում (<code>z-index: 2</code>, որ լինի քարտի հղման շերտից վերև), ապրանքի էջում՝ «♡ Հավանել» կոճակ</li>
+      <li>Ֆիլտրերում՝ «Միայն հավանածները» radio։ Pipeline-ին փոխանցիր <code>wishlist</code>-ը</li>
+    </ul>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/models/Wishlist.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">export</span> <span class="k">class</span> Wishlist {
+    #ids;
+    #storageKey;
+
+    <span class="f">constructor</span>(storageKey) {
+        <span class="k">this</span>.#storageKey = storageKey;
+        <span class="k">this</span>.#ids = <span class="k">new</span> <span class="f">Set</span>(<span class="f">load</span>(storageKey, []));   <span class="c">// JSON-ը Set չգիտի՝ պահում ենք զանգված</span>
+    }
+
+    <span class="k">get</span> <span class="f">size</span>() {
+        <span class="k">return</span> <span class="k">this</span>.#ids.size;
+    }
+
+    <span class="f">has</span>(id) {
+        <span class="k">return</span> <span class="k">this</span>.#ids.<span class="f">has</span>(id);
+    }
+
+    <span class="c">// Վերադարձնում է նոր վիճակը՝ true, եթե հիմա հավանած է</span>
+    <span class="f">toggle</span>(id) {
+        <span class="k">if</span> (<span class="k">this</span>.#ids.<span class="f">has</span>(id)) {
+            <span class="k">this</span>.#ids.<span class="k">delete</span>(id);
+        } <span class="k">else</span> {
+            <span class="k">this</span>.#ids.<span class="f">add</span>(id);
+        }
+        <span class="f">save</span>(<span class="k">this</span>.#storageKey, [...<span class="k">this</span>.#ids]);
+        <span class="k">return</span> <span class="k">this</span>.#ids.<span class="f">has</span>(id);
+    }
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 6 · Ֆիլտրերը՝ տվյալներից · Դաս 23</h3>
+    <p>Եթե վաղը խանութում հայտնվի «Տեսախցիկներ» կատեգորիան, HTML-ը չպիտի փոխվի։ Կատեգորիաների և ապրանքանիշերի ցուցակները կառուցում ենք ապրանքներից, իսկ քանակները հաշվում <code>Map</code>-ով։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/catalog/filters.js — countBy</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">export</span> <span class="k">function</span> <span class="f">countBy</span>(products, key) {
+    <span class="k">const</span> counts = <span class="k">new</span> <span class="f">Map</span>();
+    products.<span class="f">forEach</span>(p =&gt; counts.<span class="k">set</span>(p[key], (counts.<span class="k">get</span>(p[key]) ?? <span class="n">0</span>) + <span class="n">1</span>));
+    <span class="k">return</span> counts;
+}</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/catalog/filters.js — pipeline</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">export</span> <span class="k">function</span> <span class="f">getVisibleProducts</span>(products, state, wishlist) {
+    <span class="k">const</span> query = state.search.<span class="f">toLowerCase</span>();
+
+    <span class="k">const</span> result = products
+        .<span class="f">filter</span>(p =&gt; state.categories.length === <span class="n">0</span> || state.categories.<span class="f">includes</span>(p.category))
+        .<span class="f">filter</span>(p =&gt; state.brands.length === <span class="n">0</span> || state.brands.<span class="f">includes</span>(p.brand))
+        .<span class="f">filter</span>(p =&gt; state.min === <span class="k">null</span> || p.price &gt;= state.min)
+        .<span class="f">filter</span>(p =&gt; state.max === <span class="k">null</span> || p.price &lt;= state.max)
+        .<span class="f">filter</span>(p =&gt; state.stock !== <span class="s">"in"</span> || p.inStock)
+        .<span class="f">filter</span>(p =&gt; state.stock !== <span class="s">"sale"</span> || p.oldPrice !== <span class="k">null</span>)
+        .<span class="f">filter</span>(p =&gt; state.stock !== <span class="s">"fav"</span> || wishlist.<span class="f">has</span>(p.id))
+        .<span class="f">filter</span>(p =&gt; query === <span class="s">""</span> ||
+            p.name.<span class="f">toLowerCase</span>().<span class="f">includes</span>(query) ||
+            CATEGORIES[p.category].<span class="f">toLowerCase</span>().<span class="f">includes</span>(query));
+
+    <span class="k">return</span> [...result].<span class="f">sort</span>(SORTERS[state.sort] ?? SORTERS.popular);
+}</code></pre>
+    </div>
+    <div class="note">
+      <span class="tag">Նույն pipeline-ը, այլ գրելաձև</span>
+      <p>Առաջադրանք 1-ում ամեն ֆիլտր <code>if</code> էր և <code>result = result.filter(...)</code>։ Այստեղ ամեն ֆիլտր պայման է՝ «կամ ֆիլտրը միացված չէ, կամ ապրանքը համապատասխանում է», և ամբողջը մեկ շղթա է։ Ֆունկցիան չի փոխում ոչ <code>products</code>-ը, ոչ <code>state</code>-ը (Դաս 23)։ Երկու ձևն էլ ճիշտ են․ պաշտպանության ժամանակ բացատրիր՝ որն ես ընտրել և ինչու։</p>
+    </div>
+
+    <h3>Քայլ 7 · Ստուգում ValidationError-ով · Դաս 23</h3>
+    <p>Վերաշարադրիր Առաջադրանք 2-ի ստուգումը։ Կանոնը ֆունկցիա է, որը նետում է <code>ValidationError</code>, իսկ ստուգիչը <code>catch</code>-ում տարբերում է այն ծրագրի սխալից։ Կանոնների «գործարանները» փակույթներ են․ <code>minLength(3, "...")</code>-ը վերադարձնում է ֆունկցիա, որը հիշում է 3-ը։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/validation.js — կանոններ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">export</span> <span class="k">const</span> required = message =&gt; (value, field) =&gt; {
+    <span class="k">if</span> (value.<span class="f">trim</span>() === <span class="s">""</span>) <span class="k">throw</span> <span class="k">new</span> <span class="f">ValidationError</span>(field, message);
+};
+
+<span class="k">export</span> <span class="k">const</span> minLength = (min, message) =&gt; (value, field) =&gt; {
+    <span class="k">if</span> (value.<span class="f">trim</span>().length &lt; min) <span class="k">throw</span> <span class="k">new</span> <span class="f">ValidationError</span>(field, message);
+};
+
+<span class="k">export</span> <span class="k">const</span> matches = (pattern, message) =&gt; (value, field) =&gt; {
+    <span class="k">if</span> (value.<span class="f">trim</span>() !== <span class="s">""</span> &amp;&amp; !pattern.<span class="f">test</span>(value.<span class="f">trim</span>())) <span class="k">throw</span> <span class="k">new</span> <span class="f">ValidationError</span>(field, message);
+};</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/validation.js — մեկ դաշտի ստուգում</div><button class="copy">Պատճենել</button></div>
+<pre><code>    <span class="k">function</span> <span class="f">validateField</span>(name) {
+        <span class="k">const</span> input = form[name];
+        <span class="k">const</span> value = input.type === <span class="s">"checkbox"</span> ? (input.checked ? <span class="s">"on"</span> : <span class="s">""</span>) : input.value;
+        <span class="k">try</span> {
+            rules[name].<span class="f">forEach</span>(rule =&gt; <span class="f">rule</span>(value, name, form));
+            <span class="f">clearError</span>(form, name);
+            <span class="k">return</span> <span class="k">true</span>;
+        } <span class="k">catch</span> (error) {
+            <span class="k">if</span> (!(error <span class="k">instanceof</span> ValidationError)) <span class="k">throw</span> error;   <span class="c">// ծրագրի սխալը չենք թաքցնում</span>
+            <span class="f">showError</span>(form, error.field, error.message);
+            <span class="k">return</span> <span class="k">false</span>;
+        }
+    }</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/pages/checkout.js — կանոնները</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> validator = <span class="f">createValidator</span>(form, {
+    name: [<span class="f">required</span>(<span class="s">"Գրիր անունդ և ազգանունդ"</span>), <span class="f">minLength</span>(<span class="n">3</span>, <span class="s">"Առնվազն 3 նիշ"</span>)],
+    phone: [<span class="f">required</span>(<span class="s">"Հեռախոսը պարտադիր է"</span>), <span class="f">matches</span>(patterns.phone, <span class="s">"Օրինակ՝ +374 91 23 45 67"</span>)],
+    email: [<span class="f">matches</span>(patterns.email, <span class="s">"Ստուգիր հասցեն․ օրինակ՝ ani@example.com"</span>)],
+    address: [(value, field) =&gt; {
+        <span class="k">if</span> (!<span class="f">isPickup</span>() &amp;&amp; value.<span class="f">trim</span>() === <span class="s">""</span>) <span class="k">throw</span> <span class="k">new</span> <span class="f">ValidationError</span>(field, <span class="s">"Գրիր առաքման հասցեն"</span>);
+    }],
+    terms: [<span class="f">required</span>(<span class="s">"Անհրաժեշտ է համաձայնությունը"</span>)]
+});</code></pre>
+    </div>
+
+    <h3>Քայլ 8 · Անփոփոխ թարմացումներ · Դաս 23</h3>
+    <p><code>Cart</code>-ում <code>push</code> և <code>qty++</code> չկան․ ամեն փոփոխություն ստեղծում է նոր զանգված <code>map</code>-ով, <code>filter</code>-ով և spread-ով։ Կարգավորումները՝ <code>Object.freeze</code>։ Ստուգիր Console-ում․ <code>PAGE_SIZE</code>-ը փոխել չի ստացվի։</p>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Հաճախ հանդիպող սխալներ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>products.find is not a function</code></td><td>Մոռացել ես <code>await</code>-ը, և <code>products</code>-ը Promise է</td></tr>
+      <tr><td>Էջը դատարկ է, Console-ում՝ ոչինչ</td><td><code>async</code> ֆունկցիայի սխալը առանց <code>catch</code>-ի կորչում է։ Կանչող տեղում՝ <code>try/catch</code></td></tr>
+      <tr><td>404-ի դեպքում էջում հայտնվում է <code>undefined</code></td><td><code>response.ok</code>-ը չի ստուգվում, <code>fetch</code>-ը 404-ը սխալ չի համարում (Դաս 20)</td></tr>
+      <tr><td>«Կրկին փորձել»-ը ոչինչ չի անում</td><td>Քեշում մնացել է ձախողված Promise-ը։ <code>catch</code>-ում ջնջիր այն <code>cache.delete(url)</code></td></tr>
+      <tr><td><code>cart.#items</code>-ը Console-ում սխալ է տալիս</td><td>Այդպես էլ պետք է․ փակ դաշտ է (Դաս 22)։ Օգտագործիր <code>cart.count</code></td></tr>
+      <tr><td>Հավանածները կորչում են թարմացնելիս</td><td><code>JSON.stringify(new Set([1]))</code>-ը <code>"{}"</code> է։ Պահիր <code>[...set]</code></td></tr>
+      <tr><td><code>this</code>-ը <code>undefined</code> է <code>forEach</code>-ի ներսում</td><td>Սովորական <code>function</code>-ի փոխարեն՝ arrow (Դաս 22)</td></tr>
+      <tr><td><code>catch</code>-ը թաքցնում է ծրագրի իսկական սխալները</td><td>Ստուգիր <code>instanceof ValidationError</code>, մնացածը <code>throw error</code> (Դաս 23)</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Համեմատիր օրինակի հետ</h2>
+    <div class="warn note">
+      <span class="tag">Live Server-ով</span>
+      <p>Բացիր <a href="example-2-final/index.html">example-2-final</a>-ը Live Server-ով (<code>file://</code>-ով մոդուլները և <code>fetch</code>-ը չեն աշխատի)։ Համեմատիր․<br><br><strong>1. Ֆայլերի ծառը.</strong> Քանի՞ մոդուլ ունես, և ո՞րն է ամենամեծը։ Եթե մի ֆայլ 250 տողից երկար է, գուցե այն երկու գործ է անում։<br><strong>2. Կախվածություններ.</strong> Նկարիր քո import-ների գրաֆը (Դաս 18)։ Օղակ կա՞։<br><strong>3. Սխալներ.</strong> Network → Offline։ Ամեն էջ ի՞նչ է ցույց տալիս։<br><strong>4. API-ի փոխարինում.</strong> Եթե վաղը ապրանքները գան <code>/api/products</code>-ից, քանի՞ ֆայլ պետք է փոխես։ Օրինակում՝ մեկ (<code>config.js</code>-ի <code>PRODUCTS_URL</code>-ը)։</p>
+    </div>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Ընդունման ստուգաթերթ</h2>
+    <h3>Ֆունկցիոնալություն</h3>
+    <ul class="goals">
+      <li>Console-ը մաքուր է բոլոր 9 էջում</li>
+      <li>Կատալոգ, ապրանք, զամբյուղ, պատվեր՝ տվյալները <code>products.json</code>-ից</li>
+      <li>Ամեն էջ ունի բեռնման և սխալի վիճակ, «Կրկին փորձել»-ը աշխատում է</li>
+      <li>Հավանածները պահպանվում են, «Միայն հավանածները» ֆիլտրը աշխատում է</li>
+      <li>Ֆիլտրերի կատեգորիաները և ապրանքանիշերը կառուցվում են տվյալներից՝ քանակներով</li>
+      <li>Ֆորմաները մերժում են սխալ տվյալները, սխալները՝ դաշտերի տակ</li>
+    </ul>
+
+    <h3>Կոդ (JS Դաս 24, բաժին 05)</h3>
+    <ul class="goals">
+      <li>Ոչ մի <code>var</code>, <code>console.log</code>, <code>debugger</code></li>
+      <li>Ամեն <code>fetch</code> ստուգում է <code>response.ok</code>, ամեն <code>catch</code> ինչ-որ բան անում է</li>
+      <li>Ֆունկցիաների անունները սկսվում են բայով, կախարդական թվեր չկան (<code>config.js</code>)</li>
+      <li>Զամբյուղը և հավանածները՝ դասեր <code>#private</code> դաշտերով</li>
+      <li>Օգտագործողի տեքստը (որոնում, անուն) էջում է հայտնվում <code>textContent</code>-ով</li>
+    </ul>
+
+    <h3>Եզրային դեպքեր</h3>
+    <ul class="goals">
+      <li>Դատարկ զամբյուղ, դատարկ ֆիլտր, <code>?id=999</code></li>
+      <li>Network → Offline և սխալ ֆայլի անուն</li>
+      <li>Շատ երկար տեքստ որոնման դաշտում և անուն դաշտում</li>
+      <li>«Գնել»-ի կրկնակի արագ սեղմում․ քանակը 2 է, ոչ սխալ</li>
+      <li>Հեռախոս 320px, մուգ թեմա, միայն ստեղնաշար</li>
+    </ul>
+
+    <h3>Git</h3>
+    <ul class="goals">
+      <li>Առնվազն 10 իմաստալից commit, կա <code>.gitignore</code></li>
+      <li>README՝ հասցեով, հնարավորություններով և Բլոկ 1-ի սահմանափակումների թարմացված ցուցակով</li>
+      <li>Հրապարակված տարբերակն աշխատում է</li>
+    </ul>
+  </section>
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Պաշտպանություն · Դաս 24</h2>
+    <p>Ամեն ուսանողին՝ 7–10 րոպե (JS Դաս 24, բաժին 04)։</p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ինչ ցույց տալ</th><th>Րոպե</th></tr>
+      <tr><td>Ցուցադրություն․ հրապարակված կայքը՝ ֆիլտր → ապրանք → զամբյուղ → պատվեր → շնորհակալություն</td><td>3</td></tr>
+      <tr><td>Ճարտարապետություն․ մոդուլների ծառը և կախվածությունների գրաֆը</td><td>2</td></tr>
+      <tr><td>Հետաքրքիր կտոր․ կոդ, որով հպարտ ես</td><td>2</td></tr>
+      <tr><td>Դժվարությունը․ ինչ չէր ստացվում և ինչպես լուծեցիր</td><td>2</td></tr>
+      <tr><td>Հարցեր</td><td>1</td></tr>
+    </table>
+    </div>
+
+    <h3>Հնարավոր հարցեր</h3>
+    <ul class="goals">
+      <li>Ինչու՞ ես զամբյուղում պահում միայն <code>id</code> և <code>qty</code> (Դաս 16)</li>
+      <li>Ինչու՞ է «Գնել»-ի listener-ը <code>document</code>-ի վրա, ոչ ամեն կոճակի</li>
+      <li>Ինչ կլինի, եթե <code>fetch</code>-ը վերադարձնի 404, և որտեղ է դա մշակվում</li>
+      <li>Ինչու՞ է քեշում պահվում Promise-ը, ոչ պատասխանը</li>
+      <li>Ինչով է <code>Cart</code> դասը ավելի լավ, քան Առաջադրանք 1-ի ֆունկցիաները, և ինչով՝ ոչ</li>
+      <li>Ինչու՞ <code>Set</code> հավանածների, բայց զանգված զամբյուղի համար</li>
+      <li>Որտեղ է այս կոդը փակույթ, և ինչ է այն «հիշում»</li>
+      <li>Ինչ կփոխվի PHP բլոկում, երբ ապրանքները գան իսկական API-ից</li>
+    </ul>
+
+    <h3>Գնահատում</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Չափանիշ</th><th>Միավոր</th></tr>
+      <tr><td>Ֆունկցիոնալություն․ ամեն ինչ աշխատում է, Console-ը մաքուր է</td><td>25</td></tr>
+      <tr><td>Կոդի կառուցվածք․ մոդուլներ, մեկ ֆունկցիա = մեկ գործ, կրկնություն չկա</td><td>20</td></tr>
+      <tr><td>Վիճակի կառավարում․ մեկ աղբյուր → render, ուղիղ DOM-ի փոփոխում չկա</td><td>15</td></tr>
+      <tr><td>Եզրային դեպքեր․ բեռնում, սխալ, դատարկ, չգտնվեց</td><td>15</td></tr>
+      <tr><td>UI և ադապտիվություն</td><td>10</td></tr>
+      <tr><td>Git և README</td><td>10</td></tr>
+      <tr><td>Ներկայացում և պատասխաններ</td><td>5</td></tr>
+      <tr><td><strong>Ընդամենը</strong></td><td><strong>100</strong></td></tr>
+    </table>
+    </div>
+    <div class="tip note">
+      <span class="tag">Ինչ է լինելու հետո</span>
+      <p>PHP բլոկում <code>data/products.json</code>-ը կփոխարինվի իսկական API-ով (PHP Դաս 17), զամբյուղը կպահվի սեսիայում, իսկ մուտքն ու գրանցումը կաշխատեն նույն դաշտերով (PHP Դաս 16)։ Քո <code>api.js</code>-ը և <code>validation.js</code>-ը կմնան գրեթե նույնը։</p>
+    </div>
+    <div class="pager"><a href="task-2.html">← Առաջադրանք 2</a><a href="index.html">Նախագծի էջ</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · նախագիծ · առաջադրանք 3</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

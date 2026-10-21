@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 20 · fetch և POST — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · տնային</b> · Դաս 20</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../js-lesson-20.html">JS Դաս 20</a> · մինի-նախագիծ</p>
+  <h1>fetch և POST</h1>
+  <p class="lede">«Սերվերը» դառնում է իսկական․ առաջարկները գալիս են <code>data/recommended.json</code>-ից <code>fetch</code>-ով, իսկ «Խորհուրդ տուր գիրք Անիին» ֆորման ուղարկում է POST հարցում։ Կոդը գրում ենք <code>async/await</code>-ով։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Արդյունքը՝ pages/books.html</span>
+    <span>Live Server</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–20․ <code>fetch</code>, <code>response.ok</code>, <code>response.json()</code>, <code>async/await</code>, <code>try/catch/finally</code>, POST՝ <code>method</code>, <code>headers</code>, <code>body</code>։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/review.jpg" alt="Խորհուրդի ֆորմա և հաղորդագրություն «համարը՝ 101»" width="900" height="318" loading="lazy">
+      <figcaption>POST հարցում</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/error.jpg" alt="Առաջարկների սխալ՝ ֆայլը չգտնվեց" width="900" height="158" loading="lazy">
+      <figcaption>404</figcaption>
+    </figure>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատիր քո կայքում (կամ <a href="../lesson-19/example/index.html">նախորդ դասի օրինակում</a>)։ CSS-ը տրված է, որ կենտրոնանաս JS-ի վրա․ HTML/CSS-ը արդեն գիտես։</p>
+    <ul class="goals">
+      <li><code>starter/data/recommended.json</code> — առաջարկների JSON-ը</li>
+      <li><code>starter/pages/books.html</code> — «Գրքեր» էջի markup-ը (JS չկա, միայն <code>&lt;script&gt;</code>-ները)</li>
+    </ul>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · JSON ֆայլ</h3>
+    <ul class="goals">
+      <li><code>data/recommended.json</code>՝ <code>{ "books": [...], "tips": [...] }</code> (<code>starter/</code>-ից)</li>
+      <li>Ուղին՝ էջից․ <code>"../data/recommended.json"</code></li>
+      <li>Live Server․ <code>fetch</code>-ը <code>file://</code>-ով չի աշխատում</li>
+    </ul>
+
+    <h3>Քայլ 2 · api.js</h3>
+    <ul class="goals">
+      <li><code>request(url, options)</code>՝ <code>response.ok</code>-ի ստուգում և <code>throw</code></li>
+      <li><code>getRecommended()</code> և <code>sendSuggestion(title, body)</code></li>
+      <li>Արտաքինից նույնն է, ինչ fake-api-ն․ մնացած կոդը գրեթե չի փոխվում</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/api.js — request</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">async</span> <span class="k">function</span> <span class="f">request</span>(url, options) {
+    <span class="k">const</span> response = <span class="k">await</span> <span class="f">fetch</span>(url, options);
+    <span class="k">if</span> (!response.ok) {
+        <span class="k">throw</span> <span class="k">new</span> <span class="f">Error</span>(<span class="s">`Սերվերը վերադարձրեց </span>${response.status}<span class="s">`</span>);
+    }
+    <span class="k">return</span> response.<span class="f">json</span>();
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 3 · async/await</h3>
+    <ul class="goals">
+      <li><code>load()</code>՝ <code>try</code> (տվյալներ), <code>catch</code> (սխալ), <code>finally</code> (կոճակ)</li>
+      <li>Դատարկ զանգվածը նույնպես վիճակ է՝ «Առաջարկներ դեռ չկան»</li>
+    </ul>
+
+    <h3>Քայլ 4 · POST</h3>
+    <ul class="goals">
+      <li>Ֆորմա՝ գիրք (2+ նիշ) և պատճառ (10+ նիշ), Դաս 13-ի ստուգումով</li>
+      <li>Ուղարկում՝ <code>https://jsonplaceholder.typicode.com/posts</code>, պատասխանից՝ <code>id</code></li>
+      <li>Ուղարկելիս կոճակը անջատված է, սխալի դեպքում՝ հաղորդագրություն</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Network → Offline․ առաջարկների տեղում՝ սխալի հաղորդագրություն</li>
+      <li>Ֆայլի անունը փոխիր՝ 404-ը նույնպես սխալ է, ոչ դատարկ էջ</li>
+      <li>POST-ից հետո՝ «համարը՝ 101»</li>
+      <li>Ամեն <code>fetch</code> անցնում է <code>request</code>-ով</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>404-ի դեպքում <code>Unexpected token &lt;</code></td><td><code>response.ok</code>-ը չի ստուգվում․ 404-ի էջը HTML է, ոչ JSON</td></tr>
+      <tr><td>CORS սխալ</td><td>Բացել ես <code>file://</code>-ով․ Live Server</td></tr>
+      <tr><td><code>await is only valid in async functions</code></td><td>Ֆունկցիան նշիր <code>async</code></td></tr>
+      <tr><td>POST-ը ուղարկում է <code>[object Object]</code></td><td><code>body: JSON.stringify(...)</code> և <code>Content-Type</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 20-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում։</p>
+    <ol class="hw">
+      <li>Բեռնիր <code>/users</code>-ը և տպիր բոլոր անունները Console-ում։ Օգտագործիր <code>.then</code> ձևը։</li>
+      <li>Կրկնիր նույնը <code>async/await</code>-ով։ Համեմատիր՝ որն է ավելի ընթեռնելի։</li>
+      <li>Փորձիր բեռնել <code>/users/9999</code>։ Ավելացրու <code>response.ok</code>-ի ստուգում և ցույց տուր ճիշտ սխալ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր օգտագործողներին քարտերով՝ քո <code>.row / .col / .wrapper</code> կառուցվածքով։ Ամեն քարտում՝ անուն, էլ. հասցե, քաղաք, ընկերություն։</li>
+      <li>Ավելացրու երեք վիճակ՝ բեռնում, հաջողություն, սխալ։ Կոճակը բեռնման ընթացքում պիտի լինի <code>disabled</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ստուգիր սխալի վիճակը՝ DevTools → Network → Offline։ Համոզվիր, որ «Կրկին փորձել» կոճակն աշխատում է։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Բեռնիր <code>/posts</code>-ը և ցուցադրիր միայն առաջին 10-ը։ Ավելացրու որոնում վերնագրով (Դաս 14-ի debounce-ով)։</li>
+      <li>Ամեն օգտագործողի քարտին ավելացրու «Գրառումները» կոճակ, որը բեռնում է <code>/posts?userId=X</code> և ցուցադրում մոդալում (Դաս 11)։</li>
+      <li>Օգտագործիր <code>Promise.all</code>՝ միաժամանակ բեռնելու <code>/users</code> և <code>/posts</code>։ Ցուցադրիր՝ ամեն օգտագործողի կողքին քանի՞ գրառում ունի։</li>
+      <li>Ֆորմա նոր գրառման համար (վերնագիր + տեքստ)։ Ուղարկիր <code>POST</code>-ով, ցուցադրիր պատասխանը և ավելացրու ցուցակի սկզբում։ Օգտագործիր Դաս 13-ի վալիդացիան։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/pages/books.html">օրինակը</a> և դրա կոդը <code>example/js/</code>-ում։ Դաս 18-ից օրինակը բացիր Live Server-ով։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-19/task.html">← Դաս 19</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-21/task.html">Դաս 21 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · տնային աշխատանք · Դաս 20</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

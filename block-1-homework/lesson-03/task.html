@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Տնային · Դաս 03 — դասացուցակ և համեմատություն</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:#fff}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule); background:var(--paper)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  @media (max-width:700px){.shots{grid-template-columns:1fr}}
+  .lede a, .note a, .pager a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code){white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 1 · տնային</b> · Դաս 03</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../html-lesson-03.html">HTML Դաս 03</a> · մինի-նախագիծ</p>
+  <h1>Դասացուցակ և համեմատական աղյուսակ</h1>
+  <p class="lede">Կայքում ավելանում են երկու էջ՝ շաբաթական դասացուցակ <code>rowspan</code>-ով և <code>colspan</code>-ով և հեռախոսների համեմատություն տողային վերնագրերով։</p>
+
+  <div class="facts">
+    <span>Ժամանակ՝ ~1.5 ժամ</span>
+    <span>Սկսիր Դաս 02-ի արդյունքից</span>
+    <span>Արդյունք՝ +2 էջ</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Օգտագործիր միայն Դաս 01–03-ի թեգերը։ Աղյուսակի եզրագծերը և գույները CSS են, որը սկսվում է Դաս 06-ում․ Դաս 03-ի խաղահրապարակի ոճերը միայն ցուցադրություն էին։ Ֆորմաներ դեռ չկան (Դաս 04)։</p>
+  </div>
+
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Կայքում հայտնվում են երկու նոր էջ՝ աղյուսակներով։ Առանց CSS-ի աղյուսակները եզրագծեր չունեն․ կառուցվածքը ստուգելու համար օգտագործիր DevTools-ը։</p>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/schedule.jpg" alt="Դասացուցակի աղյուսակ առանց եզրագծերի․ օրերի անունները միավորված են մի քանի տողով, ամեն օրվա մեջտեղում՝ «Մեծ ընդմիջում» տող" width="800" height="1049" loading="lazy">
+      <figcaption>pages/schedule.html</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/compare.jpg" alt="Համեմատական աղյուսակ․ վերևում երեք հեռախոսի նկար հղումներով, տակը՝ հինգ բնութագրի տող" width="800" height="900" loading="lazy">
+      <figcaption>pages/compare.html</figcaption>
+    </figure>
+    </div>
+  </section>
+
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <div class="tree">starter/
+├── content.md          ← դասացուցակը և հեռախոսների բնութագրերը
+└── images/
+    ├── phone-arev.jpg
+    ├── phone-masis.jpg
+    └── phone-sevan.jpg</div>
+    <p>Սկսիր Դաս 02-ի քո կայքից։ Եթե այն չունես, վերցրու <a href="../lesson-02/example/index.html">Դաս 02-ի օրինակը</a>։</p>
+  </section>
+
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+
+    <h3>Քայլ 1 · Նոր էջեր և նավիգացիա</h3>
+    <p>Ստեղծիր <code>pages/schedule.html</code> և <code>pages/compare.html</code>։ Ավելացրու երկու նոր կետ նավիգացիայում <strong>բոլոր հինգ էջում</strong>։</p>
+
+    <h3>Քայլ 2 · Նախ պարզ աղյուսակ</h3>
+    <p>Մինչ դասացուցակը, կառուցիր փորձնական աղյուսակ՝ 4 տող × 3 սյուն, միայն <code>table</code>, <code>tr</code>, <code>td</code>-ով։ Հետո քայլ առ քայլ ավելացրու <code>th</code>, <code>caption</code>, <code>thead</code>, <code>tbody</code>, <code>tfoot</code> և <code>scope</code>։ Ամեն քայլից հետո նայիր բրաուզերին։</p>
+
+    <h3>Քայլ 3 · Դասացուցակ rowspan-ով</h3>
+    <p>Օրվա անունը մեկ վանդակ է, որը զբաղեցնում է այդ օրվա բոլոր տողերը։ <strong>Ընդմիջման տողը նույնպես այդ օրվա մեջ է</strong>, ուստի 5 դասով օրվա համար <code>rowspan="6"</code>։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>մեկ օր՝ 5 դաս + ընդմիջում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">th</span> <span class="f">scope</span>=<span class="s">"row"</span> <span class="f">rowspan</span>=<span class="s">"6"</span><span class="p">&gt;</span>Երկուշաբթի<span class="p">&lt;/</span><span class="t">th</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>1<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>09:00<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>Հայոց լեզու<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+    <span class="c">&lt;!-- Օրվա վանդակ չկա․ այն արդեն զբաղեցված է վերևից --&gt;</span>
+    <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>2<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>09:55<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>Մաթեմատիկա<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span><span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>3<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span><span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>10:50<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span><span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>Անգլերեն<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">td</span> <span class="f">colspan</span>=<span class="s">"3"</span><span class="p">&gt;</span>Մեծ ընդմիջում · 20 րոպե<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span><span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>4<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span><span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>12:05<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span><span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>Ֆիզիկա<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">tr</span><span class="p">&gt;</span><span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>5<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span><span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>13:00<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span><span class="p">&lt;</span><span class="t">td</span><span class="p">&gt;</span>Ֆիզկուլտուրա<span class="p">&lt;/</span><span class="t">td</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">tr</span><span class="p">&gt;</span></code></pre>
+    </div>
+    <div class="tip note"><span class="tag">Հաշվիր վանդակները</span><p>Ամեն տողում պետք է լինի 4 սյուն։ Առաջին տողում՝ օրը + 3 <code>td</code>։ Հաջորդ տողերում՝ 3 <code>td</code>, որովհետև 4-րդը «գալիս է» վերևից։ Ընդմիջման տողում՝ <code>colspan="3"</code>։ Եթե աղյուսակը «ծռվում է», առաջինը հաշվիր։</p></div>
+    <ul class="goals">
+      <li><code>caption</code>՝ աղյուսակի վերնագիրը</li>
+      <li><code>thead</code>-ում՝ չորս <code>th scope="col"</code></li>
+      <li>Օրերը՝ <code>th scope="row"</code></li>
+      <li><code>tfoot</code>՝ «Ընդամենը շաբաթական» (<code>colspan="3"</code>) և դասերի թիվը</li>
+      <li>Մեկնաբանության մեջ բացատրիր, թե ինչու է պետք <code>scope</code>-ը</li>
+    </ul>
+
+    <h3>Քայլ 4 · Համեմատական աղյուսակ</h3>
+    <ul class="goals">
+      <li>Առաջին տողում՝ դատարկ վանդակ և երեք հեռախոս։ Ամեն հեռախոսի վանդակում՝ նկար և հղում (<code>href="#conclusion"</code>)</li>
+      <li>Հաջորդ հինգ տողերում առաջին վանդակը բնութագրի անունն է՝ <code>th scope="row"</code></li>
+      <li>Աղյուսակից հետո՝ <code>h2 id="conclusion"</code> և եզրակացություն</li>
+    </ul>
+
+    <h3>Քայլ 5 · Ստուգում DevTools-ով</h3>
+    <p>Elements ներդիրում բացիր աղյուսակը։ Մկնիկը տար <code>td</code>-ի վրա, և բրաուզերը կընդգծի այդ վանդակը էջում։ Այդպես կտեսնես, թե որ վանդակն ինչքան տեղ է զբաղեցնում։</p>
+  </section>
+
+  <section id="s3">
+    <h2><span class="num">03</span>Ընդունման ստուգաթերթ</h2>
+    <h3>Կայք</h3>
+    <ul class="goals">
+      <li>Երկու նոր էջ, նավիգացիան թարմացված է բոլոր հինգ էջում</li>
+      <li>Բոլոր հղումները աշխատում են</li>
+    </ul>
+
+    <h3>Դասացուցակ</h3>
+    <ul class="goals">
+      <li>5 օր, օրական 4–6 դաս</li>
+      <li>Օրերը՝ <code>rowspan</code>-ով, ընդմիջումները՝ <code>colspan</code>-ով</li>
+      <li>Կա <code>caption</code>, <code>thead</code>, <code>tbody</code>, <code>tfoot</code></li>
+      <li>Բոլոր վերնագրերն ունեն <code>scope</code></li>
+      <li>Ոչ մի տող ավելորդ կամ պակաս վանդակ չունի</li>
+    </ul>
+
+    <h3>Համեմատություն</h3>
+    <ul class="goals">
+      <li>Երեք հեռախոս, հինգ բնութագիր</li>
+      <li>Բնութագրերի անունները՝ <code>th scope="row"</code></li>
+      <li>Կա նկար և հղում վանդակի ներսում</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Օրվա հաջորդ տողերը մեկ սյուն աջ են գնացել</td><td>Չես հանել <code>td</code>-ն այն տողերից, որոնք զբաղեցնում է <code>rowspan</code>-ը</td></tr>
+      <tr><td>Ընդմիջումից հետո դասերը տեղափոխվել են «Օր» սյուն</td><td><code>rowspan</code>-ը հաշվել ես առանց ընդմիջման տողի։ Գումարիր 1</td></tr>
+      <tr><td>Աղյուսակը նման է պարզ տեքստի</td><td>Սպասելի է․ եզրագծերը և ֆոնը CSS են (Դաս 06)։ Կառուցվածքը ստուգիր DevTools-ով</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 03-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում կամ նույն թղթապանակում։</p>
+    <ol class="hw">
+      <li>Կառուցիր պարզ աղյուսակ՝ 4 տող × 3 սյուն, միայն <code>table</code>, <code>tr</code>, <code>td</code>-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու վերնագրային տող <code>th</code>-երով և <code>caption</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Բաժանիր <code>thead</code>-ի և <code>tbody</code>-ի։ Ավելացրու <code>tfoot</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու բոլոր <code>scope</code>-երը։ Բացատրիր մեկնաբանության մեջ՝ ինչու։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կառուցիր քո դասարանի դասացուցակը՝ 5 օր, օրական 4–6 դաս։ Օգտագործիր <code>rowspan</code> օրերի համար։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու տող՝ «Ընդմիջում», որը զբաղեցնում է բոլոր սյուները (<code>colspan</code>)։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Դիտավորյալ սխալ արա՝ <code>rowspan="2"</code> դիր, բայց հաջորդ տողից <code>td</code>-ն մի՛ հանիր։ Նկարագրիր՝ ինչ եղավ։ Հետո ուղղիր։</li>
+      <li>Կառուցիր համեմատական աղյուսակ՝ երեք հեռախոս, հինգ բնութագիր։ Առաջին սյունը՝ բնութագրի անունը (<code>th scope="row"</code>)։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու աղյուսակի ներսում նկար և հղում մեկ վանդակում։ Համոզվիր, որ դա թույլատրելի է։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գտիր ինտերնետում որևէ կայք աղյուսակով, բացիր DevTools-ով և գտիր՝ կա՞ն արդյոք <code>thead</code>, <code>scope</code>, <code>caption</code>։ Գրիր արդյունքը։</li>
+    </ol>
+  </section>
+
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/index.html">օրինակը</a> և քո էջը կողք կողքի։ Բացիր երկուսի կոդն էլ խմբագրիչում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-02/task.html">← Դաս 02</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-04/task.html">Դաս 04 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 1 · տնային աշխատանք · Դաս 03</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

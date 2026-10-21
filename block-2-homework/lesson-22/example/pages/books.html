@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Գրքեր — Անի Սարգսյան</title>
+
+    <meta name="description" content="Անիի ընթերցանության օրագիրը․ ինչ եմ կարդում և ինչ եմ կարդացել">
+    <meta property="og:title" content="Գրքեր — Անի Սարգսյան">
+    <meta property="og:description" content="Անիի ընթերցանության օրագիրը․ ինչ եմ կարդում և ինչ եմ կարդացել">
+    <meta property="og:image" content="../images/og.jpg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="icon" href="../images/favicon.svg">
+
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <!-- JS — Բլոկ 2։ ամեն էջ՝ site.js, իսկ այս էջը՝ նաև իր մուտքի կետը (Դաս 18) -->
+    <script type="module" src="../js/site.js"></script>
+    <script type="module" src="../js/pages/books.js"></script>
+</head>
+<body>
+
+    <a href="#main" class="skip-link">Անցնել բովանդակությանը</a>
+
+    <header class="header">
+        <!-- Checkbox-ը .row-ից ԱՌԱՋ է, որ ~ սելեկտորը հասնի մենյուին — Դաս 18 -->
+        <input type="checkbox" id="nav-toggle" class="nav-toggle">
+
+        <div class="row align-center justify-between">
+            <div class="col">
+                <a href="../index.html" class="logo">Անի Սարգսյան</a>
+            </div>
+            <div class="col">
+                <label for="nav-toggle" class="burger">
+                    <span></span><span></span><span></span>
+                    <span class="visually-hidden">Մենյու</span>
+                </label>
+
+                <nav aria-label="Գլխավոր մենյու">
+                    <ul class="menu flex align-center gap-10">
+                        <li><a href="../index.html">Գլխավոր</a></li>
+                        <li><a href="about.html">Իմ մասին</a></li>
+                        <li class="has-sub">
+                            <a href="projects.html">Նախագծեր <span aria-hidden="true">▾</span></a>
+                            <ul class="submenu">
+                                <li><a href="projects.html">Բոլոր նախագծերը</a></li>
+                                <li><a href="schedule.html">Դասացուցակ</a></li>
+                                <li><a href="compare.html">Համեմատություն</a></li>
+                                <li><a href="gallery.html">Պատկերասրահ</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="blog.html">Բլոգ</a></li>
+                        <li><a href="books.html" aria-current="page">Գրքեր</a></li>
+                        <li><a href="contact.html">Կապ</a></li>
+                        <li><button type="button" class="theme-toggle" data-action="theme" aria-label="Մուգ թեմա">☾</button></li>
+                        <li><a href="register.html" class="btn btn--primary btn--sm">Գրանցվել ակումբին</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main id="main">
+        <section class="page-head">
+            <div class="row">
+                <div class="col w-100">
+                    <div class="wrapper">
+                        <ol class="crumbs">
+                            <li><a href="../index.html">Գլխավոր</a></li>
+                            <li aria-current="page">Գրքեր</li>
+                        </ol>
+                        <h1>Իմ գրադարանը</h1>
+                        <p class="lead" id="stats"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    <!-- ================= ԺԱՄԱՉԱՓ — Դաս 14 ================= -->
+    <section id="timer" class="bg-surface">
+        <div class="row flex-wrap align-center">
+            <div class="col w-50 w-md-100">
+                <div class="wrapper">
+                    <h2 class="section-title">Կարդում եմ հիմա</h2>
+                    <p class="text-muted">Միացրու ժամաչափը, երբ սկսում ես կարդալ։ Կանգնեցնելիս կտեսնես, թե որքան ժամանակ կարդացիր։</p>
+                </div>
+            </div>
+            <div class="col w-50 w-md-100">
+                <div class="wrapper timer">
+                    <p class="timer__time" id="timer-time" aria-live="off">00:00</p>
+                    <div class="flex flex-wrap gap-10">
+                        <button type="button" class="btn btn--primary" data-timer="start">Սկսել</button>
+                        <button type="button" class="btn btn--outline" data-timer="stop">Կանգնեցնել</button>
+                        <button type="button" class="btn btn--ghost" data-timer="reset">Զրոյացնել</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <!-- ================= ԴԱՐԱԿ ================= -->
+        <section id="shelf">
+            <div class="row">
+                <div class="col w-100">
+                <h2 class="section-title">Դարակ</h2>
+                <p><button type="button" class="btn btn--ghost btn--sm" data-action="show-stats">Ցույց տալ վիճակագրությունը</button></p>
+                <div id="stats-details"></div>
+
+                <!-- Ֆիլտրեր և որոնում — Դաս 11 -->
+                <div class="toolbar flex flex-wrap align-center justify-between gap-10 mb-20">
+                    <div class="filters flex flex-wrap gap-10" id="filters">
+                        <button type="button" class="btn btn--sm btn--outline is-active" data-filter="all">Բոլորը</button>
+                        <button type="button" class="btn btn--sm btn--outline" data-filter="reading">Կարդում եմ</button>
+                        <button type="button" class="btn btn--sm btn--outline" data-filter="done">Կարդացել եմ</button>
+                        <button type="button" class="btn btn--sm btn--outline" data-filter="planned">Կարդալու եմ</button>
+                    </div>
+                    <div class="flex align-center gap-10">
+                        <label for="search" class="visually-hidden">Որոնել գիրք</label>
+                        <input type="search" id="search" placeholder="Որոնել վերնագրով կամ հեղինակով…" autocomplete="off">
+                        <button type="button" class="btn btn--sm btn--ghost" data-action="clear-done">Հանել կարդացածները</button>
+                    </div>
+                </div>
+
+                <!-- Քարտերը լցնում է JS-ը (Դաս 10)։ Այս div-ը երբեք չի ջնջվում -->
+                <div class="grid-auto gap-20" id="books"></div>
+                </div>
+            </div>
+        </section>
+
+    <!-- ================= ՆՈՐ ԳԻՐՔ — Դաս 13 ================= -->
+    <section id="add-book">
+        <div class="row">
+            <div class="col w-100">
+                <div class="wrapper">
+                    <h2 class="section-title">Ավելացնել գիրք</h2>
+                    <!-- novalidate՝ սխալները ցույց ենք տալիս ինքներս -->
+                    <form class="book-form" id="book-form" novalidate>
+                        <fieldset>
+                            <legend>Գիրքը</legend>
+                            <div class="form-grid">
+                                <label for="title">Վերնագիր *</label>
+                                <div class="field">
+                                    <input type="text" id="title" name="title" autocomplete="off">
+                                    <small class="field__error"></small>
+                                </div>
+
+                                <label for="author">Հեղինակ *</label>
+                                <div class="field">
+                                    <input type="text" id="author" name="author" autocomplete="off">
+                                    <small class="field__error"></small>
+                                </div>
+
+                                <label for="pages">Էջեր *</label>
+                                <div class="field">
+                                    <input type="number" id="pages" name="pages" min="1" max="3000">
+                                    <small class="field__error"></small>
+                                </div>
+
+                                <label for="genre">Ժանր</label>
+                                <div class="field">
+                                    <select id="genre" name="genre">
+                                        <option value="վեպ">Վեպ</option>
+                                        <option value="պատմավեպ">Պատմավեպ</option>
+                                        <option value="պատմվածք">Պատմվածք</option>
+                                        <option value="հեքիաթ">Հեքիաթ</option>
+                                        <option value="պոեզիա">Պոեզիա</option>
+                                        <option value="ֆանտաստիկա">Ֆանտաստիկա</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend>Կարգավիճակ</legend>
+                            <div class="flex flex-wrap gap-20 mb-10">
+                                <label><input type="radio" name="status" value="planned" checked> Կարդալու եմ</label>
+                                <label><input type="radio" name="status" value="reading"> Կարդում եմ</label>
+                                <label><input type="radio" name="status" value="done"> Կարդացել եմ</label>
+                            </div>
+                            <div class="form-grid">
+                                <label for="read">Կարդացած էջեր</label>
+                                <div class="field">
+                                    <input type="number" id="read" name="read" min="0" value="0">
+                                    <small class="field__error"></small>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <button type="submit" class="btn btn--primary">Ավելացնել դարակ</button>
+                        <p class="form-success" id="form-success" role="status"></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= ԱՌԱՋԱՐԿՆԵՐ — Դաս 19, 20 ================= -->
+    <section id="recommended" class="bg-surface">
+        <div class="row">
+            <div class="col w-100">
+                <div class="wrapper">
+                    <h2 class="section-title">Ինչ կարդալ հետո</h2>
+                    <p class="meta" id="quote" aria-live="polite"></p>
+                    <div class="flex flex-wrap align-center gap-10 mb-20">
+                        <button type="button" class="btn btn--outline btn--sm" data-action="load-recommended">Թարմացնել առաջարկները</button>
+                        <p class="meta" id="recommended-status" aria-live="polite"></p>
+                    </div>
+                    <div class="grid-auto gap-20" id="recommended-list"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= ՈՐՈՆՈՒՄ OPEN LIBRARY-ՈՒՄ — Դաս 21 ================= -->
+    <section id="discover">
+        <div class="row">
+            <div class="col w-100">
+                <div class="wrapper">
+                    <h2 class="section-title">Գտնել նոր գիրք</h2>
+                    <p class="text-muted">Որոնում ենք <a href="https://openlibrary.org">Open Library</a>-ում՝ աշխարհի բաց գրադարանում։ Գրիր անգլերեն․ օրինակ՝ <em>tolkien</em>, <em>little prince</em>։</p>
+                    <div class="flex flex-wrap align-center gap-10 mb-20">
+                        <label for="discover-query" class="visually-hidden">Որոնել Open Library-ում</label>
+                        <input type="search" id="discover-query" placeholder="Վերնագիր կամ հեղինակ…" autocomplete="off">
+                        <label for="discover-limit" class="meta">Էջում՝</label>
+                        <select id="discover-limit">
+                            <option value="6">6</option>
+                            <option value="12" selected>12</option>
+                            <option value="24">24</option>
+                        </select>
+                    </div>
+                    <p class="meta mb-20" id="discover-status" aria-live="polite">Գրիր առնվազն 3 նիշ</p>
+                    <div class="grid-auto gap-20" id="discover-results"></div>
+                    <nav class="pager flex flex-wrap align-center gap-10" id="discover-pager" aria-label="Որոնման էջեր"></nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= ԿԱՐԾԻՔ — Դաս 20, POST ================= -->
+    <section id="review">
+        <div class="row">
+            <div class="col w-100">
+                <div class="wrapper">
+                    <h2 class="section-title">Խորհուրդ տուր գիրք Անիին</h2>
+                    <form class="review-form" id="review-form" novalidate>
+                        <div class="form-grid">
+                            <label for="review-title">Գիրք *</label>
+                            <div class="field">
+                                <input type="text" id="review-title" name="title" autocomplete="off">
+                                <small class="field__error"></small>
+                            </div>
+                            <label for="review-body">Ինչու կարդալ *</label>
+                            <div class="field">
+                                <textarea id="review-body" name="body" rows="3"></textarea>
+                                <small class="field__error"></small>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn--primary">Ուղարկել</button>
+                        <p class="form-success" id="review-status" role="status"></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Մանրամասների մոդալ — Դաս 11։ Բովանդակությունը լցնում է JS-ը -->
+    <div class="modal modal--js" id="book-modal" role="dialog" aria-modal="true" aria-labelledby="book-modal-title">
+        <div class="modal__window">
+            <button type="button" class="modal__close" data-action="close-modal" aria-label="Փակել">×</button>
+            <div id="book-modal-content"></div>
+        </div>
+    </div>
+
+    </main>
+
+    <footer class="footer">
+        <h2 class="visually-hidden">Կայքի ներքևի մաս</h2>
+
+        <div class="row flex-wrap">
+            <div class="col w-40 w-md-100">
+                <div class="wrapper">
+                    <p class="logo">Անի Սարգսյան</p>
+                    <p>Սովորում եմ վեբ ծրագրավորում և գրում եմ այդ մասին։</p>
+                </div>
+            </div>
+
+            <div class="col w-20 w-md-50 w-sm-100">
+                <div class="wrapper">
+                    <h3 class="footer__title">Բաժիններ</h3>
+                    <nav aria-label="Footer-ի հղումներ">
+                        <ul class="flex flex-column gap-10">
+                            <li><a href="../index.html">Գլխավոր</a></li>
+                            <li><a href="projects.html">Նախագծեր</a></li>
+                            <li><a href="blog.html">Բլոգ</a></li>
+                            <li><a href="contact.html">Կապ</a></li>
+                            <li><a href="../components.html">Կոմպոնենտներ</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="col w-40 w-md-50 w-sm-100">
+                <div class="wrapper">
+                    <h3 class="footer__title">Նոր գրառումներ</h3>
+                    <!-- Դաշտը ձգվում է, կոճակը չի սեղմվում — Դաս 12 -->
+                    <form class="inline-form flex gap-10" action="../index.html" method="get">
+                        <label for="mail" class="visually-hidden">Էլ. հասցե</label>
+                        <input type="email" id="mail" name="mail" placeholder="ani@example.com" autocomplete="email" required>
+                        <button type="submit" class="btn btn--primary">Բաժանորդագրվել</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col w-100">
+                <div class="wrapper footer__bottom flex justify-between align-center flex-wrap gap-10">
+                    <p>&copy; 2026&nbsp;Անի Սարգսյան</p>
+                    <address><a href="mailto:ani@example.com">ani@example.com</a> · Սևան, Հայաստան</address>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- «Վեր» կոճակ — position: fixed, Դաս 15 -->
+    <a href="#" class="to-top" aria-label="Վերադառնալ էջի սկիզբ">↑</a>
+
+</body>
+</html>

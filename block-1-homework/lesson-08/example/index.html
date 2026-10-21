@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Անի Սարգսյան — սովորում եմ վեբ ծրագրավորում</title>
+
+    <!-- Նկարագրություն Google-ի արդյունքներում -->
+    <meta name="description" content="Անիի անձնական կայքը․ ինչ եմ սովորում, նախագծեր և բլոգ">
+
+    <!-- Ինչպես կերևա սոցցանցերում կիսվելիս -->
+    <meta property="og:title" content="Անի Սարգսյան — սովորում եմ վեբ ծրագրավորում">
+    <meta property="og:description" content="Անիի անձնական կայքը․ ինչ եմ սովորում, նախագծեր և բլոգ">
+    <meta property="og:image" content="images/og.jpg">
+
+    <!-- Պատկերակը ներդիրում -->
+    <!-- Տառատեսակ հայերենով — Google Fonts, միայն 400 և 700 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="icon" href="images/favicon.svg">
+
+    <!-- Ոճեր․ նախ global.css, հետո main.css — main-ը կարող է վերագրել global-ը -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+    <!-- Skip link — թաքնված է, երևում է առաջին Tab-ով (global.css) -->
+    <a href="#main" class="skip-link">Անցնել բովանդակությանը</a>
+
+    <header>
+        <p class="site-name"><a href="index.html">Անի Սարգսյան</a></p>
+        <nav aria-label="Գլխավոր մենյու">
+            <ul>
+                <li><a href="index.html">Գլխավոր</a></li>
+                <li><a href="pages/about.html">Իմ մասին</a></li>
+                <li><a href="pages/blog.html">Բլոգ</a></li>
+                <li><a href="pages/schedule.html">Դասացուցակ</a></li>
+                <li><a href="pages/compare.html">Համեմատություն</a></li>
+                <li><a href="pages/register.html">Ակումբ</a></li>
+                <li><a href="pages/contact.html">Կապ</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main">
+        <section id="intro">
+            <h1>Անի Սարգսյան</h1>
+            <p class="lead">Սովորում եմ վեբ ծրագրավորում։ Այստեղ գրում եմ այն, ինչ սովորում եմ ամեն շաբաթ։</p>
+            <img src="images/avatar.jpg" alt="Անիի դիմանկարը՝ նկարազարդ" width="200" height="200" class="avatar">
+            <p>Այս էջում՝
+                <a href="#learning">Ինչ եմ սովորում</a> ·
+                <a href="#projects">Իմ նախագծերը</a> ·
+                <a href="#resources">Օգտակար նյութեր</a>
+            </p>
+        </section>
+
+        <section id="learning">
+            <h2>Ինչ եմ սովորում</h2>
+
+            <h3>HTML</h3>
+            <p>HTML-ը էջի <strong>կմախքն</strong> է։ Այսօր սովորեցի, որ <em>div-ների ապուրը</em> վատ է,
+                և ամեն բլոկ պետք է ունենա իմաստ՝ &lt;header&gt;, &lt;main&gt;, &lt;footer&gt;։</p>
+
+            <h3>CSS</h3>
+            <p>CSS-ը էջի տեսքն է։ Այս շաբաթ սովորեցի <mark>box model</mark>-ը․ ամեն տարր տուփ է՝ content, padding, border, margin։</p>
+        </section>
+
+        <section id="projects">
+            <h2>Իմ նախագծերը</h2>
+
+            <!-- Քարտ — Դաս 08 -->
+            <article class="card">
+                <img src="images/project-site.jpg" alt="Անիի կայքի գլխավոր էջի սքրինշոթը" width="600" height="400">
+                <div class="card__body">
+                    <h3 class="title-4">Այս կայքը</h3>
+                    <p class="text-muted">Հինգ դասում աճեց մեկ էջից մինչև յոթը։ Հիմա ստանում է ոճեր։</p>
+                    <p><span class="pill">HTML</span> <span class="pill">CSS</span></p>
+                    <a href="pages/blog.html" class="btn">Կարդալ բլոգը</a>
+                </div>
+            </article>
+
+            <article class="card">
+                <img src="images/project-schedule.jpg" alt="Դասացուցակի աղյուսակի սքրինշոթը" width="600" height="400">
+                <div class="card__body">
+                    <h3 class="title-4">Դասացուցակ</h3>
+                    <p class="text-muted">Աղյուսակ rowspan-ով և colspan-ով։</p>
+                    <p><span class="pill">HTML</span></p>
+                    <a href="pages/schedule.html" class="btn">Բացել</a>
+                </div>
+            </article>
+
+            <h3>Հաջորդը</h3>
+            <p>Display, Flexbox և դասավորության համակարգ։</p>
+        </section>
+
+        <section id="resources">
+            <h2>Օգտակար նյութեր</h2>
+            <ul>
+                <li><a href="https://developer.mozilla.org/hy/" target="_blank" rel="noopener">MDN՝ HTML-ի տեղեկատու</a></li>
+                <li><a href="https://validator.w3.org/" target="_blank" rel="noopener">W3C Validator՝ HTML-ի ստուգում</a></li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <nav aria-label="Footer-ի հղումներ">
+            <ul>
+                <li><a href="index.html">Գլխավոր</a></li>
+                <li><a href="pages/blog.html">Բլոգ</a></li>
+                <li><a href="pages/contact.html">Կապ</a></li>
+            </ul>
+        </nav>
+        <address>
+            <a href="mailto:ani@example.com">ani@example.com</a><br>
+            Սևան, Հայաստան
+        </address>
+        <p class="copyright">&copy; 2026&nbsp;Անի Սարգսյան</p>
+    </footer>
+
+</body>
+</html>

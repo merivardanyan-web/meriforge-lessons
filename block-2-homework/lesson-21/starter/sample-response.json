@@ -1,0 +1,31 @@
+{
+  "numFound": 1234,
+  "start": 0,
+  "docs": [
+    {
+      "key": "/works/OL27482W",
+      "title": "The Hobbit",
+      "author_name": [
+        "J.R.R. Tolkien"
+      ],
+      "first_publish_year": 1937,
+      "number_of_pages_median": 310,
+      "cover_i": 14627509
+    },
+    {
+      "key": "/works/OL27448W",
+      "title": "The Lord of the Rings",
+      "author_name": [
+        "J.R.R. Tolkien"
+      ],
+      "first_publish_year": 1954,
+      "number_of_pages_median": 1193,
+      "cover_i": 14627060
+    },
+    {
+      "key": "/works/OL1W",
+      "title": "Tolkien: A Biography",
+      "first_publish_year": 1977
+    }
+  ]
+}

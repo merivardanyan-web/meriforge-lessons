@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Կոմպոնենտներ — ՏեխնոՄարկետ</title>
+    <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<!-- Ոճերի ուղեցույց — HTML Դաս 17։ Ամեն կոմպոնենտ մեկ տեղում, որ տեսնես բոլոր վիճակները։ -->
+<main>
+
+    <section>
+        <div class="row">
+            <div class="col w-100">
+                <h1 class="mb-10">Կոմպոնենտներ</h1>
+                <p class="text-muted mb-30">ՏեխնոՄարկետի ոճերի ուղեցույց։ Նոր կոմպոնենտը նախ ավելացվում է այստեղ, հետո՝ էջում։</p>
+
+                <h2 class="section-title mb-20">Վերնագրեր</h2>
+                <p class="title-1 mb-10">Վերնագիր 1</p>
+                <p class="title-2 mb-10">Վերնագիր 2</p>
+                <p class="title-3 mb-10">Վերնագիր 3</p>
+                <p class="title-4 mb-30">Վերնագիր 4</p>
+
+                <h2 class="section-title mb-20">Կոճակներ</h2>
+                <div class="flex flex-wrap gap-10 mb-30">
+                    <button class="btn btn--primary">Հիմնական</button>
+                    <button class="btn btn--primary btn--sm">Փոքր</button>
+                    <button class="btn btn--ghost">Երկրորդական</button>
+                    <button class="btn btn--ghost btn--sm">Երկրորդական փոքր</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="hero">
+        <div class="row">
+            <div class="col w-100">
+                <p class="title-3 mb-20">Կոճակներ մուգ ֆոնի վրա</p>
+                <div class="flex flex-wrap gap-10">
+                    <a href="#" class="btn btn--light">Բաց</a>
+                    <a href="#" class="btn btn--outline-light">Եզրագծով</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="products">
+        <div class="row">
+            <div class="col w-100">
+                <h2 class="section-title mb-20">Քարտ և պիտակներ</h2>
+                <div class="grid-auto gap-20">
+                    <article class="card">
+                        <span class="card__badge">-30%</span>
+                        <picture class="card__media ratio-3-2">
+                            <img class="img-cover" src="images/laptop.jpg" alt="" width="600" height="400">
+                        </picture>
+                        <div class="card__body">
+                            <h3 class="card__title">Զեղչով քարտ</h3>
+                            <p class="card__meta">Մետա տեքստ</p>
+                            <div class="card__footer">
+                                <p class="card__price">315&nbsp;000 ֏ <del>450&nbsp;000 ֏</del></p>
+                                <button class="btn btn--primary btn--sm">Գնել</button>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="card">
+                        <span class="card__badge card__badge--new">Նոր</span>
+                        <picture class="card__media ratio-3-2">
+                            <img class="img-cover" src="images/monitor.jpg" alt="" width="600" height="400">
+                        </picture>
+                        <div class="card__body">
+                            <h3 class="card__title">Շատ երկար անունով ապրանք, որը ստուգում է, թե ինչպես է քարտը իրեն պահում երկու տողի դեպքում</h3>
+                            <p class="card__meta">Մետա տեքստ</p>
+                            <div class="card__footer">
+                                <p class="card__price">185&nbsp;000 ֏</p>
+                                <button class="btn btn--primary btn--sm">Գնել</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="row flex-wrap">
+            <div class="col w-50 w-md-100">
+                <h2 class="section-title mb-20">Ներքին էջերի նավիգացիա</h2>
+                <nav aria-label="Օրինակ">
+                    <ol class="crumbs">
+                        <li><a href="#">Գլխավոր</a></li>
+                        <li><a href="#">Կատալոգ</a></li>
+                        <li aria-current="page">Ընթացիկ էջ</li>
+                    </ol>
+                </nav>
+                <nav class="pagination mb-30" aria-label="Էջավորման օրինակ">
+                    <ul class="flex flex-wrap gap-10">
+                        <li><a href="#" aria-current="page">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">Հաջորդը →</a></li>
+                    </ul>
+                </nav>
+
+                <h2 class="section-title mb-20">Պիտակներ և կարգավիճակ</h2>
+                <p class="flex flex-wrap align-center gap-10 mb-30">
+                    <span class="badge">-30%</span>
+                    <span class="stock">Առկա է պահեստում</span>
+                    <span class="text-danger">−163&nbsp;500 ֏</span>
+                    <a href="#" class="link">Տեքստային հղում</a>
+                </p>
+
+                <h2 class="section-title mb-20">Աղյուսակ</h2>
+                <table class="table specs mb-30">
+                    <caption class="visually-hidden">Աղյուսակի օրինակ</caption>
+                    <tbody>
+                        <tr><th scope="row">Անվանում</th><td>Արժեք</td></tr>
+                        <tr><th scope="row">Անվանում</th><td>Արժեք</td></tr>
+                        <tr><th scope="row">Անվանում</th><td>Արժեք</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col w-50 w-md-100">
+                <h2 class="section-title mb-20">Ֆորմայի տարրեր</h2>
+                <form class="form-section" action="#" method="get">
+                    <fieldset class="fieldset">
+                        <legend>Խմբի վերնագիր</legend>
+                        <div class="form-grid mb-20">
+                            <div class="field">
+                                <label for="c-name" class="field__label">Դաշտ <span class="req" aria-hidden="true">*</span></label>
+                                <input id="c-name" class="input" required>
+                            </div>
+                            <div class="field">
+                                <label for="c-sel" class="field__label">Ընտրություն</label>
+                                <select id="c-sel" class="input"><option>Առաջին</option><option>Երկրորդ</option></select>
+                            </div>
+                            <div class="field field--full">
+                                <label for="c-area" class="field__label">Երկար տեքստ</label>
+                                <textarea id="c-area" rows="2" class="input"></textarea>
+                                <span class="field__hint">Օգնող տեքստ դաշտի տակ</span>
+                            </div>
+                        </div>
+                        <div class="choices">
+                            <label class="choice">
+                                <input type="radio" name="c-ch" checked>
+                                <span class="choice__body"><strong>Ընտրված</strong><span class="text-muted">Նշում</span></span>
+                            </label>
+                            <label class="choice">
+                                <input type="radio" name="c-ch">
+                                <span class="choice__body"><strong>Չընտրված</strong><span class="text-muted">Նշում</span></span>
+                            </label>
+                        </div>
+                        <label class="check"><input type="checkbox"> Checkbox տեքստով</label>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="row">
+            <div class="col w-100">
+                <h2 class="section-title mb-20">Մուտքի քարտ</h2>
+                <div class="auth__card">
+                    <h3 class="title-3 mb-10">Վերնագիր</h3>
+                    <ul class="auth__perks">
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Առավելություն</span></li>
+                    </ul>
+                    <form action="#" method="post">
+                        <div class="field">
+                            <label for="c-pass" class="field__label">Գաղտնաբառ</label>
+                            <input id="c-pass" type="password" class="input" autocomplete="new-password" aria-describedby="c-pass-hint">
+                            <span id="c-pass-hint" class="field__hint">Առնվազն 8 նիշ</span>
+                        </div>
+                        <div class="auth__row">
+                            <label class="check"><input type="checkbox"> Հիշել ինձ</label>
+                            <a href="#" class="link">Հղում</a>
+                        </div>
+                        <button type="button" class="btn btn--primary w-100">Կոճակ</button>
+                    </form>
+                    <p class="auth__switch">Տեքստ՝ <a href="#" class="link">հղում</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+</body>
+</html>

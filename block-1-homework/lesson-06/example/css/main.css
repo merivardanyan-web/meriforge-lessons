@@ -1,0 +1,98 @@
+/* ============================================
+   main.css — Անիի կայքը · Դաս 06
+   Այս դասին՝ սելեկտորներ, գույներ, տառաչափեր և վիճակներ։
+   Reset-ից հետո բրաուզերի բացակները չկան․ ժամանակավոր
+   margin-bottom-ներ ենք դնում, մանրամասն՝ Դաս 08-ում։
+   ============================================ */
+
+/* ---------- 1. Թեգային սելեկտորներ ---------- */
+body {
+    /* color-ը և font-family-ն ժառանգվում են բոլոր ներսի տարրերին */
+    font-family: Arial, sans-serif;
+    color: #1a1a1a;
+    background: #ffffff;
+}
+
+h1 { font-size: 32px; color: #003459; }
+h2 { font-size: 24px; color: #003459; }
+h3 { font-size: 18px; }
+
+table { border-collapse: collapse; }
+
+/* Խմբավորում ստորակետով — համակցություն 4 */
+th, td {
+    border: 1px solid #9db4c0;   /* border-ը ՉԻ ժառանգվում․ ներսի տարրերը եզրագիծ չունեն */
+    padding: 6px 10px;
+    text-align: left;
+}
+
+/* Ժամանակավոր բացակներ — Դաս 08-ում կփոխարինենք */
+h1, h2, h3, p, ul, ol, table, figure, fieldset, blockquote { margin-bottom: 12px; }
+section { margin-bottom: 28px; }
+
+/* ---------- 2. Դասեր ---------- */
+.site-name { font-size: 20px; font-weight: 700; }
+.lead      { font-size: 18px; color: #253237; }
+.meta      { font-size: 14px; color: #6b6b6b; }      /* 5.3:1 սպիտակի վրա */
+.copyright { font-size: 14px; }
+
+.btn {
+    padding: 10px 20px;
+    background: #003459;
+    color: #ffffff;                                   /* 12.8:1 */
+    border: 1px solid #003459;
+    text-decoration: none;       /* «main a»-ն ընդգծում է բոլոր հղումները․ կոճակը՝ ոչ */
+}
+
+/* Երկու դաս միաժամանակ — համակցություն 3 */
+.btn.btn-light {
+    background: #ffffff;
+    color: #003459;
+}
+
+/* Թեգ + դաս — համակցություն 5 */
+button.btn { cursor: pointer; }
+
+/* ---------- 3. id-ներ ---------- */
+#intro      { background: #f5f5f5; }
+#conclusion { color: #003459; }
+
+/* ---------- 4. Header և footer ---------- */
+header,
+footer {
+    background: #003459;
+    color: #ffffff;
+}
+
+/* Ներսում — համակցություն 1 */
+header a { color: #ffffff; }
+main a   { color: #003459; text-decoration: underline; }
+
+/* Ուղիղ երեխա — համակցություն 2․ միայն footer-ի առաջին մակարդակի p-երը */
+footer > p { font-size: 14px; }
+
+/* Հոդվածի ցուցակներին վերադարձնում ենք նշանները (global.css-ը հանել էր) */
+main ul { list-style: disc;    padding-left: 24px; }
+main ol { list-style: decimal; padding-left: 24px; }
+
+/* ---------- 5. Վիճակներ ---------- */
+header a:hover,
+header a:focus-visible { color: #9db4c0; }           /* 6.1:1 մուգ ֆոնի վրա */
+
+main a:hover,
+main a:focus-visible   { background: #fff3a0; }
+
+.btn:hover,
+.btn:focus-visible {
+    background: #ffffff;
+    color: #003459;
+}
+
+.btn.btn-light:hover,
+.btn.btn-light:focus-visible {
+    background: #003459;
+    color: #ffffff;
+}
+
+/* Աղյուսակի զույգ տողեր — Դաս 03-ի աղյուսակների համար */
+tr:nth-child(even) td { background: #f5f5f5; }

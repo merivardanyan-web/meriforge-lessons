@@ -1,0 +1,1118 @@
+/* ============================================
+   main.css — ՏեխնոՄարկետ
+   Այս ՆԱԽԱԳԾԻ դեմքը՝ գույներ, չափեր, կոմպոնենտներ
+   Մեկ ֆայլ բոլոր 9 էջի համար
+   Փոխվում է ամեն նոր նախագծի հետ
+   ============================================ */
+
+/* ============ 1. ՏՈԿԵՆՆԵՐ — Դաս 19 ============ */
+:root {
+    color-scheme: light;
+
+    /* Գունապնակ — առաջին շերտ */
+    --navy-900: #00253f;
+    --navy-700: #003459;
+    --navy-300: #9db4c0;
+    --slate-900: #253237;
+    --slate-800: #1a1a1a;
+    --slate-500: #6b6b6b;
+    --slate-100: #f5f5f5;
+    --white: #ffffff;
+    --red-600: #c62828;
+    --green-600: #0f7b4f;
+
+    /* Իմաստային — երկրորդ շերտ, կոմպոնենտները օգտագործում են ՄԻԱՅՆ սրանք */
+    --bg: var(--slate-100);
+    --surface: var(--white);
+    --dark: var(--slate-900);
+    --text: var(--slate-800);
+    --text-muted: var(--slate-500);
+    --text-on-dark-muted: #c9d4d9;   /* կոնտրաստ 9.1:1 մուգի վրա */
+    --accent: var(--navy-700);
+    --accent-hover: var(--navy-900);
+    --accent-light: var(--navy-300);
+    --on-dark: var(--white);
+    --on-accent: var(--white);             /* տեքստ ակցենտային ֆոնի վրա */
+    --on-accent-muted: #c9d4d9;
+    --border: #e2e6e9;
+    --border-on-dark: rgba(255, 255, 255, .12);
+    --icon-bg: #e6ecf0;
+    --danger: var(--red-600);
+    --success: var(--green-600);
+
+    /* Կմախք */
+    --wall: 60px;
+    --gap: 10px;
+    --header-h: 73px;              /* header-ի բարձրությունը հեռախոսում — չափված DevTools-ով */
+
+    /* Ձև */
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-full: 999px;
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, .08);
+    --shadow-md: 0 8px 20px rgba(0, 0, 0, .12);
+
+    --transition: .2s ease;
+}
+
+/* ============ 2. ԲԱԶԱ ============ */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;          /* խարիսխները չեն մտնում header-ի տակ — Դաս 15 */
+}
+
+body {
+    font-family: "Noto Sans Armenian", system-ui, sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--bg);
+    overflow-wrap: break-word;          /* երկար հայերեն բառերը չեն դուրս գալիս — Դաս 9 */
+
+    /* Footer-ը միշտ ներքևում է, նույնիսկ կարճ էջում (404) — Դաս 7, 11 */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main { flex-grow: 1; }
+
+::selection {
+    background: var(--accent);
+    color: var(--on-accent);
+}
+
+/* ============ 3. ԿՄԱԽՔ — Դաս 10 ============ */
+section { padding: 60px 0; }
+.row    { padding: 0 calc(var(--wall) - var(--gap)); }
+.col    { padding: var(--gap); }
+
+/* ============ 4. ՏԻՊՈԳՐԱՖԻԱ — Դաս 7, 14 ============ */
+h1, .title-1 { font-size: clamp(1.75rem, 4vw, 2.25rem); font-weight: 700; line-height: 1.15; }
+h2, .title-2 { font-size: clamp(1.25rem, 3vw, 1.625rem); font-weight: 700; line-height: 1.25; }
+h3, .title-3 { font-size: 1.125rem; font-weight: 700; line-height: 1.3; }
+h4, .title-4 { font-size: 0.875rem; font-weight: 700; }
+
+.text-muted { color: var(--text-muted); }
+.text-small { font-size: 0.75rem; }
+
+/* ============ 5. ՀԵՌԱՎՈՐՈՒԹՅՈՒՆՆԵՐ ============ */
+.mb-10 { margin-bottom: 10px; }
+.mb-20 { margin-bottom: 20px; }
+.mb-30 { margin-bottom: 30px; }
+
+.gap-10 { gap: 10px; }
+.gap-20 { gap: 20px; }
+
+/* ============ 6. ԿՈՃԱԿՆԵՐ — Դաս 17, 19 ============ */
+.btn {
+    /* Պարամետրեր՝ լռելյայն արժեքներով */
+    --btn-bg: var(--accent);
+    --btn-color: var(--on-accent);
+    --btn-border: transparent;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;                   /* սեղմելի տարածք ≥ 44px */
+    padding: 10px 22px;
+    border: 1px solid var(--btn-border);
+    border-radius: var(--radius-sm);
+    background: var(--btn-bg);
+    color: var(--btn-color);
+    font-weight: 700;
+    white-space: nowrap;
+    transition: background-color var(--transition), color var(--transition), border-color var(--transition);
+}
+
+/* Մոդիֆիկատորները փոխում են ՄԻԱՅՆ պարամետրերը */
+.btn--primary:hover { --btn-bg: var(--accent-hover); }
+
+.btn--light {
+    --btn-bg: var(--accent-light);
+    --btn-color: var(--slate-800);       /* գունապնակից՝ չի փոխվում մուգ թեմայում */
+}
+.btn--light:hover { --btn-bg: var(--white); }
+
+.btn--outline-light {
+    --btn-bg: transparent;
+    --btn-color: var(--on-dark);
+    --btn-border: var(--accent-light);
+}
+.btn--outline-light:hover {
+    --btn-bg: var(--accent-light);
+    --btn-color: var(--slate-800);
+}
+
+.btn--sm { min-height: 36px; padding: 6px 16px; }
+
+.btn:active { transform: translateY(1px); }
+
+/* ============ 7. HEADER — Դաս 15, 18 ============ */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+}
+
+.header .row { padding-top: 4px; padding-bottom: 4px; }
+
+.logo {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.menu a {
+    padding: 11px 12px;
+    border-radius: var(--radius-sm);
+    transition: background-color var(--transition);
+}
+
+.menu a:not(.btn):hover { background: var(--bg); }
+
+/* Բուրգեր — checkbox-ով, առանց JS-ի — Դաս 18, HTML Դաս 23 */
+.nav-toggle {
+    display: none;                       /* համակարգչում բուրգեր չկա → checkbox-ը Tab-ի հերթում չէ */
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.burger {
+    display: none;
+    width: 44px;
+    height: 44px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+}
+
+.burger span:not(.visually-hidden) {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--text);
+    transition: transform var(--transition), opacity var(--transition);
+}
+
+.nav-toggle:focus-visible ~ .row .burger {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* ============ 8. HERO ============ */
+#hero {
+    background: var(--dark);
+    color: var(--on-dark);
+    padding: 70px 0;
+}
+
+#hero h1 { max-width: 18ch; }             /* տեքստի օպտիմալ լայնություն — Դաս 7 */
+
+#hero .hero__lead {
+    max-width: 50ch;
+    color: var(--text-on-dark-muted);
+    font-size: 1rem;
+}
+
+/* ============ 9. ԲԱԺԻՆՆԵՐ ============ */
+
+/* ---------- Բաժնի վերնագիր — Դաս 17 ---------- */
+.section-title {
+    position: relative;
+    padding-bottom: 12px;
+}
+
+.section-title::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 48px;
+    height: 3px;
+    background: var(--accent);
+}
+
+/* Ապրանքների ցանց՝ 6 քարտ → 3 + 3 մեծ էկրանին։ Օգտագործում է global.css-ի .grid-auto-ն,
+   փոխում է միայն սյան նվազագույն լայնությունը — Դաս 20 */
+#products .grid-auto { grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); }
+
+/* ---------- Քարտ — Դաս 16, 17, 21 ---------- */
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+.card__badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+    background: var(--danger);
+    color: var(--white);
+    font-size: 0.6875rem;
+    font-weight: 700;
+}
+
+.card__badge--new { background: var(--success); }
+
+.card__body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 16px;
+}
+
+.card__title { font-size: 0.875rem; font-weight: 700; margin-bottom: 4px; }
+.card__meta  { font-size: 0.75rem; color: var(--text-muted); }
+
+/* Քարտի ամբողջ մակերեսը՝ սեղմելի, բայց HTML-ում մեկ հղում — HTML Դաս 23 */
+.card__title a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.card__footer {
+    margin-top: auto;
+    padding-top: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.card__footer .btn {
+    position: relative;
+    z-index: 2;                          /* կոճակը մնում է սեղմելի հղման շերտից վերև */
+}
+
+.card__price {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.card__price del {
+    margin-left: 6px;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+/* ---------- Առավելություններ ---------- */
+#features { background: var(--surface); }
+
+.feature__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 14px;
+    border-radius: 50%;
+    background: var(--icon-bg);
+    color: var(--accent);
+}
+
+.feature__icon svg {
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;                /* գույնը ժառանգվում է — Դաս 16 */
+}
+
+/* ---------- CTA ---------- */
+#cta {
+    background: var(--accent);
+    color: var(--on-accent);
+    padding: 44px 0;
+}
+
+#cta .cta__lead { color: var(--on-accent-muted); }
+
+.input {
+    flex-grow: 1;
+    min-width: 0;                        /* Դաս 12 ⭐ առանց սրա input-ը դուրս է գալիս */
+    min-height: 44px;
+    padding: 11px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+}
+
+.input:focus-visible {
+    outline: 2px solid var(--accent-light);
+    outline-offset: 2px;
+}
+
+#cta .btn { flex-shrink: 0; }           /* Դաս 12 */
+
+/* ---------- Footer ---------- */
+.footer {
+    background: var(--dark);
+    color: var(--on-dark);
+    padding-top: 40px;
+}
+
+.footer__title {
+    margin-bottom: 12px;
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.footer p,
+.footer li { color: var(--text-on-dark-muted); }
+
+.footer li + li { margin-top: 6px; }
+
+.footer .logo { color: var(--on-dark); }    /* մուգ ֆոն → բաց տեքստ */
+
+.footer a { padding: 2px 0; }
+.footer a:hover { color: var(--on-dark); text-decoration: underline; }
+
+.footer__bottom {
+    margin-top: 30px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    border-top: 1px solid var(--border-on-dark);
+    font-size: 0.75rem;
+}
+
+/* ============ 9.2 ՆԵՐՔԻՆ ԷՋԵՐ — կատալոգ ============ */
+/* ---------- Էջի գլուխ՝ ներքին էջերի համար — Դաս 10, 17 ---------- */
+.page-head {
+    padding: 36px 0 28px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+}
+
+.crumbs {                                /* Դաս 17 */
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.crumbs li + li::before {
+    content: "/";
+    margin: 0 8px;
+}
+
+.crumbs a:hover { color: var(--accent); text-decoration: underline; }
+
+/* ---------- Ակտիվ էջ — Դաս 18 ---------- */
+.menu a:not(.btn)[aria-current="page"] {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+/* ---------- Զամբյուղի հաշվիչ header-ում — Դաս 15, 17 ---------- */
+.count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    margin-left: 8px;
+    padding: 0 6px;
+    border-radius: var(--radius-full);
+    background: var(--surface);
+    color: var(--accent);
+    font-size: 0.6875rem;
+}
+
+/* ---------- Dropdown — Դաս 18 ---------- */
+.has-sub { position: relative; }
+
+.submenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 10;
+    min-width: 200px;
+    padding: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+
+    opacity: 0;
+    visibility: hidden;                  /* display: none-ը չի անիմացվում — Դաս 18 */
+    transform: translateY(6px);
+    transition: opacity var(--transition), transform var(--transition), visibility var(--transition);
+}
+
+.has-sub:hover .submenu,
+.has-sub:focus-within .submenu {         /* ստեղնաշարի համար — Դաս 18 */
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.submenu a { display: block; }
+
+/* ---------- Ֆիլտրեր — Դաս 4, 12 ---------- */
+.filters {
+    padding: 20px;
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.filters__group {
+    min-width: 0;                        /* fieldset-ը լռելյայն չի նեղանում — Դաս 4 */
+    margin-bottom: 18px;
+    padding: 0 0 18px;
+    border: 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.filters__group legend {
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.check {                                 /* checkbox կամ radio + տեքստ */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 32px;
+    cursor: pointer;
+}
+
+.check input { width: 18px; height: 18px; flex-shrink: 0; }
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.field__label {
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.input--sm { min-height: 38px; padding: 7px 10px; }
+
+/* ---------- Գործիքագոտի և էջավորում ---------- */
+.toolbar {
+    margin-bottom: 20px;
+    padding: 0 0 14px;
+    border-bottom: 1px solid var(--border);
+}
+
+#catalog .grid-auto { grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); }
+
+.pagination { margin-top: 30px; }
+
+.pagination a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    transition: border-color var(--transition);
+}
+
+.pagination a:hover { border-color: var(--accent); }
+
+.pagination a[aria-current="page"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+    font-weight: 700;
+}
+
+.btn--ghost {
+    --btn-bg: transparent;
+    --btn-color: var(--accent);
+    --btn-border: var(--border);
+}
+.btn--ghost:hover { --btn-border: var(--accent); }
+
+/* ============ 9.3 ՆԵՐՔԻՆ ԷՋԵՐ — ապրանք, զամբյուղ, պատվեր, 404 ============ */
+/* ---------- Ապրանքի էջ — Դաս 16, 20 ---------- */
+.gallery__main {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--surface);
+}
+
+.gallery__thumbs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.gallery__thumbs picture {
+    border: 2px solid transparent;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.gallery__thumbs .is-current { border-color: var(--accent); }
+
+.badge {                                 /* .card__badge-ի նույն տեսքը, բայց հոսքում */
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+    background: var(--danger);
+    color: var(--white);
+    font-size: 0.6875rem;
+    font-weight: 700;
+}
+
+.stock { color: var(--success); font-weight: 700; }
+
+.product__price {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.product__price del {
+    margin-left: 10px;
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+.input--qty { flex-grow: 0; width: 90px; }
+
+.perks {
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+.perks li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.perks li + li { margin-top: 10px; }
+
+.perks svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    stroke: var(--accent);
+}
+
+#details { background: var(--surface); }
+
+.prose p + p,
+.prose p + ul { margin-top: 12px; }
+.prose ul { list-style: disc; padding-left: 20px; }
+.prose li + li { margin-top: 4px; }
+
+/* ---------- Աղյուսակներ — Դաս 3 ---------- */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.table th,
+.table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+
+.specs th {
+    width: 40%;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.specs tbody tr:nth-child(odd) { background: var(--bg); }   /* Դաս 3 */
+
+/* ---------- Զամբյուղ ---------- */
+.cart-table thead th {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 700;
+}
+
+.cart-table tbody tr { background: var(--surface); }
+
+.cart-table__product {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.cart-table__product picture {
+    width: 80px;
+    flex-shrink: 0;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.cart-table__product a { font-weight: 700; }
+.cart-table__product a:hover { color: var(--accent); }
+
+.cell-label { display: none; }           /* երևում է միայն հեռախոսում */
+
+.link-danger {
+    min-height: 44px;
+    padding: 0 6px;
+    background: none;
+    border: 0;
+    color: var(--danger);
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+/* ---------- Ամփոփում (զամբյուղ և պատվեր) ---------- */
+.summary {
+    position: sticky;                    /* Դաս 15 */
+    top: 90px;
+    padding: 22px;
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.summary__list li {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 0;
+}
+
+.summary__total {
+    margin-top: 6px;
+    border-top: 1px solid var(--border);
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.summary__items li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.summary__items picture {
+    width: 56px;
+    flex-shrink: 0;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.summary__items span { flex-grow: 1; }
+
+.text-success { color: var(--success); font-weight: 700; }
+
+.text-danger { color: var(--danger); }
+
+.link { color: var(--accent); text-decoration: underline; }
+
+/* ---------- Պատվերի ֆորմա — Դաս 4, 20 ---------- */
+.form-section {                         /* քարտը div է, fieldset-ը՝ ներսում */
+    margin-bottom: 20px;
+    padding: 22px;
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.fieldset {                              /* զրոյացնում ենք բրաուզերի ոճերը — Դաս 4 */
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.fieldset legend {
+    margin-bottom: 16px;
+    padding: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.field--full { grid-column: 1 / -1; }   /* Դաս 20 */
+
+.req { color: var(--danger); }
+
+.field__hint {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Ընտրության քարտ՝ radio + տեքստ — Դաս 4, 6, 15 */
+.choices {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.choice {
+    position: relative;
+    display: block;
+    cursor: pointer;
+}
+
+.choice input {
+    position: absolute;
+    top: 18px;
+    left: 16px;
+    width: 18px;
+    height: 18px;
+}
+
+.choice__body {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 12px;
+    padding: 14px 16px 14px 46px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    transition: border-color var(--transition);
+}
+
+.choice:hover .choice__body { border-color: var(--accent-light); }
+
+.choice input:checked + .choice__body {        /* հարևան սելեկտոր — Դաս 6 */
+    border-color: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.choice input:focus-visible + .choice__body {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* ---------- Կարգավիճակի էջեր՝ 404 և շնորհակալություն — Դաս 21 ---------- */
+.status {
+    padding: 90px 0;
+    text-align: center;
+}
+
+.status .wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.status__code {
+    font-size: clamp(5rem, 20vw, 9rem);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--accent);
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-12px); }
+}
+
+.status__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+    background: var(--success);
+    color: var(--white);
+    animation: pop .5s ease-out both;
+}
+
+.status__icon svg { width: 36px; height: 36px; stroke: currentColor; }
+
+@keyframes pop {
+    from { transform: scale(.4); opacity: 0; }
+    to   { transform: scale(1);  opacity: 1; }
+}
+
+.status p { max-width: 46ch; }
+
+/* ---------- Մուտք և գրանցում — Դաս 4, 8, 11, 17 ---------- */
+.auth { padding: 60px 0 90px; }
+
+.auth__card {
+    max-width: 460px;                    /* ֆորման նեղ է՝ աչքը չի վազում — Դաս 9 */
+    margin-inline: auto;
+    padding: 32px;
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.auth__card h1 { margin-bottom: 6px; }
+.auth__card .field { margin-bottom: 16px; }
+
+.auth__row {                             /* «Հիշել ինձ» ձախում, «Մոռացե՞լ ես» աջում */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px 16px;
+    margin-bottom: 20px;
+}
+
+.auth__perks {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 24px;
+    padding: 16px;
+    border-radius: var(--radius-sm);
+    background: var(--icon-bg);
+}
+
+.auth__perks li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.auth__perks svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    stroke: var(--accent);
+}
+
+.auth__switch {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+}
+
+/* ============ 10. ԱԴԱՊՏԻՎՈՒԹՅՈՒՆ — Դաս 14, HTML Դաս 23 ============ */
+
+/* ---------- Պլանշետ ---------- */
+@media (max-width: 992px) {
+    :root { --wall: 40px; }
+
+    section { padding: 48px 0; }
+    #hero   { padding: 56px 0; }
+
+    /* Կատալոգ․ ֆիլտրերը՝ վերևում, խմբերը՝ մեկ շարքով */
+    .filters__groups {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 30px;
+    }
+    .filters__group { flex: 1 1 200px; }
+
+    .summary { position: static; }
+}
+
+/* ---------- Հեռախոս ---------- */
+@media (max-width: 768px) {
+    :root { --wall: 20px; }
+
+    section { padding: 36px 0; }
+    #hero   { padding: 40px 0; }
+
+    /* Բուրգերը հայտնվում է */
+    .burger { display: flex; }
+    .nav-toggle { display: block; }
+
+    .menu {
+        position: fixed;
+        top: var(--header-h);
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 90;
+
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+
+        background: var(--surface);
+        padding: 16px;
+        overflow-y: auto;
+
+        transform: translateX(100%);
+        visibility: hidden;              /* ֆոկուսի թակարդի դեմ — HTML Դաս 23 */
+        transition: transform .25s ease, visibility .25s;
+    }
+
+    .nav-toggle:checked ~ .row .menu {
+        transform: translateX(0);
+        visibility: visible;
+    }
+
+    .nav-toggle:checked ~ .row .burger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle:checked ~ .row .burger span:nth-child(2) { opacity: 0; }
+    .nav-toggle:checked ~ .row .burger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .menu a {
+        display: block;
+        padding: 14px 12px;
+        border-radius: 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .menu .btn {
+        display: flex;
+        margin-top: 14px;
+        border-bottom: 0;
+    }
+
+    /* Dropdown-ը բուրգեր-մենյուում՝ միշտ բաց, ներդրված */
+    .submenu {
+        position: static;
+        min-width: 0;
+        padding: 0 0 0 16px;
+        border: 0;
+        box-shadow: none;
+        opacity: 1;
+        visibility: inherit;             /* փակ մենյուում թաքնվում է ծնողի հետ */
+        transform: none;
+    }
+
+
+    /* Hero-ի կոճակները՝ ամբողջ լայնությամբ */
+    #hero .btn { width: 100%; }
+
+    /* CTA-ի ֆորմա՝ ուղղահայաց */
+    #cta form { flex-direction: column; align-items: stretch; }
+    #cta .btn  { width: 100%; }
+
+    /* Footer-ի ներքևի տողը՝ կենտրոնով */
+    .footer__bottom { justify-content: center; text-align: center; }
+
+    /* Զամբյուղի աղյուսակ → քարտեր — Դաս 3, 9, 14 */
+    .cart-table thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+    }
+
+    .cart-table,
+    .cart-table tbody,
+    .cart-table tr,
+    .cart-table td { display: block; }
+
+    .cart-table tr {
+        margin-bottom: 12px;
+        padding: 6px 14px;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .cart-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 0;
+    }
+
+    .cart-table td:last-child { border-bottom: 0; justify-content: end; }
+    .cart-table td:first-child { justify-content: start; }
+
+    .cell-label {
+        display: inline;
+        color: var(--text-muted);
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-section { padding: 16px; }
+    .gallery__thumbs { gap: 6px; }
+    .auth { padding: 30px 0 60px; }
+    .auth__card { padding: 20px; }
+}
+
+
+/* ---------- Փոքր հեռախոս ---------- */
+@media (max-width: 400px) {
+    .card__footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .card__footer .btn { width: 100%; }
+}
+
+/* ============ 11. ՄՈՒԳ ԹԵՄԱ — Դաս 19 ============
+   Փոխվում են ՄԻԱՅՆ իմաստային տոկենները։ Կոմպոնենտներին ձեռք չենք տալիս։ */
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;              /* ֆորմայի տարրերը և սքրոլբարը՝ մուգ */
+
+        --bg: #12181b;
+        --surface: #1b2327;
+        --dark: #0b1012;
+        --text: #e8ecee;
+        --text-muted: #a9b4ba;
+        --accent: var(--navy-300);
+        --accent-hover: #c9d4d9;
+        --accent-light: #e6ecf0;
+        --on-accent: var(--navy-900);
+        --on-accent-muted: var(--slate-900);
+        --border: #2c363b;
+        --icon-bg: #24313a;
+        --danger: #ef6b6b;
+        --success: #4cc38a;
+
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, .4);
+        --shadow-md: 0 8px 20px rgba(0, 0, 0, .5);
+    }
+
+    .card__badge,
+    .badge,
+    .status__icon { color: var(--slate-900); }   /* բաց ֆոն → մուգ տեքստ */
+}
+
+/* ============ 12. ՇԱՐԺՄԱՆ ՀԱՐԳԱՆՔ — Դաս 21 ============ */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

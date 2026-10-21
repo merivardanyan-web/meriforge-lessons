@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Առաջադրանք 3 — ապրանք, զամբյուղ, պատվեր, 404</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lesson.css">
+<script src="../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:3fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a{color:var(--pen); text-decoration:underline}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 1 · նախագիծ</b> · առաջադրանք 3</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Առաջադրանք 3 / 3 · Դաս 23 → Դաս 24 · տնային, մեկ շաբաթ</p>
+  <h1>Ապրանք, զամբյուղ, պատվեր, 404</h1>
+  <p class="lede">Գլխավոր էջը և կատալոգը պատրաստ են և հրապարակված։ Հիմա կայքը դարձնում ենք ամբողջական խանութ՝ ևս հինգ էջով։ Ամեն էջը վերցնում է 01–23 դասերից մի թեմա, որը մինչ այժմ նախագծում չէր օգտագործվել․ աղյուսակներ, ամբողջական ֆորմաներ, անիմացիաներ, թեմաներ։ Ավարտելուց հետո համեմատիր <a href="example-2-final/product.html">օրինակ 2</a>-ի հետ։</p>
+
+  <div class="facts">
+    <span>Սկսիր Առաջադրանք 2-ի արդյունքից</span>
+    <span>Տեքստերը՝ content.md, բաժիններ «Ապրանքի էջ»-ից ներքև</span>
+    <span>Ավարտ՝ պաշտպանություն Դաս 24-ում</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Էջ</th><th>Ֆայլ</th><th>Նոր թեման նախագծում</th><th>Դաս</th></tr>
+      <tr><td>Ապրանքի էջ</td><td><code>product.html</code></td><td>Պատկերասրահ, բնութագրերի աղյուսակ</td><td>3, 16, 20</td></tr>
+      <tr><td>Զամբյուղ</td><td><code>cart.html</code></td><td>Աղյուսակ, որը հեռախոսում դառնում է քարտեր</td><td>3, 9, 14</td></tr>
+      <tr><td>Պատվերի ձևակերպում</td><td><code>checkout.html</code></td><td>Ամբողջական ֆորմա՝ fieldset, radio, select, textarea, autocomplete</td><td>4, 6, 20</td></tr>
+      <tr><td>Շնորհակալություն</td><td><code>thanks.html</code></td><td>Կարգավիճակի էջ, անիմացիա</td><td>21</td></tr>
+      <tr><td>404</td><td><code>404.html</code></td><td>Սխալի էջ, որը GitHub Pages-ը ցույց է տալիս ինքնաշխատ</td><td>21, 23</td></tr>
+      <tr><td>Մուտք</td><td><code>login.html</code></td><td>Կարճ ֆորմա քարտի մեջ, <code>type="password"</code>, <code>autocomplete</code></td><td>4, 8, 11</td></tr>
+      <tr><td>Գրանցում</td><td><code>register.html</code></td><td>Գրանցման ֆորմա, <code>minlength</code>, հուշում <code>aria-describedby</code>-ով</td><td>4, 5, 17</td></tr>
+      <tr><td>Բոնուս</td><td><code>main.css</code></td><td>Մուգ թեմա՝ <code>prefers-color-scheme</code>-ով</td><td>19</td></tr>
+    </table>
+    </div>
+
+    <div class="shots">
+      <figure class="shot">
+        <img src="screenshots/final-product.jpg" alt="Ապրանքի էջը համակարգչում․ վերևում փշրանքներ, ձախում մեծ նկար և չորս փոքր նկար, աջում անվանում, գին, քանակ և կոճակ, ներքևում բնութագրերի աղյուսակ, նկարագրություն և երեք նման ապրանք" width="900" height="1577" loading="lazy">
+        <figcaption>product.html</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="screenshots/final-checkout.jpg" alt="Պատվերի ձևակերպման էջը․ ձախում երեք քարտ՝ կոնտակտներ, առաքում և վճարում ընտրության քարտերով, աջում պատվերի ամփոփում" width="900" height="1310" loading="lazy">
+        <figcaption>checkout.html</figcaption>
+      </figure>
+    </div>
+
+    <div class="shots shots--wide">
+      <figure class="shot">
+        <img src="screenshots/final-cart.jpg" alt="Զամբյուղի էջը համակարգչում․ աղյուսակ երեք ապրանքով և աջում ամփոփման բլոկ" width="900" height="780" loading="lazy">
+        <figcaption>cart.html՝ 1280px, աղյուսակ</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="screenshots/final-cart-mobile.jpg" alt="Զամբյուղի էջը հեռախոսում․ ամեն ապրանքը առանձին քարտ է՝ գին, քանակ և գումար տողերով" width="375" height="2331" loading="lazy">
+        <figcaption>375px՝ քարտեր</figcaption>
+      </figure>
+    </div>
+
+    <div class="shots">
+      <figure class="shot">
+        <img src="screenshots/final-thanks.jpg" alt="Շնորհակալության էջ կանաչ շրջանակով նշանով և երկու կոճակով" width="900" height="632" loading="lazy">
+        <figcaption>thanks.html</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="screenshots/final-404.jpg" alt="404 էջ մեծ կապույտ թվով և երկու կոճակով" width="900" height="632" loading="lazy">
+        <figcaption>404.html</figcaption>
+      </figure>
+    </div>
+
+    <div class="shots">
+      <figure class="shot">
+        <img src="screenshots/final-login.jpg" alt="Մուտքի էջ․ կենտրոնում սպիտակ քարտ՝ փշրանքներ, վերնագիր, էլ. հասցեի և գաղտնաբառի դաշտեր, «Հիշել ինձ» նշիչ, կոճակ և հղում գրանցմանը" width="900" height="761" loading="lazy">
+        <figcaption>login.html</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="screenshots/final-register.jpg" alt="Գրանցման էջ․ նույն քարտը՝ երեք առավելություններով ցանկ, անվան, էլ. հասցեի և երկու գաղտնաբառի դաշտ, պայմանների նշիչ և կոճակ" width="900" height="1015" loading="lazy">
+        <figcaption>register.html</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Շաբաթվա պլան</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Օր</th><th>Ինչ ես անում</th><th>Մոտավոր ժամ</th></tr>
+      <tr><td>1</td><td>Ապրանքի էջ</td><td>2</td></tr>
+      <tr><td>2</td><td>Զամբյուղ՝ համակարգչի և հեռախոսի տարբերակներով</td><td>2</td></tr>
+      <tr><td>3–4</td><td>Պատվերի ձևակերպում</td><td>3</td></tr>
+      <tr><td>5</td><td>Շնորհակալություն, 404, մուտք և գրանցում, <code>components.html</code>-ի թարմացում</td><td>2.5</td></tr>
+      <tr><td>6</td><td>Ամբողջ կայքի ստուգում (բաժին 05), README, նոր հրապարակում, բոնուսը՝ եթե ժամանակ կա</td><td>1.5</td></tr>
+      <tr><td>Դաս 24</td><td>Պաշտպանություն (բաժին 06)</td><td>—</td></tr>
+    </table>
+    </div>
+    <div class="note">
+      <span class="tag">Ամեն օր՝ մեկ commit</span>
+      <p>Ամեն էջից հետո՝ <code>git add .</code>, <code>git commit -m "Ապրանքի էջ"</code>, <code>git push</code> (Դաս 23)։ Պաշտպանության ժամանակ commit-ների պատմությունը ցույց է տալիս, թե ինչպես է աշխատանքն առաջ գնացել։</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <p>Ամեն նոր էջ սկսիր <code>catalog.html</code>-ի պատճենից․ <code>head</code>-ը, header-ը և footer-ը արդեն պատրաստ են։ Փոխիր <code>title</code>-ը, <code>description</code>-ը և <code>aria-current</code>-ը, իսկ <code>main</code>-ը կառուցիր նորից։</p>
+
+    <h3>Քայլ 1 · Ապրանքի էջ</h3>
+    <ul class="goals">
+      <li>Փշրանքներ չորս մակարդակով․ Գլխավոր / Կատալոգ / Նոութբուքեր / Նոութբուք Pro 14։ Վերջինը հղում չէ, այլ <code>li aria-current="page"</code></li>
+      <li>Երկու սյուն՝ <code>w-50 w-md-100</code>։ Ձախում մեծ նկարը և չորս փոքր նկար Grid-ով (<code>repeat(4, 1fr)</code>, Դաս 20)։ Առաջինն ընդգծված է եզրագծով</li>
+      <li>Մեծ նկարը էջի վերևում է, ուստի նրան <strong>չի</strong> պետք <code>loading="lazy"</code> (Դաս 16)</li>
+      <li>Պիտակ «-30%»։ Քարտի <code>.card__badge</code>-ը <code>absolute</code> է, իսկ այստեղ պիտակը հոսքում է։ Ստեղծիր <code>.badge</code>՝ նույն տեսքով, առանց դիրքավորման</li>
+      <li>Քանակի ֆորմա՝ <code>action="cart.html"</code>, <code>input type="number"</code>՝ <code>min="1"</code> և <code>max="10"</code></li>
+      <li>Առավելությունների ցուցակ՝ նույն երեք SVG պատկերակով, ինչ գլխավոր էջում, <code>stroke</code>-ը՝ ակցենտի գույնով</li>
+      <li>Բնութագրերի աղյուսակ․ <code>caption</code> (կարող է լինել <code>.visually-hidden</code>), ամեն տողի անունը՝ <code>th scope="row"</code>, կենտ տողերը՝ <code>:nth-child(odd)</code> ֆոնով (Դաս 3)</li>
+      <li>«Նման ապրանքներ»՝ երեք քարտ նույն <code>.card</code> կոմպոնենտով</li>
+    </ul>
+    <div class="tip note"><span class="tag">Ստուգում</span><p>Փոքր նկարները սեղմելի չեն, և դա ճիշտ է․ առանց JavaScript-ի մեծ նկարը փոխել չենք կարող։ Մի՛ դարձրու դրանք հղումներ կամ կոճակներ, որոնք ոչինչ չեն անում։ Գրիր սա README-ի «Հայտնի սահմանափակումներ» բաժնում։</p></div>
+
+    <h3>Քայլ 2 · Զամբյուղ</h3>
+    <ul class="goals">
+      <li>Էջի գլուխ՝ փշրանքներով, h1 «Զամբյուղ» և «4 ապրանք»</li>
+      <li>Երկու սյուն՝ <code>w-70</code> աղյուսակի և <code>w-30</code> ամփոփման համար։ Ամփոփումը <code>position: sticky</code> է՝ ոլորելիս մնում է տեսադաշտում (Դաս 15)</li>
+      <li>Աղյուսակ՝ <code>caption</code>, <code>thead</code> հինգ <code>th scope="col"</code>-ով, <code>tbody</code> երեք տողով։ Վերջին սյան վերնագիրը տեսողականորեն թաքնված է, բայց կա</li>
+      <li>Ամեն քանակի դաշտ ունի <strong>իր</strong> <code>label</code>-ը՝ «Քանակ՝ Նոութբուք Pro 14»։ Սյան վերնագիրը չի փոխարինում label-ին</li>
+      <li>«Հեռացնել»-ը <code>button type="button"</code> է։ Էկրանընթերցիչը պետք է իմանա, թե <em>որ</em> ապրանքն է հեռացնում․ ավելացրու անունը <code>.visually-hidden</code> span-ով</li>
+      <li>Ամփոփման թվերը ստուգիր հաշվիչով։ <code>content.md</code>-ում կա ստուգման տողը</li>
+    </ul>
+    <p>Հեռախոսում հինգ սյուն չի տեղավորվի։ Աղյուսակը դարձրու քարտեր՝ փոխելով միայն <code>display</code>-ը (Դաս 9)․</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>@media (max-width: 768px)-ի ներսում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Վերնագրերը թաքնված են տեսողականորեն, բայց մնում են էկրանընթերցիչի համար */</span>
+<span class="k">.cart-table thead</span> {
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">width</span>: <span class="n">1px</span>;
+    <span class="f">height</span>: <span class="n">1px</span>;
+    <span class="f">overflow</span>: <span class="s">hidden</span>;
+    <span class="f">clip-path</span>: <span class="s">inset</span>(<span class="n">50%</span>);
+}
+
+<span class="c">/* Աղյուսակի տարրերը դառնում են սովորական բլոկներ */</span>
+<span class="k">.cart-table</span>,
+<span class="k">.cart-table tbody</span>,
+<span class="k">.cart-table tr</span>,
+<span class="k">.cart-table td</span> { <span class="f">display</span>: <span class="s">block</span>; }
+
+<span class="k">.cart-table td</span> {
+    <span class="f">display</span>: <span class="s">flex</span>;
+    <span class="f">justify-content</span>: <span class="s">space-between</span>;
+}
+
+<span class="c">/* Համակարգչում թաքնված պիտակները՝ «Գին», «Քանակ», «Գումար» */</span>
+<span class="k">.cell-label</span> { <span class="f">display</span>: <span class="s">inline</span>; }</code></pre>
+    </div>
+    <div class="tip note"><span class="tag">Ինչու ոչ երկու տարբեր HTML</span><p>Կարող էիր գրել աղյուսակ համակարգչի համար և քարտեր հեռախոսի համար, իսկ մեկը թաքցնել։ Բայց այդ դեպքում ամեն ապրանք կլիներ HTML-ում երկու անգամ, և JS բլոկում պետք կլիներ թարմացնել երկու տեղ։ Մեկ HTML, երկու դասավորություն․ սա է Դաս 14-ի գաղափարը։</p></div>
+
+    <h3>Քայլ 3 · Պատվերի ձևակերպում</h3>
+    <ul class="goals">
+      <li>Մեկ <code>form</code>՝ <code>action="thanks.html"</code>, <code>method="get"</code></li>
+      <li>Երեք խումբ, ամեն մեկը՝ սպիտակ քարտի ներսում․ <code>div.form-section &gt; fieldset &gt; legend</code>։ Fieldset-ի բրաուզերային եզրագիծը և padding-ը զրոյացրու</li>
+      <li>Դաշտերը՝ երկու սյունով Grid-ով։ Լայն դաշտերը (էլ. հասցե, մեկնաբանություն)՝ <code>grid-column: 1 / -1</code> (Դաս 20)։ 576px-ից ներքև՝ մեկ սյուն</li>
+      <li>Ամեն դաշտ՝ <code>label</code> + <code>input</code>, ճիշտ <code>type</code> (<code>tel</code>, <code>email</code>) և <code>autocomplete</code> (աղյուսակը՝ <code>content.md</code>-ում)</li>
+      <li>Պարտադիր դաշտերը՝ <code>required</code>։ Աստղանիշը (*) <code>aria-hidden="true"</code> է, որովհետև էկրանընթերցիչն արդեն ասում է «պարտադիր»</li>
+      <li>Առաքումը և վճարումը՝ radio-ներ ընտրության քարտերի տեսքով։ Ընտրված քարտը ընդգծվում է <strong>առանց JavaScript-ի</strong>․</li>
+    </ul>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML + CSS — Դաս 4, 6, 15</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">label</span> <span class="f">class</span>=<span class="s">"choice"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"radio"</span> <span class="f">name</span>=<span class="s">"delivery"</span> <span class="f">value</span>=<span class="s">"courier"</span> <span class="f">checked</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"choice__body"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">strong</span><span class="p">&gt;</span>Առաքում Երևանում<span class="p">&lt;/</span><span class="t">strong</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">span</span><span class="p">&gt;</span>Վաղը · անվճար<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+
+<span class="k">.choice</span>       { <span class="f">position</span>: <span class="s">relative</span>; }
+<span class="k">.choice input</span> { <span class="f">position</span>: <span class="s">absolute</span>; <span class="f">top</span>: <span class="n">18px</span>; <span class="f">left</span>: <span class="n">16px</span>; }
+<span class="k">.choice__body</span> { <span class="f">padding-left</span>: <span class="n">46px</span>; <span class="f">border</span>: <span class="n">1px</span> <span class="s">solid</span> <span class="f">var</span>(<span class="n">--border</span>); }
+
+<span class="c">/* radio-ից ՀԵՏՈ եկող span-ը — հարևան սելեկտոր, Դաս 6 */</span>
+<span class="k">.choice input:checked + .choice__body</span>      { <span class="f">border-color</span>: <span class="f">var</span>(<span class="n">--accent</span>); }
+<span class="k">.choice input:focus-visible + .choice__body</span> { <span class="f">outline</span>: <span class="n">2px</span> <span class="s">solid</span> <span class="f">var</span>(<span class="n">--accent</span>); }</code></pre>
+    </div>
+    <div class="warn note">
+      <span class="tag">Փորձիր և մտածիր</span>
+      <p><strong>1.</strong> Սեղմիր «Հաստատել»՝ դաշտերը դատարկ թողնելով։ Բրաուզերը չի ուղարկի ֆորման և ցույց կտա, թե որ դաշտն է պակասում։ Սա <code>required</code>-ի աշխատանքն է։<br>
+      <strong>2.</strong> Լրացրու ամեն ինչ և ուղարկիր։ Նայիր <code>thanks.html</code>-ի հասցեին․ քո անունը, հեռախոսը և հասցեն երևում են այնտեղ։ Սա է <code>GET</code>-ի խնդիրը անձնական տվյալների համար։ Իրական խանութում ֆորման ուղարկվում է <code>POST</code>-ով սերվերին․ դա կանենք PHP բլոկում։ Գրիր սա README-ում։</p>
+    </div>
+
+    <h3>Քայլ 4 · Շնորհակալություն և 404</h3>
+    <ul class="goals">
+      <li>Երկու էջն էլ օգտագործում են մեկ կոմպոնենտ՝ <code>.status</code>․ կենտրոնացված բովանդակություն, վերնագիր, տեքստ, երկու կոճակ</li>
+      <li>404-ի մեծ թիվը՝ <code>clamp()</code>-ով (Դաս 14) և հանգիստ «լողացող» անիմացիայով <code>@keyframes</code>-ով։ Թիվը դեկորատիվ է՝ <code>aria-hidden="true"</code>, իսկ իմաստը h1-ում է</li>
+      <li>Շնորհակալության էջի կանաչ նշանը հայտնվում է <code>scale</code> անիմացիայով (Դաս 21)։ Ստուգիր, որ <code>prefers-reduced-motion</code>-ը անջատում է այն</li>
+      <li>Կարճ էջում footer-ը չպետք է «բարձրանա» էկրանի մեջտեղ։ <code>body</code>-ին՝ <code>display: flex</code>, <code>flex-direction: column</code>, <code>min-height: 100vh</code>, իսկ <code>main</code>-ին՝ <code>flex-grow: 1</code> (Դաս 7, 11)</li>
+      <li>Հրապարակելուց հետո բացիր գոյություն չունեցող հասցե, օրինակ՝ <code>…/technomarket/abc</code>։ GitHub Pages-ը ինքն է ցույց տալիս <code>404.html</code>-ը</li>
+    </ul>
+
+    <h3>Քայլ 5 · Մուտք և գրանցում</h3>
+    <p>Երկու էջն էլ մեկ կոմպոնենտ են՝ <code>.auth__card</code>․ նեղ սպիտակ քարտ էջի կենտրոնում։ Մուտքի և գրանցման կոճակները դեռ ոչինչ չեն անում, որովհետև գաղտնաբառը ստուգելու համար պետք է սերվեր։ Բայց markup-ը պատրաստում ենք հիմա, և PHP Դաս 16-ում այն կաշխատի առանց փոփոխության։</p>
+    <ul class="goals">
+      <li>Header-ում՝ նոր կետ «Մուտք»՝ <code>login.html</code>։ Երկու էջում էլ այն նշված է <code>aria-current</code>-ով։ Footer-ում՝ «Իմ հաշիվը»։ Մի մոռացիր թարմացնել header-ը և footer-ը <strong>բոլոր</strong> էջերում</li>
+      <li>Քարտը՝ <code>max-width: 460px</code> և <code>margin-inline: auto</code> (Դաս 8)։ Լայն ֆորման դժվար է կարդալ, իսկ նեղը՝ կենտրոնում, անմիջապես ցույց է տալիս, որ էջում մեկ գործողություն կա</li>
+      <li>Ֆորման՝ <code>action="#"</code>, <code>method="post"</code>։ Ի տարբերություն պատվերի ֆորմայի, այստեղ <code>GET</code> չենք օգտագործում նույնիսկ ուսումնական նախագծում, որովհետև գաղտնաբառը կհայտնվեր հասցեում և բրաուզերի պատմության մեջ</li>
+      <li>Դաշտերի <code>name</code>-երը՝ <code>name</code>, <code>email</code>, <code>password</code>, <code>password_confirmation</code>, <code>remember</code>, <code>terms</code>։ Սրանք նույնն են, ինչ PHP Դաս 16-ում</li>
+      <li><code>autocomplete</code>՝ մուտքում <code>current-password</code>, գրանցման երկու դաշտում՝ <code>new-password</code>։ Այդ դեպքում բրաուզերը առաջարկում է պահված գաղտնաբառը մուտքում և ուժեղ գաղտնաբառ՝ գրանցման ժամանակ</li>
+      <li>Գրանցման գաղտնաբառը՝ <code>minlength="8"</code>, իսկ «Առնվազն 8 նիշ» հուշումը կապված է դաշտին <code>aria-describedby</code>-ով (Դաս 5)։ Էկրանընթերցիչը այն կկարդա դաշտը ֆոկուսելիս</li>
+      <li>«Հիշել ինձ» նշիչը և «Մոռացե՞լ ես գաղտնաբառը» հղումը՝ մեկ տողում, <code>justify-content: space-between</code> և <code>flex-wrap</code> (Դաս 11)։ Նեղ էկրանում հղումը իջնում է ներքև</li>
+      <li>Գրանցման առավելությունների ցանկը՝ <code>ul</code>, իսկ նշանները՝ նույն SVG-ն, որ շնորհակալության էջում է, <code>aria-hidden="true"</code>-ով (Դաս 16)</li>
+    </ul>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML — Դաս 4, 5</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"password"</span> <span class="f">class</span>=<span class="s">"field__label"</span><span class="p">&gt;</span>Գաղտնաբառ <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"req"</span> <span class="f">aria-hidden</span>=<span class="s">"true"</span><span class="p">&gt;</span>*<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">input</span> <span class="f">id</span>=<span class="s">"password"</span> <span class="f">name</span>=<span class="s">"password"</span> <span class="f">type</span>=<span class="s">"password"</span> <span class="f">class</span>=<span class="s">"input"</span>
+           <span class="f">autocomplete</span>=<span class="s">"new-password"</span> <span class="f">minlength</span>=<span class="s">"8"</span>
+           <span class="f">aria-describedby</span>=<span class="s">"password-hint"</span> <span class="f">required</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">span</span> <span class="f">id</span>=<span class="s">"password-hint"</span> <span class="f">class</span>=<span class="s">"field__hint"</span><span class="p">&gt;</span>Առնվազն 8 նիշ<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+    </div>
+    <div class="warn note">
+      <span class="tag">Փորձիր և մտածիր</span>
+      <p><strong>1.</strong> Գրանցման ֆորմայում գրիր 5 նիշանոց գաղտնաբառ և ուղարկիր։ Բրաուզերը կասի, որ քիչ է։ Իսկ եթե երկու գաղտնաբառը տարբեր են, ֆորման կուղարկվի․ HTML-ը չի կարող համեմատել երկու դաշտ։ Դա կանենք JS բլոկում, իսկ իսկական ստուգումը՝ PHP-ում։<br>
+      <strong>2.</strong> DevTools-ում ջնջիր <code>minlength</code>-ը և ուղարկիր նույն 5 նիշը։ Ֆորման գնաց։ Ահա թե ինչու բրաուզերի ստուգումը օգտագործողի հարմարության համար է, ոչ պաշտպանության։ Գրիր սա README-ի սահմանափակումներում։</p>
+    </div>
+
+    <h3>Քայլ 6 · Բոնուս՝ մուգ թեմա</h3>
+    <p>Եթե Դաս 19-ի երկու շերտի տոկենները ճիշտ ես կառուցել, մուգ թեման մեկ media query է, որի ներսում փոխվում են <strong>միայն իմաստային տոկենները</strong>։ Կոմպոնենտներին ձեռք չես տալիս։</p>
+    <figure class="shot">
+      <img src="screenshots/final-dark.jpg" alt="Գլխավոր էջը մուգ թեմայով․ մուգ ֆոն, բաց տեքստ, բաց-կապույտ կոճակներ" width="900" height="703" loading="lazy">
+      <figcaption>Ստուգում՝ DevTools → Ctrl+Shift+P → «Emulate CSS prefers-color-scheme: dark»</figcaption>
+    </figure>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Խնդիր</th><th>Լուծում</th></tr>
+      <tr><td>Կոճակի սպիտակ տեքստը բաց ակցենտի վրա չի կարդացվում</td><td>Նոր իմաստային տոկեն՝ <code>--on-accent</code>․ լուսավոր թեմայում սպիտակ, մուգում՝ մուգ կապույտ։ <code>.btn</code>-ը օգտագործում է այն, ոչ <code>--on-dark</code>-ը</td></tr>
+      <tr><td>«Բաց» կոճակի տեքստը մուգ թեմայում նույնպես բացվում է</td><td>Այդ կոճակի ֆոնը միշտ բաց է, ուստի տեքստի գույնը վերցրու գունապնակից (<code>--slate-800</code>), ոչ իմաստային <code>--text</code>-ից</td></tr>
+      <tr><td>Input-ները և select-ը մնում են սպիտակ</td><td><code>:root { color-scheme: dark; }</code> մուգ թեմայի ներսում (Դաս 19)</td></tr>
+      <tr><td>Կոնտրաստը չի բավականացնում</td><td>Ստուգիր ամեն զույգ DevTools-ով (≥ 4.5:1)՝ նույնը, ինչ լուսավոր թեմայում</td></tr>
+    </table>
+    </div>
+    <div class="tip note"><span class="tag">Ինչու ոչ անջատիչ</span><p>Դաս 19-ի checkbox-անջատիչը աշխատում է մեկ էջի ներսում։ Մյուս էջ անցնելիս ընտրությունը կորչում է, որովհետև այն պահելու համար պետք է JavaScript։ Ուստի այստեղ թեման հետևում է համակարգի կարգավորմանը։ Ձեռքով անջատիչը՝ JS բլոկում։</p></div>
+
+    <h3>Քայլ 7 · Ավարտ</h3>
+    <ul class="goals">
+      <li>Բոլոր նոր կոմպոնենտները (<code>.badge</code>, աղյուսակ, ընտրության քարտ, ֆորմայի դաշտ, <code>.auth__card</code>) ավելացրու <code>components.html</code>-ում (Դաս 17)</li>
+      <li>Թարմացրու README-ն՝ էջերի աղյուսակով և նոր սահմանափակումներով</li>
+      <li>Հրապարակիր նորից և ստուգիր բոլոր 9 էջը իրական հեռախոսում</li>
+    </ul>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Հաճախ հանդիպող սխալներ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Header-ը մի էջում տարբերվում է մյուսներից</td><td>Մի էջում փոփոխել ես, մյուսներում՝ ոչ։ Ամեն փոփոխությունից հետո պատճենիր header-ը բոլոր 9 էջում։ JS և PHP բլոկներում սա կլուծվի մեկ ֆայլով</td></tr>
+      <tr><td>Ամփոփումը sticky չէ</td><td><code>sticky</code>-ը շարժվում է միայն իր ծնողի ներսում։ Եթե <code>.row</code>-ին տվել ես <code>align-start</code>, սյունը նույն բարձրությունն ունի, ինչ ամփոփումը, և շարժվելու տեղ չկա։ Հանիր <code>align-start</code>-ը, որ սյունը ձգվի։ Ստուգիր նաև, որ ծնողներից ոչ մեկը չունի <code>overflow: hidden</code> (Դաս 15)</td></tr>
+      <tr><td>Legend-ը նստած է քարտի եզրին</td><td>Legend-ը միշտ fieldset-ի եզրագծի վրա է։ Քարտի ֆոնը և padding-ը տուր դրսի <code>div</code>-ին, իսկ fieldset-ը զրոյացրու</td></tr>
+      <tr><td>Radio-ի քարտը չի ընդգծվում</td><td><code>+</code> սելեկտորն աշխատում է միայն <em>անմիջապես հետո</em> եկող տարրի համար։ Input-ը պետք է լինի span-ից առաջ, նույն ծնողի ներսում</td></tr>
+      <tr><td>Զամբյուղի քարտերում «Գին» պիտակը երևում է նաև համակարգչում</td><td><code>.cell-label { display: none }</code> հիմնական CSS-ում, <code>display: inline</code>՝ միայն media query-ի ներսում</td></tr>
+      <tr><td>404 էջում նկարները և CSS-ը չեն բեռնվում ենթաթղթապանակի հասցեում</td><td>Հարաբերական ուղիները հաշվվում են ընթացիկ հասցեից։ Մեր նախագծի համար սա ընդունելի է․ գրիր այն README-ում</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Ինչպես համեմատել օրինակի հետ</h2>
+    <div class="warn note">
+      <span class="tag">Էջ առ էջ</span>
+      <p><a href="example-2-final/product.html">product</a> · <a href="example-2-final/cart.html">cart</a> · <a href="example-2-final/checkout.html">checkout</a> · <a href="example-2-final/thanks.html">thanks</a> · <a href="example-2-final/404.html">404</a> · <a href="example-2-final/login.html">login</a> · <a href="example-2-final/register.html">register</a> · <a href="example-2-final/components.html">components</a><br><br>
+      <strong>1. Զամբյուղը 375px-ում.</strong> համեմատիր քո քարտերը օրինակի հետ։ Քանի՞ տող CSS է պետք եղել քեզ։<br>
+      <strong>2. Ֆորման ստեղնաշարով.</strong> անցիր ամբողջ պատվերի ֆորման միայն <code>Tab</code>-ով, <code>Space</code>-ով և սլաքներով։ Radio-ների խմբում սլաքները փոխում են ընտրությունը։<br>
+      <strong>3. Մուգ թեման.</strong> միացրու երկու կայքում։ Քանի՞ տոկեն է փոխվել օրինակում (<code>main.css</code>, բաժին 11), և քանի՞սը՝ քոնում։</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Ամբողջ կայքի ընդունում</h2>
+
+    <h3>Էջեր</h3>
+    <ul class="goals">
+      <li>Կա 9 էջ, բոլոր հղումները աշխատում են, ոչ մի <code>href="#"</code> չի մնացել, բացի «պայմաններից» և «Մոռացե՞լ ես գաղտնաբառը»-ից</li>
+      <li>Header-ը և footer-ը նույնն են ամեն էջում, ակտիվ էջը նշված է <code>aria-current</code>-ով</li>
+      <li>Ամեն էջ ունի իր <code>title</code>-ը և <code>description</code>-ը</li>
+    </ul>
+
+    <h3>Աղյուսակներ և ֆորմաներ</h3>
+    <ul class="goals">
+      <li>Աղյուսակներն ունեն <code>caption</code> և <code>scope</code></li>
+      <li>Զամբյուղը հեռախոսում քարտեր է, առանց HTML-ի կրկնության</li>
+      <li>Ֆորմայի ամեն դաշտ ունի <code>label</code>, <code>name</code>, ճիշտ <code>type</code> և <code>autocomplete</code></li>
+      <li>Պարտադիր դաշտերը չեն թողնում ուղարկել դատարկ ֆորման</li>
+      <li>Գաղտնաբառի դաշտերը՝ <code>type="password"</code>, ճիշտ <code>autocomplete</code>-ով, իսկ ֆորման՝ <code>method="post"</code></li>
+    </ul>
+
+    <h3>Որակ</h3>
+    <ul class="goals">
+      <li>Բոլոր էջերը՝ 320px-ից 1920px, առանց հորիզոնական սքրոլի</li>
+      <li>Բոլոր էջերն անցնելի են <code>Tab</code>-ով, ֆոկուսը միշտ տեսանելի է</li>
+      <li>Անիմացիաները անջատվում են <code>prefers-reduced-motion</code>-ով</li>
+      <li>Lighthouse Accessibility ≥ 90 ամեն էջում</li>
+      <li>README-ն նկարագրում է բոլոր էջերը և սահմանափակումները</li>
+    </ul>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Պաշտպանություն · Դաս 24</h2>
+    <p>Ամեն ուսանողին՝ 5 րոպե ներկայացում և 3 րոպե հարցեր։</p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ինչ ցույց տալ</th><th>Րոպե</th></tr>
+      <tr><td>Կայքը հրապարակված հղումով՝ 1280px-ում, հետո 375px-ում՝ բուրգերով</td><td>2</td></tr>
+      <tr><td>Մեկ որոշում, որով հպարտ ես, և ինչու ես այդպես արել</td><td>1</td></tr>
+      <tr><td>Մեկ սահմանափակում README-ից և ինչպես այն կլուծվի JS կամ PHP բլոկում</td><td>1</td></tr>
+      <tr><td>Պատվերի ֆորման՝ միայն ստեղնաշարով</td><td>1</td></tr>
+    </table>
+    </div>
+
+    <h3>Հնարավոր հարցեր</h3>
+    <ul class="goals">
+      <li>Ինչու՞ է dropdown-ը թաքնված <code>visibility</code>-ով, ոչ <code>display: none</code>-ով</li>
+      <li>Ինչու՞ <code>aria-current</code>, ոչ <code>.active</code> դաս</li>
+      <li>Ինչո՞վ է տարբերվում <code>global.css</code>-ը <code>main.css</code>-ից</li>
+      <li>Ինչու՞ է պատվերի ֆորման <code>GET</code>-ով, և ինչու՞ է դա վատ իրական խանութի համար</li>
+      <li>Ինչու՞ մուտքի ֆորման <code>GET</code>-ով չենք ուղարկում նույնիսկ ուսումնական նախագծում</li>
+      <li>Ինչպե՞ս է զամբյուղի աղյուսակը դառնում քարտեր, և ինչու՞ չես գրել երկու HTML</li>
+    </ul>
+
+    <h3>Գնահատում</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Չափանիշ</th><th>Միավոր</th></tr>
+      <tr><td>Սեմանտիկ HTML, աղյուսակներ, ֆորմաներ</td><td>20</td></tr>
+      <tr><td>CSS համակարգ՝ տոկեններ, կոմպոնենտներ, կրկնություն չկա</td><td>20</td></tr>
+      <tr><td>Ադապտիվություն 320–1920px</td><td>20</td></tr>
+      <tr><td>Հասանելիություն՝ ստեղնաշար, կոնտրաստ, label-ներ</td><td>20</td></tr>
+      <tr><td>Հրապարակում, README, commit-ների պատմություն</td><td>10</td></tr>
+      <tr><td>Պաշտպանություն և պատասխաններ</td><td>10</td></tr>
+      <tr><td><strong>Ընդամենը</strong> (բոնուս՝ մուգ թեմա, +5)</td><td><strong>100</strong></td></tr>
+    </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչ է լինելու հետո</span>
+      <p>Այս ինը էջը JS բլոկում կենդանանում են․ ֆիլտրերը կֆիլտրեն, զամբյուղը կհաշվի, ֆորմաները կստուգվեն մինչ ուղարկելը։ PHP բլոկում դրանք կդառնան իրական խանութ՝ տվյալների բազայով, իսկ մուտքն ու գրանցումը կաշխատեն իսկապես (PHP Դաս 16)։ Markup-ը կմնա քոնը։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 1 · նախագիծ · Առաջադրանք 3 / 3</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

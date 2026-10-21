@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Տնային · Դաս 14 — ադապտիվություն</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:#fff}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule); background:var(--paper)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  @media (max-width:700px){.shots{grid-template-columns:1fr}}
+  .lede a, .note a, .pager a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code){white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 1 · տնային</b> · Դաս 14</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../html-lesson-14.html">HTML Դաս 14</a> · մինի-նախագիծ</p>
+  <h1>Ամբողջ կայքը ադապտիվ</h1>
+  <p class="lede">Կայքը դառնում է ադապտիվ 320px-ից մինչև 1920px․ ադապտիվ սյուներ, media query-ներ, <code>clamp()</code> և ստուգում իրական հեռախոսում։</p>
+
+  <div class="facts">
+    <span>Ժամանակ՝ ~2.5 ժամ</span>
+    <span>Սկսիր Դաս 13-ի արդյունքից</span>
+    <span>Արդյունք՝ բոլոր էջերը՝ ադապտիվ</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Օգտագործիր միայն Դաս 01–14-ը։ Հեռախոսում մենյուն պարզապես փաթաթվում է․ բուրգեր-մենյուն Դաս 18-ում է։</p>
+  </div>
+
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Ամբողջ կայքը աշխատում է 320px-ից մինչև 1920px․ սյուները դառնում են երկու, ապա մեկ, վերնագրերը սահուն փոքրանում են, իսկ մենյուն փաթաթվում է կենտրոնում։</p>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/index.jpg" alt="Գլխավոր էջ համակարգչում" width="900" height="1439" loading="lazy">
+      <figcaption>index.html՝ 1280px</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/index-mobile.jpg" alt="Գլխավոր էջ հեռախոսում․ մենյուն երկու տողով կենտրոնում, բոլոր բլոկները մեկը մյուսի տակ" width="375" height="4196" loading="lazy">
+      <figcaption>index.html՝ 375px</figcaption>
+    </figure>
+    </div>
+  </section>
+
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <div class="tree">starter/
+└── content.md     ← breakpoint-ներ և ամեն բաժնի սյուները</div>
+    <p>Սկսիր Դաս 13-ի քո կայքից։ Եթե այն չունես, վերցրու <a href="../lesson-13/example/index.html">Դաս 13-ի օրինակը</a>։</p>
+  </section>
+
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+
+    <h3>Քայլ 1 · viewport</h3>
+    <p>Ստուգիր, որ բոլոր էջերում կա <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code>։ Ջնջիր այն մեկ էջից և բացիր DevTools-ի սարքի ռեժիմում․ էջը կփոքրանա ամբողջությամբ։ Վերադարձրու։</p>
+
+    <h3>Քայլ 2 · Ադապտիվ .w-* դասեր</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>global.css — Դաս 14</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">@media (max-width: 992px)</span> {
+    .w-md-25  { <span class="f">width</span>: <span class="s">25%</span>; }
+    .w-md-33  { <span class="f">width</span>: <span class="s">33.3333%</span>; }
+    .w-md-50  { <span class="f">width</span>: <span class="s">50%</span>; }
+    .w-md-100 { <span class="f">width</span>: <span class="s">100%</span>; }
+}
+
+<span class="k">@media (max-width: 576px)</span> {
+    .w-sm-50  { <span class="f">width</span>: <span class="s">50%</span>; }
+    .w-sm-100 { <span class="f">width</span>: <span class="s">100%</span>; }
+}</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HTML — մեծ էկրանի դասից ՀԵՏՈ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-33 w-md-50 w-sm-100"</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <h3>Քայլ 3 · Ամեն բաժին</h3>
+    <p>Անցիր բոլոր էջերով և ավելացրու <code>w-md-*</code> և <code>w-sm-*</code> դասերը՝ <code>content.md</code>-ի աղյուսակով։ Համոզվիր, որ ամեն այդպիսի <code>.row</code> ունի <code>flex-wrap</code>։ Ջնջիր այն մեկ տեղից և նկարագրիր, ինչ եղավ։</p>
+
+    <h3>Քայլ 4 · Ադապտիվ բլոկ main.css-ի վերջում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css — բաժին 9</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">@media (max-width: 768px)</span> {
+    :root { <span class="f">--wall</span>: <span class="s">20px</span>; }      <span class="c">/* բոլոր պատերը՝ մեկ տողով */</span>
+
+    section { <span class="f">padding</span>: <span class="s">30px 0</span>; }
+
+    header .row { <span class="f">flex-wrap</span>: <span class="s">wrap</span>; <span class="f">justify-content</span>: <span class="s">center</span>; }
+    .menu       { <span class="f">flex-wrap</span>: <span class="s">wrap</span>; <span class="f">justify-content</span>: <span class="s">center</span>; }
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 5 · clamp()</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">h1</span> { <span class="f">font-size</span>: <span class="s">clamp(1.75rem, 4vw, 2.5rem)</span>; }
+<span class="k">h2</span> { <span class="f">font-size</span>: <span class="s">clamp(1.375rem, 3vw, 1.75rem)</span>; }</code></pre>
+    </div>
+    <p>Նեղացրու պատուհանը դանդաղ․ վերնագրերը փոքրանում են սահուն, առանց թռիչքների։ Փորձիր նաև պատերը clamp()-ով՝ <code>--wall: clamp(20px, 5vw, 60px)</code>, և համեմատիր media query-ի տարբերակի հետ։</p>
+
+    <h3>Քայլ 6 · Նեղ էկրանի երկու թակարդ</h3>
+    <ul class="goals">
+      <li>Երկար հղումները չեն կոտրվում, որովհետև <code>global.css</code>-ում <code>a { white-space: nowrap; }</code>։ Տեքստի մեջ հղումներին՝ <code>white-space: normal</code></li>
+      <li>Ֆորմայի <code>fieldset</code>-ը լռելյայն չի նեղանում իր բովանդակությունից փոքր։ Տուր նրան <code>min-width: 0</code>՝ նույնը, ինչ Դաս 12-ի input-ին</li>
+    </ul>
+
+    <h3>Քայլ 7 · Ստուգում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Console — ով է ստեղծում հորիզոնական սքրոլը</div><button class="copy">Պատճենել</button></div>
+<pre><code>document.querySelectorAll('*').forEach(e =&gt; {
+    if (e.offsetWidth &gt; document.body.offsetWidth) console.log(e);
+});</code></pre>
+    </div>
+    <p>Ստուգիր հինգ լայնությամբ՝ 375, 576, 768, 992, 1440։ Հետո բացիր կայքը իրական հեռախոսում Live Server-ի ցանցային հասցեով։</p>
+  </section>
+
+  <section id="s3">
+    <h2><span class="num">03</span>Ընդունման ստուգաթերթ</h2>
+    <h3>Սյուներ</h3>
+    <ul class="goals">
+      <li>Բոլոր սյուներն ունեն ադապտիվ դասեր</li>
+      <li>Սյուներով բոլոր տողերն ունեն <code>flex-wrap</code></li>
+      <li>Footer-ը՝ 40/20/40 → 100/50/50 → 100/100/100</li>
+    </ul>
+
+    <h3>Չափեր</h3>
+    <ul class="goals">
+      <li><code>--wall</code>-ը փոքրանում է հեռախոսում</li>
+      <li>h1-ը և h2-ը՝ <code>clamp()</code>-ով</li>
+    </ul>
+
+    <h3>Ստուգում</h3>
+    <ul class="goals">
+      <li>Հինգ լայնություն, հինգ սքրինշոթ</li>
+      <li>320px-ում հորիզոնական սքրոլ չկա ոչ մի էջում</li>
+      <li>Ստուգված է իրական հեռախոսում</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>.w-md-100</code>-ը չի աշխատում</td><td>Ադապտիվ դասը գրված է HTML-ում մեծ էկրանի դասից առաջ, կամ global.css-ում media query-ն վերևում է, իսկ <code>.w-*</code>-ը՝ ներքևում</td></tr>
+      <tr><td>Սյուները չեն անցնում նոր տող</td><td><code>.row</code>-ը չունի <code>flex-wrap</code></td></tr>
+      <tr><td>Ֆորման դուրս է գալիս հեռախոսում</td><td><code>fieldset</code>-ին՝ <code>min-width: 0</code></td></tr>
+      <tr><td>Հեռախոսում ամեն ինչ փոքր է</td><td>Բացակայում է viewport meta-ն</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 14-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում կամ նույն թղթապանակում։</p>
+    <ol class="hw">
+      <li>Ջնջիր <code>viewport</code> meta-ն և բացիր հեռախոսում (կամ DevTools-ի սարքի ռեժիմում)։ Ուղարկիր սքրինշոթ։ Վերականգնիր։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>global.css</code>-ում ադապտիվ <code>.w-*</code> դասերը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կառուցիր 4-սյունանոց ցանց, որը դառնում է 2, ապա 1։ Ստուգիր երեք լայնությամբ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ջնջիր <code>flex-wrap</code>-ը և նկարագրիր, ինչ եղավ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Դարձրու պատերը ադապտիվ երկու ձևով՝ media query-ով և <code>clamp()</code>-ով։ Համեմատիր։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կիրառիր <code>clamp()</code> բոլոր վերնագրերին։ Նեղացրու պատուհանը դանդաղ և նկարագրիր վարքագիծը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Դիտավորյալ ստեղծիր հորիզոնական սքրոլ (օրինակ՝ <code>width: 120%</code> ինչ-որ բլոկի վրա)։ Գտիր այն Console-ի կոդով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Բացիր քո էջը իրական հեռախոսում Live Server-ի ցանցային հասցեով։ Նկարագրիր, ինչ նկատեցիր, որ DevTools-ում չէիր տեսնում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Դարձրու Դաս 12-ի footer-ը ադապտիվ՝ 40/20/40-ից 100/50/50, ապա 100/100/100։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Վերցրու Դաս 13-ի ամբողջ էջը և դարձրու ամբողջովին ադապտիվ։ Ստուգիր՝ 375, 576, 768, 992, 1440։ Ուղարկիր հինգ սքրինշոթ։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/index.html">օրինակը</a> և քո էջը կողք կողքի։ Բացիր երկուսի կոդն էլ խմբագրիչում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-13/task.html">← Դաս 13</a><a href="../index.html">Բոլոր տնայինները</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 1 · տնային աշխատանք · Դաս 14</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

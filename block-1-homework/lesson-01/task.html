@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Տնային · Դաս 01 — «Իմ մասին» էջ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:#fff}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule); background:var(--paper)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  @media (max-width:700px){.shots{grid-template-columns:1fr}}
+  .lede a, .note a, .pager a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code){white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 1 · տնային</b> · Դաս 01</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../html-lesson-01.html">HTML Դաս 01</a> · մինի-նախագիծ</p>
+  <h1>«Իմ մասին» էջ</h1>
+  <p class="lede">Քո առաջին իրական էջը՝ ձեռքով գրված կմախքով, վերնագրերով, պարբերություններով և մեկնաբանություններով։ Այս էջը սկիզբն է կայքի, որը կաճի հաջորդ չորս դասերին։</p>
+
+  <div class="facts">
+    <span>Ժամանակ՝ ~1 ժամ</span>
+    <span>Արդյունք՝ lesson-01/index.html</span>
+    <span>Հաջորդ դասին՝ եռաէջանոց կայք</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Օգտագործիր միայն Դաս 01-ի թեգերը՝ կմախքը, <code>h1</code>–<code>h6</code>, <code>p</code>, <code>hr</code>, <code>br</code> և մեկնաբանություններ։ Դեռ մի՛ օգտագործիր հղումներ և նկարներ (Դաս 02) և ոչ մի CSS (Դաս 06)։</p>
+  </div>
+
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Մեկ էջ քո մասին՝ վերնագրերով, պարբերություններով և բաժանարար գծերով։ CSS չկա, ուստի էջը կունենա բրաուզերի լռելյայն տեսքը․ այդպես էլ պետք է լինի։</p>
+    <figure class="shot">
+      <img src="screenshots/index.jpg" alt="Էջ սպիտակ ֆոնով․ մեծ վերնագիր «Անի Սարգսյան», տակը պարբերություն, հորիզոնական գիծ, երկու բաժին վերնագրերով «Իմ մասին» և «Իմ նպատակները», ներքևում ևս մեկ գիծ և թարմացման ամսաթիվ" width="800" height="900" loading="lazy">
+      <figcaption>Օրինակը բրաուզերում՝ առանց CSS-ի</figcaption>
+    </figure>
+  </section>
+
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <div class="tree">starter/
+└── content.md     ← նմուշային տեքստեր, եթե չես ուզում գրել քո մասին</div>
+    <p>Լավագույն տարբերակը քո սեփական տեքստերն են։ Այս էջը կաճի հաջորդ չորս դասերին և կդառնա քո առաջին կայքը։</p>
+  </section>
+
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+
+    <h3>Քայլ 1 · Թղթապանակ</h3>
+    <div class="tree">lesson-01/
+├── index.html
+├── css/        ← դեռ դատարկ է
+└── images/     ← դեռ դատարկ է</div>
+    <p>Բացիր թղթապանակը VS Code-ով՝ <strong>File → Open Folder</strong>, ոչ թե առանձին ֆայլը։ Բոլոր անունները՝ փոքրատառ, առանց բացատների։</p>
+
+    <h3>Քայլ 2 · Կմախք ձեռքով</h3>
+    <p>Գրիր կմախքը <strong>առանց</strong> <code>!</code> + Tab-ի։ Ամեն տողից հետո մտածիր՝ ինչ է այն անում։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.html — կմախքը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">!DOCTYPE</span> <span class="f">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">html</span> <span class="f">lang</span>=<span class="s">"hy"</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">charset</span>=<span class="s">"UTF-8"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">name</span>=<span class="s">"viewport"</span> <span class="f">content</span>=<span class="s">"width=device-width, initial-scale=1.0"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">title</span><span class="p">&gt;</span>Անի Սարգսյան — իմ առաջին էջը<span class="p">&lt;/</span><span class="t">title</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">body</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="t">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">html</span><span class="p">&gt;</span></code></pre>
+    </div>
+    <div class="tip note"><span class="tag">Ստուգում</span><p>Գործարկիր Live Server-ը։ Ներդիրում պետք է երևա քո <code>title</code>-ը, իսկ էջը դեռ դատարկ է։</p></div>
+
+    <h3>Քայլ 3 · Վերնագիր և ենթավերնագիր</h3>
+    <p><code>body</code>-ի ներսում՝ մեկ <code>h1</code> քո անունով և մեկ <code>p</code>։ Հետո՝ <code>hr</code>։ <code>hr</code>-ը փակվող թեգ չունի։</p>
+
+    <h3>Քայլ 4 · Երկու բաժին</h3>
+    <ul class="goals">
+      <li>«Իմ մասին»՝ <code>h2</code> և երկու <code>p</code></li>
+      <li>«Իմ նպատակները»՝ <code>h2</code>, իսկ ներսում երկու <code>h3</code> («Այս ամիս», «Այս տարի»), ամեն մեկի տակ՝ <code>p</code></li>
+      <li>Վերջում՝ ևս մեկ <code>hr</code> և պարբերություն թարմացման ամսաթվով</li>
+    </ul>
+    <div class="tip note"><span class="tag">Վերնագրերը աստիճաններ են</span><p><code>h3</code>-ը միշտ <code>h2</code>-ի ներսում է։ Մի՛ ընտրիր վերնագիրը չափի համար․ չափը կփոխենք CSS-ով։</p></div>
+
+    <h3>Քայլ 5 · Մեկնաբանություններ</h3>
+    <p>Ամեն բաժնից առաջ դիր մեկնաբանություն։ Բրաուզերը դրանք չի ցույց տալիս, բայց մեկ ամիս անց դու արագ կգտնես ճիշտ տեղը։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>մեկնաբանություն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- ===== Իմ մասին ===== --&gt;</span>
+<span class="p">&lt;</span><span class="t">h2</span><span class="p">&gt;</span>Իմ մասին<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <h3>Քայլ 6 · Ինդենտացիա և ստուգում DevTools-ով</h3>
+    <p>Ամեն ներդրված տարր՝ 4 բացատ աջ։ Բացիր DevTools-ը (F12), Elements ներդիրում բացիր <code>body</code>-ն և համոզվիր, որ կառուցվածքը նույնն է, ինչ քո կոդում։</p>
+  </section>
+
+  <section id="s3">
+    <h2><span class="num">03</span>Ընդունման ստուգաթերթ</h2>
+    <h3>Կառուցվածք</h3>
+    <ul class="goals">
+      <li>Կա <code>lesson-01/</code>՝ <code>index.html</code>, <code>css/</code>, <code>images/</code></li>
+      <li>Կմախքը գրված է ձեռքով, կա <code>lang="hy"</code> և <code>meta charset="UTF-8"</code></li>
+      <li><code>title</code>-ը իմաստալից է և երևում է ներդիրում</li>
+    </ul>
+
+    <h3>Բովանդակություն</h3>
+    <ul class="goals">
+      <li>Մեկ <code>h1</code>, առնվազն երկու <code>h2</code>, չորս <code>p</code> և մեկ <code>hr</code></li>
+      <li><code>h3</code>-երը գտնվում են <code>h2</code>-ի ներսում</li>
+      <li>Առնվազն երեք մեկնաբանություն՝ բաժինների անուններով</li>
+    </ul>
+
+    <h3>Կոդ</h3>
+    <ul class="goals">
+      <li>Բոլոր թեգերը փակված են (բացի <code>hr</code>-ից և <code>meta</code>-ից)</li>
+      <li>Ինդենտացիան հետևողական է</li>
+      <li>Ոչ մի CSS կամ <code>style</code> ատրիբուտ</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Հայերեն տեքստը երևում է որպես «Õ€Õ¡Õµ» նշաններ</td><td><code>meta charset="UTF-8"</code>-ը բացակայում է կամ սխալ է գրված</td></tr>
+      <tr><td>Live Server-ը բացում է թղթապանակի ցուցակ, ոչ էջը</td><td>Ֆայլը կոչվում է <code>Index.html</code> կամ <code>index.htm</code>։ Ճիշտը՝ <code>index.html</code></td></tr>
+      <tr><td>Ամբողջ էջը դարձել է վերնագիր</td><td>Մոռացել ես փակել <code>&lt;/h1&gt;</code>-ը</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 01-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում կամ նույն թղթապանակում։</p>
+    <ol class="hw">
+      <li>Տեղադրիր VS Code-ը, Live Server-ը և Auto Rename Tag-ը։ Ուղարկիր սքրինշոթ։</li>
+      <li>Ստեղծիր <code>lesson-01</code> թղթապանակը ճիշտ կառուցվածքով՝ <code>index.html</code>, <code>css/</code>, <code>images/</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գրիր HTML կմախքը <strong>ձեռքով</strong>, առանց <code>!</code> + Tab։ Առնվազն երեք անգամ՝ երեք տարբեր ֆայլում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կառուցիր էջ քո մասին՝ առնվազն մեկ <code>h1</code>, երկու <code>h2</code>, չորս <code>p</code> և մեկ <code>hr</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու առնվազն երեք մեկնաբանություն, որոնք նշում են բաժինները։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Դիտավորյալ մի՛ փակիր որևէ թեգ։ Պահպանիր, նայիր բրաուզերում և գրիր՝ ի՞նչ կոտրվեց։ Հետո ուղղիր։</li>
+      <li>Ջնջիր <code>&lt;meta charset="UTF-8"&gt;</code> տողը։ Ի՞նչ եղավ հայերեն տեքստի հետ։ Վերականգնիր։</li>
+      <li>Փոխիր <code>&lt;title&gt;</code>-ը և ցույց տուր, թե որտեղ է այն երևում բրաուզերում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Բացիր որևէ ճանաչված կայք DevTools-ով։ Գտիր այնտեղ <code>&lt;h1&gt;</code>-ը և փոխիր տեքստը։ Ուղարկիր սքրինշոթ։</li>
+      <li>Գրիր 3–4 նախադասությամբ՝ ի՞նչ է կատարվում, երբ մուտքագրում ես կայքի հասցեն։ Սեփական բառերով։</li>
+    </ol>
+  </section>
+
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/index.html">օրինակը</a> և քո էջը կողք կողքի։ Բացիր երկուսի կոդն էլ խմբագրիչում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><span></span><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-02/task.html">Դաս 02 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 1 · տնային աշխատանք · Դաս 01</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

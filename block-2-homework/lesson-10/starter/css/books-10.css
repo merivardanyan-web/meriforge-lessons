@@ -1,0 +1,13 @@
+/* Ավելացրու main.css-ի վերջում՝ «9. ԱԴԱՊՏԻՎՈՒԹՅՈՒՆ»-ից առաջ */
+/* JS-ի վիճակներ — Դաս 10։ JS-ը միայն դասեր է փոխում */
+.hidden { display: none !important; }
+.book.is-done .pill { background-color: var(--success); color: var(--white); }
+.book.is-planned .book__cover { filter: grayscale(.6); }
+.empty {
+    grid-column: 1 / -1;
+    padding: 40px;
+    text-align: center;
+    background-color: var(--surface);
+    border-radius: var(--radius-md);
+}
+.genres { list-style: none; padding-left: 0; display: flex; flex-wrap: wrap; gap: 8px; }

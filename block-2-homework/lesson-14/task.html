@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 14 · Ոչինչ չի կորչում — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · տնային</b> · Դաս 14</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../js-lesson-14.html">JS Դաս 14</a> · մինի-նախագիծ</p>
+  <h1>Ոչինչ չի կորչում</h1>
+  <p class="lede">Դարակը, ավելացված գրքերը և թեման պահվում են localStorage-ում։ Ավելանում են «Կարդում եմ հիմա» ժամաչափը, toast ծանուցումները, «Վեր» կոճակը, որը երևում է 400px-ից հետո, և որոնում debounce-ով։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Արդյունքը՝ pages/books.html</span>
+    <span>Աշխատում է նաև file://-ով</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–14․ <code>localStorage</code>, <code>JSON</code>, <code>try/catch</code>, <code>setTimeout</code>, <code>setInterval</code>, <code>clearInterval</code>, <code>scrollY</code>, <code>scrollTo</code>։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <figure class="shot">
+      <img src="screenshots/timer.jpg" alt="Ժամաչափ «00:03» և toast «Կարդացիր 0 րոպե 3 վայրկյան»" width="900" height="633" loading="lazy">
+      <figcaption>Ժամաչափ և toast</figcaption>
+    </figure>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատիր քո կայքում (կամ <a href="../lesson-13/example/index.html">նախորդ դասի օրինակում</a>)։ CSS-ը տրված է, որ կենտրոնանաս JS-ի վրա․ HTML/CSS-ը արդեն գիտես։</p>
+    <ul class="goals">
+      <li><code>starter/css/books-14.css</code> — CSS-ը, որ ավելանում է այս դասին</li>
+      <li><code>starter/pages/books.html</code> — «Գրքեր» էջի markup-ը (JS չկա, միայն <code>&lt;script&gt;</code>-ները)</li>
+    </ul>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · storage.js</h3>
+    <ul class="goals">
+      <li><code>save(key, value)</code> և <code>load(key, fallback)</code>՝ <code>try/catch</code>-ով</li>
+      <li>Այն պետք է բոլոր էջերում (թեմայի համար), ուստի առաջին սկրիպտն է</li>
+    </ul>
+
+    <h3>Քայլ 2 · Դարակը</h3>
+    <ul class="goals">
+      <li><code>let books = load(BOOKS_KEY, INITIAL_BOOKS)</code></li>
+      <li>Պահպանումը՝ <strong>մեկ տող</strong> <code>render()</code>-ի վերջում։ Ինչու՞ այնտեղ</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/books.js — render</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">render</span>() {
+    <span class="c">// ... քարտեր և վիճակագրություն</span>
+    <span class="f">save</span>(BOOKS_KEY, books);     <span class="c">// ← ամբողջ պահպանումը</span>
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 3 · Թեմա</h3>
+    <ul class="goals">
+      <li><code>applyTheme(theme)</code>՝ դաս, նշան, aria-label</li>
+      <li>Բեռնման ժամանակ՝ <code>applyTheme(load(THEME_KEY, "light"))</code>, սեղմելիս՝ <code>save</code></li>
+    </ul>
+
+    <h3>Քայլ 4 · Ժամաչափ</h3>
+    <ul class="goals">
+      <li><code>setInterval</code> ամեն վայրկյան, ցուցադրում՝ <code>mm:ss</code> (<code>padStart</code>)</li>
+      <li>«Սկսել»-ի երկրորդ սեղմումը չպիտի միացնի երկրորդ ժամաչափը</li>
+      <li>«Կանգնեցնել»՝ <code>clearInterval</code> և toast «Կարդացիր X րոպե»</li>
+    </ul>
+
+    <h3>Քայլ 5 · Toast, «Վեր», debounce</h3>
+    <ul class="goals">
+      <li><code>showToast(message)</code>՝ 3 վայրկյան, նոր ծանուցումը երկարացնում է ժամանակը</li>
+      <li>«Վեր»՝ <code>is-visible</code> 400px-ից հետո, սեղմելիս՝ <code>scrollTo({ top: 0, behavior: "smooth" })</code></li>
+      <li>Որոնում՝ <code>clearTimeout</code> + <code>setTimeout</code> 300 մվ</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Էջը թարմացնելուց հետո դարակը, նոր գրքերը և թեման տեղում են</li>
+      <li>DevTools → Application → Local Storage-ում երևում են <code>ani:books</code> և <code>ani:theme</code></li>
+      <li>Երկու անգամ «Սկսել»՝ ժամաչափը չի արագանում</li>
+      <li>Կախարդական թվեր չկան՝ 400, 3000, 300, 1000</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Թարմացնելուց հետո <code>[object Object]</code></td><td>Պահել ես առանց <code>JSON.stringify</code>-ի</td></tr>
+      <tr><td>Ժամաչափը արագանում է</td><td>Երկրորդ <code>setInterval</code>․ ստուգիր <code>intervalId !== null</code></td></tr>
+      <tr><td><code>load is not defined</code> այլ էջերում</td><td>storage.js-ը միացված չէ կամ site.js-ից հետո է</td></tr>
+      <tr><td>Գաղտնի ռեժիմում սխալ</td><td>Առանց <code>try/catch</code>-ի localStorage-ը կարող է սխալ գցել</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 14-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում։</p>
+    <ol class="hw">
+      <li>Դաշտ և կոճակ։ Սեղմելիս անունը պահպանիր <code>localStorage</code>-ում։ Էջը թարմացնելիս ցույց տուր «Բարև, [անուն]»։</li>
+      <li>Ավելացրու «Մոռանալ» կոճակ, որը ջնջում է պահված անունը։</li>
+      <li>Հաշվիչ, որի արժեքը պահպանվում է էջը թարմացնելուց հետո։</li>
+      <li>Մուգ/բաց թեմայի փոխարկիչ՝ ընտրության պահպանմամբ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գրիր <code>save(key, value)</code> և <code>load(key, fallback)</code> ֆունկցիաները <code>try/catch</code>-ով։ Ստուգիր օբյեկտով, զանգվածով և չգոյություն ունեցող բանալիով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կենդանի ժամացույց էջում՝ <code>ժժ:րր:վվ</code> ձևաչափով, <code>padStart</code>-ով։</li>
+      <li>Հետհաշվարկ մինչև քո ընտրած ամսաթիվը՝ օր, ժամ, րոպե, վայրկյան։ Հասնելիս՝ կանգնեցրու <code>clearInterval</code>-ով։</li>
+      <li>Ծանուցում (toast), որը հայտնվում է կոճակի սեղմումից և ինքնաբերաբար անհետանում 3 վայրկյան հետո։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>«Վեր» կոճակ, որը հայտնվում է 400px սքրոլից հետո և սահուն վերադարձնում վեր։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Վերցրու Դաս 12–13-ի to-do-ն։ Ավելացրու՝ (ա) պահպանում <code>localStorage</code>-ում, (բ) որոնման դաշտ debounce-ով, (գ) «Ջնջել բոլորը» կոճակ <code>confirm</code>-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/pages/books.html">օրինակը</a> և դրա կոդը <code>example/js/</code>-ում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-13/task.html">← Դաս 13</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-17/task.html">Դաս 17 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · տնային աշխատանք · Դաս 14</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

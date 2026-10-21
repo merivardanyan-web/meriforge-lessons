@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 09 · Իմ կայքը DOM-ի աչքերով — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · տնային</b> · Դաս 09</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../js-lesson-09.html">JS Դաս 09</a> · մինի-նախագիծ</p>
+  <h1>Իմ կայքը DOM-ի աչքերով</h1>
+  <p class="lede">Օրագիրը տեղափոխվում է Անիի կայք՝ HTML/CSS բլոկի նույն կայքը, որ նա կառուցեց 21 դասում։ Նոր էջ՝ «Գրքեր», հինգ ստատիկ քարտով։ JS-ը դեռ ոչինչ չի փոխում․ միայն կարդում է էջը և պատասխանում հարցերին Console-ում։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Արդյունքը՝ pages/books.html</span>
+    <span>Աշխատում է նաև file://-ով</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–09․ <code>querySelector</code>, <code>querySelectorAll</code>, <code>[...NodeList]</code>, <code>textContent</code>, <code>closest</code>, <code>children</code>, <code>nextElementSibling</code>, <code>?.</code>։ Էջը փոխելը՝ Դաս 10-ում։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/books.jpg" alt="Գրքեր էջ՝ հինգ ստատիկ քարտ գունավոր շապիկներով" width="900" height="879" loading="lazy">
+      <figcaption>pages/books.html՝ ստատիկ markup</figcaption>
+    </figure>
+    </div>
+    <p>Ահա ինչ պետք է տեսնես Console-ում։ Ձևակերպումները կարող են տարբերվել, թվերը՝ ոչ։</p>
+<pre class="out"><span class="m">Console</span>
+Էջ՝ Իմ գրադարանը
+Բաժիններ՝ 2, .row՝ 5
+Գրքեր դարակում՝ 5
+Վերնագրեր՝ ["Փոքրիկ իշխանը", "Սամվել", "Գիքորը", "1984", "Ալքիմիկոսը"]
+Ընդհանուր՝ 1232 էջ, կարդացել եմ՝ 484 (39%)
+Ամենամեծը՝ Սամվել
+1. Փոքրիկ իշխանը — Կարդացել եմ
+2. Սամվել — Կարդում եմ
+3. Գիքորը — Կարդացել եմ
+4. 1984 — Կարդալու եմ
+5. Ալքիմիկոսը — Կարդացել եմ
+Կարդացել եմ 3 գիրք
+Առաջին քարտի մարմնում՝ 5 էլեմենտ՝ ["H3", "P", "DIV", "P", "SPAN"]
+Քարտը գտնվում է section#shelf-ում
+Երկրորդ քարտը՝ Սամվել
+Գնահատական՝ null
+Գնահատականի տեքստը՝ դեռ չկա (կավելացնենք Դաս 12-ում)</pre>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատիր Բլոկ 1-ի քո կայքի պատճենում։ Եթե այն չունես, վերցրու <a href="../../block-1-homework/lesson-21/example/index.html">Բլոկ 1-ի Դաս 21-ի օրինակը</a>։</p>
+    <ul class="goals">
+      <li><code>starter/css/books-09.css</code> — CSS-ը, որ ավելանում է այս դասին</li>
+      <li><code>starter/pages/books.html</code> — «Գրքեր» էջի markup-ը (JS չկա, միայն <code>&lt;script&gt;</code>-ները)</li>
+    </ul>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Նոր էջ</h3>
+    <ul class="goals">
+      <li>Վերցրու Բլոկ 1-ի քո կայքը (կամ <a href="../../block-1-homework/lesson-21/example/index.html">Դաս 21-ի օրինակը</a>)</li>
+      <li>Ավելացրու <code>pages/books.html</code>՝ <code>starter/</code>-ից։ Header-ում՝ նոր կետ «Գրքեր» <strong>բոլոր</strong> էջերում</li>
+      <li>CSS-ը՝ <code>starter/css/books.css</code>-ից <code>main.css</code>-ի վերջում (ադապտիվությունից առաջ)</li>
+      <li><code>&lt;script src="../js/books.js" defer&gt;</code></li>
+    </ul>
+
+    <h3>Քայլ 2 · Հաշվիր</h3>
+    <ul class="goals">
+      <li>h1-ի տեքստը, section-ների և .row-երի քանակը, քանի գիրք կա</li>
+      <li>Վերնագրերը զանգվածով՝ <code>[...querySelectorAll(...)].map(...)</code></li>
+    </ul>
+
+    <h3>Քայլ 3 · Թվեր տեքստից</h3>
+    <ul class="goals">
+      <li>Էջերը և կարդացածները՝ <code>Number(el.textContent)</code></li>
+      <li>Ընդհանուր, կարդացած, տոկոս, ամենամեծ գիրքը</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/books.js — էջերը թվերով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> pages = [...document.<span class="f">querySelectorAll</span>(<span class="s">".book__pages"</span>)].<span class="f">map</span>(el =&gt; <span class="f">Number</span>(el.textContent));</code></pre>
+    </div>
+
+    <h3>Քայլ 4 · Ամեն քարտի ներսում</h3>
+    <ul class="goals">
+      <li><code>books.forEach(book =&gt; book.querySelector(...))</code>՝ վերնագիր և կարգավիճակ</li>
+      <li>Քանի՞ գիրք է կարդացած՝ ըստ պիտակի տեքստի</li>
+    </ul>
+
+    <h3>Քայլ 5 · Ծառով</h3>
+    <ul class="goals">
+      <li>Առաջին <code>.book__body</code>-ի երեխաների քանակը և <code>tagName</code>-երը</li>
+      <li><code>closest("section")</code>, <code>nextElementSibling</code></li>
+    </ul>
+
+    <h3>Քայլ 6 · Չկա՞ — null</h3>
+    <ul class="goals">
+      <li><code>.book__rating</code>-ը դեռ չկա։ Տպիր <code>null</code>-ը և ապահով կարդա <code>?.textContent ?? "..."</code></li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Console-ում ամեն պատասխան մեկ տողով է</li>
+      <li>JS-ը ոչինչ չի փոխում էջում</li>
+      <li>Header-ում «Գրքեր»-ը կա բոլոր էջերում, ակտիվն է միայն books.html-ում</li>
+      <li>Ոչ մի կարմիր սխալ, նույնիսկ չեղած էլեմենտի դեպքում</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>Cannot read properties of null</code></td><td>Սկրիպտը կատարվում է HTML-ից առաջ․ <code>defer</code> (Դաս 9)</td></tr>
+      <tr><td><code>map is not a function</code></td><td>NodeList-ը զանգված չէ․ <code>[...nodeList].map</code></td></tr>
+      <tr><td>Գումարը «96560...» է</td><td><code>textContent</code>-ը տող է․ <code>Number()</code></td></tr>
+      <tr><td>Կայքի այլ էջերում «Գրքեր» չկա</td><td>Header-ը կրկնվում է ամեն էջում․ փոխիր բոլորը (PHP բլոկում՝ մեկ ֆայլ)</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 09-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում։</p>
+    <ol class="hw">
+      <li>Ընտրիր էջի <code>h1</code>-ը և տպիր դրա տեքստը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Հաշվիր՝ քանի <code>section</code>, քանի <code>.row</code> և քանի <code>.col</code> կա էջում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Տպիր բոլոր <code>h2</code>-ների տեքստերը զանգվածով (օգտագործիր <code>[...]</code> և <code>map</code>)։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ընտրիր վերջին <code>.col</code>-ը և տպիր դրա ներսի ամբողջ տեքստը։</li>
+      <li>Ընտրիր առաջին <code>.wrapper</code>-ը։ Տպիր դրա երեխաների քանակը և ամեն երեխայի <code>tagName</code>-ը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ընտրիր ցանկացած ներքին էլեմենտ և <code>closest</code>-ով գտիր դրա <code>section</code>-ը։ Տպիր <code>section</code>-ի դասը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցիկլով անցիր բոլոր <code>.col</code>-երով և ամեն մեկի ներսում գտիր վերնագիրը՝ <code>col.querySelector(...)</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Փորձիր ընտրել գոյություն չունեցող դաս։ Տպիր արդյունքը և ապահով կերպով մշակիր <code>?.</code>-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Դիտավորյալ հանիր <code>defer</code>-ը <code>&lt;script&gt;</code>-ից և տես, թե ինչ է լինում։ Գրիր մեկնաբանության մեջ՝ ինչ սխալ ստացար։ Հետո վերադարձրու։</li>
+      <li>Եթե էջում գներ կան՝ հավաքիր դրանք զանգվածում, վերածիր թվերի և տպիր ընդհանուրը, միջինը և ամենաթանկը։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/pages/books.html">օրինակը</a> և դրա կոդը <code>example/js/</code>-ում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-08/task.html">← Դաս 08</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-10/task.html">Դաս 10 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · տնային աշխատանք · Դաս 09</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

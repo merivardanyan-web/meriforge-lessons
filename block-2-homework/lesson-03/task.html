@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 03 · Ընթերցանության պլան — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · տնային</b> · Դաս 03</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../js-lesson-03.html">JS Դաս 03</a> · մինի-նախագիծ</p>
+  <h1>Ընթերցանության պլան</h1>
+  <p class="lede">Ցիկլերով օրագիրը պլանավորում է․ որ էջերն եմ կարդալու ամեն օր, քանի օրում կավարտեմ, ինչպես է աճում առաջընթացի գիծը և ինչ տեսք ունի ամսվա ընթերցանության օրացույցը։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Արդյունքը՝ Console-ում</span>
+    <span>Բաց արա index.html-ը</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–03․ <code>for</code>, <code>while</code>, <code>do..while</code>, <code>break</code>, <code>continue</code>, ներդրված ցիկլեր, <code>Math.floor</code>, <code>repeat</code>։ Ֆունկցիաներ դեռ չկան։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Ահա ինչ պետք է տեսնես Console-ում։ Ձևակերպումները կարող են տարբերվել, թվերը՝ ոչ։</p>
+<pre class="out"><span class="m">Console</span>
+Պլան՝ «Վերք Հայաստանի», օրական 45 էջ
+Օր 1՝ էջ 1–45
+Օր 2՝ էջ 46–90
+Օր 3՝ էջ 91–135
+Օր 4՝ էջ 136–180
+Օր 5՝ էջ 181–225
+Օր 6՝ էջ 226–270
+Օր 7՝ էջ 271–315
+Օր 8՝ էջ 316–320
+Եթե սկսեմ 20 էջից և ամեն օր ավելացնեմ 5, կավարտեմ 9 օրում
+░░░░░░░░░░ 0%
+██░░░░░░░░ 25%
+█████░░░░░ 50%
+███████░░░ 75%
+██████████ 100%
+Հոկտեմբեր․ ե ե չ հ ու շ կ
+Շաբաթ 1․ ■ ■ □ ■ ■ □ ■ 
+Շաբաթ 2․ ■ □ ■ ■ □ ■ ■ 
+Շաբաթ 3․ □ ■ ■ □ ■ ■ □ 
+Շաբաթ 4․ ■ ■ □ ■ ■ □ ■ 
+Կարդացել եմ 19 օր 28-ից
+100 էջը կանցնեմ 3-րդ օրը (135 էջ)</pre>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատիր նոր թղթապանակում՝ <code>reading-journal/</code>։</p>
+    <ul class="goals">
+      <li><code>starter/index.html</code> — էջ, որը միացնում է <code>js/main.js</code>-ը</li>
+      <li><code>starter/js/main.js</code> — դատարկ ֆայլ</li>
+    </ul>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Պլան օրերով</h3>
+    <ul class="goals">
+      <li>«Վերք Հայաստանի», 320 էջ, օրական 45</li>
+      <li><code>for</code>, որի քայլը 45 է․ <code>from += perDay</code></li>
+      <li>Վերջին օրը՝ միայն մնացած էջերը</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.js — պլան</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">for</span> (<span class="k">let</span> <span class="k">from</span> = <span class="n">1</span>; <span class="k">from</span> &lt;= pages; <span class="k">from</span> += perDay) {
+    <span class="k">let</span> to = <span class="k">from</span> + perDay - <span class="n">1</span>;
+    <span class="k">if</span> (to &gt; pages) {
+        to = pages;
+    }
+    console.<span class="f">log</span>(<span class="s">`Օր </span>${day}<span class="s">՝ էջ </span>${from}<span class="s">–</span>${to}<span class="s">`</span>);
+    day++;
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 2 · Քանի՞ օրում</h3>
+    <ul class="goals">
+      <li>Առաջին օրը 20 էջ, ամեն հաջորդ օր՝ 5-ով ավելի</li>
+      <li>Չգիտես՝ քանի կրկնություն կլինի, ուստի <code>while</code></li>
+    </ul>
+
+    <h3>Քայլ 3 · Առաջընթացի գիծ</h3>
+    <ul class="goals">
+      <li>0, 25, 50, 75, 100 տոկոսների համար՝ <code>"█".repeat(...)</code> և <code>"░".repeat(...)</code></li>
+      <li>10 նիշանոց գիծ․ <code>Math.floor(percent / 10)</code></li>
+    </ul>
+
+    <h3>Քայլ 4 · Ամսվա օրացույց</h3>
+    <ul class="goals">
+      <li>4 շաբաթ × 7 օր՝ ներդրված ցիկլ</li>
+      <li>Ամեն երրորդ օրը չես կարդացել․ □ և <code>continue</code>, մնացածը՝ ■</li>
+      <li>Շաբաթը՝ մեկ տող, վերջում՝ քանի օր ես կարդացել</li>
+    </ul>
+
+    <h3>Քայլ 5 · break</h3>
+    <ul class="goals">
+      <li>Որերորդ օրը կանցնես 100 էջը։ Գտնելուն պես դուրս արի ցիկլից</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Պլանի վերջին օրը 316–320 է, ոչ 316–360</li>
+      <li>Օրացույցում 28 նշան է՝ 4 տող</li>
+      <li>Ամեն ցիկլ ավարտվում է․ անվերջ ցիկլ չկա</li>
+      <li>Մեկնաբանություն՝ ինչու ես ընտրել հենց այդ ցիկլը</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Էջը սառչում է</td><td>Անվերջ <code>while</code>․ ցիկլի ներսում չես փոխում պայմանի փոփոխականը</td></tr>
+      <tr><td>Օրացույցը մեկ երկար տող է</td><td><code>line</code>-ը պիտի զրոյացվի արտաքին ցիկլի ամեն քայլին</td></tr>
+      <tr><td><code>continue</code>-ից հետո օրը հաշվվում է</td><td><code>readDays++</code>-ը <code>continue</code>-ից հետո է, ոչ առաջ</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 03-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում։</p>
+    <ol class="hw">
+      <li>Տպիր 1-ից 20 թվերը <code>for</code>-ով, ապա նույնը՝ <code>while</code>-ով։</li>
+      <li>Տպիր 100-ից 1 թվերը՝ 5-ական քայլով (100, 95, 90…)։</li>
+      <li>Հաշվիր 1-ից 50 <strong>զույգ</strong> թվերի գումարը։</li>
+      <li>Օգտագործողից վերցրու թիվ և տպիր դրա բազմապատկման աղյուսակը 1-ից 10։</li>
+      <li>Հաշվիր տրված թվի ֆակտորիալը (5! = 1×2×3×4×5 = 120)։</li>
+      <li>Կառուցիր հակառակ բուրգ՝<br>
+        <code>*****</code><br><code>****</code><br><code>***</code><br><code>**</code><br><code>*</code></li>
+      <li>Տպիր 2-ից 50 բոլոր պարզ թվերը (օգտագործիր ներդրված ցիկլ և դրոշակ)։</li>
+      <li>Տրված է թիվ։ Հաշվիր՝ քանի՞ թվանշան ունի (օրինակ՝ 4729 → 4)։</li>
+      <li>Կառուցիր 5×5 քառակուսի <code>■</code> նշաններից՝ ներդրված ցիկլով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Խաղ․ ծրագիրը «մտածում» է թիվ (օրինակ՝ 7)։ <code>while</code>-ով հարցրու օգտագործողին, մինչև գուշակի, և հուշիր՝ «շատ է» կամ «քիչ է»։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/index.html">օրինակը</a> և դրա կոդը <code>example/js/</code>-ում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-02/task.html">← Դաս 02</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-04/task.html">Դաս 04 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · տնային աշխատանք · Դաս 03</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

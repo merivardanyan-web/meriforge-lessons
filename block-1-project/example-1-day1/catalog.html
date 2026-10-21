@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Կատալոգ — ՏեխնոՄարկետ</title>
+    <meta name="description" content="Նոութբուքեր, մոնիտորներ, սմարթֆոններ և աքսեսուարներ՝ 2 տարվա երաշխիքով">
+
+    <meta property="og:title" content="Կատալոգ — ՏեխնոՄարկետ">
+    <meta property="og:description" content="Նոութբուքեր, մոնիտորներ, սմարթֆոններ և աքսեսուարներ՝ 2 տարվա երաշխիքով">
+    <meta property="og:image" content="images/og.jpg">
+
+    <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<a href="#main" class="skip-link">Անցնել բովանդակությանը</a>
+
+<!-- ================= HEADER ================= -->
+<header class="header">
+    <div class="row align-center justify-between">
+
+        <div class="col">
+            <a href="index.html" class="logo">ՏեխնոՄարկետ</a>
+        </div>
+
+        <div class="col">
+            <nav aria-label="Գլխավոր մենյու">
+                <ul class="menu flex align-center gap-10">
+                    <li><a href="index.html">Գլխավոր</a></li>
+                    <li class="has-sub">
+                        <a href="catalog.html" aria-current="page">Կատալոգ <span aria-hidden="true">▾</span></a>
+                        <ul class="submenu">
+                            <li><a href="catalog.html?cat=laptops">Նոութբուքեր</a></li>
+                            <li><a href="catalog.html?cat=monitors">Մոնիտորներ</a></li>
+                            <li><a href="catalog.html?cat=phones">Սմարթֆոններ</a></li>
+                            <li><a href="catalog.html?cat=tablets">Պլանշետներ</a></li>
+                            <li><a href="catalog.html?cat=accessories">Աքսեսուարներ</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#contact">Կապ</a></li>
+                    <li><a href="#" class="btn btn--primary btn--sm">Զամբյուղ <span class="count">4</span><span class="visually-hidden"> ապրանք</span></a></li>
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+</header>
+
+<main id="main">
+
+    <section class="page-head">
+        <div class="row">
+            <div class="col w-100">
+                <nav aria-label="Դուք այստեղ եք">
+                <ol class="crumbs">
+                    <li><a href="index.html">Գլխավոր</a></li>
+                    <li aria-current="page">Կատալոգ</li>
+                </ol>
+                </nav>
+                <h1 class="mb-10">Կատալոգ</h1>
+                <p class="text-muted">Նոութբուքեր, մոնիտորներ, սմարթֆոններ և աքսեսուարներ՝ 2 տարվա երաշխիքով</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= ԿԱՏԱԼՈԳ ================= -->
+    <section id="catalog">
+        <div class="row align-start flex-wrap">
+
+            <!-- Ֆիլտրեր — Դաս 4 -->
+            <aside class="col w-25 w-md-100" aria-label="Ֆիլտրեր">
+                <form class="filters" action="catalog.html" method="get">
+                    <h2 class="title-4 mb-20">Ֆիլտրեր</h2>
+
+                    <div class="filters__groups">
+                        <fieldset class="filters__group">
+                            <legend>Կատեգորիա</legend>
+                            <ul>
+                                <li><label class="check"><input type="checkbox" name="cat" value="laptops"> Նոութբուքեր</label></li>
+                                <li><label class="check"><input type="checkbox" name="cat" value="monitors"> Մոնիտորներ</label></li>
+                                <li><label class="check"><input type="checkbox" name="cat" value="phones"> Սմարթֆոններ</label></li>
+                                <li><label class="check"><input type="checkbox" name="cat" value="tablets"> Պլանշետներ</label></li>
+                                <li><label class="check"><input type="checkbox" name="cat" value="accessories"> Աքսեսուարներ</label></li>
+                            </ul>
+                        </fieldset>
+
+                        <fieldset class="filters__group">
+                            <legend>Գին, ֏</legend>
+                            <div class="flex gap-10">
+                                <div class="field">
+                                    <label for="min" class="field__label">Սկսած</label>
+                                    <input id="min" name="min" type="number" min="0" step="1000" placeholder="0" class="input input--sm">
+                                </div>
+                                <div class="field">
+                                    <label for="max" class="field__label">Մինչև</label>
+                                    <input id="max" name="max" type="number" min="0" step="1000" placeholder="500000" class="input input--sm">
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="filters__group">
+                            <legend>Ապրանքանիշ</legend>
+                            <ul>
+                                <li><label class="check"><input type="checkbox" name="brand" value="arev"> Արև</label></li>
+                                <li><label class="check"><input type="checkbox" name="brand" value="masis"> Մասիս</label></li>
+                                <li><label class="check"><input type="checkbox" name="brand" value="sevan"> Սևան</label></li>
+                                <li><label class="check"><input type="checkbox" name="brand" value="lori"> Լոռի</label></li>
+                            </ul>
+                        </fieldset>
+
+                        <fieldset class="filters__group">
+                            <legend>Ցուցադրել</legend>
+                            <ul>
+                                <li><label class="check"><input type="radio" name="stock" value="all" checked> Բոլորը</label></li>
+                                <li><label class="check"><input type="radio" name="stock" value="in"> Միայն առկաները</label></li>
+                                <li><label class="check"><input type="radio" name="stock" value="sale"> Միայն զեղչվածները</label></li>
+                            </ul>
+                        </fieldset>
+                    </div>
+
+                    <div class="flex gap-10 flex-wrap">
+                        <button type="submit" class="btn btn--primary">Կիրառել</button>
+                        <a href="catalog.html" class="btn btn--ghost">Մաքրել</a>
+                    </div>
+                </form>
+            </aside>
+
+            <!-- Արդյունքներ -->
+            <div class="col w-75 w-md-100">
+
+                <div class="toolbar flex justify-between align-center flex-wrap gap-10">
+                    <p class="text-muted">Ցուցադրված է 1–9՝ 24 ապրանքից</p>
+
+                    <form class="flex align-center flex-wrap gap-10" action="catalog.html" method="get">
+                        <label for="sort" class="field__label">Դասավորել</label>
+                        <select id="sort" name="sort" class="input input--sm">
+                            <option value="popular">Հանրաճանաչ</option>
+                            <option value="price-asc">Գինը՝ աճման կարգով</option>
+                            <option value="price-desc">Գինը՝ նվազման կարգով</option>
+                            <option value="new">Նորերը</option>
+                        </select>
+                        <button type="submit" class="btn btn--ghost btn--sm">Կիրառել</button>
+                    </form>
+                </div>
+
+                <div class="grid-auto gap-20">
+
+                    <article class="card">
+                        <span class="card__badge">-30%</span>
+                        <picture class="card__media ratio-3-2">
+                            <source srcset="images/laptop.webp" type="image/webp">
+                            <img class="img-cover" src="images/laptop.jpg"
+                                 alt="Նոութբուք Pro 14 բաց վիճակում"
+                                 width="600" height="400" loading="lazy">
+                        </picture>
+                        <div class="card__body">
+                            <h3 class="card__title">Նոութբուք Pro 14</h3>
+                            <p class="card__meta">16 ԳԲ / 512 ԳԲ SSD</p>
+                            <div class="card__footer">
+                                <p class="card__price">315&nbsp;000&nbsp;֏ <del>450&nbsp;000&nbsp;֏</del></p>
+                                <button class="btn btn--primary btn--sm">Գնել</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <span class="card__badge card__badge--new">Նոր</span>
+                        <picture class="card__media ratio-3-2">
+                            <source srcset="images/monitor.webp" type="image/webp">
+                            <img class="img-cover" src="images/monitor.jpg"
+                                 alt="27 դյույմանոց մոնիտոր բարակ շրջանակով"
+                                 width="600" height="400" loading="lazy">
+                        </picture>
+                        <div class="card__body">
+                            <h3 class="card__title">Մոնիտոր 27 4K</h3>
+                            <p class="card__meta">IPS · 60 Հց · USB-C</p>
+                            <div class="card__footer">
+                                <p class="card__price">185&nbsp;000&nbsp;֏</p>
+                                <button class="btn btn--primary btn--sm">Գնել</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <picture class="card__media ratio-3-2">
+                            <source srcset="images/keyboard.webp" type="image/webp">
+                            <img class="img-cover" src="images/keyboard.jpg"
+                                 alt="Մեխանիկական ստեղնաշար մուգ ստեղներով"
+                                 width="600" height="400" loading="lazy">
+                        </picture>
+                        <div class="card__body">
+                            <h3 class="card__title">Ստեղնաշար մեխանիկական</h3>
+                            <p class="card__meta">RGB · հայերեն տառեր</p>
+                            <div class="card__footer">
+                                <p class="card__price">42&nbsp;000&nbsp;֏</p>
+                                <button class="btn btn--primary btn--sm">Գնել</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <picture class="card__media ratio-3-2">
+                            <source srcset="images/smartphone.webp" type="image/webp">
+                            <img class="img-cover" src="images/smartphone.jpg"
+                                 alt="Սմարթֆոն մեծ էկրանով"
+                                 width="600" height="400" loading="lazy">
+                        </picture>
+                        <div class="card__body">
+                            <h3 class="card__title">Սմարթֆոն X 128</h3>
+                            <p class="card__meta">6.1" · 128 ԳԲ</p>
+                            <div class="card__footer">
+                                <p class="card__price">310&nbsp;000&nbsp;֏</p>
+                                <button class="btn btn--primary btn--sm">Գնել</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <span class="card__badge">-15%</span>
+                        <picture class="card__media ratio-3-2">
+                            <source srcset="images/headphones.webp" type="image/webp">
+                            <img class="img-cover" src="images/headphones.jpg"
+                                 alt="Անլար ականջակալներ"
+                                 width="600" height="400" loading="lazy">
+                        </picture>
+                        <div class="card__body">
+                            <h3 class="card__title">Ականջակալ Studio</h3>
+                            <p class="card__meta">Bluetooth · աղմուկի նվազեցում</p>
+                            <div class="card__footer">
+                                <p class="card__price">80&nbsp;750&nbsp;֏ <del>95&nbsp;000&nbsp;֏</del></p>
+                                <button class="btn btn--primary btn--sm">Գնել</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <picture class="card__media ratio-3-2">
+                            <source srcset="images/tablet.webp" type="image/webp">
+                            <img class="img-cover" src="images/tablet.jpg"
+                                 alt="Պլանշետ բարակ իրանով"
+                                 width="600" height="400" loading="lazy">
+                        </picture>
+                        <div class="card__body">
+                            <h3 class="card__title">Պլանշետ 11</h3>
+                            <p class="card__meta">11" · 128 ԳԲ · Wi-Fi</p>
+                            <div class="card__footer">
+                                <p class="card__price">240&nbsp;000&nbsp;֏</p>
+                                <button class="btn btn--primary btn--sm">Գնել</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <span class="card__badge card__badge--new">Նոր</span>
+                        <picture class="card__media ratio-3-2">
+                            <source srcset="images/mouse.webp" type="image/webp">
+                            <img class="img-cover" src="images/mouse.jpg"
+                                 alt="Մուգ գույնի անլար մկնիկ"
+                                 width="600" height="400" loading="lazy">
+                        </picture>
+                        <div class="card__body">
+                            <h3 class="card__title">Մկնիկ անլար</h3>
+                            <p class="card__meta">Bluetooth · 3 կոճակ</p>
+                            <div class="card__footer">
+                                <p class="card__price">18&nbsp;000&nbsp;֏</p>
+                                <button class="btn btn--primary btn--sm">Գնել</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <span class="card__badge">-17%</span>
+                        <picture class="card__media ratio-3-2">
+                            <source srcset="images/speaker.webp" type="image/webp">
+                            <img class="img-cover" src="images/speaker.jpg"
+                                 alt="Փոքր ուղղանկյուն բարձրախոս"
+                                 width="600" height="400" loading="lazy">
+                        </picture>
+                        <div class="card__body">
+                            <h3 class="card__title">Բարձրախոս Mini</h3>
+                            <p class="card__meta">Bluetooth · 10 ժամ</p>
+                            <div class="card__footer">
+                                <p class="card__price">35&nbsp;000&nbsp;֏ <del>42&nbsp;000&nbsp;֏</del></p>
+                                <button class="btn btn--primary btn--sm">Գնել</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <picture class="card__media ratio-3-2">
+                            <source srcset="images/smartwatch.webp" type="image/webp">
+                            <img class="img-cover" src="images/smartwatch.jpg"
+                                 alt="Խելացի ժամացույց մուգ ժապավենով"
+                                 width="600" height="400" loading="lazy">
+                        </picture>
+                        <div class="card__body">
+                            <h3 class="card__title">Ժամացույց Fit</h3>
+                            <p class="card__meta">AMOLED · GPS</p>
+                            <div class="card__footer">
+                                <p class="card__price">65&nbsp;000&nbsp;֏</p>
+                                <button class="btn btn--primary btn--sm">Գնել</button>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+
+                <!-- Էջավորում — Դաս 18 -->
+                <nav class="pagination" aria-label="Էջավորում">
+                    <ul class="flex flex-wrap gap-10">
+                        <li><a href="catalog.html?page=1" aria-current="page">1</a></li>
+                        <li><a href="catalog.html?page=2">2</a></li>
+                        <li><a href="catalog.html?page=3">3</a></li>
+                        <li><a href="catalog.html?page=2">Հաջորդը →</a></li>
+                    </ul>
+                </nav>
+
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+    <div class="row flex-wrap">
+
+        <div class="col w-40 w-md-100">
+            <p class="logo mb-10"><a href="index.html">ՏեխնոՄարկետ</a></p>
+            <p>Տեխնիկայի խանութ Երևանում 2018 թվականից։ Ուսումնական նախագիծ։</p>
+        </div>
+
+        <div class="col w-25 w-md-50 w-sm-100">
+            <h2 class="footer__title">Բաժիններ</h2>
+            <nav aria-label="Ստորին մենյու">
+                <ul>
+                    <li><a href="catalog.html">Կատալոգ</a></li>
+                    <li><a href="#">Զամբյուղ</a></li>
+                    <li><a href="#">Պատվերի ձևակերպում</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="col w-25 w-md-50 w-sm-100" id="contact">
+            <h2 class="footer__title">Կապ</h2>
+            <ul>
+                <li>Երևան, Աբովյան 1</li>
+                <li><a href="tel:+37410000000">+374 10 00 00 00</a></li>
+                <li><a href="mailto:info@technomarket.example">info@technomarket.example</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="row flex-wrap justify-between footer__bottom">
+        <div class="col">© 2026 ՏեխնոՄարկետ</div>
+        <div class="col">Կառուցված է առանց գրադարանների՝ HTML և CSS</div>
+    </div>
+</footer>
+
+</body>
+</html>

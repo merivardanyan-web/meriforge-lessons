@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Տնային · Դաս 09 — հորիզոնական մենյու</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:#fff}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule); background:var(--paper)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  @media (max-width:700px){.shots{grid-template-columns:1fr}}
+  .lede a, .note a, .pager a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code){white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 1 · տնային</b> · Դաս 09</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../html-lesson-09.html">HTML Դաս 09</a> · մինի-նախագիծ</p>
+  <h1>Հորիզոնական մենյու և հոսք</h1>
+  <p class="lede">Մենյուն դառնում է հորիզոնական՝ ճիշտ սեղմելի տարածքով, աղյուսակները ստանում են սեփական սքրոլ, իսկ footer-ը՝ վերնագիր էկրանընթերցիչի համար։</p>
+
+  <div class="facts">
+    <span>Ժամանակ՝ ~1.5 ժամ</span>
+    <span>Սկսիր Դաս 08-ի արդյունքից</span>
+    <span>Արդյունք՝ main.css + HTML</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Օգտագործիր միայն Դաս 01–09-ը։ Ամեն ինչ կողք կողքի դնում ենք <code>inline-block</code>-ով։ Flexbox-ը, որը կլուծի բացակների և հավասարեցման խնդիրները, Դաս 11-ում է։</p>
+  </div>
+
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Մենյուն դառնում է հորիզոնական՝ մեծ սեղմելի տարածքով և ընթացիկ էջի նշումով։ Լայն աղյուսակները հեռախոսում սքրոլվում են իրենց տուփի ներսում, իսկ էջը մնում է տեղում։</p>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/index.jpg" alt="Գլխավոր էջ՝ հորիզոնական մենյու header-ում, ակտիվ «Գլխավոր» կետը մուգ ֆոնով" width="800" height="2154" loading="lazy">
+      <figcaption>index.html</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/schedule.jpg" alt="Դասացուցակ՝ հորիզոնական մենյու, ակտիվ «Դասացուցակ» կետ" width="800" height="1866" loading="lazy">
+      <figcaption>pages/schedule.html</figcaption>
+    </figure>
+    </div>
+  </section>
+
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <div class="tree">starter/
+└── content.md     ← մենյու, թաքնված վերնագիր, աղյուսակներ</div>
+    <p>Սկսիր Դաս 08-ի քո կայքից։ Եթե այն չունես, վերցրու <a href="../lesson-08/example/index.html">Դաս 08-ի օրինակը</a>։</p>
+  </section>
+
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+
+    <h3>Քայլ 1 · Երեք display DevTools-ում</h3>
+    <p>Ընտրիր <code>section</code> (block), <code>strong</code> (inline) և <code>.btn</code> (inline-block)։ Computed ներդիրում գտիր <code>display</code>-ը։ Մկնիկը տար տարրի վրա և նայիր, թե որքան տեղ է այն զբաղեցնում․ block-ը միշտ ամբողջ տողն է։</p>
+
+    <h3>Քայլ 2 · Հորիզոնական մենյու</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.menu li</span> {
+    <span class="f">display</span>: <span class="s">inline-block</span>;    <span class="c">/* li-երը դառնում են հորիզոնական */</span>
+}
+
+<span class="k">.menu a</span> {
+    <span class="f">padding</span>: <span class="s">12px 14px</span>;       <span class="c">/* padding-ը հղման վրա, ոչ li-ի */</span>
+    <span class="f">border-radius</span>: <span class="s">6px</span>;
+}
+
+<span class="k">.menu a:hover,</span>
+<span class="k">.menu a:focus-visible</span> {
+    <span class="f">background-color</span>: <span class="s">var(--on-dark)</span>;
+    <span class="f">color</span>: <span class="s">var(--secondary)</span>;
+}
+
+<span class="k">.menu a.is-active</span> {
+    <span class="f">background-color</span>: <span class="s">var(--dark)</span>;
+}</code></pre>
+    </div>
+    <div class="tip note"><span class="tag">Ստուգում</span><p>DevTools-ով չափիր հղման բարձրությունը։ Այն պետք է լինի առնվազն 44px։ Padding-ը հղման վրա է, ուստի սեղմելի է ամբողջ ուղղանկյունը, ոչ միայն տառերը։ <code>a</code>-ն padding ընդունում է, որովհետև <code>global.css</code>-ում այն արդեն <code>inline-block</code> է։</p></div>
+    <p>Ավելացրու <code>class="is-active"</code> ընթացիկ էջի հղմանը․ <code>about.html</code>-ում՝ «Իմ մասին»-ին, <code>blog.html</code>-ում՝ «Բլոգ»-ին և այլն։</p>
+
+    <h3>Քայլ 3 · Քարտերի հավասարեցում</h3>
+    <p>Դաս 08-ի քարտերը inline-block են, և եթե մեկի տեքստը երկար է, դրանք սկսվում են տարբեր բարձրությունից։ Ավելացրու <code>.card { vertical-align: top; }</code>։</p>
+
+    <h3>Քայլ 4 · Վերնագիր միայն էկրանընթերցիչի համար</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>footer-ի սկզբում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">footer</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">h2</span> <span class="f">class</span>=<span class="s">"visually-hidden"</span><span class="p">&gt;</span>Կայքի ներքևի մաս<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+    ...
+<span class="p">&lt;/</span><span class="t">footer</span><span class="p">&gt;</span></code></pre>
+    </div>
+    <p>Դիզայնում վերնագիր չկա, բայց էկրանընթերցիչով օգտագործողը վերնագրերով է նավարկում էջը։ <code>.visually-hidden</code>-ը արդեն կա <code>global.css</code>-ում։ Համեմատիր այն <code>display: none</code>-ի հետ․ վերջինը թաքցնում է նաև էկրանընթերցիչից։</p>
+
+    <h3>Քայլ 5 · Լայն աղյուսակներ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>schedule.html</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"table-wrap"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">table</span><span class="p">&gt;</span>
+        ...
+    <span class="p">&lt;/</span><span class="t">table</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.table-wrap</span> {
+    <span class="f">overflow-x</span>: <span class="s">auto</span>;      <span class="c">/* սքրոլ միայն երբ պետք է */</span>
+    <span class="f">overflow-y</span>: <span class="s">hidden</span>;
+}</code></pre>
+    </div>
+    <div class="tip note"><span class="tag">Ստուգում</span><p>DevTools → Device toolbar → 320px։ Աղյուսակը սքրոլվում է իր տուփում, իսկ էջի մնացած մասը չի շարժվում աջ ու ձախ։</p></div>
+  </section>
+
+  <section id="s3">
+    <h2><span class="num">03</span>Ընդունման ստուգաթերթ</h2>
+    <h3>Մենյու</h3>
+    <ul class="goals">
+      <li>Երկու մենյուն էլ հորիզոնական են</li>
+      <li>Սեղմելի տարածքը ≥ 44px</li>
+      <li>Ընթացիկ էջը նշված է ամեն էջում</li>
+      <li>Hover-ը և focus-ը տեսանելի են</li>
+    </ul>
+
+    <h3>Հոսք</h3>
+    <ul class="goals">
+      <li>Header-ը և footer-ը զբաղեցնում են ամբողջ լայնությունը</li>
+      <li>Բովանդակությունը կենտրոնում է</li>
+      <li>Քարտերը սկսվում են նույն բարձրությունից</li>
+    </ul>
+
+    <h3>Հասանելիություն</h3>
+    <ul class="goals">
+      <li>Footer-ն ունի թաքնված վերնագիր</li>
+      <li>Աղյուսակները 320px-ում չեն ստեղծում էջի հորիզոնական սքրոլ</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Մենյուի կետերի միջև կան փոքր բացակներ</td><td>Դրանք HTML-ի տողադարձերն են inline-block տարրերի միջև (Դաս 09, բաժին 05)։ Մենյուի համար դա խնդիր չէ․ Flexbox-ով կվերանան Դաս 11-ում</td></tr>
+      <tr><td>Padding-ը տվել ես li-ին, և սեղմվում են միայն տառերը</td><td>Padding-ը տեղափոխիր <code>a</code>-ի վրա</td></tr>
+      <tr><td>Աղյուսակը դեռ ստեղծում է էջի սքրոլ</td><td><code>overflow-x</code>-ը դրված է <code>table</code>-ի վրա, ոչ փաթեթավորող <code>div</code>-ի</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 09-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում կամ նույն թղթապանակում։</p>
+    <ol class="hw">
+      <li>Ստեղծիր երեք բլոկ՝ <code>block</code>, <code>inline</code>, <code>inline-block</code>։ Ամեն մեկին տուր նույն <code>width</code>, <code>height</code>, <code>margin</code>։ Նկարագրիր տարբերությունները։</li>
+      <li>Ցուցադրիր, որ <code>inline</code>-ի ուղղահայաց <code>padding</code>-ը նկարվում է, բայց տեղ չի զբաղեցնում։</li>
+      <li>Կառուցիր երեք սյուն <code>inline-block</code>-ով և <code>33.33%</code>-ով։ Ցույց տուր խնդիրը, ապա լուծիր բոլոր երեք ձևով։</li>
+      <li>Ցուցադրիր <code>vertical-align: top</code>-ի ազդեցությունը տարբեր բարձրության բլոկների վրա։</li>
+      <li>Համեմատիր <code>display: none</code>, <code>visibility: hidden</code> և <code>opacity: 0</code>։ Ապացուցիր, որ <code>opacity: 0</code>-ով կոճակը դեռ սեղմվում է։</li>
+      <li>Օգտագործիր <code>.visually-hidden</code> դասը՝ բաժնի վերնագիր ավելացնելու համար, որը դիզայնում չկա։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր <code>overflow</code>-ի չորս արժեքը՝ նույն երկար տեքստով։</li>
+      <li>Վերցրու Դաս 3-ի աղյուսակը և փաթեթավորիր <code>.table-wrap { overflow-x: auto }</code>-ի մեջ։ Ստուգիր հեռախոսի ռեժիմում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կառուցիր հորիզոնական մենյու դասարանական օրինակի պես։ Համոզվիր, որ սեղմելի տարածքը 44px-ից մեծ է։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կառուցիր էջ, որտեղ ամբողջ լայնությամբ header-ը և footer-ը <code>block</code> են, մենյուն՝ հորիզոնական, իսկ բովանդակությունը՝ կենտրոնացված <code>max-width</code>-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/index.html">օրինակը</a> և քո էջը կողք կողքի։ Բացիր երկուսի կոդն էլ խմբագրիչում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-08/task.html">← Դաս 08</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-10/task.html">Դաս 10 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 1 · տնային աշխատանք · Դաս 09</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

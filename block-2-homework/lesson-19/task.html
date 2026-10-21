@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 19 · Ինչ կարդալ հետո՝ ասինխրոն — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · տնային</b> · Դաս 19</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../js-lesson-19.html">JS Դաս 19</a> · մինի-նախագիծ</p>
+  <h1>Ինչ կարդալ հետո՝ ասինխրոն</h1>
+  <p class="lede">Նոր բաժին՝ «Ինչ կարդալ հետո»։ Առաջարկները գալիս են «սերվերից», որը պատասխանում է ուշացումով և երբեմն սխալվում է։ Երեք վիճակ՝ բեռնում, տվյալներ, սխալ, և երկու զուգահեռ հարցում։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Արդյունքը՝ pages/books.html</span>
+    <span>Live Server</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–19․ Promise, <code>then/catch/finally</code>, <code>Promise.all</code>, <code>Promise.allSettled</code>, <code>Promise.reject</code>։ <code>fetch</code> և <code>async/await</code>՝ Դաս 20-ում։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/loading.jpg" alt="Առաջարկների բաժին երեք կմախքային քարտով" width="900" height="447" loading="lazy">
+      <figcaption>Բեռնում</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/loaded.jpg" alt="Առաջարկներ «Ավելացնել դարակ» կոճակներով և խորհուրդ" width="900" height="447" loading="lazy">
+      <figcaption>Տվյալներ</figcaption>
+    </figure>
+    </div>
+    <figure class="shot">
+      <img src="screenshots/error.jpg" alt="Սխալի հաղորդագրություն կարմիրով" width="900" height="181" loading="lazy">
+      <figcaption>Սխալ</figcaption>
+    </figure>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատիր քո կայքում (կամ <a href="../lesson-18/example/index.html">նախորդ դասի օրինակում</a>)։ CSS-ը տրված է, որ կենտրոնանաս JS-ի վրա․ HTML/CSS-ը արդեն գիտես։</p>
+    <ul class="goals">
+      <li><code>starter/css/books-19.css</code> — CSS-ը, որ ավելանում է այս դասին</li>
+      <li><code>starter/js/fake-api.js</code> — առաջարկների և խորհուրդների տվյալները</li>
+      <li><code>starter/pages/books.html</code> — «Գրքեր» էջի markup-ը (JS չկա, միայն <code>&lt;script&gt;</code>-ները)</li>
+    </ul>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · «Սերվեր»</h3>
+    <ul class="goals">
+      <li><code>fake-api.js</code>՝ <code>delay(ms)</code>, <code>getRecommended()</code> (20% դեպքերում՝ սխալ), <code>getTip()</code></li>
+      <li>Ֆունկցիաները վերադարձնում են Promise, տվյալները՝ <code>starter/</code>-ից</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/fake-api.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">export</span> <span class="k">const</span> delay = ms =&gt; <span class="k">new</span> <span class="f">Promise</span>(resolve =&gt; <span class="f">setTimeout</span>(resolve, ms));
+
+<span class="k">export</span> <span class="k">function</span> <span class="f">getRecommended</span>() {
+    <span class="k">return</span> <span class="f">delay</span>(DELAY).<span class="f">then</span>(() =&gt; {
+        <span class="k">if</span> (Math.<span class="f">random</span>() &lt; FAIL_RATE) {
+            <span class="k">return</span> Promise.<span class="f">reject</span>(<span class="k">new</span> <span class="f">Error</span>(<span class="s">"Սերվերը չպատասխանեց"</span>));
+        }
+        <span class="k">return</span> RECOMMENDED;
+    });
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 2 · Երեք վիճակ</h3>
+    <ul class="goals">
+      <li>Բեռնում՝ կմախքային քարտեր (HTML Դաս 21-ի <code>.skeleton</code>), «Բեռնվում է…», կոճակը՝ <code>disabled</code></li>
+      <li>Տվյալներ՝ քարտեր «Ավելացնել դարակ» կոճակով</li>
+      <li>Սխալ՝ հաղորդագրություն, «Թարմացնել»-ը նորից փորձում է</li>
+    </ul>
+
+    <h3>Քայլ 3 · Երկու հարցում զուգահեռ</h3>
+    <ul class="goals">
+      <li><code>Promise.allSettled([getRecommended(), getTip()])</code></li>
+      <li>Ինչու՞ ոչ <code>Promise.all</code>․ եթե առաջարկները ձախողվեն, խորհուրդը չպիտի կորչի</li>
+    </ul>
+
+    <h3>Քայլ 4 · finally</h3>
+    <ul class="goals">
+      <li>Կոճակը միացրու <code>finally</code>-ում․ և՛ հաջողության, և՛ սխալի դեպքում</li>
+    </ul>
+
+    <h3>Քայլ 5 · Դարակ</h3>
+    <ul class="goals">
+      <li>«Ավելացնել դարակ»՝ <code>read: 0</code>-ով, քարտը դառնում է «Դարակում է»</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Էջը բացվում է կմախքներով, մոտ 1 վրկ հետո՝ առաջարկներ</li>
+      <li>«Թարմացնել»-ը մի քանի անգամ․ երբեմն երևում է սխալը, իսկ խորհուրդը մնում է</li>
+      <li>Բեռնման ընթացքում կոճակը անջատված է</li>
+      <li>Նույն գիրքը դարակում երկու անգամ չի հայտնվում</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Էջում <code>[object Promise]</code></td><td>Promise-ը արժեք չէ․ արդյունքը՝ <code>.then</code>-ում</td></tr>
+      <tr><td>Սխալը չի բռնվում</td><td><code>.then</code> շղթայի վերջում չկա <code>.catch</code> (կամ allSettled-ի <code>status</code>-ը չես ստուգում)</td></tr>
+      <tr><td>Կոճակը մնում է անջատված</td><td>Միացրու <code>finally</code>-ում, ոչ միայն հաջողության դեպքում</td></tr>
+      <tr><td>Մեկ <code>.then</code>-ում մոռացված <code>return</code></td><td>Հաջորդ <code>.then</code>-ը ստանում է <code>undefined</code> (Դաս 19 տնային)</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 19-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում։</p>
+    <ol class="hw">
+      <li>Կանխագուշակիր հերթականությունը, հետո ստուգիր․ <code>console.log("A")</code>, <code>setTimeout(...,0)</code> «B»-ով, <code>Promise.resolve().then()</code> «C»-ով, <code>console.log("D")</code>։ Բացատրիր արդյունքը մեկնաբանության մեջ։</li>
+      <li>Գրիր <code>delay(ms)</code> ֆունկցիան։ Օգտագործիր այն 3 վայրկյանանոց հետհաշվարկի համար՝ 3, 2, 1, «Մեկնարկ»։</li>
+      <li>Գրիր <code>getRandomNumber()</code>, որը 1 վայրկյան հետո <code>resolve</code> է անում պատահական թիվ։ 50% դեպքերում՝ <code>reject</code>։ Մշակիր երկու դեպքն էլ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գրիր <code>getUser(id)</code>, որը վերադարձնում է Promise։ Անվավեր <code>id</code>-ի դեպքում՝ <code>reject(new Error(...))</code>։</li>
+      <li>Ավելացրու <code>getOrders(userId)</code> և կապիր շղթայով՝ նախ օգտագործող, հետո նրա պատվերները։</li>
+      <li>Կրկնիր նույն շղթան, բայց մոռացիր <code>return</code>-ը մեկ <code>.then</code>-ում։ Գրիր՝ ինչ ստացվեց և ինչու։</li>
+      <li>Օգտագործիր <code>Promise.all</code>՝ երեք «հարցում» զուգահեռ։ Չափիր ժամանակը <code>console.time</code>-ով և համեմատիր հերթականի հետ։</li>
+      <li>Կրկնիր նույնը <code>Promise.allSettled</code>-ով, որտեղ մեկը ձախողվում է։ Ցուցադրիր՝ որոնք հաջողվեցին և որը՝ ոչ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կառուցիր էջ՝ կոճակով, բեռնման ցուցիչով և արդյունքի բլոկով։ Սեղմելիս ցուցիչը հայտնվում է, 2 վրկ հետո՝ արդյունքը։ Օգտագործիր <code>.finally()</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Նույն էջում 30% հավանականությամբ նմանակիր սխալ և ցույց տուր հաղորդագրություն՝ «Կրկին փորձել» կոճակով։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/pages/books.html">օրինակը</a> և դրա կոդը <code>example/js/</code>-ում։ Դաս 18-ից օրինակը բացիր Live Server-ով։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-18/task.html">← Դաս 18</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-20/task.html">Դաս 20 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · տնային աշխատանք · Դաս 19</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

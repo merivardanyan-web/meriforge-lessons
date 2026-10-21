@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Նոութբուք Pro 14 — ՏեխնոՄարկետ</title>
+    <meta name="description" content="Նոութբուք Pro 14՝ 16 ԳԲ / 512 ԳԲ SSD, 1.4 կգ, 2 տարվա երաշխիք">
+
+    <meta property="og:title" content="Նոութբուք Pro 14 — ՏեխնոՄարկետ">
+    <meta property="og:description" content="Նոութբուք Pro 14՝ 16 ԳԲ / 512 ԳԲ SSD, 1.4 կգ, 2 տարվա երաշխիք">
+    <meta property="og:image" content="images/og.jpg">
+
+    <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- JS — Բլոկ 2։ defer-ով սկրիպտները կատարվում են գրված հերթականությամբ (JS Դաս 15) -->
+    <script src="js/data.js" defer></script>
+    <script src="js/storage.js" defer></script>
+    <script src="js/utils.js" defer></script>
+    <script src="js/cart.js" defer></script>
+    <script src="js/add-to-cart.js" defer></script>
+    <script src="js/product.js" defer></script>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Անցնել բովանդակությանը</a>
+
+<!-- ================= HEADER ================= -->
+<header class="header">
+    <input type="checkbox" id="nav" class="nav-toggle">
+
+    <div class="row align-center justify-between">
+
+        <div class="col">
+            <a href="index.html" class="logo">ՏեխնոՄարկետ</a>
+        </div>
+
+        <div class="col">
+            <label for="nav" class="burger">
+                <span></span><span></span><span></span>
+                <span class="visually-hidden">Մենյու</span>
+            </label>
+
+            <nav aria-label="Գլխավոր մենյու">
+                <ul class="menu flex align-center gap-10">
+                    <li><a href="index.html">Գլխավոր</a></li>
+                    <li class="has-sub">
+                        <a href="catalog.html">Կատալոգ <span aria-hidden="true">▾</span></a>
+                        <ul class="submenu">
+                            <li><a href="catalog.html?cat=laptops">Նոութբուքեր</a></li>
+                            <li><a href="catalog.html?cat=monitors">Մոնիտորներ</a></li>
+                            <li><a href="catalog.html?cat=phones">Սմարթֆոններ</a></li>
+                            <li><a href="catalog.html?cat=tablets">Պլանշետներ</a></li>
+                            <li><a href="catalog.html?cat=accessories">Աքսեսուարներ</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#contact">Կապ</a></li>
+                    <li><a href="login.html">Մուտք</a></li>
+                    <li><a href="cart.html" class="btn btn--primary btn--sm">Զամբյուղ <span class="count is-empty" data-cart-count>0</span><span class="visually-hidden"> ապրանք</span></a></li>
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+</header>
+
+<main id="main">
+
+    <!-- ================= ԱՊՐԱՆՔ ================= -->
+    <section id="product">
+        <div class="row">
+            <div class="col w-100">
+                <nav aria-label="Դուք այստեղ եք">
+                <ol class="crumbs">
+                    <li><a href="index.html">Գլխավոր</a></li>
+                    <li><a href="catalog.html">Կատալոգ</a></li>
+                    <li><a href="catalog.html?cat=laptops">Նոութբուքեր</a></li>
+                    <li aria-current="page">Նոութբուք Pro 14</li>
+                </ol>
+                </nav>
+            </div>
+        </div>
+
+        <div class="row flex-wrap align-start">
+
+            <!-- Պատկերասրահ — Դաս 16, 20 -->
+            <div class="col w-50 w-md-100">
+                <div class="gallery">
+                    <picture class="gallery__main ratio-3-2">
+                        <source srcset="images/laptop.webp" type="image/webp">
+                        <img class="img-cover" src="images/laptop.jpg"
+                             alt="Նոութբուք Pro 14 բաց վիճակում, առջևից"
+                             width="600" height="400">
+                    </picture>
+                    <ul class="gallery__thumbs">
+                        <li>
+                            <picture class="ratio-3-2 is-current">
+                                <source srcset="images/laptop.webp" type="image/webp">
+                                <img class="img-cover" src="images/laptop.jpg"
+                                     alt="Առջևից"
+                                     width="600" height="400" loading="lazy">
+                            </picture>
+                        </li>
+                        <li>
+                            <picture class="ratio-3-2">
+                                <source srcset="images/laptop-2.webp" type="image/webp">
+                                <img class="img-cover" src="images/laptop-2.jpg"
+                                     alt="Մոտիկից"
+                                     width="600" height="400" loading="lazy">
+                            </picture>
+                        </li>
+                        <li>
+                            <picture class="ratio-3-2">
+                                <source srcset="images/laptop-3.webp" type="image/webp">
+                                <img class="img-cover" src="images/laptop-3.jpg"
+                                     alt="Երեկոյան լույսով"
+                                     width="600" height="400" loading="lazy">
+                            </picture>
+                        </li>
+                        <li>
+                            <picture class="ratio-3-2">
+                                <source srcset="images/laptop-4.webp" type="image/webp">
+                                <img class="img-cover" src="images/laptop-4.jpg"
+                                     alt="Մյուս կողմից"
+                                     width="600" height="400" loading="lazy">
+                            </picture>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Տեղեկություն -->
+            <div class="col w-50 w-md-100">
+                <div class="wrapper">
+                    <span class="badge mb-10">-30%</span>
+                    <h1 class="mb-10">Նոութբուք Pro 14</h1>
+                    <p class="text-muted mb-20">Կոդ՝ TM-1024 · <span class="stock">Առկա է պահեստում</span></p>
+
+                    <p class="product__price mb-20">315&nbsp;000&nbsp;֏ <del>450&nbsp;000&nbsp;֏</del></p>
+
+                    <p class="mb-20">14 դյույմանոց թեթև նոութբուք աշխատանքի և ուսման համար։ 16 ԳԲ հիշողությունը բավական է
+                        միաժամանակ բրաուզերի, կոդի խմբագրիչի և զանգերի համար, իսկ մարտկոցը դիմանում է ամբողջ աշխատանքային օրվան։</p>
+
+                    <!-- data-id՝ որ JS-ը իմանա, որ ապրանքն է (JS Դաս 10)։ Էջը դեռ ստատիկ է՝ դինամիկ կդառնա Առաջադրանք 2-ում -->
+                    <form class="flex align-end gap-10 flex-wrap mb-30" id="product-form" data-id="1" action="cart.html" method="get">
+                        <div class="field">
+                            <label for="qty" class="field__label">Քանակ</label>
+                            <input id="qty" name="qty" type="number" value="1" min="1" max="10" class="input input--qty">
+                        </div>
+                        <button type="submit" class="btn btn--primary">Ավելացնել զամբյուղ</button>
+                    </form>
+
+                    <ul class="perks">
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 4h14v12H1zM15 9h4l4 4v3h-8z"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="18.5" cy="18.5" r="2"/></svg> Անվճար առաքում Երևանում՝ վաղը</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/></svg> 2 տարվա պաշտոնական երաշխիք</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 1-15.5 6.3L3 16"/><path d="M3 12a9 9 0 0 1 15.5-6.3L21 8"/><path d="M21 3v5h-5M3 21v-5h5"/></svg> 14 օր վերադարձ առանց հարցերի</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ================= ԲՆՈՒԹԱԳՐԵՐ ================= -->
+    <section id="details">
+        <div class="row flex-wrap">
+
+            <div class="col w-60 w-md-100">
+                <h2 class="section-title mb-30">Բնութագրեր</h2>
+                <!-- Աղյուսակ — Դաս 3 -->
+                <table class="table specs">
+                    <caption class="visually-hidden">Նոութբուք Pro 14-ի տեխնիկական բնութագրերը</caption>
+                    <tbody>
+                        <tr><th scope="row">Պրոցեսոր</th><td>8 միջուկ, մինչև 4.5 ԳՀց</td></tr>
+                        <tr><th scope="row">Օպերատիվ հիշողություն</th><td>16 ԳԲ</td></tr>
+                        <tr><th scope="row">Կուտակիչ</th><td>512 ԳԲ SSD</td></tr>
+                        <tr><th scope="row">Էկրան</th><td>14", 2560 × 1600, IPS</td></tr>
+                        <tr><th scope="row">Մարտկոց</th><td>մինչև 12 ժամ</td></tr>
+                        <tr><th scope="row">Քաշ</th><td>1.4 կգ</td></tr>
+                        <tr><th scope="row">Միակցիչներ</th><td>2 × USB-C, USB-A, HDMI, 3.5 մմ</td></tr>
+                        <tr><th scope="row">Երաշխիք</th><td>2 տարի</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col w-40 w-md-100">
+                <h2 class="section-title mb-30">Նկարագրություն</h2>
+                <div class="prose">
+                    <p>Pro 14-ը նախագծված է նրանց համար, ովքեր շատ են տեղաշարժվում․ ալյումինե իրանը ընդամենը 1.4 կգ է։</p>
+                    <p>2560 × 1600 էկրանը հարմար է կոդի և փաստաթղթերի համար, իսկ միակցիչների շնորհիվ ադապտեր պետք չէ։</p>
+                    <ul>
+                        <li>Հայերեն տառերով ստեղնաշար</li>
+                        <li>Լուսավորված ստեղներ</li>
+                        <li>Արագ լիցքավորում՝ 50% 30 րոպեում</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ================= ՆՄԱՆ ԱՊՐԱՆՔՆԵՐ ================= -->
+    <section id="related">
+        <div class="row">
+            <div class="col w-100">
+
+                <h2 class="section-title mb-30">Նման ապրանքներ</h2>
+
+                <div class="grid-auto gap-20">
+
+                    <article data-id="2" class="card">
+                        <span class="card__badge card__badge--new">Նոր</span>
+                        <picture class="card__media ratio-3-2">
+                            <source srcset="images/monitor.webp" type="image/webp">
+                            <img class="img-cover" src="images/monitor.jpg"
+                                 alt="27 դյույմանոց մոնիտոր բարակ շրջանակով"
+                                 width="600" height="400" loading="lazy">
+                        </picture>
+                        <div class="card__body">
+                            <h3 class="card__title"><a href="product.html?id=2">Մոնիտոր 27 4K</a></h3>
+                            <p class="card__meta">IPS · 60 Հց · USB-C</p>
+                            <div class="card__footer">
+                                <p class="card__price">185&nbsp;000&nbsp;֏</p>
+                                <button type="button" class="btn btn--primary btn--sm" data-action="add" data-id="2">Գնել</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article data-id="3" class="card is-out">
+                        <picture class="card__media ratio-3-2">
+                            <source srcset="images/keyboard.webp" type="image/webp">
+                            <img class="img-cover" src="images/keyboard.jpg"
+                                 alt="Մեխանիկական ստեղնաշար մուգ ստեղներով"
+                                 width="600" height="400" loading="lazy">
+                        </picture>
+                        <div class="card__body">
+                            <h3 class="card__title"><a href="product.html?id=3">Ստեղնաշար մեխանիկական</a></h3>
+                            <p class="card__meta">RGB · հայերեն տառեր</p>
+                            <div class="card__footer">
+                                <p class="card__price">42&nbsp;000&nbsp;֏</p>
+                                <button type="button" class="btn btn--primary btn--sm" disabled>Սպառված</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article data-id="7" class="card">
+                        <span class="card__badge card__badge--new">Նոր</span>
+                        <picture class="card__media ratio-3-2">
+                            <source srcset="images/mouse.webp" type="image/webp">
+                            <img class="img-cover" src="images/mouse.jpg"
+                                 alt="Մուգ գույնի անլար մկնիկ"
+                                 width="600" height="400" loading="lazy">
+                        </picture>
+                        <div class="card__body">
+                            <h3 class="card__title"><a href="product.html?id=7">Մկնիկ անլար</a></h3>
+                            <p class="card__meta">Bluetooth · 3 կոճակ</p>
+                            <div class="card__footer">
+                                <p class="card__price">18&nbsp;000&nbsp;֏</p>
+                                <button type="button" class="btn btn--primary btn--sm" data-action="add" data-id="7">Գնել</button>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Մոդալ «Ավելացվեց զամբյուղ» — JS Դաս 11, 16։ Բովանդակությունը լցնում է JS-ը -->
+    <div class="modal" id="cart-modal" role="dialog" aria-modal="true" aria-labelledby="cart-modal-title">
+        <div class="modal__window">
+            <button type="button" class="modal__close" data-action="close-modal" aria-label="Փակել">✕</button>
+            <h2 class="title-3 mb-20" id="cart-modal-title">Ավելացվեց զամբյուղ</h2>
+            <div class="modal__product" id="cart-modal-product"></div>
+            <div class="flex gap-10 flex-wrap">
+                <a href="cart.html" class="btn btn--primary">Անցնել զամբյուղ</a>
+                <button type="button" class="btn btn--ghost" data-action="close-modal">Շարունակել գնումները</button>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+    <div class="row flex-wrap">
+
+        <div class="col w-40 w-md-100">
+            <p class="logo mb-10"><a href="index.html">ՏեխնոՄարկետ</a></p>
+            <p>Տեխնիկայի խանութ Երևանում 2018 թվականից։ Ուսումնական նախագիծ։</p>
+        </div>
+
+        <div class="col w-25 w-md-50 w-sm-100">
+            <h2 class="footer__title">Բաժիններ</h2>
+            <nav aria-label="Ստորին մենյու">
+                <ul>
+                    <li><a href="catalog.html">Կատալոգ</a></li>
+                    <li><a href="cart.html">Զամբյուղ</a></li>
+                    <li><a href="checkout.html">Պատվերի ձևակերպում</a></li>
+                    <li><a href="login.html">Իմ հաշիվը</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="col w-25 w-md-50 w-sm-100" id="contact">
+            <h2 class="footer__title">Կապ</h2>
+            <ul>
+                <li>Երևան, Աբովյան 1</li>
+                <li><a href="tel:+37410000000">+374 10 00 00 00</a></li>
+                <li><a href="mailto:info@technomarket.example">info@technomarket.example</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="row flex-wrap justify-between footer__bottom">
+        <div class="col">© 2026 ՏեխնոՄարկետ</div>
+        <div class="col">Կառուցված է առանց գրադարանների՝ HTML և CSS</div>
+    </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Կոմպոնենտներ — ՏեխնոՄարկետ</title>
+    <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<!-- Ոճերի ուղեցույց — HTML Դաս 17։ Ամեն կոմպոնենտ մեկ տեղում, որ տեսնես բոլոր վիճակները։ -->
+<main>
+
+    <section>
+        <div class="row">
+            <div class="col w-100">
+                <h1 class="mb-10">Կոմպոնենտներ</h1>
+                <p class="text-muted mb-30">ՏեխնոՄարկետի ոճերի ուղեցույց։ Նոր կոմպոնենտը նախ ավելացվում է այստեղ, հետո՝ էջում։</p>
+
+                <h2 class="section-title mb-20">Վերնագրեր</h2>
+                <p class="title-1 mb-10">Վերնագիր 1</p>
+                <p class="title-2 mb-10">Վերնագիր 2</p>
+                <p class="title-3 mb-10">Վերնագիր 3</p>
+                <p class="title-4 mb-30">Վերնագիր 4</p>
+
+                <h2 class="section-title mb-20">Կոճակներ</h2>
+                <div class="flex flex-wrap gap-10 mb-30">
+                    <button class="btn btn--primary">Հիմնական</button>
+                    <button class="btn btn--primary btn--sm">Փոքր</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="hero">
+        <div class="row">
+            <div class="col w-100">
+                <p class="title-3 mb-20">Կոճակներ մուգ ֆոնի վրա</p>
+                <div class="flex flex-wrap gap-10">
+                    <a href="#" class="btn btn--light">Բաց</a>
+                    <a href="#" class="btn btn--outline-light">Եզրագծով</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="products">
+        <div class="row">
+            <div class="col w-100">
+                <h2 class="section-title mb-20">Քարտ և պիտակներ</h2>
+                <div class="grid-auto gap-20">
+                    <article class="card">
+                        <span class="card__badge">-30%</span>
+                        <picture class="card__media ratio-3-2">
+                            <img class="img-cover" src="images/laptop.jpg" alt="" width="600" height="400">
+                        </picture>
+                        <div class="card__body">
+                            <h3 class="card__title">Զեղչով քարտ</h3>
+                            <p class="card__meta">Մետա տեքստ</p>
+                            <div class="card__footer">
+                                <p class="card__price">315&nbsp;000 ֏ <del>450&nbsp;000 ֏</del></p>
+                                <button class="btn btn--primary btn--sm">Գնել</button>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="card">
+                        <span class="card__badge card__badge--new">Նոր</span>
+                        <picture class="card__media ratio-3-2">
+                            <img class="img-cover" src="images/monitor.jpg" alt="" width="600" height="400">
+                        </picture>
+                        <div class="card__body">
+                            <h3 class="card__title">Շատ երկար անունով ապրանք, որը ստուգում է, թե ինչպես է քարտը իրեն պահում երկու տողի դեպքում</h3>
+                            <p class="card__meta">Մետա տեքստ</p>
+                            <div class="card__footer">
+                                <p class="card__price">185&nbsp;000 ֏</p>
+                                <button class="btn btn--primary btn--sm">Գնել</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Տնային · Դաս 02 — եռաէջանոց կայք</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:#fff}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule); background:var(--paper)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  @media (max-width:700px){.shots{grid-template-columns:1fr}}
+  .lede a, .note a, .pager a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code){white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 1 · տնային</b> · Դաս 02</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../html-lesson-02.html">HTML Դաս 02</a> · մինի-նախագիծ</p>
+  <h1>Եռաէջանոց կայք</h1>
+  <p class="lede">Դաս 01-ի էջը դառնում է կայք․ երեք էջ, նավիգացիա, նկարներ, ցուցակներ և հղումներ։ Գլխավոր դասը՝ ֆայլերի ուղիները։</p>
+
+  <div class="facts">
+    <span>Ժամանակ՝ ~1.5 ժամ</span>
+    <span>Սկսիր Դաս 01-ի արդյունքից</span>
+    <span>Արդյունք՝ 3 էջ + images/</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Օգտագործիր միայն Դաս 01–02-ի թեգերը՝ վերնագրեր, տեքստային թեգեր, ցուցակներ, հղումներ, նկարներ և հատուկ նշաններ։ Դեռ մի՛ օգտագործիր աղյուսակներ (Դաս 03), ֆորմաներ (Դաս 04), <code>header</code>/<code>nav</code>/<code>main</code> (Դաս 05) և CSS (Դաս 06)։</p>
+  </div>
+
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Երեք էջ, որոնք հղումներով կապված են իրար։ Ամեն էջում նույն նավիգացիան է, նկարները բեռնվում են բոլոր էջերում։</p>
+    <figure class="shot">
+      <img src="screenshots/index.jpg" alt="Գլխավոր էջը․ վերնագիր, նավիգացիայի ցուցակ, դիմանկար, խարիսխների տող և երեք բաժին՝ ցուցակներով և մեջբերումով" width="800" height="1495" loading="lazy">
+      <figcaption>index.html</figcaption>
+    </figure>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/about.jpg" alt="Իմ մասին էջը՝ դիմանկար, դեկորատիվ կետագիծ, ցուցակ և Սևանի նկար" width="800" height="1120" loading="lazy">
+      <figcaption>pages/about.html</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/contact.jpg" alt="Կապ էջը՝ էլ. հասցեի, հեռախոսի և արտաքին կայքի հղումներով" width="800" height="900" loading="lazy">
+      <figcaption>pages/contact.html</figcaption>
+    </figure>
+    </div>
+  </section>
+
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <div class="tree">starter/
+├── content.md        ← բոլոր տեքստերը և նկարների alt-երը
+└── images/
+    ├── avatar.jpg    ← 400 × 400
+    ├── sevan.jpg     ← 600 × 400
+    └── divider.png   ← դեկորատիվ կետագիծ, 600 × 24</div>
+    <p>Սկսիր Դաս 01-ի քո <code>index.html</code>-ից։ Եթե այն չունես, վերցրու <a href="../lesson-01/example/index.html">Դաս 01-ի օրինակը</a>։ Կարող ես օգտագործել քո նկարները՝ նույն անուններով։</p>
+  </section>
+
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+
+    <h3>Քայլ 1 · Կառուցվածք</h3>
+    <div class="tree">lesson-02/
+├── index.html
+├── pages/
+│   ├── about.html
+│   └── contact.html
+└── images/
+    ├── avatar.jpg
+    ├── sevan.jpg
+    └── divider.png</div>
+
+    <h3>Քայլ 2 · Նավիգացիա</h3>
+    <p>Նավիգացիան ցուցակ է, որովհետև այն հղումների <em>ցուցակ</em> է։ Գլխավոր էջում և <code>pages/</code>-ի էջերում ուղիները տարբեր են․</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.html-ում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">ul</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span><span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"index.html"</span><span class="p">&gt;</span>Գլխավոր<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span><span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"pages/about.html"</span><span class="p">&gt;</span>Իմ մասին<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span><span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"pages/contact.html"</span><span class="p">&gt;</span>Կապ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;</span></code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>pages/about.html-ում — ../ մեկ մակարդակ վեր</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">ul</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span><span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"../index.html"</span><span class="p">&gt;</span>Գլխավոր<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span><span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"about.html"</span><span class="p">&gt;</span>Իմ մասին<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span><span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"contact.html"</span><span class="p">&gt;</span>Կապ<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;</span></code></pre>
+    </div>
+    <div class="tip note"><span class="tag">Ստուգում</span><p>Անցիր բոլոր հղումներով բոլոր էջերից՝ 3 էջ × 3 հղում = 9 անցում։ Ոչ մեկը չպետք է բացի «Cannot GET» կամ դատարկ էջ։</p></div>
+
+    <h3>Քայլ 3 · Գլխավոր էջի վերնագրերը</h3>
+    <p>Մեկ <code>h1</code>, երեք <code>h2</code>, ամեն <code>h2</code>-ի տակ երկու <code>h3</code>։ Տեքստերը՝ <code>content.md</code>-ից։</p>
+
+    <h3>Քայլ 4 · Տեքստային թեգեր</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Թեգ</th><th>Որտեղ օգտագործել</th></tr>
+      <tr><td><code>strong</code></td><td>Կարևոր բառ՝ «HTML-ը էջի <strong>կմախքն</strong> է»</td></tr>
+      <tr><td><code>em</code></td><td>Շեշտ՝ «ամենադժվարը <em>ֆայլերի ուղիներն</em> էին»</td></tr>
+      <tr><td><code>mark</code></td><td>Ընդգծում՝ «Սկսում ենք Դաս 6-ից»</td></tr>
+      <tr><td><code>s</code></td><td>Այլևս ճիշտ չէ՝ «<s>սովորել ամեն ինչ մեկ շաբաթում</s>»</td></tr>
+      <tr><td><code>small</code></td><td>Copyright և փոքր ծանոթագրություններ</td></tr>
+      <tr><td><code>sub</code>, <code>sup</code></td><td>H<sub>2</sub>O, 10<sup>9</sup>, մ<sup>2</sup></td></tr>
+      <tr><td><code>blockquote</code></td><td>Մեջբերում</td></tr>
+    </table>
+    </div>
+    <p>Ցույց տուր էջում թեգ որպես տեքստ․ <code>&amp;lt;h1&amp;gt;</code>։ Ավելացրու <code>&amp;copy;</code> և <code>&amp;nbsp;</code> copyright-ի տողում։</p>
+
+    <h3>Քայլ 5 · Ցուցակներ</h3>
+    <ul class="goals">
+      <li>Համարակալված ցուցակ (<code>ol</code>)՝ այն քայլերով, որոնցով կառուցել ես կայքը</li>
+      <li>Ներդրված ցուցակ՝ երկու մակարդակ, երեք տարր յուրաքանչյուրում։ Ներքին <code>ul</code>-ը գտնվում է <strong><code>li</code>-ի ներսում</strong>, ոչ թե նրանից հետո</li>
+    </ul>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>ներդրված ցուցակ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">ul</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>Խմբագրիչ
+        <span class="p">&lt;</span><span class="t">ul</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>VS Code<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>Live Server<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">li</span><span class="p">&gt;</span>Auto Rename Tag<span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">li</span><span class="p">&gt;</span>
+    ...
+<span class="p">&lt;/</span><span class="t">ul</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <h3>Քայլ 6 · Նկարներ</h3>
+    <ul class="goals">
+      <li>Նույն <code>avatar.jpg</code>-ը գլխավոր էջում (<code>images/avatar.jpg</code>) և «Իմ մասին»-ում (<code>../images/avatar.jpg</code>)</li>
+      <li>Ամեն նկար՝ <code>width</code> և <code>height</code>, որ էջը չ«ցատկի» բեռնվելիս</li>
+      <li>Իմաստալից <code>alt</code>՝ նկարագրիր, թե <em>ինչ է</em> նկարում, ոչ «նկար» կամ «photo»</li>
+      <li>Դեկորատիվ <code>divider.png</code>՝ <code>alt=""</code>։ Մեկնաբանության մեջ գրիր, թե ինչու</li>
+    </ul>
+
+    <h3>Քայլ 7 · Խարիսխներ, mailto և tel</h3>
+    <ul class="goals">
+      <li>Գլխավոր էջի վերևում երեք հղում՝ <code>href="#learning"</code> և այլն, իսկ <code>h2</code>-երին՝ համապատասխան <code>id</code></li>
+      <li>«Կապ» էջում՝ <code>mailto:</code> և <code>tel:</code> հղումներ</li>
+      <li>Արտաքին հղումը՝ <code>target="_blank"</code> և <code>rel="noopener"</code></li>
+    </ul>
+  </section>
+
+  <section id="s3">
+    <h2><span class="num">03</span>Ընդունման ստուգաթերթ</h2>
+    <h3>Կայք</h3>
+    <ul class="goals">
+      <li>Երեք էջ, ամեն մեկում նույն նավիգացիան</li>
+      <li>Բոլոր 9 անցումները աշխատում են</li>
+      <li>Ամեն էջ ունի իր <code>title</code>-ը</li>
+    </ul>
+
+    <h3>Բովանդակություն</h3>
+    <ul class="goals">
+      <li>Մեկ <code>h1</code>, երեք <code>h2</code>, ամեն մեկի տակ երկու <code>h3</code></li>
+      <li>Օգտագործված են բոլոր ութ տեքստային թեգերը</li>
+      <li>Կա <code>ol</code> և երկու մակարդակով ներդրված <code>ul</code></li>
+      <li>Կա <code>&amp;lt;</code>, <code>&amp;gt;</code>, <code>&amp;copy;</code>, <code>&amp;nbsp;</code></li>
+    </ul>
+
+    <h3>Նկարներ և հղումներ</h3>
+    <ul class="goals">
+      <li>Նույն նկարը բեռնվում է երկու էջում</li>
+      <li>Ամեն նկար ունի <code>alt</code>, <code>width</code>, <code>height</code>, դեկորատիվը՝ <code>alt=""</code></li>
+      <li>Խարիսխները տանում են ճիշտ բաժին</li>
+      <li><code>mailto:</code> և <code>tel:</code> հղումները բացում են ծրագիր</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>pages/about.html</code>-ում նկարը չի երևում</td><td>Մոռացել ես <code>../</code>-ը․ <code>../images/avatar.jpg</code></td></tr>
+      <tr><td>«Գլխավոր» հղումը <code>pages/</code>-ից բացում է <code>pages/index.html</code></td><td>Ճիշտը՝ <code>../index.html</code></td></tr>
+      <tr><td>Խարիսխը չի աշխատում</td><td><code>href="#learning"</code>-ում կա <code>#</code>, իսկ <code>id="learning"</code>-ում՝ ոչ։ Անունները պետք է նույնը լինեն մինչև տառը</td></tr>
+      <tr><td>Ներքին ցուցակը երևում է առանձին</td><td>Ներքին <code>ul</code>-ը դրված է <code>&lt;/li&gt;</code>-ից հետո։ Տեղափոխիր այն <code>li</code>-ի ներսը</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 02-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում կամ նույն թղթապանակում։</p>
+    <ol class="hw">
+      <li>Կառուցիր էջ ճիշտ վերնագրերի հիերարխիայով՝ մեկ <code>h1</code>, երեք <code>h2</code>, ամեն մեկի տակ երկուական <code>h3</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Օգտագործիր բոլոր տեքստային թեգերը՝ <code>strong</code>, <code>em</code>, <code>s</code>, <code>mark</code>, <code>small</code>, <code>sub</code>, <code>sup</code>, <code>blockquote</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կազմիր ներդրված ցուցակ՝ առնվազն երկու մակարդակ, երեք տարրով յուրաքանչյուրում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կազմիր համարակալված ցուցակ՝ որևէ գործողության քայլերով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ստեղծիր եռաէջանոց կայք՝ <code>index.html</code>, <code>pages/about.html</code>, <code>pages/contact.html</code>։ Ամեն էջում պիտի լինի նավիգացիա մյուս երկուսին։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>images/</code> թղթապանակ և ցուցադրիր նույն նկարը <strong>երկու էջում էլ</strong>՝ ճիշտ ուղիներով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գրիր իմաստալից <code>alt</code> ամեն նկարի համար։ Ավելացրու նաև մեկ դեկորատիվ նկար՝ <code>alt=""</code>-ով և բացատրիր ընտրությունը մեկնաբանության մեջ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու խարիսխներով նավիգացիա՝ էջի վերևում հղումներ, որոնք տանում են ներքևի բաժիններ (<code>id</code> + <code>#</code>)։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>mailto</code> և <code>tel</code> հղումներ։ Ստուգիր՝ սեղմելիս ի՞նչ է կատարվում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցույց տուր էջում HTML կոդի օրինակ՝ օգտագործելով <code>&amp;lt;</code> և <code>&amp;gt;</code>։ Ավելացրու նաև <code>&amp;copy;</code> և <code>&amp;nbsp;</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/index.html">օրինակը</a> և քո էջը կողք կողքի։ Բացիր երկուսի կոդն էլ խմբագրիչում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-01/task.html">← Դաս 01</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-03/task.html">Դաս 03 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 1 · տնային աշխատանք · Դաս 02</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

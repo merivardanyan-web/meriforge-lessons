@@ -1,0 +1,40 @@
+/* Ավելացրու main.css-ի վերջում՝ «9. ԱԴԱՊՏԻՎՈՒԹՅՈՒՆ»-ից առաջ */
+/* Ֆիլտրեր, մոդալ, մուգ թեմա — Դաս 11 */
+.filters .btn.is-active { --btn-bg: var(--accent); --btn-color: var(--on-accent); }
+.toolbar input[type="search"] { max-width: 280px; }
+.book__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 8px; }
+
+.modal--js { display: none; }
+.modal--js.is-open { display: flex; }
+.modal--js .modal__window { width: min(480px, 100%); max-width: none; text-align: left; }
+.no-scroll { overflow: hidden; }
+
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: none;
+    color: var(--text);
+    cursor: pointer;
+}
+
+/* Ձեռքով ընտրված մուգ թեմա (body.dark)՝ նույն տոկենները, ինչ prefers-color-scheme-ում */
+body.dark {
+    --bg:           #151a1d;
+    --surface:      #1e252a;
+    --text:         #e8eced;
+    --text-muted:   #9aa5ab;
+    --accent:       #7db4e6;
+    --accent-hover: #a8cdf0;
+    --accent-light: #36576f;
+    --on-accent:    #0a1520;
+    --dark:         #0d1113;
+    --border:       #2c353b;
+    --danger:       #ef6b6b;
+    --success:      #4cc38a;
+    --highlight:    #4a4420;
+}

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 10 · Դարակը JS-ով — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · տնային</b> · Դաս 10</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../js-lesson-10.html">JS Դաս 10</a> · մինի-նախագիծ</p>
+  <h1>Դարակը JS-ով</h1>
+  <p class="lede">Ստատիկ քարտերը ջնջում ենք․ HTML-ում մնում է դատարկ <code>#books</code>, իսկ քարտերը JS-ը ստեղծում է զանգվածից։ Առաջընթացի գիծը, կարգավիճակի դասը և վիճակագրությունը հաշվվում են տվյալներից։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Արդյունքը՝ pages/books.html</span>
+    <span>Աշխատում է նաև file://-ով</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–10․ <code>innerHTML</code>, <code>map().join("")</code>, <code>classList</code>, <code>dataset</code>, ոճեր, <code>createElement</code>, <code>append</code>, <code>before</code>։ Իրադարձությունները՝ Դաս 11-ում։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/books.jpg" alt="Դարակ՝ ժանրերի պիտակներ և վեց քարտ առաջընթացի գծերով" width="900" height="879" loading="lazy">
+      <figcaption>Քարտերը՝ զանգվածից</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/books-mobile.jpg" alt="Նույն էջը հեռախոսում՝ մեկ սյունով" width="375" height="1500" loading="lazy">
+      <figcaption>375px</figcaption>
+    </figure>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատիր քո կայքում (կամ <a href="../lesson-09/example/index.html">նախորդ դասի օրինակում</a>)։ CSS-ը տրված է, որ կենտրոնանաս JS-ի վրա․ HTML/CSS-ը արդեն գիտես։</p>
+    <ul class="goals">
+      <li><code>starter/css/books-10.css</code> — CSS-ը, որ ավելանում է այս դասին</li>
+      <li><code>starter/js/books.js</code> — գրքերի զանգվածը</li>
+      <li><code>starter/pages/books.html</code> — «Գրքեր» էջի markup-ը (JS չկա, միայն <code>&lt;script&gt;</code>-ները)</li>
+    </ul>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Տվյալներ</h3>
+    <ul class="goals">
+      <li>6 գիրք՝ <code>id</code>, վերնագիր, հեղինակ, տարի, էջեր, կարդացած, ժանր, շապիկի գույն (<code>starter/js/books.js</code>)</li>
+      <li><code>getStatus(book)</code>՝ <code>"planned"</code>, <code>"reading"</code>, <code>"done"</code>, իսկ տեքստերը՝ օբյեկտում</li>
+    </ul>
+
+    <h3>Քայլ 2 · createBookCard</h3>
+    <ul class="goals">
+      <li>Վերադարձնում է HTML տող, ոչինչ չի դնում էջում</li>
+      <li>Քարտին՝ <code>is-${status}</code> դաս և <code>data-id</code></li>
+      <li>Առաջընթացը՝ CSS փոփոխականով․ <code>style="--progress: 25%"</code> (HTML Դաս 19-ի <code>.progress</code>)</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/books.js — քարտ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">article</span> <span class="f">class</span>=<span class="s">"book is-${status}"</span> <span class="f">data-id</span>=<span class="s">"${id}"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"book__cover"</span> <span class="f">style</span>=<span class="s">"--cover: ${color}"</span><span class="p">&gt;</span><span class="p">&lt;</span><span class="t">span</span><span class="p">&gt;</span>${title}<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    ...
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"progress"</span><span class="p">&gt;</span><span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"progress__bar"</span> <span class="f">style</span>=<span class="s">"--progress: ${percent}%"</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <h3>Քայլ 3 · render և դատարկ վիճակ</h3>
+    <ul class="goals">
+      <li><code>render(list)</code>՝ <code>list.map(createBookCard).join("")</code></li>
+      <li>Դատարկ ցուցակի դեպքում՝ «Այս պայմանով գիրք չկա»</li>
+      <li><code>updateStats(list)</code>՝ գրքեր, կարդացածներ, էջեր</li>
+    </ul>
+
+    <h3>Քայլ 4 · Ժանրերի ցուցակ createElement-ով</h3>
+    <ul class="goals">
+      <li>Եզակի ժանրերը՝ <code>includes</code>-ով (Set-ը՝ Դաս 23-ում)</li>
+      <li><code>createElement("ul")</code>, <code>textContent</code>, <code>append</code>, <code>container.before(list)</code></li>
+      <li>Մեկնաբանություն․ ո՞ր ձևն է հարմար՝ innerHTML, թե createElement</li>
+    </ul>
+
+    <h3>Քայլ 5 · Հերթականություն</h3>
+    <ul class="goals">
+      <li>Նախ՝ «Կարդում եմ», հետո՝ «Կարդացել եմ», վերջում՝ պլանները։ Պատճեն և <code>sort</code></li>
+      <li>Console-ում փորձիր <code>render(books.filter(...))</code>՝ ֆիլտրեր առանց կոճակների</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>HTML-ում քարտեր չկան, միայն դատարկ <code>#books</code></li>
+      <li>Վերնագրում «6 գիրք · 3 կարդացած · 574 էջ»</li>
+      <li><code>render(books.filter(b =&gt; b.pages &gt; 1000))</code>-ը ցույց է տալիս դատարկ վիճակը</li>
+      <li>Ոճերը՝ CSS-ում, JS-ը միայն դասեր և CSS փոփոխականներ է դնում</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Քարտերի միջև երևում է «,»</td><td>Մոռացել ես <code>.join("")</code></td></tr>
+      <tr><td>Գիծը միշտ լցված է</td><td>CSS փոփոխականի անունը՝ <code>--progress</code>, արժեքը՝ տոկոսով</td></tr>
+      <tr><td>Շապիկը սպիտակ է</td><td><code>--cover</code>-ը չի փոխանցվել կամ գույնը չակերտների մեջ է</td></tr>
+      <tr><td>Ժանրերը կրկնվում են</td><td>Ավելացնելուց առաջ ստուգիր <code>includes</code>-ով</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 10-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում։</p>
+    <ol class="hw">
+      <li>Ստեղծիր էջ մեկ <code>h1</code>-ով և JS-ով փոխիր դրա տեքստը։ Ապա փորձիր նույնը <code>innerHTML</code>-ով՝ <code>&lt;em&gt;</code> թեգով ներսում։</li>
+      <li>Ստեղծիր <code>.box</code> դիվ։ JS-ով ավելացրու <code>.active</code> դասը, հետո հանիր, հետո <code>toggle</code> արա երկու անգամ։ Ամեն քայլից հետո տպիր <code>className</code>-ը։</li>
+      <li>CSS-ում գրիր <code>.hidden { display: none; }</code>։ JS-ով թաքցրու և ցույց տուր որևէ բլոկ՝ միայն <code>classList</code>-ով։</li>
+      <li>Ստեղծիր առաջընթացի գիծ (progress bar)։ JS-ով դինամիկ սահմանիր դրա լայնությունը՝ <code>style.width</code>-ով ըստ տոկոսի փոփոխականի։</li>
+      <li>Ստեղծիր <code>&lt;img&gt;</code> և JS-ով սահմանիր <code>src</code> և <code>alt</code>։ Ապա <code>setAttribute</code>-ով ավելացրու <code>title</code>։</li>
+      <li>Կոճակին ավելացրու <code>data-id</code> և <code>data-name</code>։ JS-ով կարդա դրանք <code>dataset</code>-ով և տպիր։</li>
+      <li>Ունես անունների զանգված։ <code>map</code> + <code>join</code> + <code>innerHTML</code>-ով գեներացրու <code>&lt;ul&gt;</code> ցուցակ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Նույն զանգվածով՝ արա նույնը, բայց <code>createElement</code> և <code>append</code>-ով։ Համեմատիր՝ որ ձևն է քեզ ավելի հարմար և գրիր մեկնաբանության մեջ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Վերցրու դասարանական <code>products</code> զանգվածը։ Render արա միայն 100 000-ից էժան ապրանքները, դասավորած գնով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>renderEmpty()</code> դեպքի մշակում․ եթե ֆիլտրից հետո ապրանք չմնա, ցույց տուր «Ապրանք չգտնվեց» հաղորդագրություն։ Ստուգիր՝ ֆիլտրելով 1 000 000-ից թանկերը։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/pages/books.html">օրինակը</a> և դրա կոդը <code>example/js/</code>-ում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-09/task.html">← Դաս 09</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-11/task.html">Դաս 11 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · տնային աշխատանք · Դաս 10</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

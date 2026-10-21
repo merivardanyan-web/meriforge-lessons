@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Տնային · Դաս 21 — անցումներ և անիմացիաներ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:#fff}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule); background:var(--paper)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  @media (max-width:700px){.shots{grid-template-columns:1fr}}
+  .lede a, .note a, .pager a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code){white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 1 · տնային</b> · Դաս 21</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../html-lesson-21.html">HTML Դաս 21</a> · մինի-նախագիծ</p>
+  <h1>Անցումներ և անիմացիաներ</h1>
+  <p class="lede">Կայքը ստանում է սահուն անցումներ, հերթով հայտնվող hero, ընդգծում կենտրոնից, բեռնման կմախք և <code>prefers-reduced-motion</code>։ Սա վերջին տնայինն է Դաս 22-ի նախագծից առաջ։</p>
+
+  <div class="facts">
+    <span>Ժամանակ՝ ~2 ժամ</span>
+    <span>Սկսիր Դաս 20-ի արդյունքից</span>
+    <span>Հաջորդը՝ ՏեխնոՄարկետ նախագիծ</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Օգտագործիր միայն Դաս 01–21-ը։ Անիմացիաները գործարկվում են էջի բեռնման և hover-ի ժամանակ․ ոլորումով կամ կտտոցով գործարկվողները JavaScript են։</p>
+  </div>
+
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Կայքը «կենդանանում» է․ կոճակները և քարտերը սահուն են փոխվում, hero-ի տարրերը հայտնվում են հերթով, իսկ բլոգում կա բեռնման կմախք։ Ամեն շարժում անջատվում է, եթե օգտագործողը համակարգում խնդրել է նվազեցնել շարժումը։</p>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/index.jpg" alt="Գլխավոր էջ․ hero, մենյուի ակտիվ կետի տակ գիծ" width="900" height="562" loading="lazy">
+      <figcaption>index.html</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/blog.jpg" alt="Բլոգ․ կողային բլոկում մոխրագույն գծեր բեռնման կմախքի տեսքով" width="900" height="1454" loading="lazy">
+      <figcaption>pages/blog.html</figcaption>
+    </figure>
+    </div>
+  </section>
+
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <div class="tree">starter/
+└── content.md     ← անցումներ, անիմացիաներ, կմախք</div>
+    <p>Սկսիր Դաս 20-ի քո կայքից։ Եթե այն չունես, վերցրու <a href="../lesson-20/example/index.html">Դաս 20-ի օրինակը</a>։</p>
+  </section>
+
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+
+    <h3>Քայլ 1 · Շարժման հարգանք՝ առաջինը</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>global.css — Դաս 21</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">@media (prefers-reduced-motion: reduce)</span> {
+    *, *::before, *::after {
+        <span class="f">animation-duration</span>: <span class="s">.01ms !important</span>;
+        <span class="f">animation-iteration-count</span>: <span class="s">1 !important</span>;
+        <span class="f">transition-duration</span>: <span class="s">.01ms !important</span>;
+        <span class="f">scroll-behavior</span>: <span class="s">auto !important</span>;
+    }
+}</code></pre>
+    </div>
+    <p>Սա միակ տեղն է, որտեղ <code>!important</code>-ը արդարացված է․ օգտագործողի ընտրությունը ավելի կարևոր է, քան ցանկացած մեր կանոն։</p>
+
+    <h3>Քայլ 2 · transition բազայում, ոչ :hover-ում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.card</span> {
+    <span class="f">transition</span>: <span class="s">box-shadow var(--transition), transform var(--transition)</span>;
+}
+
+<span class="k">.card:hover</span> {
+    <span class="f">box-shadow</span>: <span class="s">var(--shadow-md)</span>;
+    <span class="f">transform</span>: <span class="s">translateY(-4px)</span>;   <span class="c">/* ոչ margin-top — Դաս 21, «էժան» անիմացիա */</span>
+}</code></pre>
+    </div>
+    <div class="tip note"><span class="tag">Փորձիր</span><p>Տեղափոխիր <code>transition</code>-ը <code>.card:hover</code>-ի մեջ։ Քարտը սահուն կբարձրանա, բայց կթռչի վար առանց անցման։ Վերադարձրու։</p></div>
+    <p>Կոճակների <code>transition</code>-ին ավելացրու <code>transform</code>, որ <code>:active</code>-ի 1px-ը նույնպես սահուն լինի։</p>
+
+    <h3>Քայլ 3 · Ընդգծում կենտրոնից</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.menu a:not(.btn)</span> { <span class="f">position</span>: <span class="s">relative</span>; }
+
+<span class="k">.menu a:not(.btn)::after</span> {
+    <span class="f">content</span>: <span class="s">""</span>;
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">left</span>: <span class="s">14px</span>;
+    <span class="f">right</span>: <span class="s">14px</span>;
+    <span class="f">bottom</span>: <span class="s">6px</span>;
+    <span class="f">height</span>: <span class="s">2px</span>;
+    <span class="f">background</span>: <span class="s">var(--accent)</span>;
+    <span class="f">transform</span>: <span class="s">scaleX(0)</span>;
+    <span class="f">transform-origin</span>: <span class="s">center</span>;      <span class="c">/* փորձիր left և right */</span>
+    <span class="f">transition</span>: <span class="s">transform var(--transition)</span>;
+}
+
+<span class="k">.menu a:not(.btn):hover::after,</span>
+<span class="k">.menu a[aria-current="page"]::after</span> { <span class="f">transform</span>: <span class="s">scaleX(1)</span>; }</code></pre>
+    </div>
+
+    <h3>Քայլ 4 · @keyframes</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">@keyframes fade-up</span> {
+    from { <span class="f">opacity</span>: <span class="s">0</span>; <span class="f">transform</span>: <span class="s">translateY(16px)</span>; }
+    to   { <span class="f">opacity</span>: <span class="s">1</span>; <span class="f">transform</span>: <span class="s">translateY(0)</span>; }
+}
+
+<span class="k">.fade-up</span> { <span class="f">animation</span>: <span class="s">fade-up .5s ease-out both</span>; }
+<span class="k">.delay-1</span> { <span class="f">animation-delay</span>: <span class="s">.1s</span>; }
+<span class="k">.delay-2</span> { <span class="f">animation-delay</span>: <span class="s">.2s</span>; }</code></pre>
+    </div>
+    <p>Hero-ի <code>h1</code>-ին՝ <code>fade-up</code>, <code>.lead</code>-ին՝ <code>fade-up delay-1</code>, կոճակներին՝ <code>fade-up delay-2</code>։ Ջնջիր <code>both</code>-ը և նայիր, թե ինչ է կատարվում հետաձգման ընթացքում․ տարրը երևում է, անհետանում և նոր հայտնվում։</p>
+    <p>Ավելացրու նաև «Նոր» պիտակին <code>pulse</code>՝ <strong>3 անգամ</strong>, ոչ անվերջ, և մոդալին՝ <code>pop</code>։</p>
+
+    <h3>Քայլ 5 · Բեռնման կմախք</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">@keyframes shimmer</span> {
+    to { <span class="f">background-position</span>: <span class="s">-200% 0</span>; }
+}
+
+<span class="k">.skeleton</span> {
+    <span class="f">background</span>: <span class="s">linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%)</span>;
+    <span class="f">background-size</span>: <span class="s">200% 100%</span>;
+    <span class="f">animation</span>: <span class="s">shimmer 1.4s linear infinite</span>;
+}</code></pre>
+    </div>
+    <p>Կմախքը դեկորատիվ է․ ամբողջ բլոկին՝ <code>aria-hidden="true"</code>։ JS բլոկում այն կերևա, մինչ գրառումները բեռնվում են սերվերից։</p>
+
+    <h3>Քայլ 6 · Ստուգում</h3>
+    <p>DevTools → Rendering → Emulate CSS prefers-reduced-motion: reduce։ Անցիր ամբողջ կայքով և գրիր, թե ինչ կոտրվեց (օրինակ՝ տարր, որը մնաց <code>opacity: 0</code>), և ինչպես ուղղեցիր։ Performance ներդիրով համեմատիր <code>margin-top</code>-ով և <code>transform</code>-ով hover-ը։</p>
+  </section>
+
+  <section id="s3">
+    <h2><span class="num">03</span>Ընդունման ստուգաթերթ</h2>
+    <h3>Անցումներ</h3>
+    <ul class="goals">
+      <li><code>transition</code>-ը բազային կանոնում է</li>
+      <li>Անիմացվում են միայն <code>transform</code> և <code>opacity</code> (և գույները)</li>
+      <li>Ժամանակը՝ <code>--transition</code> տոկենից</li>
+    </ul>
+
+    <h3>Անիմացիաներ</h3>
+    <ul class="goals">
+      <li>Hero-ի տարրերը հայտնվում են հերթով, առանց թարթելու</li>
+      <li>Պիտակը շարժվում է 3 անգամ, ոչ անվերջ</li>
+      <li>Կմախքը՝ <code>aria-hidden</code></li>
+    </ul>
+
+    <h3>Հասանելիություն</h3>
+    <ul class="goals">
+      <li><code>prefers-reduced-motion</code>-ը <code>global.css</code>-ում է</li>
+      <li>Շարժման անջատումով ոչինչ չի կորչում</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Տարրը մնում է անտեսանելի</td><td><code>from {{ opacity: 0 }}</code> և չկա <code>animation-fill-mode: both</code>, կամ անիմացիան չի սկսվում</td></tr>
+      <tr><td>Hover-ի ժամանակ մոտակա տարրերը շարժվում են</td><td>Անիմացնում ես <code>margin</code> կամ <code>width</code>։ Օգտագործիր <code>transform</code></td></tr>
+      <tr><td>Երկրորդ <code>transform</code>-ը ջնջեց առաջինը</td><td><code>transform</code>-ը մեկ հատկություն է։ Գրիր երկուսը միասին՝ <code>translateY(-4px) scale(1.02)</code></td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 21-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում կամ նույն թղթապանակում։</p>
+    <ol class="hw">
+      <li>Կառուցիր երկու նույնական քարտ՝ մեկում <code>transition</code>-ը բազայում, մյուսում՝ <code>:hover</code>-ում։ Նկարագրիր տարբերությունը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Համեմատիր <code>margin-top: -4px</code>-ը և <code>transform: translateY(-4px)</code>-ը։ Չափիր FPS-ը DevTools-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր, որ երկրորդ <code>transform</code>-ը ջնջում է առաջինը։ Ուղղիր։</li>
+      <li>Ցուցադրիր հերթականության կարևորությունը՝ <code>rotate</code> + <code>translateX</code> երկու կարգով։</li>
+      <li>Կառուցիր ընդգծում, որը աճում է ձախից, կենտրոնից և աջից (<code>transform-origin</code>)։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կառուցիր <code>fade-up</code> անիմացիա 5 քարտի համար՝ <code>animation-delay</code>-ի հերթականությամբ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ջնջիր <code>animation-fill-mode: both</code>-ը և նկարագրիր, ինչ եղավ delay-ի ընթացքում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կառուցիր skeleton-ցուցիչ բեռնման համար։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Համեմատիր <code>box-shadow</code>-ը և <code>drop-shadow</code>-ը ոչ ուղղանկյուն SVG-ի վրա։</li>
+      <li>Ավելացրու <code>prefers-reduced-motion</code>, միացրու այն DevTools-ում և անցիր ամբողջ նախագծով։ Գրիր ցուցակ՝ ի՞նչ կոտրվեց և ինչպես ուղղեցիր։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/index.html">օրինակը</a> և քո էջը կողք կողքի։ Բացիր երկուսի կոդն էլ խմբագրիչում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-20/task.html">← Դաս 20</a><a href="../index.html">Բոլոր տնայինները</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 1 · տնային աշխատանք · Դաս 21</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

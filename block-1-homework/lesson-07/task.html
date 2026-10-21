@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Տնային · Դաս 07 — գույն և տիպոգրաֆիա</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:#fff}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule); background:var(--paper)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  @media (max-width:700px){.shots{grid-template-columns:1fr}}
+  .lede a, .note a, .pager a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code){white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 1 · տնային</b> · Դաս 07</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../html-lesson-07.html">HTML Դաս 07</a> · մինի-նախագիծ</p>
+  <h1>Գույն և տիպոգրաֆիա</h1>
+  <p class="lede">Կայքը ստանում է հայերեն տառատեսակ, գունապնակ <code>:root</code>-ում, rem-ով սանդղակ և ստուգված կոնտրաստներ։</p>
+
+  <div class="facts">
+    <span>Ժամանակ՝ ~1.5 ժամ</span>
+    <span>Սկսիր Դաս 06-ի արդյունքից</span>
+    <span>Արդյունք՝ թարմացված main.css</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Օգտագործիր միայն Դաս 01–07-ը։ Բացակները դեռ ժամանակավոր են․ <code>padding</code>, <code>margin</code> և <code>border</code>-ի ամբողջական համակարգը Դաս 08-ում է։</p>
+  </div>
+
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Կայքը նույնն է, բայց հիմա ունի հայերեն տառատեսակ, գունապնակ փոփոխականներով և տառաչափերի սանդղակ։ Բոլոր տեքստերը անցնում են 4.5:1 կոնտրաստի շեմը։</p>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/index.jpg" alt="Գլխավոր էջ Noto Sans Armenian տառատեսակով, մուգ կապույտ header և ավելի մեծ վերնագրեր" width="800" height="1544" loading="lazy">
+      <figcaption>index.html</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/blog.jpg" alt="Բլոգի էջ․ գրառումների տեքստը սահմանափակ լայնությամբ, ամսաթվերը մոխրագույն" width="800" height="1651" loading="lazy">
+      <figcaption>pages/blog.html</figcaption>
+    </figure>
+    </div>
+  </section>
+
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <div class="tree">starter/
+└── content.md     ← տառատեսակ, գունապնակ, սանդղակ</div>
+    <p>Սկսիր Դաս 06-ի քո կայքից։ Եթե այն չունես, վերցրու <a href="../lesson-06/example/index.html">Դաս 06-ի օրինակը</a>։</p>
+  </section>
+
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+
+    <h3>Քայլ 1 · Տառատեսակ</h3>
+    <p>Google Fonts-ում ընտրիր Noto Sans Armenian, միայն 400 և 700։ Պատճենիր <code>link</code>-երը բոլոր յոթ էջի <code>head</code>-ում՝ CSS ֆայլերից առաջ։</p>
+    <div class="tip note"><span class="tag">Փորձիր</span><p>Ժամանակավորապես գրիր <code>font-family: "Roboto"</code>՝ առանց հայերենի։ Հայերեն տառերը կցուցադրվեն այլ տառատեսակով, որովհետև Roboto-ն դրանք չունի։ Սա է պատճառը, որ տառատեսակ ընտրելիս ստուգում ենք Language → Armenian։</p></div>
+
+    <h3>Քայլ 2 · global.css-ի ավելացում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>global.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* ---------- Ֆորմայի տարրերը ժառանգում են տառատեսակը ---------- */</span>
+<span class="k">input, textarea, select, button</span> {
+    <span class="f">font</span>: <span class="s">inherit</span>;
+    <span class="f">color</span>: <span class="s">inherit</span>;
+}</code></pre>
+    </div>
+    <p>Առանց սրա ֆորմայի դաշտերը և կոճակը կմնան բրաուզերի տառատեսակով։ Ստուգիր գրանցման էջում։</p>
+
+    <h3>Քայլ 3 · Գունապնակ :root-ում</h3>
+    <p>Բոլոր գույները հավաքիր <code>:root</code>-ում՝ <code>content.md</code>-ի աղյուսակից։ Հետո փոխարինիր բոլոր HEX-երը <code>var(--...)</code>-ով։ Ֆայլում HEX պետք է մնա միայն <code>:root</code>-ի ներսում։</p>
+    <div class="tip note"><span class="tag">Ստուգում</span><p>Փոխիր <code>--secondary</code>-ը, օրինակ՝ <code>#5a189a</code>։ Header-ը, վերնագրերը, կոճակները և հղումները պետք է միանգամից փոխվեն։ Եթե ինչ-որ տեղ մնաց հին կապույտը, այնտեղ HEX է մնացել։ Վերադարձրու գույնը։</p></div>
+
+    <h3>Քայլ 4 · Կոնտրաստ</h3>
+    <p>DevTools-ում ընտրիր տեքստ, Styles-ում սեղմիր գույնի քառակուսուն և նայիր «Contrast ratio»-ին։ Գրիր ամեն զույգի արժեքը մեկնաբանության մեջ։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css — մեկնաբանություն</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/*  Կոնտրաստներ (շեմը՝ 4.5:1)
+    --text      #1a1a1a / --bg      #f5f5f5   16.0:1  ✓
+    --muted     #6b6b6b / --bg      #f5f5f5    4.9:1  ✓
+    --on-dark   #ffffff / --secondary         12.8:1  ✓
+    --light     #9db4c0 / --surface #ffffff    2.2:1  ✗ տեքստի համար չենք օգտագործում
+*/</span></code></pre>
+    </div>
+
+    <h3>Քայլ 5 · Սանդղակ rem-ով</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">body</span> {
+    <span class="f">font-family</span>: <span class="s">"Noto Sans Armenian", system-ui, sans-serif</span>;
+    <span class="f">font-size</span>: <span class="s">1rem</span>;
+    <span class="f">line-height</span>: <span class="s">1.6</span>;
+    <span class="f">color</span>: <span class="s">var(--text)</span>;
+    <span class="f">background-color</span>: <span class="s">var(--bg)</span>;
+}
+
+<span class="k">h1</span> { <span class="f">font-size</span>: <span class="s">2.5rem</span>;   <span class="f">line-height</span>: <span class="s">1.15</span>; }  <span class="c">/* 2.5   × 16 = 40px */</span>
+<span class="k">h2</span> { <span class="f">font-size</span>: <span class="s">1.75rem</span>;  <span class="f">line-height</span>: <span class="s">1.25</span>; }  <span class="c">/* 1.75  × 16 = 28px */</span>
+<span class="k">h3</span> { <span class="f">font-size</span>: <span class="s">1.25rem</span>;  <span class="f">line-height</span>: <span class="s">1.3</span>;  }  <span class="c">/* 1.25  × 16 = 20px */</span>
+<span class="k">h4</span> { <span class="f">font-size</span>: <span class="s">1.125rem</span>; <span class="f">line-height</span>: <span class="s">1.4</span>;  }  <span class="c">/* 1.125 × 16 = 18px */</span></code></pre>
+    </div>
+    <div class="tip note"><span class="tag">Ինչու rem</span><p>Բրաուզերի կարգավորումներում մեծացրու լռելյայն տառաչափը։ rem-ով գրված տեքստը կմեծանա, իսկ px-ով գրվածը՝ ոչ։ Վատ տեսողությամբ օգտագործողը հենց այդպես է կարդում կայքերը։</p></div>
+
+    <h3>Քայլ 6 · Տեքստի մանրամասներ</h3>
+    <ul class="goals">
+      <li>Հոդվածների պարբերություններին և <code>.lead</code>-ին՝ <code>max-width: 65ch</code>։ Համեմատիր լայն էկրանին առանց դրա</li>
+      <li><code>.meta</code>՝ փոքր տառաչափ, <code>--muted</code> գույն, թեթև <code>letter-spacing</code></li>
+      <li><code>blockquote</code>՝ <code>font-style: italic</code></li>
+      <li><code>.bg-dark</code>, <code>.bg-secondary</code>, <code>.bg-surface</code> դասեր՝ ամեն մեկը իր տեքստի գույնով</li>
+    </ul>
+  </section>
+
+  <section id="s3">
+    <h2><span class="num">03</span>Ընդունման ստուգաթերթ</h2>
+    <h3>Տառատեսակ</h3>
+    <ul class="goals">
+      <li>Noto Sans Armenian՝ միայն 400 և 700, բոլոր էջերում</li>
+      <li>Ֆորմայի տարրերն օգտագործում են նույն տառատեսակը</li>
+    </ul>
+
+    <h3>Գույներ</h3>
+    <ul class="goals">
+      <li>Բոլոր գույները <code>:root</code>-ում, HEX չկա դրանից դուրս</li>
+      <li>Ամեն ֆոն ունի իր տեքստի գույնը</li>
+      <li>Բոլոր տեքստային զույգերը ≥ 4.5:1, արժեքները՝ մեկնաբանության մեջ</li>
+    </ul>
+
+    <h3>Տառաչափեր</h3>
+    <ul class="goals">
+      <li>h1–h4՝ rem-ով, հաշվարկը՝ մեկնաբանության մեջ</li>
+      <li><code>body</code>-ի <code>line-height</code>-ը 1.5–1.7</li>
+      <li>Հոդվածի տեքստը՝ <code>max-width: 65ch</code></li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Տառատեսակը չի բեռնվում</td><td>Google Fonts-ի <code>link</code>-ը դրված է CSS ֆայլերից հետո կամ մոռացել ես <code>pages/</code>-ի էջերում</td></tr>
+      <tr><td><code>var(--secondary)</code>-ը չի աշխատում</td><td>Անունում սխալ կա, կամ <code>:root</code>-ը գրված է <code>root</code>՝ առանց երկու կետի</td></tr>
+      <tr><td>Ցուցակի տառերը աստիճանաբար փոքրանում են</td><td>Ներդրված ցուցակում օգտագործել ես <code>em</code>․ այն կուտակվում է։ Օգտագործիր <code>rem</code></td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 07-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում կամ նույն թղթապանակում։</p>
+    <ol class="hw">
+      <li>Գրիր նույն գույնը չորս ձևաչափով՝ անուն, HEX, RGB, HSL։ Ստուգիր, որ արդյունքը նույնն է։</li>
+      <li>Ցուցադրիր <code>rgba</code>-ի և <code>opacity</code>-ի տարբերությունը՝ երկու նույնական բլոկով։</li>
+      <li>Ստեղծիր 5 գունային համադրություն։ Ամեն մեկի կոնտրաստը ստուգիր DevTools-ով և գրիր արժեքը մեկնաբանության մեջ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գտիր դիտավորյալ վատ համադրություն (2:1-ից պակաս) և ուղղիր այն։ Ցույց տուր՝ առաջ և հետո։</li>
+      <li>Միացրու հայերենով տառատեսակ։ Փորձիր նաև առանց հայերենի տառատեսակ և նկարագրիր՝ ինչ եղավ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ստեղծիր վերնագրերի սանդղակ <code>rem</code>-ով՝ h1-ից h4։ Ցույց տուր հաշվարկը մեկնաբանություններում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Փորձիր բրաուզերի կարգավորումներում մեծացնել լռելյայն տառաչափը։ Համեմատիր <code>px</code>-ով և <code>rem</code>-ով գրված տեքստերի պահվածքը։</li>
+      <li>Ցուցադրիր <code>em</code>-ի կուտակումը՝ երեք մակարդակ ներդրված ցուցակով, որտեղ <code>font-size: 0.9em</code>։</li>
+      <li>Կիրառիր <code>max-width: 65ch</code> հոդվածի տեքստին։ Համեմատիր առանց դրա տարբերակի հետ լայն էկրանին։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ոճավորիր Դաս 5-ի սեմանտիկ էջը՝ ամբողջական տիպոգրաֆիայով և գույներով։ Բոլոր կոնտրաստները պիտի անցնեն 4.5:1 շեմը։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/index.html">օրինակը</a> և քո էջը կողք կողքի։ Բացիր երկուսի կոդն էլ խմբագրիչում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-06/task.html">← Դաս 06</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-08/task.html">Դաս 08 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 1 · տնային աշխատանք · Դաս 07</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Տնային · Դաս 06 — առաջին ոճերը</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:#fff}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule); background:var(--paper)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  @media (max-width:700px){.shots{grid-template-columns:1fr}}
+  .lede a, .note a, .pager a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code){white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 1 · տնային</b> · Դաս 06</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../html-lesson-06.html">HTML Դաս 06</a> · մինի-նախագիծ</p>
+  <h1>Առաջին ոճերը</h1>
+  <p class="lede">Կայքը ստանում է <code>global.css</code> և <code>main.css</code>։ Գործնականում ես կիրառում սելեկտորները, համակցությունները, վիճակները, կասկադը և ժառանգումը։</p>
+
+  <div class="facts">
+    <span>Ժամանակ՝ ~1.5 ժամ</span>
+    <span>Սկսիր Դաս 05-ի արդյունքից</span>
+    <span>Արդյունք՝ css/global.css + css/main.css</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Օգտագործիր միայն Դաս 01–06-ը։ Գույները HEX-ով, տառաչափերը px-ով․ <code>:root</code>-ի փոփոխականները, Google Fonts-ը և rem-ը Դաս 07-ում են։ Box model-ը (Դաս 08) և <code>display</code>-ը (Դաս 09) դեռ չենք անցել, ուստի մենյուն մնում է ուղղահայաց։</p>
+  </div>
+
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Կայքը ստանում է առաջին ոճերը՝ գույներ, տառաչափեր, աղյուսակների եզրագծեր և hover/focus վիճակներ։ Reset-ից հետո բրաուզերի բացակները անհետանում են․ մենք մի քանի ժամանակավոր <code>margin-bottom</code> ենք դնում, իսկ իսկական բացակները՝ Դաս 08-ում։ Մենյուն դեռ ուղղահայաց է․ հորիզոնականը՝ Դաս 09-ում։</p>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/index.jpg" alt="Գլխավոր էջ՝ մուգ կապույտ header ուղղահայաց մենյուով, մոխրագույն ֆոնով ներածություն, կապույտ վերնագրեր և ընդգծված հղումներ" width="800" height="1293" loading="lazy">
+      <figcaption>index.html</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/schedule.jpg" alt="Դասացուցակ եզրագծերով և զույգ տողերի մոխրագույն ֆոնով" width="800" height="1504" loading="lazy">
+      <figcaption>pages/schedule.html</figcaption>
+    </figure>
+    </div>
+  </section>
+
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <div class="tree">starter/
+└── content.md     ← որ class-ը որտեղ դնել, գույներ և տառաչափեր</div>
+    <p>Սկսիր Դաս 05-ի քո կայքից։ Եթե այն չունես, վերցրու <a href="../lesson-05/example/index.html">Դաս 05-ի օրինակը</a>։</p>
+  </section>
+
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+
+    <h3>Քայլ 1 · Երկու ֆայլ, ճիշտ հերթականությամբ</h3>
+    <p>Դաս 05-ում <code>head</code>-ում արդեն միացրել ենք <code>css/global.css</code>-ը և <code>css/main.css</code>-ը։ Հերթականությունը կարևոր է․ նախ <code>global</code>, հետո <code>main</code>։ Երբ երկու կանոն նույն սպեցիֆիկությունն ունեն, հաղթում է ավելի ուշ գրվածը, ուստի <code>main.css</code>-ը կարող է վերագրել <code>global.css</code>-ը։</p>
+
+    <h3>Քայլ 2 · global.css</h3>
+    <p>Պատճենիր Դաս 06-ի «global.css-ի ծնունդը» բաժնի ամբողջ կոդը՝ reset, հղումներ, ցուցակներ, տեքստի դասեր, <code>.skip-link</code> և <code>.visually-hidden</code>։</p>
+    <div class="tip note"><span class="tag">Ստուգում</span><p>Թարմացրու էջը։ Skip link-ը անհետացավ, իսկ առաջին <kbd>Tab</kbd>-ով հայտնվում է վերևի ձախ անկյունում։ Ցուցակների կետերը նույնպես անհետացան․ դա <code>list-style: none</code>-ն է։</p></div>
+
+    <h3>Քայլ 3 · Թեգային սելեկտորներ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css — թեգեր</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">body</span> {
+    <span class="f">font-family</span>: <span class="s">Arial, sans-serif</span>;
+    <span class="f">color</span>: <span class="s">#1a1a1a</span>;
+    <span class="f">background</span>: <span class="s">#ffffff</span>;
+}
+
+<span class="k">h1</span> { <span class="f">font-size</span>: <span class="s">32px</span>; <span class="f">color</span>: <span class="s">#003459</span>; }
+<span class="k">h2</span> { <span class="f">font-size</span>: <span class="s">24px</span>; <span class="f">color</span>: <span class="s">#003459</span>; }
+<span class="k">h3</span> { <span class="f">font-size</span>: <span class="s">18px</span>; }
+
+<span class="k">table</span> { <span class="f">border-collapse</span>: <span class="s">collapse</span>; }</code></pre>
+    </div>
+    <div class="tip note"><span class="tag">Ժառանգում</span><p><code>body</code>-ին տվել ենք <code>color</code> և <code>font-family</code>, և դրանք հասել են բոլոր պարբերություններին և ցուցակներին։ Հիմա տուր <code>body</code>-ին <code>border: 2px solid red</code>։ Եզրագիծը կհայտնվի միայն <code>body</code>-ի շուրջը, ոչ ներսի տարրերի․ <code>border</code>-ը չի ժառանգվում։ Ստուգելուց հետո ջնջիր։</p></div>
+
+    <h3>Քայլ 4 · Դասեր և id-ներ</h3>
+    <p>Ավելացրու HTML-ում <code>content.md</code>-ի աղյուսակի class-երը։ Հետո գրիր հինգ կանոն դասերով (<code>.site-name</code>, <code>.lead</code>, <code>.meta</code>, <code>.copyright</code>, <code>.btn</code>) և երկուսը id-ով (<code>#intro</code>, <code>#conclusion</code>)։</p>
+
+    <h3>Քայլ 5 · Հինգ համակցություն</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Համակցություն</th><th>Օրինակ կայքում</th></tr>
+      <tr><td>1. Ներսում</td><td><code>header a</code>, <code>main a</code></td></tr>
+      <tr><td>2. Ուղիղ երեխա</td><td><code>footer &gt; p</code></td></tr>
+      <tr><td>3. Երկու դաս միաժամանակ</td><td><code>.btn.btn-light</code></td></tr>
+      <tr><td>4. Խմբավորում</td><td><code>th, td</code></td></tr>
+      <tr><td>5. Թեգ + դաս</td><td><code>button.btn</code></td></tr>
+    </table>
+    </div>
+    <p>Reset-ը հանել էր ցուցակների կետերը։ Հոդվածի ցուցակներին վերադարձրու դրանք՝ <code>main ul { list-style: disc; padding-left: 24px; }</code>։</p>
+
+    <h3>Քայլ 6 · Վիճակներ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css — վիճակներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">header a:hover,</span>
+<span class="k">header a:focus-visible</span> { <span class="f">color</span>: <span class="s">#9db4c0</span>; }
+
+<span class="k">main a:hover,</span>
+<span class="k">main a:focus-visible</span>   { <span class="f">background</span>: <span class="s">#fff3a0</span>; }
+
+<span class="k">.btn:hover,</span>
+<span class="k">.btn:focus-visible</span> {
+    <span class="f">background</span>: <span class="s">#ffffff</span>;
+    <span class="f">color</span>: <span class="s">#003459</span>;
+}
+
+<span class="k">tr:nth-child(even) td</span> { <span class="f">background</span>: <span class="s">#f5f5f5</span>; }</code></pre>
+    </div>
+    <div class="tip note"><span class="tag">Ստուգում</span><p>Անցիր էջը <kbd>Tab</kbd>-ով։ Ամեն հղում և կոճակ պետք է փոխի տեսքը ֆոկուսի ժամանակ, ոչ միայն մկնիկով։ Եթե <code>:focus-visible</code>-ը մոռացել ես, ստեղնաշարով նավարկողը չի տեսնի, թե որտեղ է։</p></div>
+
+    <h3>Քայլ 7 · Ով է հաղթում</h3>
+    <p>«Կարդալ ավելին» կոճակը գտնվում է <code>main</code>-ի ներսում, ուստի նրա վրա գործում են և՛ <code>main a</code>-ն, և՛ <code>.btn</code>-ը։ Բացիր DevTools → Styles և գտիր, որ կանոններն են ջնջված։ Ինչու՞ է գույնը <code>.btn</code>-ից, իսկ ընդգծումը՝ <code>main a</code>-ից։ Ուղղիր <code>.btn</code>-ին ավելացնելով <code>text-decoration: none</code>։</p>
+  </section>
+
+  <section id="s3">
+    <h2><span class="num">03</span>Ընդունման ստուգաթերթ</h2>
+    <h3>Ֆայլեր</h3>
+    <ul class="goals">
+      <li><code>global.css</code>-ը միացված է <code>main.css</code>-ից առաջ բոլոր յոթ էջում</li>
+      <li>Skip link-ը թաքնված է և հայտնվում է առաջին <kbd>Tab</kbd>-ով</li>
+    </ul>
+
+    <h3>Սելեկտորներ</h3>
+    <ul class="goals">
+      <li>Առնվազն հինգ կանոն թեգով, հինգը՝ դասով, երկուսը՝ id-ով</li>
+      <li>Օգտագործված են բոլոր հինգ համակցությունները</li>
+      <li>Կա <code>:hover</code> և <code>:focus-visible</code> հղումների և կոճակների համար</li>
+      <li>Աղյուսակների զույգ տողերը՝ <code>:nth-child(even)</code></li>
+    </ul>
+
+    <h3>Կոդ</h3>
+    <ul class="goals">
+      <li>Ոչ մի <code>!important</code></li>
+      <li>Ոչ մի <code>style</code> ատրիբուտ HTML-ում</li>
+      <li>Մուգ ֆոնի վրա տեքստը բաց է, բաց ֆոնի վրա՝ մուգ</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>main.css-ի կանոնը չի աշխատում</td><td>Ֆայլերի հերթականությունը սխալ է, կամ <code>global.css</code>-ում ավելի սպեցիֆիկ սելեկտոր կա։ DevTools → Styles-ում ջնջված կանոնը ցույց է տալիս, թե ով է հաղթել</td></tr>
+      <tr><td>Ոճերը չեն երևում <code>pages/</code>-ի էջերում</td><td>Ուղին՝ <code>../css/main.css</code></td></tr>
+      <tr><td>Ամբողջ էջը «սեղմված» է</td><td>Reset-ը հանել է բրաուզերի բացակները։ Առայժմ՝ մի քանի <code>margin-bottom</code>, իսկական լուծումը՝ Դաս 08-ում</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 06-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում կամ նույն թղթապանակում։</p>
+    <ol class="hw">
+      <li>Ստեղծիր <code>global.css</code> և <code>main.css</code>։ Միացրու ճիշտ հերթականությամբ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Փորձիր փոխել հերթականությունը՝ <code>main.css</code>-ը առաջինը։ Նկարագրիր՝ ինչ կոտրվեց։ Վերականգնիր։</li>
+      <li>Գրիր հինգ կանոն թեգային սելեկտորով, հինգը՝ դասով, երկուսը՝ <code>id</code>-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Օգտագործիր բոլոր հինգ համակցությունները 04-րդ բաժնից։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ստեղծիր երկու կանոն, որոնք հակասում են իրար։ Կանխագուշակիր՝ որը կհաղթի, հետո ստուգիր DevTools-ով։</li>
+      <li>Հաշվիր սպեցիֆիկությունը՝ <code>.card p</code>, <code>#hero .btn</code>, <code>ul li a.link</code>, <code>input[type="text"]:focus</code>։ Ստուգիր DevTools-ով։</li>
+      <li>Ցուցադրիր ժառանգումը․ <code>body</code>-ին տուր <code>color</code> և <code>font-family</code>, և ցույց տուր, որ դրանք հասնում են ներսի էլեմենտներին։ Հետո ցույց տուր, որ <code>border</code>-ը չի ժառանգվում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>:hover</code> և <code>:focus-visible</code> վիճակներ կոճակներին ու հղումներին։ Ստուգիր <kbd>Tab</kbd>-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Օգտագործիր <code>:nth-child(even)</code> աղյուսակի տողերի համար (Դաս 3-ի աղյուսակը)։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Վերցրու Դաս 5-ի սեմանտիկ էջը և ոճավորիր այն՝ գույներ, տառաչափեր, hover վիճակներ։ Ոչ մի <code>!important</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/index.html">օրինակը</a> և քո էջը կողք կողքի։ Բացիր երկուսի կոդն էլ խմբագրիչում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-05/task.html">← Դաս 05</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-07/task.html">Դաս 07 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 1 · տնային աշխատանք · Դաս 06</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

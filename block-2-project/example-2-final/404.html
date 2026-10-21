@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Էջը չի գտնվել — ՏեխնոՄարկետ</title>
+    <meta name="description" content="Էջը չի գտնվել">
+
+    <meta property="og:title" content="Էջը չի գտնվել — ՏեխնոՄարկետ">
+    <meta property="og:description" content="Էջը չի գտնվել">
+    <meta property="og:image" content="images/og.jpg">
+
+    <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script>
+        // Թեման կիրառում ենք մինչև էջի նկարվելը, որ «թարթում» չլինի — JS Դաս 14
+        try {
+            const savedTheme = localStorage.getItem("tm:theme");
+            if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
+        } catch (e) { /* localStorage-ը անհասանելի է՝ մնում է համակարգի թեման */ }
+    </script>
+
+    <!-- JS — մեկ մուտքի կետ, մնացածը import-ով (JS Դաս 18) -->
+    <script type="module" src="js/pages/common.js"></script>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Անցնել բովանդակությանը</a>
+
+<!-- ================= HEADER ================= -->
+<header class="header">
+    <input type="checkbox" id="nav" class="nav-toggle">
+
+    <div class="row align-center justify-between">
+
+        <div class="col">
+            <a href="index.html" class="logo">ՏեխնոՄարկետ</a>
+        </div>
+
+        <div class="col">
+            <label for="nav" class="burger">
+                <span></span><span></span><span></span>
+                <span class="visually-hidden">Մենյու</span>
+            </label>
+
+            <nav aria-label="Գլխավոր մենյու">
+                <ul class="menu flex align-center gap-10">
+                    <li><a href="index.html">Գլխավոր</a></li>
+                    <li class="has-sub">
+                        <a href="catalog.html">Կատալոգ <span aria-hidden="true">▾</span></a>
+                        <ul class="submenu">
+                            <li><a href="catalog.html?cat=laptops">Նոութբուքեր</a></li>
+                            <li><a href="catalog.html?cat=monitors">Մոնիտորներ</a></li>
+                            <li><a href="catalog.html?cat=phones">Սմարթֆոններ</a></li>
+                            <li><a href="catalog.html?cat=tablets">Պլանշետներ</a></li>
+                            <li><a href="catalog.html?cat=accessories">Աքսեսուարներ</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#contact">Կապ</a></li>
+                    <li><a href="login.html">Մուտք</a></li>
+                    <li><button type="button" class="theme-toggle" data-action="theme" aria-label="Մուգ թեմա">☾</button></li>
+                    <li><a href="cart.html" class="btn btn--primary btn--sm">Զամբյուղ <span class="count is-empty" data-cart-count>0</span><span class="visually-hidden"> ապրանք</span></a></li>
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+</header>
+
+<main id="main">
+
+    <section class="status">
+        <div class="row">
+            <div class="col w-100">
+                <div class="wrapper">
+                    <p class="status__code" aria-hidden="true">404</p>
+                    <h1 class="mb-10">Էջը չի գտնվել</h1>
+                    <p class="text-muted mb-30">Հնարավոր է՝ հղումը սխալ է, կամ էջը տեղափոխվել է։ Սկսիր գլխավոր էջից կամ կատալոգից։</p>
+                    <div class="flex gap-10 flex-wrap justify-center">
+                        <a href="index.html" class="btn btn--primary">Գլխավոր էջ</a>
+                        <a href="catalog.html" class="btn btn--ghost">Կատալոգ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+    <div class="row flex-wrap">
+
+        <div class="col w-40 w-md-100">
+            <p class="logo mb-10"><a href="index.html">ՏեխնոՄարկետ</a></p>
+            <p>Տեխնիկայի խանութ Երևանում 2018 թվականից։ Ուսումնական նախագիծ։</p>
+        </div>
+
+        <div class="col w-25 w-md-50 w-sm-100">
+            <h2 class="footer__title">Բաժիններ</h2>
+            <nav aria-label="Ստորին մենյու">
+                <ul>
+                    <li><a href="catalog.html">Կատալոգ</a></li>
+                    <li><a href="cart.html">Զամբյուղ</a></li>
+                    <li><a href="checkout.html">Պատվերի ձևակերպում</a></li>
+                    <li><a href="login.html">Իմ հաշիվը</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="col w-25 w-md-50 w-sm-100" id="contact">
+            <h2 class="footer__title">Կապ</h2>
+            <ul>
+                <li>Երևան, Աբովյան 1</li>
+                <li><a href="tel:+37410000000">+374 10 00 00 00</a></li>
+                <li><a href="mailto:info@technomarket.example">info@technomarket.example</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="row flex-wrap justify-between footer__bottom">
+        <div class="col">© 2026 ՏեխնոՄարկետ</div>
+        <div class="col">Կառուցված է առանց գրադարանների՝ HTML և CSS</div>
+    </div>
+</footer>
+
+</body>
+</html>

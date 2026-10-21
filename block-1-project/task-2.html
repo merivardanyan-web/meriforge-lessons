@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Առաջադրանք 2 — ադապտիվություն, հղկում, հրապարակում</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lesson.css">
+<script src="../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; align-items:start}
+  @media (max-width:700px){.shots{grid-template-columns:1fr}}
+  .lede a, .note a{color:var(--pen); text-decoration:underline}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 1 · նախագիծ</b> · առաջադրանք 2</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Առաջադրանք 2 / 3 · HTML Դաս 23 · 2 ժամ + տնային</p>
+  <h1>Ադապտիվություն, հղկում, հրապարակում</h1>
+  <p class="lede">Երեկվա երկու էջը աշխատում են միայն համակարգչում։ Այսօր դրանք դարձնում ենք ադապտիվ 320px-ից մինչև 1920px, ավելացնում ենք բուրգեր-մենյու առանց JavaScript-ի, անցնում ենք հասանելիության աուդիտ և հրապարակում ենք GitHub Pages-ում։ Ավարտելուց հետո համեմատիր <a href="example-2-final/index.html">օրինակ 2</a>-ի գլխավոր էջի և կատալոգի հետ։ Մնացած էջերը Առաջադրանք 3-ում են։</p>
+
+  <div class="facts">
+    <span>Սկսիր Առաջադրանք 1-ի արդյունքից</span>
+    <span>Չես հասցրել՝ վերցրու example-1-day1-ը</span>
+    <span>Արդյունք՝ հղում GitHub Pages-ում</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Որտեղից ենք սկսում և ուր ենք գնում</h2>
+
+    <div class="shots">
+      <figure class="shot">
+        <img src="screenshots/day1-mobile-problem.jpg" alt="Օր 1-ի էջը 375px լայնությամբ․ մենյուն դուրս է գալիս էկրանից, և էջն ունի հորիզոնական սքրոլ" width="375" height="740" loading="lazy">
+        <figcaption>Հիմա՝ 375px։ Մենյուն դուրս է գալիս էկրանից։</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="screenshots/final-mobile-menu.jpg" alt="Վերջնական էջը 375px լայնությամբ՝ բաց բուրգեր-մենյուով, որտեղ հղումները մեկը մյուսի տակ են" width="375" height="740" loading="lazy">
+        <figcaption>Պետք է՝ բուրգեր-մենյու։</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="screenshots/final-mobile.jpg" alt="Վերջնական էջը 375px լայնությամբ՝ ամբողջությամբ, մեկ սյունակով" width="375" height="4538" loading="lazy">
+        <figcaption>Պետք է՝ ամբողջ էջը մեկ սյունակով։</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Քայլեր</h2>
+
+    <h3>Քայլ 1 · Ադապտիվության բլոկ</h3>
+    <p>Ավելացրու <code>main.css</code>-ի վերջում <strong>բաժին 10</strong>՝ երեք breakpoint-ով։ Ամեն breakpoint-ում փոխիր միայն այն, ինչ իսկապես կոտրվում է․</p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Breakpoint</th><th>Ինչ է փոխվում</th></tr>
+      <tr><td><code>max-width: 992px</code></td><td><code>--wall: 40px</code>, բաժինների padding-ը փոքրանում է։ Կատալոգում ֆիլտրերը գնում են արդյունքներից վերև (<code>w-md-100</code>), իսկ <code>fieldset</code>-երը դասավորվում են մեկ շարքով <code>flex-wrap</code>-ով</td></tr>
+      <tr><td><code>max-width: 768px</code></td><td><code>--wall: 20px</code>, բուրգերը հայտնվում է, hero-ի և CTA-ի կոճակները՝ 100%, CTA ֆորման՝ ուղղահայաց, footer-ի ներքևի տողը՝ կենտրոնում, dropdown-ը բուրգերի ներսում՝ միշտ բաց և ներդրված</td></tr>
+      <tr><td><code>max-width: 400px</code></td><td>Քարտի գինը և «Գնել» կոճակը՝ մեկը մյուսի տակ</td></tr>
+    </table>
+    </div>
+    <div class="tip note"><span class="tag">Ստուգում</span><p>Ապրանքների ցանցի և սյուների համար նոր media query պետք չէ․ <code>.grid-auto</code>-ն և <code>w-md-100</code>-ը արդեն հարմարվում են։ Եթե գրում ես շատ ադապտիվ կոդ, հավանաբար երեկ ինչ-որ բան ֆիքսված չափով ես գրել։</p></div>
+
+    <h3>Քայլ 2 · Բուրգեր-մենյու checkbox-ով</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>header-ի նոր կառուցվածքը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">header</span> <span class="f">class</span>=<span class="s">"header"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"checkbox"</span> <span class="f">id</span>=<span class="s">"nav"</span> <span class="f">class</span>=<span class="s">"nav-toggle"</span><span class="p">&gt;</span>   <span class="c">&lt;!-- ⭐ .row-ից ԱՌԱՋ --&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row align-center justify-between"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span> ... լոգո ... <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"nav"</span> <span class="f">class</span>=<span class="s">"burger"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">span</span><span class="p">&gt;&lt;/</span><span class="t">span</span><span class="p">&gt;&lt;</span><span class="t">span</span><span class="p">&gt;&lt;/</span><span class="t">span</span><span class="p">&gt;&lt;</span><span class="t">span</span><span class="p">&gt;&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"visually-hidden"</span><span class="p">&gt;</span>Մենյու<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">nav</span> <span class="f">aria-label</span>=<span class="s">"Գլխավոր մենյու"</span><span class="p">&gt;</span> ... <span class="p">&lt;/</span><span class="t">nav</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">header</span><span class="p">&gt;</span></code></pre>
+    </div>
+    <ul class="goals">
+      <li>Checkbox-ը <code>.row</code>-ից առաջ է, որպեսզի <code>.nav-toggle:checked ~ .row .menu</code> սելեկտորը աշխատի (Դաս 6)</li>
+      <li>Checkbox-ը թաքնված է <code>opacity: 0</code>-ով, ոչ <code>display: none</code>-ով, որպեսզի մնա ստեղնաշարով հասանելի</li>
+      <li>Մենյուն <code>position: fixed</code> է header-ի տակ և դուրս է գալիս <code>transform</code>-ով (Դաս 15, 21)</li>
+      <li>Բաց վիճակում երեք գիծը դառնում է ×</li>
+    </ul>
+
+    <h3>Քայլ 2ա · Dropdown-ը բուրգերի ներսում</h3>
+    <p>Հեռախոսում <code>:hover</code> չկա, ուստի ենթամենյուն բուրգերի ներսում ցույց տուր միշտ բաց՝ ձախից փոքր նահանջով։ Կարևոր մանրուք՝ <code>visibility: inherit</code>։ Այդ դեպքում ենթամենյուն թաքնվում է ծնողի հետ, երբ բուրգերը փակ է, և ֆոկուսի թակարդ չի առաջանում (տես հաջորդ քայլը)։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>@media (max-width: 768px)-ի ներսում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.submenu</span> {
+    <span class="f">position</span>: <span class="s">static</span>;
+    <span class="f">padding</span>: <span class="n">0 0 0 16px</span>;
+    <span class="f">border</span>: <span class="n">0</span>;
+    <span class="f">box-shadow</span>: <span class="s">none</span>;
+    <span class="f">opacity</span>: <span class="n">1</span>;
+    <span class="f">visibility</span>: <span class="s">inherit</span>;
+    <span class="f">transform</span>: <span class="s">none</span>;
+}</code></pre>
+    </div>
+    <div class="tip note"><span class="tag">Ստուգում</span><p>Համակարգչում checkbox-ը պետք չէ։ Տուր նրան <code>display: none</code>, իսկ 768px-ից ներքև՝ <code>display: block</code>։ Հակառակ դեպքում համակարգչում <code>Tab</code>-ը կանգ կառնի անտեսանելի checkbox-ի վրա։</p></div>
+
+    <h3>Քայլ 3 · Ֆոկուսի թակարդը</h3>
+    <div class="warn note">
+      <span class="tag">Փորձիր նախքան ուղղելը</span>
+      <p>Փակ մենյուի հղումները էկրանից դուրս են, բայց դեռ ստանում են ֆոկուս։ Սեղմիր <code>Tab</code> հեռախոսի լայնությամբ, և ֆոկուսը «կանհետանա» անտեսանելի հղումների մեջ։ Ուղղիր <code>visibility: hidden</code>-ով փակ վիճակում և <code>visibility: visible</code>-ով բաց վիճակում։ <code>visibility</code>-ը հանում է տարրերը <code>Tab</code>-ի հերթից և միաժամանակ անիմացվում է։</p>
+    </div>
+
+    <h3>Քայլ 4 · Ստուգում յոթ լայնությամբ</h3>
+    <p>DevTools → Device toolbar։ Ստուգիր <strong>երկու էջն էլ</strong> 320, 375, 414, 768, 1024, 1280 և 1920 լայնություններով։ Ապա <strong>դանդաղ քաշիր</strong> պատուհանը 1920-ից մինչև 320․ խնդիրները հաճախ breakpoint-ների <em>միջև</em> են։ Հորիզոնական սքրոլի պատճառը գտնելու համար՝</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Console-ում — Դաս 14</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="t">document</span>.<span class="f">querySelectorAll</span>(<span class="s">'*'</span>).<span class="f">forEach</span>(<span class="n">e</span> =&gt; {
+    <span class="k">if</span> (<span class="n">e</span>.<span class="n">offsetWidth</span> &gt; <span class="t">document</span>.<span class="n">body</span>.<span class="n">offsetWidth</span>) <span class="t">console</span>.<span class="f">log</span>(<span class="n">e</span>);
+});</code></pre>
+    </div>
+
+    <h3>Քայլ 5 · Վեց հղկում</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ինչ</th><th>Ինչպես</th><th>Դաս</th></tr>
+      <tr><td>Խարիսխները չեն մտնում header-ի տակ</td><td><code>html { scroll-padding-top }</code>, <code>scroll-behavior: smooth</code></td><td>15</td></tr>
+      <tr><td>Երկար հայերեն բառերը չեն դուրս գալիս</td><td><code>body { overflow-wrap: break-word }</code></td><td>9</td></tr>
+      <tr><td>Ընտրված տեքստի գույնը</td><td><code>::selection</code> տոկեններով</td><td>19</td></tr>
+      <tr><td>Hero-ի տողերի լայնությունը</td><td><code>max-width: 18ch</code> և <code>50ch</code></td><td>7</td></tr>
+      <tr><td>Ամբողջ քարտը սեղմելի է</td><td>Անվանումը՝ հղում, <code>.card__title a::after { inset: 0 }</code>, կոճակը՝ <code>z-index</code>-ով վերևում</td><td>15, 17</td></tr>
+      <tr><td>Շարժման հարգանք</td><td><code>@media (prefers-reduced-motion: reduce)</code></td><td>21</td></tr>
+    </table>
+    </div>
+
+    <h3>Քայլ 6 · Հասանելիության աուդիտ</h3>
+    <ol>
+      <li>Ձեռքդ վերցրու մկնիկից և անցիր ամբողջ էջը միայն <code>Tab</code>-ով։ Առաջինը պետք է հայտնվի skip-link-ը</li>
+      <li>Ամեն պահի պետք է տեսնես, թե որտեղ է ֆոկուսը, և հերթականությունը պետք է համընկնի տեսողականին</li>
+      <li>Հեռախոսի լայնությամբ բացիր բուրգերը ստեղնաշարով (<code>Space</code>)</li>
+      <li>Գործարկիր Lighthouse-ը Incognito ռեժիմում և WAVE ընդլայնումը։ Ուղղիր ամեն ինչ, ինչ 90-ից ցածր է</li>
+      <li>Ստուգիր HTML-ը <code>validator.w3.org</code>-ում</li>
+    </ol>
+
+    <h3>Քայլ 7 · Հրապարակում և README</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>GitHub Pages — JS բլոկում կկրկնես Դաս 17-ում</div><button class="copy">Պատճենել</button></div>
+<pre><code>git init
+git add .
+git commit -m "ՏեխնոՄարկետ landing page"
+git remote add origin https://github.com/username/technomarket.git
+git branch -M main
+git push -u origin main
+
+<span class="c"># GitHub → Settings → Pages → Deploy from a branch → main / (root) → Save
+# Հասցեն՝ https://username.github.io/technomarket/</span></code></pre>
+    </div>
+    <p>README-ն գրիր օրինակի կաղապարով (<code>example-2-final/README.md</code>)՝ դեմոյի հղումով, տեխնոլոգիաներով, կառուցվածքով, <strong>«Հայտնի սահմանափակումներ»</strong> բաժնով և Lighthouse-ի քո թվերով։</p>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Հաճախ հանդիպող սխալներ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Կատալոգը հեռախոսում ունի հորիզոնական սքրոլ, թեև բոլոր սյուները 100% են</td><td><code>fieldset</code>-ը լռելյայն չի նեղանում իր բովանդակությունից փոքր։ Տուր նրան <code>min-width: 0</code> (նույնը, ինչ input-ի դեպքում, Դաս 12)</td></tr>
+      <tr><td>Դասավորման <code>select</code>-ը դուրս է գալիս էկրանից</td><td>Գործիքագոտու ֆորմային՝ <code>flex-wrap</code></td></tr>
+      <tr><td>Բուրգերը սեղմվում է, բայց մենյուն չի բացվում</td><td>Checkbox-ը <code>.row</code>-ից առաջ չէ, կամ <code>for</code>-ը և <code>id</code>-ն չեն համընկնում</td></tr>
+      <tr><td>Բաց մենյուն ծածկում է header-ը կամ թողնում է բաց տարածք</td><td>Չափիր header-ի բարձրությունը DevTools-ով և դիր այն տոկենում (<code>--header-h</code>)</td></tr>
+      <tr><td>Ամբողջ քարտը սեղմելի է, բայց «Գնել»-ը այլևս չի սեղմվում</td><td>Կոճակին՝ <code>position: relative; z-index: 2</code></td></tr>
+      <tr><td>GitHub Pages-ում նկարները չեն բեռնվում</td><td>Ուղիները <code>/images/...</code>-ով են սկսվում կամ ռեգիստրը չի համընկնում (Դաս 2)</td></tr>
+      <tr><td>Մենյուի հղմանը սեղմելուց հետո մենյուն բաց է մնում</td><td>Սա սպասելի է առանց JS-ի․ գրիր այն README-ի սահմանափակումներում։ Կուղղվի JS բլոկում</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ինչպես համեմատել օրինակի հետ</h2>
+    <div class="warn note">
+      <span class="tag">Երեք համեմատություն</span>
+      <p><strong>1. Բաժին 10-ը.</strong> համեմատիր քո ադապտիվ կոդի ծավալը օրինակի հետ։ Եթե քոնը երկու անգամ ավելի երկար է, գտիր, թե երեկ որտեղ ես գրել ֆիքսված չափ։<br>
+      <strong>2. Բուրգերը.</strong> բացիր <a href="example-2-final/index.html">example-2-final</a>-ը 375px-ում և անցիր <code>Tab</code>-ով։ Համեմատիր քոնի հետ։<br>
+      <strong>3. Lighthouse.</strong> գործարկիր երկու էջի վրա։ Եթե օրինակի թիվը ավելի բարձր է, բաց արա Lighthouse-ի հաշվետվությունը և գտիր տարբերության պատճառը։</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Վերջնական ընդունում</h2>
+
+    <h3>Տեսք</h3>
+    <ul class="goals">
+      <li>Համապատասխանում է մակետին</li>
+      <li>Բոլոր հեռավորությունները սանդղակի վրա են</li>
+      <li>Տառաչափերը 5-ից քիչ են, կլորացումները և ստվերները՝ հետևողական</li>
+    </ul>
+
+    <h3>Ադապտիվություն</h3>
+    <ul class="goals">
+      <li>Երկու էջն էլ աշխատում են 320px-ից 1920px, չկա հորիզոնական սքրոլ</li>
+      <li>Կատալոգի ֆիլտրերը հեռախոսում արդյունքներից վերև են և չեն դուրս գալիս էկրանից</li>
+      <li>Բուրգերն աշխատում է և մկնիկով, և ստեղնաշարով, dropdown-ը նրա ներսում բաց է</li>
+      <li>Ցանցերը ճիշտ են վերակառուցվում, կոճակները հեռախոսում հարմար են</li>
+    </ul>
+
+    <h3>Կոդ</h3>
+    <ul class="goals">
+      <li><code>:root</code>-ից դուրս HEX չկա</li>
+      <li>Չկա <code>!important</code> (բացի reduced-motion-ից) և inline style</li>
+      <li>HTML-ը վալիդ է</li>
+    </ul>
+
+    <h3>Հասանելիություն</h3>
+    <ul class="goals">
+      <li>Ամբողջ էջն անցնելի է <code>Tab</code>-ով, ֆոկուսը տեսանելի է, ֆոկուսի թակարդ չկա</li>
+      <li>Կոնտրաստները ≥ 4.5:1, սեղմելի տարածքները ≥ 44×44px</li>
+      <li>Lighthouse Accessibility ≥ 90 (նպատակը՝ 100)</li>
+    </ul>
+
+    <h3>Հրապարակում</h3>
+    <ul class="goals">
+      <li>Կոդը GitHub-ում է, էջը հասանելի է հղումով</li>
+      <li>Բոլոր նկարները բեռնվում են, էջը ստուգված է իրական հեռախոսում</li>
+      <li>Կա README՝ «Հայտնի սահմանափակումներ» բաժնով</li>
+    </ul>
+
+    <div class="tip note">
+      <span class="tag">Հանձնում</span>
+      <p>Ուղարկիր երեք բան․ GitHub Pages-ի հղումը, պահոցի հղումը և Lighthouse-ի սքրինշոթը։ Հաջորդը <a href="task-3.html">Առաջադրանք 3</a>-ն է՝ մնացած հինգ էջը, մեկ շաբաթ տնային աշխատանքով։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 1 · նախագիծ · Առաջադրանք 2 / 3</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

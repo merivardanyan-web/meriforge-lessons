@@ -1,0 +1,109 @@
+/* ============================================
+   global.css — ՎԱՐՔԱԳԻԾԸ
+   Նույնն է ամեն նախագծում։ Աճում է ամեն դասին։
+   ============================================ */
+
+/* ---------- Reset — Դաս 06 ---------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ---------- Հղումներ ---------- */
+a {
+    display: inline-block;
+    color: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+/* ---------- Ցուցակներ ---------- */
+ul, ol {
+    list-style: none;
+}
+
+/* ---------- Տեքստ ---------- */
+.text-center { text-align: center; }
+.text-left   { text-align: left; }
+.text-right  { text-align: right; }
+
+/* ---------- Հասանելիություն ---------- */
+.skip-link {
+    position: absolute;
+    left: -9999px;
+}
+
+.skip-link:focus {
+    left: 10px;
+    top: 10px;
+    background: white;
+    padding: 10px;
+    z-index: 100;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* ---------- Ֆորմայի տարրերը ժառանգում են տառատեսակը — Դաս 07 ---------- */
+input, textarea, select, button {
+    font: inherit;
+    color: inherit;
+}
+
+/* ---------- Նկարներ — Դաս 08 ---------- */
+/* picture թեգը կօգտագործենք Դաս 16-ից, կանոնը արդեն պատրաստ է */
+picture {
+    display: block;
+    font-size: 0;
+}
+
+img {
+    max-width: 100%;
+}
+
+/* ---------- Կմախք — Դաս 10 ---------- */
+.row {
+    display: flex;
+}
+
+.wrapper {
+    height: 100%;    /* լցնում է ամբողջ .col-ը */
+}
+
+/* ---------- Լայնություններ — Դաս 10 ---------- */
+.w-10  { width: 10%; }
+.w-20  { width: 20%; }
+.w-25  { width: 25%; }
+.w-30  { width: 30%; }
+.w-33  { width: 33.3333%; }
+.w-40  { width: 40%; }
+.w-50  { width: 50%; }
+.w-60  { width: 60%; }
+.w-70  { width: 70%; }
+.w-75  { width: 75%; }
+.w-80  { width: 80%; }
+.w-100 { width: 100%; }
+
+/* ---------- Flex օգնականներ — Դաս 11 ---------- */
+.flex        { display: flex; }
+.flex-column { flex-direction: column; }
+
+.justify-start   { justify-content: start; }
+.justify-center  { justify-content: center; }
+.justify-end     { justify-content: end; }
+.justify-between { justify-content: space-between; }
+.justify-around  { justify-content: space-around; }
+
+.align-start  { align-items: start; }
+.align-center { align-items: center; }
+.align-end    { align-items: end; }
+
+/* ---------- Flex — Դաս 12 ---------- */
+.flex-wrap { flex-wrap: wrap; }

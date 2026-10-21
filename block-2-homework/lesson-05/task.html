@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 05 · Իմ դարակը — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · տնային</b> · Դաս 05</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../js-lesson-05.html">JS Դաս 05</a> · մինի-նախագիծ</p>
+  <h1>Իմ դարակը</h1>
+  <p class="lede">Մեկ գրքից անցնում ենք դարակին․ վերնագրերի զանգված, էջերի զանգված, «կարդալու» հերթ։ Ավելացնում, հանում, փնտրում և հաշվում ենք՝ առանց կրկնությունների։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Արդյունքը՝ Console-ում</span>
+    <span>Բաց արա index.html-ը</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–05․ զանգվածներ, ինդեքսներ, <code>push/pop/shift/unshift</code>, <code>splice</code>, <code>slice</code>, <code>includes/indexOf</code>, <code>join/split</code>, <code>for...of</code>, spread։ <code>map</code>/<code>filter</code>-ը՝ Դաս 6-ում։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Ահա ինչ պետք է տեսնես Console-ում։ Ձևակերպումները կարող են տարբերվել, թվերը՝ ոչ։</p>
+<pre class="out"><span class="m">Console</span>
+--- Դարակում 3 գիրք ---
+1. Փոքրիկ իշխանը · 96 էջ
+2. Սամվել · 560 էջ
+3. Գիքորը · 40 էջ
+Ավելացվեց՝ «Վերք Հայաստանի»
+«Սամվել»-ն արդեն դարակում է
+Հանվեց՝ «Գիքորը»
+Չգտնվեց
+--- Դարակում 3 գիրք ---
+1. Փոքրիկ իշխանը · 96 էջ
+2. Սամվել · 560 էջ
+3. Վերք Հայաստանի · 320 էջ
+Հաջորդը՝ «1984», հերթում մնաց 2
+Հերթ՝ Ալքիմիկոսը → Քաոս → Հարի Փոթերը և փիլիսոփայական քարը
+Ժանրեր՝ վեպ · հեքիաթ · պատմավեպ · պատմվածք · պոեզիա
+Ընդհանուր՝ 976 էջ, միջինը՝ 325 էջ
+Ամենամեծը՝ «Սամվել» (560 էջ)
+Առաջին երկուսը՝ ["Փոքրիկ իշխանը", "Սամվել"]
+Վերջից՝ ["Վերք Հայաստանի", "Սամվել", "Փոքրիկ իշխանը"]
+Բնօրինակը՝ ["Փոքրիկ իշխանը", "Սամվել", "Վերք Հայաստանի"]</pre>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատիր նոր թղթապանակում՝ <code>reading-journal/</code>։</p>
+    <ul class="goals">
+      <li><code>starter/index.html</code> — էջ, որը միացնում է <code>js/main.js</code>-ը</li>
+      <li><code>starter/js/main.js</code> — տվյալները, որ չգրես ձեռքով</li>
+    </ul>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Երկու զանգված՝ նույն ինդեքսներով</h3>
+    <ul class="goals">
+      <li><code>shelf</code>՝ վերնագրեր, <code>pagesList</code>՝ էջեր։ Նույն ինդեքսը՝ նույն գիրքը</li>
+      <li><code>showShelf()</code>՝ համարակալված ցուցակ, դատարկի դեպքում՝ հաղորդագրություն</li>
+    </ul>
+
+    <h3>Քայլ 2 · Ավելացնել և հանել</h3>
+    <ul class="goals">
+      <li><code>addBook(title, pages)</code>՝ կրկնություն չի թույլատրում (<code>includes</code>)</li>
+      <li><code>removeBook(title)</code>՝ <code>indexOf</code> + <code>splice</code>, <strong>երկու</strong> զանգվածից</li>
+      <li>Չգտնվելու դեպքում՝ «Չգտնվեց»</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.js — removeBook</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">removeBook</span>(title) {
+    <span class="k">const</span> index = shelf.<span class="f">indexOf</span>(title);
+    <span class="k">if</span> (index === -<span class="n">1</span>) {
+        <span class="k">return</span> <span class="s">"Չգտնվեց"</span>;
+    }
+    shelf.<span class="f">splice</span>(index, <span class="n">1</span>);
+    pagesList.<span class="f">splice</span>(index, <span class="n">1</span>);
+    <span class="k">return</span> <span class="s">`Հանվեց՝ «</span>${title}<span class="s">»`</span>;
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 3 · Հերթ</h3>
+    <ul class="goals">
+      <li><code>toRead.shift()</code>՝ հաջորդ գիրքը, <code>push</code>՝ նոր գիրք հերթի վերջում</li>
+      <li>Հերթը՝ մեկ տողով՝ <code>join(" → ")</code></li>
+    </ul>
+
+    <h3>Քայլ 4 · Ժանրեր տողից</h3>
+    <ul class="goals">
+      <li><code>"վեպ,հեքիաթ,..."</code> → <code>split(",")</code> → ավելացրու «պոեզիա» → <code>join(" · ")</code></li>
+    </ul>
+
+    <h3>Քայլ 5 · Վիճակագրություն</h3>
+    <ul class="goals">
+      <li><code>getTotal(list)</code>՝ <code>for...of</code>-ով</li>
+      <li>Միջինը՝ <code>toFixed(0)</code></li>
+      <li>Ամենամեծ գիրքը՝ <code>Math.max(...pagesList)</code> և <code>indexOf</code></li>
+      <li>Շրջված պատճեն՝ <code>[...shelf].reverse()</code>։ Ապացուցիր, որ բնօրինակը նույնն է</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Նույն գիրքը երկրորդ անգամ չի ավելանում</li>
+      <li>Հանելուց հետո երկու զանգվածը նույն երկարությունն ունեն</li>
+      <li>Բնօրինակը չի փոխվում <code>reverse</code>-ից</li>
+      <li>Ֆունկցիաները վերադարձնում են տեքստ, տպում է կանչող կոդը</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Հանելուց հետո էջերը «տեղաշարժվել» են</td><td>Հանել ես միայն մեկ զանգվածից</td></tr>
+      <tr><td><code>splice(index)</code>-ը հանեց ամեն ինչ</td><td>Երկրորդ արգումենտը՝ քանակը․ <code>splice(index, 1)</code></td></tr>
+      <tr><td><code>reverse()</code>-ը փոխեց դարակը</td><td><code>reverse</code>-ը փոխում է բնօրինակը։ Նախ պատճեն՝ <code>[...shelf]</code></td></tr>
+      <tr><td><code>indexOf</code>-ը միշտ -1 է</td><td>Վերնագրում բացատ կամ տառասխալ կա․ համեմատումը ճշգրիտ է</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 05-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում։</p>
+    <ol class="hw">
+      <li>Ստեղծիր 7 թվից բաղկացած զանգված։ Տպիր առաջինը, վերջինը, երկարությունը և միջինը։</li>
+      <li>Գրիր <code>getSum(arr)</code> ֆունկցիա, որը վերադարձնում է զանգվածի բոլոր թվերի գումարը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գրիր <code>getMax(arr)</code> և <code>getMin(arr)</code>՝ <strong>առանց</strong> <code>Math.max</code>-ի, ցիկլով։</li>
+      <li>Ունես 10 գնահատական։ Հաշվիր՝ քանիսն են 14-ից բարձր, և ստեղծիր դրանցից նոր զանգված։</li>
+      <li>Գրիր <code>countEvens(arr)</code>՝ քանի՞ զույգ թիվ կա զանգվածում։</li>
+      <li>Ունես անունների զանգված։ Տպիր դրանք համարակալված ցուցակով՝ <code>1. Անի</code>, <code>2. Դավիթ</code>… <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գրիր <code>reverseArray(arr)</code>՝ վերադարձնում է շրջված <strong>նոր</strong> զանգված։ Բնօրինակը չպիտի փոխվի (օգտագործիր <code>[...arr]</code>)։</li>
+      <li>Տրված է <code>"կարմիր,կանաչ,կապույտ,դեղին"</code> տողը։ Վերածիր զանգվածի, ավելացրու «սև», ապա հետ վերածիր տողի՝ <code>" | "</code> բաժանարարով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գրիր <code>removeItem(arr, item)</code>՝ գտնում է էլեմենտը <code>indexOf</code>-ով և հեռացնում <code>splice</code>-ով։ Եթե չկա — վերադարձնում է «Չգտնվեց»։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ունես երկու զանգված։ Ստեղծիր երրորդը, որտեղ կլինեն միայն այն էլեմենտները, որոնք կան <strong>երկուսում էլ</strong> (օգտագործիր <code>includes</code>)։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/index.html">օրինակը</a> և դրա կոդը <code>example/js/</code>-ում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-04/task.html">← Դաս 04</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-06/task.html">Դաս 06 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · տնային աշխատանք · Դաս 05</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

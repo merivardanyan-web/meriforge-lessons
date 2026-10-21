@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Անի Սարգսյան — սովորում եմ վեբ ծրագրավորում</title>
+
+    <meta name="description" content="Անիի անձնական կայքը․ ինչ եմ սովորում, նախագծեր և բլոգ">
+    <meta property="og:title" content="Անի Սարգսյան — սովորում եմ վեբ ծրագրավորում">
+    <meta property="og:description" content="Անիի անձնական կայքը․ ինչ եմ սովորում, նախագծեր և բլոգ">
+    <meta property="og:image" content="images/og.jpg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="icon" href="images/favicon.svg">
+
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+    <a href="#main" class="skip-link">Անցնել բովանդակությանը</a>
+
+    <header>
+        <div class="row align-center justify-between">
+            <div class="col">
+                <a href="index.html" class="logo">Անի Սարգսյան</a>
+            </div>
+            <div class="col">
+                <nav aria-label="Գլխավոր մենյու">
+                    <ul class="menu flex align-center flex-wrap">
+                        <li><a href="index.html" class="is-active">Գլխավոր</a></li>
+                        <li><a href="pages/about.html">Իմ մասին</a></li>
+                        <li><a href="pages/blog.html">Բլոգ</a></li>
+                        <li><a href="pages/schedule.html">Դասացուցակ</a></li>
+                        <li><a href="pages/compare.html">Համեմատություն</a></li>
+                        <li><a href="pages/register.html">Ակումբ</a></li>
+                        <li><a href="pages/contact.html">Կապ</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main id="main">
+        <section id="intro" class="bg-surface">
+            <div class="row flex-wrap align-center">
+                <div class="col w-70">
+                    <div class="wrapper">
+                        <h1>Անի Սարգսյան</h1>
+                        <p class="lead">Սովորում եմ վեբ ծրագրավորում։ Այստեղ գրում եմ այն, ինչ սովորում եմ ամեն շաբաթ։</p>
+                        <p>Այս էջում՝
+                            <a href="#learning">Ինչ եմ սովորում</a> ·
+                            <a href="#projects">Իմ նախագծերը</a> ·
+                            <a href="#resources">Օգտակար նյութեր</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col w-30">
+                    <div class="wrapper text-center">
+                        <img src="images/avatar.jpg" alt="Անիի դիմանկարը՝ նկարազարդ" width="200" height="200" class="avatar">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="learning">
+            <div class="row">
+                <div class="col w-100">
+                    <div class="wrapper">
+                        <h2>Ինչ եմ սովորում</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row flex-wrap">
+                <div class="col w-50">
+                    <div class="wrapper box">
+                        <h3>HTML</h3>
+                        <p>HTML-ը էջի <strong>կմախքն</strong> է։ Ամեն բլոկ ունի իմաստ՝ &lt;header&gt;, &lt;main&gt;, &lt;footer&gt;։</p>
+                    </div>
+                </div>
+                <div class="col w-50">
+                    <div class="wrapper box">
+                        <h3>CSS</h3>
+                        <p>Այս շաբաթ սովորեցի flex-grow-ը, flex-shrink-ը և gap-ը․ որոնման դաշտը ձգվում է, կոճակը՝ ոչ։</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="bg-surface">
+            <div class="row flex-wrap align-center justify-between">
+                <div class="col">
+                    <div class="wrapper">
+                        <h2>Իմ նախագծերը</h2>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="wrapper">
+                        <a href="pages/schedule.html">Բոլոր նախագծերը</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row flex-wrap">
+                <div class="col w-33">
+                    <article class="wrapper card">
+                        <img src="images/project-site.jpg" alt="Անիի կայքի գլխավոր էջի սքրինշոթը" width="600" height="400" loading="lazy">
+                        <div class="card__body">
+                            <h3 class="title-4">Այս կայքը</h3>
+                            <p class="text-muted">Սկսվեց մեկ էջից Դաս 1-ում։ Հիմա ունի տասը էջ, ոճեր և դասավորության համակարգ, իսկ ամեն դասից հետո ավելանում է մի նոր բան։</p>
+                            <p><span class="pill">HTML</span> <span class="pill">CSS</span></p>
+                        </div>
+                        <div class="card__footer">
+                            <a href="pages/blog.html" class="btn">Կարդալ բլոգը</a>
+                        </div>
+                    </article>
+                </div>
+                <div class="col w-33">
+                    <article class="wrapper card">
+                        <img src="images/project-form.jpg" alt="Գրանցման ֆորմայի սքրինշոթը" width="600" height="400" loading="lazy">
+                        <div class="card__body">
+                            <h3 class="title-4">Գրանցման ֆորմա</h3>
+                            <p class="text-muted">Ֆորմա երեք խմբով, վալիդացիայով և label-ներով, որը կարելի է անցնել միայն ստեղնաշարով։</p>
+                            <p><span class="pill">HTML</span> <span class="pill">CSS</span></p>
+                        </div>
+                        <div class="card__footer">
+                            <a href="pages/register.html" class="btn">Բացել</a>
+                        </div>
+                    </article>
+                </div>
+                <div class="col w-33">
+                    <article class="wrapper card">
+                        <img src="images/project-schedule.jpg" alt="Դասացուցակի աղյուսակի սքրինշոթը" width="600" height="400" loading="lazy">
+                        <div class="card__body">
+                            <h3 class="title-4">Դասացուցակ</h3>
+                            <p class="text-muted">Աղյուսակ rowspan-ով։</p>
+                            <p><span class="pill">HTML</span></p>
+                        </div>
+                        <div class="card__footer">
+                            <a href="pages/schedule.html" class="btn">Բացել</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="resources">
+            <div class="row">
+                <div class="col w-100">
+                    <div class="wrapper">
+                        <h2>Օգտակար նյութեր</h2>
+                        <ul>
+                            <li><a href="https://developer.mozilla.org/hy/" target="_blank" rel="noopener">MDN՝ HTML-ի և CSS-ի տեղեկատու</a></li>
+                            <li><a href="https://validator.w3.org/" target="_blank" rel="noopener">W3C Validator՝ HTML-ի ստուգում</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <h2 class="visually-hidden">Կայքի ներքևի մաս</h2>
+
+        <div class="row flex-wrap">
+            <div class="col w-40">
+                <div class="wrapper">
+                    <p class="logo">Անի Սարգսյան</p>
+                    <p>Սովորում եմ վեբ ծրագրավորում և գրում եմ այդ մասին։</p>
+                </div>
+            </div>
+
+            <div class="col w-20">
+                <div class="wrapper">
+                    <h3 class="footer__title">Բաժիններ</h3>
+                    <nav aria-label="Footer-ի հղումներ">
+                        <ul class="flex flex-column gap-10">
+                            <li><a href="index.html">Գլխավոր</a></li>
+                            <li><a href="pages/blog.html">Բլոգ</a></li>
+                            <li><a href="pages/contact.html">Կապ</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="col w-40">
+                <div class="wrapper">
+                    <h3 class="footer__title">Նոր գրառումներ</h3>
+                    <!-- Դաշտը ձգվում է, կոճակը չի սեղմվում — Դաս 12 -->
+                    <form class="inline-form flex gap-10" action="index.html" method="get">
+                        <label for="mail" class="visually-hidden">Էլ. հասցե</label>
+                        <input type="email" id="mail" name="mail" placeholder="ani@example.com" autocomplete="email" required>
+                        <button type="submit" class="btn">Բաժանորդագրվել</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col w-100">
+                <div class="wrapper footer__bottom flex justify-between align-center flex-wrap gap-10">
+                    <p>&copy; 2026&nbsp;Անի Սարգսյան</p>
+                    <address><a href="mailto:ani@example.com">ani@example.com</a> · Սևան, Հայաստան</address>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

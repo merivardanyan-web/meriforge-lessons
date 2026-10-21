@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Տնային · Դաս 10 — կառուցվածքի համակարգը</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:#fff}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule); background:var(--paper)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  @media (max-width:700px){.shots{grid-template-columns:1fr}}
+  .lede a, .note a, .pager a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code){white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 1 · տնային</b> · Դաս 10</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../html-lesson-10.html">HTML Դաս 10</a> · մինի-նախագիծ</p>
+  <h1>Ամբողջ կայքը կառուցվածքի համակարգով</h1>
+  <p class="lede">Կայքը վերակառուցում ենք <code>section &gt; .row &gt; .col &gt; .wrapper</code> համակարգով, որը կօգտագործես մինչև դասընթացի վերջ։</p>
+
+  <div class="facts">
+    <span>Ժամանակ՝ ~2.5 ժամ</span>
+    <span>Սկսիր Դաս 09-ի արդյունքից</span>
+    <span>Արդյունք՝ բոլոր 7 էջը սյուներով</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Օգտագործիր միայն Դաս 01–10-ը։ <code>.row</code>-ի <code>display: flex</code>-ը այս դասից է, բայց Flexbox-ի հատկությունները (<code>justify-content</code>, <code>align-items</code>, <code>gap</code>) Դաս 11–12-ում են։ Էջը նախատեսված է համակարգչի համար․ ադապտիվությունը Դաս 14-ում է։</p>
+  </div>
+
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Կայքն առաջին անգամ ունի իսկական դասավորություն՝ սյուներ, հավասար բացակներ և ամբողջ լայնությամբ ֆոներ։ Ամեն էջ կառուցված է նույն հինգ շերտով։</p>
+    <figure class="shot">
+      <img src="screenshots/index.jpg" alt="Գլխավոր էջ սյուներով․ header-ում անունը ձախում և մենյուն աջում, ներածությունը և դիմանկարը կողք կողքի, երկու սպիտակ բլոկ, երկու հավասար բարձրությամբ քարտ, footer երեք սյունով" width="900" height="1256" loading="lazy">
+      <figcaption>index.html՝ 1280px</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/blog.jpg" alt="Բլոգ երկու սյունով․ ձախում գրառումները, աջում «Հեղինակի մասին» բլոկը" width="900" height="1042" loading="lazy">
+      <figcaption>pages/blog.html՝ 1280px</figcaption>
+    </figure>
+  </section>
+
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <div class="tree">starter/
+└── content.md     ← չափեր և ամեն էջի սյուները</div>
+    <p>Սկսիր Դաս 09-ի քո կայքից։ Եթե այն չունես, վերցրու <a href="../lesson-09/example/index.html">Դաս 09-ի օրինակը</a>։</p>
+  </section>
+
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+
+    <h3>Քայլ 1 · global.css</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>global.css — Դաս 10</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.row</span> {
+    <span class="f">display</span>: <span class="s">flex</span>;
+}
+
+<span class="k">.wrapper</span> {
+    <span class="f">height</span>: <span class="s">100%</span>;
+}
+
+<span class="k">.w-25</span>  { <span class="f">width</span>: <span class="s">25%</span>; }
+<span class="k">.w-30</span>  { <span class="f">width</span>: <span class="s">30%</span>; }
+<span class="k">.w-40</span>  { <span class="f">width</span>: <span class="s">40%</span>; }
+<span class="k">.w-50</span>  { <span class="f">width</span>: <span class="s">50%</span>; }
+<span class="k">.w-60</span>  { <span class="f">width</span>: <span class="s">60%</span>; }
+<span class="k">.w-70</span>  { <span class="f">width</span>: <span class="s">70%</span>; }
+<span class="k">.w-100</span> { <span class="f">width</span>: <span class="s">100%</span>; }
+<span class="c">/* + w-10, w-20, w-33, w-75, w-80 */</span></code></pre>
+    </div>
+
+    <h3>Քայլ 2 · main.css-ի չափերը</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">section</span> { <span class="f">padding</span>: <span class="s">40px 0</span>; }
+<span class="k">.row</span>    { <span class="f">padding</span>: <span class="s">0 50px</span>; }
+<span class="k">.col</span>    { <span class="f">padding</span>: <span class="s">10px</span>; }</code></pre>
+    </div>
+    <p>Ջնջիր Դաս 08-ի <code>main { max-width: 960px; margin: 0 auto; }</code>-ը։ Պատերը հիմա <code>.row</code>-ի գործն են, իսկ ֆոնը կարող է զբաղեցնել ամբողջ լայնությունը։</p>
+
+    <h3>Քայլ 3 · Մեկ էջ ամբողջությամբ</h3>
+    <p>Սկսիր «Կապ» էջից, այն ամենապարզն է։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>contact.html</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">section</span> <span class="f">id</span>=<span class="s">"contact"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-100"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">h1</span><span class="p">&gt;</span>Կապ<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-50"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper box"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">h2</span><span class="p">&gt;</span>Գրիր կամ զանգիր<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+                ...
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-50"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper box"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">h2</span><span class="p">&gt;</span>Այլ կայքեր<span class="p">&lt;/</span><span class="t">h2</span><span class="p">&gt;</span>
+                ...
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span></code></pre>
+    </div>
+    <div class="tip note"><span class="tag">Ստուգում</span><p>Ժամանակավորապես ավելացրու <code>.row { outline: 2px solid red; }</code>, <code>.col { outline: 2px solid blue; }</code>, <code>.wrapper { outline: 2px solid green; }</code>։ Կարմիրի և կապույտի միջև՝ 50px պատ, կապույտի և կանաչի միջև՝ 10px բացակ։ Սքրինշոթ արա և ջնջիր outline-ները։</p></div>
+
+    <h3>Քայլ 4 · Header և footer</h3>
+    <p>Header-ում երկու սյուն․ <code>w-30</code> անվան և <code>w-70</code> մենյուի համար։ Մենյուն աջ տանելու համար՝ <code>text-align: right</code> մենյուի սյան վրա, որովհետև մենյուի կետերը inline-block են։ Footer-ում երեք սյուն։</p>
+
+    <h3>Քայլ 5 · Մնացած էջերը</h3>
+    <p>Վերակառուցիր բոլոր էջերը <code>content.md</code>-ի աղյուսակով։ Ամեն <code>section</code>-ում՝ մեկ կամ մի քանի <code>.row</code>, ամեն սյան մեջ՝ <code>.wrapper</code>։</p>
+
+    <h3>Քայլ 6 · Քարտերը սյուներում</h3>
+    <p>Գլխավոր էջի քարտը դիր անմիջապես <code>.col</code>-ի մեջ և տուր նրան նաև <code>wrapper</code> դասը՝ <code>&lt;article class="wrapper card"&gt;</code>։ Դաս 08-ի <code>display: inline-block</code>, <code>width</code> և <code>margin</code>-ը ջնջիր․ լայնությունը հիմա սյունն է որոշում։</p>
+    <div class="tip note"><span class="tag">height: 100%</span><p>Մի քարտի տեքստը դարձրու երեք անգամ ավելի երկար։ Երկու քարտն էլ կմնան նույն բարձրության, որովհետև <code>.row</code>-ը flex է, իսկ <code>.wrapper</code>-ը՝ <code>height: 100%</code>։ Հանիր <code>wrapper</code> դասը մեկ քարտից և համեմատիր։</p></div>
+  </section>
+
+  <section id="s3">
+    <h2><span class="num">03</span>Ընդունման ստուգաթերթ</h2>
+    <h3>Կառուցվածք</h3>
+    <ul class="goals">
+      <li>Ամեն էջ՝ <code>main &gt; section &gt; .row &gt; .col &gt; .wrapper</code></li>
+      <li>Ամեն <code>section</code> ունի <code>id</code></li>
+      <li>Ամեն <code>.col</code> ունի ուղիղ մեկ <code>.wrapper</code></li>
+    </ul>
+
+    <h3>Չափեր</h3>
+    <ul class="goals">
+      <li>Սյուների լայնությունների գումարը ամեն <code>.row</code>-ում 100% է</li>
+      <li>Պատերը և բացակները հավասար են բոլոր էջերում</li>
+      <li>Կողք կողքի բլոկները նույն բարձրության են</li>
+    </ul>
+
+    <h3>Շերտերի դերերը</h3>
+    <ul class="goals">
+      <li>Ֆոնը՝ <code>section</code>-ի կամ <code>.wrapper</code>-ի վրա, երբեք <code>.col</code>-ի</li>
+      <li><code>.row</code>-ը և <code>.col</code>-ը միայն չափեր ունեն</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Ֆոնով բլոկները կպած են իրար, բացակ չկա</td><td>Ֆոնը դրված է <code>.col</code>-ի վրա։ <code>.col</code>-ի padding-ը ֆոնի ներսում է, ուստի բացակը անհետանում է։ Ֆոնը տեղափոխիր <code>.wrapper</code>-ի վրա</td></tr>
+      <tr><td>Մեկ բլոկ ավելի կարճ է հարևաններից</td><td>Այդ սյան մեջ <code>.wrapper</code>-ը բացակայում է</td></tr>
+      <tr><td>Վերջին սյունը տեղափոխվել է նոր տող կամ դուրս է եկել</td><td>Լայնությունների գումարը 100%-ից ավելի է</td></tr>
+      <tr><td>Հեռախոսում ամեն ինչ շատ նեղ է</td><td>Սպասելի է․ ադապտիվ լայնությունները (<code>w-md-*</code>) Դաս 14-ում են</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 10-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում կամ նույն թղթապանակում։</p>
+    <ol class="hw">
+      <li>Ավելացրու <code>global.css</code>-ում <code>.row</code>, <code>.wrapper</code> և բոլոր <code>.w-*</code> դասերը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>main.css</code>-ում <code>section</code>-ի, <code>.row</code>-ի և <code>.col</code>-ի չափերը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կառուցիր բաժին չորս սյունով (<code>w-25</code>)։ Ստուգիր, որ բացակները հավասար են։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կառուցիր բաժին երկու անհամաչափ սյունով՝ <code>w-70</code> և <code>w-30</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կառուցիր <code>section</code>, որի ներսում կան <strong>երեք տարբեր <code>.row</code></strong>՝ վերնագիր, բովանդակություն, կոճակ։</li>
+      <li>Ցուցադրիր <code>height: 100%</code>-ի ազդեցությունը՝ երեք քարտ շատ տարբեր երկարության տեքստերով, առաջ և հետո։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Դիտավորյալ դիր ֆոն <code>.col</code>-ի վրա։ Նկարագրիր՝ ինչ կոտրվեց և ինչու։</li>
+      <li>Դիտավորյալ բաց թող <code>.wrapper</code>-ը մեկ սյան մեջ։ Համեմատիր հարևանների հետ։</li>
+      <li>Ժամանակավորապես ավելացրու <code>outline</code>-ներ բոլոր երեք շերտին տարբեր գույներով։ Ուղարկիր սքրինշոթ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Վերցրու Դաս 5-ի սեմանտիկ էջը և վերակառուցիր այն ամբողջովին այս համակարգով։ Ամեն բաժին պիտի ունենա <code>id</code>, ամեն սյուն՝ <code>.wrapper</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/index.html">օրինակը</a> և քո էջը կողք կողքի։ Բացիր երկուսի կոդն էլ խմբագրիչում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-09/task.html">← Դաս 09</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-11/task.html">Դաս 11 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 1 · տնային աշխատանք · Դաս 10</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

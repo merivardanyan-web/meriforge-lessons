@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Առաջադրանք 2 — մոդուլներ, էջեր, ֆորմաներ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lesson.css">
+<script src="../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · նախագիծ</b> · առաջադրանք 2</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Առաջադրանք 2 / 3 · JS Դաս 17–18 · 2 դաս + տնային</p>
+  <h1>Մոդուլներ, ապրանքի էջ և ֆորմաներ</h1>
+  <p class="lede">Դաս 17-ում նախագիծը դնում ենք GitHub, Դաս 18-ում բաժանում ենք մոդուլների։ Միաժամանակ կենդանացնում ենք մնացած էջերը Դաս 11–15-ի գործիքներով, որոնք Առաջադրանք 1-ում դեռ պետք չէին․ ապրանքի էջը <code>?id=</code>-ով, պատվերի, մուտքի և գրանցման ֆորմաների ստուգումը, թեման։</p>
+
+  <div class="facts">
+    <span>Արդյունք՝ GitHub պահոց + Pages</span>
+    <span>Ամեն էջ՝ մեկ type="module"</span>
+    <span>Ստուգում՝ բաժին 04</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Նախագիծը դառնում է իսկական պահոց GitHub-ում, կոդը բաժանվում է մոդուլների, իսկ մնացած էջերը նույնպես կենդանանում են․ ապրանքի էջը կառուցվում է <code>?id=</code>-ով, ֆորմաները ստուգում են տվյալները, թեման պահպանվում է։</p>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/ex2-checkout-errors.jpg" alt="Պատվերի ֆորմա սխալներով․ կարմիր եզրագծով դաշտեր և սխալի տեքստեր դրանց տակ" width="900" height="914" loading="lazy">
+      <figcaption>checkout.html՝ սխալներ դաշտերի տակ</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/ex2-register.jpg" alt="Գրանցման ֆորմա․ սխալ էլ. հասցե, գաղտնաբառի ուժի գիծ երեք հատվածով և «Գաղտնաբառերը չեն համընկնում»" width="900" height="844" loading="lazy">
+      <figcaption>register.html՝ ուժի ցուցիչ և համընկնում</figcaption>
+    </figure>
+    </div>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/ex2-product-mobile.jpg" alt="Ապրանքի էջը հեռախոսում՝ ականջակալ, գին, քանակ, բնութագրեր և նման ապրանքներ" width="375" height="2300" loading="lazy">
+      <figcaption>product.html?id=5՝ 375px</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/ex2-dark.jpg" alt="Կատալոգը մուգ թեմայով, header-ում արևի նշանով կոճակ" width="900" height="633" loading="lazy">
+      <figcaption>Ձեռքով ընտրված մուգ թեմա</figcaption>
+    </figure>
+    </div>
+    <div class="note">
+      <span class="tag">Օրինակի մասին</span>
+      <p>Այս առաջադրանքի համար առանձին օրինակ չկա․ <a href="example-2-final/index.html">example-2-final</a>-ը արդեն պարունակում է նաև Առաջադրանք 3-ը (fetch, դասեր)։ Համեմատելիս նայիր մոդուլների կառուցվածքին, <code>pages/*.js</code>-ին, <code>ui/</code>-ին և <code>validation.js</code>-ին։</p>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Git և հրապարակում · Դաս 17</h2>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>terminal</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># 1. Պահոց և առաջին commit (Դաս 17)</span>
+cd technomarket
+git init
+git add .
+git commit -m "ՏեխնոՄարկետ՝ կատալոգ և զամբյուղ (Առաջադրանք 1)"
+<span class="c">
+# 2. GitHub և Pages</span>
+git remote add origin https://github.com/ՕԳՏԱՆՈՒՆ/technomarket.git
+git push -u origin main
+<span class="c"># Settings → Pages → Branch: main</span>
+<span class="c">
+# 3. Ամեն մեծ քայլ՝ իր ճյուղում</span>
+git switch -c feature/modules
+<span class="c"># ... աշխատանք ...</span>
+git add .
+git commit -m "Կոդը բաժանված է ES մոդուլների"
+git switch main
+git merge feature/modules
+git push</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>.gitignore</div><button class="copy">Պատճենել</button></div>
+<pre><code>.DS_Store
+Thumbs.db
+.vscode/
+*.log
+node_modules/</code></pre>
+    </div>
+    <ul class="goals">
+      <li>Առնվազն 10 իմաստալից commit մինչև պաշտպանությունը (Դաս 24)․ մեկ commit = մեկ փոփոխություն</li>
+      <li>Առնվազն երեք <code>feature/</code> ճյուղ․ <code>feature/modules</code>, <code>feature/product-page</code>, <code>feature/forms</code></li>
+      <li>README՝ նկարագրություն, հասցե, հնարավորություններ, սահմանափակումներ (Բլոկ 1-ի README-ն թարմացրու)</li>
+      <li>Հրապարակված տարբերակը GitHub Pages-ում աշխատում է․ Pages-ը սերվեր է, ուստի մոդուլներն էլ կաշխատեն</li>
+    </ul>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Live Server</h3>
+    <p>Մոդուլները չեն աշխատում <code>file://</code>-ով (Դաս 18)։ VS Code → Live Server → <em>Open with Live Server</em>։ Հասցեն պիտի սկսվի <code>http://127.0.0.1:5500</code>-ով։</p>
+
+    <h3>Քայլ 2 · Մոդուլներ · Դաս 18</h3>
+    <p>Ամեն էջ ունի <strong>մեկ</strong> սկրիպտ՝ իր մուտքի կետը։ Մնացածը այն բերում է <code>import</code>-ով։ Ընդհանուր մասը (header, թեմա) մեկ ֆունկցիայում է, որ ամեն էջում չկրկնենք։</p>
+    <div class="tree">js/
+├── data.js            ← export const PRODUCTS …
+├── storage.js         ← export save, load
+├── utils.js           ← export formatPrice, debounce
+├── cart.js            ← զամբյուղի մոդելը
+├── validation.js      ← ստուգման կանոններ (քայլ 6)
+├── ui/
+│   ├── layout.js      ← initLayout()․ header + թեմա, ամեն էջում
+│   ├── header.js      ← զամբյուղի թիվ, բուրգեր
+│   ├── theme.js       ← մուգ/բաց
+│   ├── toast.js
+│   └── cart-modal.js  ← «Գնել» + մոդալ
+└── pages/             ← ամեն էջի մուտքի կետը
+    ├── home.js  catalog.js  product.js  cart.js
+    ├── checkout.js  thanks.js  login.js  register.js
+    └── common.js      ← 404</div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>catalog.html</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">script</span> <span class="f">type</span>=<span class="s">"module"</span> <span class="f">src</span>=<span class="s">"js/pages/catalog.js"</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">script</span><span class="p">&gt;</span></code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/pages/home.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">import</span> { initLayout } <span class="k">from</span> <span class="s">"../ui/layout.js"</span>;
+<span class="k">import</span> { initCartModal } <span class="k">from</span> <span class="s">"../ui/cart-modal.js"</span>;
+
+<span class="f">initLayout</span>();
+<span class="f">initCartModal</span>();</code></pre>
+    </div>
+    <div class="warn note">
+      <span class="tag">Կախվածությունները՝ մեկ ուղղությամբ</span>
+      <p><code>pages/</code> → <code>ui/</code> → <code>cart.js</code>, <code>utils.js</code> → <code>data.js</code>, <code>storage.js</code>։ Եթե <code>cart.js</code>-ը սկսի import անել <code>ui/header.js</code>-ից, իսկ <code>header.js</code>-ը՝ <code>cart.js</code>-ից, կստացվի օղակ (Դաս 18)։ Header-ի թիվը թարմացնելու համար թող <code>cart.js</code>-ը կանչի «բաժանորդների» ֆունկցիաները՝ <code>onChange(fn)</code>։ Նայիր օրինակի <code>ui/header.js</code>-ը։</p>
+    </div>
+
+    <h3>Քայլ 3 · Բուրգեր և թեմա · Դաս 11, 14</h3>
+    <p>Բլոկ 1-ի բուրգերը checkbox է և աշխատում է առանց JS-ի։ JS-ը ավելացնում է միայն այն, ինչ CSS-ը չէր կարող․ փակել Escape-ով և հղման սեղմելիս։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/ui/header.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">initBurger</span>() {
+    <span class="k">const</span> toggle = document.<span class="f">querySelector</span>(<span class="s">".nav-toggle"</span>);
+    <span class="k">const</span> nav = document.<span class="f">querySelector</span>(<span class="s">".header nav"</span>);
+    <span class="k">if</span> (!toggle || !nav) <span class="k">return</span>;
+
+    document.<span class="f">addEventListener</span>(<span class="s">"keydown"</span>, (e) =&gt; {
+        <span class="k">if</span> (e.key === <span class="s">"Escape"</span> &amp;&amp; toggle.checked) {
+            toggle.checked = <span class="k">false</span>;
+            toggle.<span class="f">focus</span>();                      <span class="c">// ֆոկուսը վերադարձնում ենք մենյուի կոճակին</span>
+        }
+    });
+
+    nav.<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+        <span class="k">if</span> (e.target.<span class="f">closest</span>(<span class="s">"a"</span>)) toggle.checked = <span class="k">false</span>;
+    });
+}</code></pre>
+    </div>
+    <p>Թեմայի կոճակը՝ header-ում, զամբյուղից առաջ։ Ընտրությունը պահվում է <code>localStorage</code>-ում, իսկ CSS-ում մուգ թեման աշխատում է երկու դեպքում՝ համակարգը մուգ է և օգտագործողը բաց չի ընտրել, կամ օգտագործողը ընտրել է մուգ։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>css/main.css — բաժին 11</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">@media (prefers-color-scheme: dark)</span> {
+    <span class="k">:root:not([data-theme="light"])</span> { <span class="c">/* մուգ տոկենները */</span> }
+}
+
+<span class="k">:root[data-theme="dark"]</span> { <span class="c">/* նույն մուգ տոկենները */</span> }</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>&lt;head&gt;-ում՝ CSS-ից հետո</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">script</span><span class="p">&gt;</span>
+        // Թեման կիրառում ենք մինչև էջի նկարվելը, որ «թարթում» չլինի — JS Դաս 14
+        try {
+            const savedTheme = localStorage.getItem("tm:theme");
+            if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
+        } catch (e) { /* localStorage-ը անհասանելի է՝ մնում է համակարգի թեման */ }
+    <span class="p">&lt;/</span><span class="t">script</span><span class="p">&gt;</span></code></pre>
+    </div>
+    <div class="tip note">
+      <span class="tag">Ինչու head-ում</span>
+      <p>Եթե թեման կիրառենք մոդուլում, որը կատարվում է էջի բեռնումից հետո, մուգ թեմա ընտրածը մի պահ կտեսնի բաց էջ։ Այս փոքր սկրիպտը կատարվում է մինչև էջի նկարվելը։ Ինքը թեմայի կոճակը՝ <code>ui/theme.js</code>-ում։</p>
+    </div>
+
+    <h3>Քայլ 4 · Ապրանքի էջ <code>?id=</code>-ով · Դաս 15</h3>
+    <ul class="goals">
+      <li>Քարտերի հղումները՝ <code>product.html?id=5</code>։ Էջում՝ <code>Number(new URLSearchParams(location.search).get("id"))</code></li>
+      <li>Ամբողջ <code>main</code>-ը կառուցում է JS-ը նույն markup-ով, ինչ Բլոկ 1-ի ստատիկ էջում՝ փշրանքներ, պատկերասրահ, գին, ֆորմա, բնութագրեր, նման ապրանքներ։ <code>document.title</code>-ը՝ ապրանքի անունով</li>
+      <li>Գոյություն չունեցող id (<code>?id=999</code>)՝ հաղորդագրություն և հղում կատալոգ</li>
+      <li>Պատկերասրահի փոքր նկարները դարձրու <code>button</code>-ներ։ Սեղմելիս փոխվում է մեծ նկարը և <code>is-current</code> դասը («հանել բոլորից → ավելացնել ընտրվածին», Դաս 11)</li>
+      <li>Listener-ները՝ <code>#product-root</code>-ի վրա (դելեգացիա), որովհետև ներսի ամեն ինչ ստեղծվում է <code>innerHTML</code>-ով</li>
+      <li>Սպառված ապրանքի էջում ֆորմայի փոխարեն՝ անջատված կոճակ</li>
+    </ul>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/pages/product.js — պատկերասրահ</div><button class="copy">Պատճենել</button></div>
+<pre><code>    <span class="k">if</span> (target.dataset.action === <span class="s">"thumb"</span>) {
+        <span class="k">const</span> main = root.<span class="f">querySelector</span>(<span class="s">".gallery__main"</span>);
+        <span class="k">const</span> { image } = target.dataset;
+        main.<span class="f">querySelector</span>(<span class="s">"source"</span>).<span class="f">setAttribute</span>(<span class="s">"srcset"</span>, <span class="s">`images/</span>${image}<span class="s">.webp`</span>);
+        main.<span class="f">querySelector</span>(<span class="s">"img"</span>).<span class="f">setAttribute</span>(<span class="s">"src"</span>, <span class="s">`images/</span>${image}<span class="s">.jpg`</span>);
+        root.<span class="f">querySelectorAll</span>(<span class="s">".gallery__thumb"</span>).<span class="f">forEach</span>(thumb =&gt; {
+            thumb.classList.<span class="f">toggle</span>(<span class="s">"is-current"</span>, thumb === target);
+            thumb.<span class="f">setAttribute</span>(<span class="s">"aria-pressed"</span>, thumb === target);
+        });
+    }</code></pre>
+    </div>
+
+    <h3>Քայլ 5 · Պատվերի ֆորմա · Դաս 13, 14</h3>
+    <ul class="goals">
+      <li><code>novalidate</code> և սխալի տեղ ամեն դաշտի տակ՝ <code>&lt;span class="field__error" data-error-for="phone"&gt;&lt;/span&gt;</code></li>
+      <li>Կանոններ՝ անուն (3+ նիշ), հեռախոս (<code>+374 91 23 45 67</code> կամ <code>091234567</code>), էլ. հասցե (ոչ պարտադիր, բայց եթե գրված է՝ ճիշտ), հասցե (պարտադիր, <strong>բացի</strong> «Վերցնել խանութից»-ի դեպքում), համաձայնություն</li>
+      <li>Սխալը՝ դաշտից դուրս գալիս (<code>blur</code>, որսման փուլով), ուղղելիս՝ անմիջապես (<code>input</code>)։ Ուղարկելիս՝ բոլոր սխալները միանգամից և ֆոկուս առաջինի վրա (Դաս 13)</li>
+      <li>Հաջող ուղարկում՝ պատվերը <code>sessionStorage</code>-ում (համար, անուն, քանակ, գումար), զամբյուղը դատարկվում է, <code>location.href = "thanks.html"</code></li>
+      <li><code>thanks.html</code>-ը կարդում է պատվերը, ցույց է տալիս համարը և ջնջում այն, որ թարմացնելիս չկրկնվի</li>
+    </ul>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/validation.js — հեռախոսի կանոն</div><button class="copy">Պատճենել</button></div>
+<pre><code>phone: /^(\+<span class="n">374</span>|<span class="n">0</span>)\s?\d{<span class="n">2</span>}(\s?\d{<span class="n">2</span>}){<span class="n">3</span>}$/,     <span class="c">// +374 91 23 45 67 կամ 091234567</span></code></pre>
+    </div>
+    <div class="note">
+      <span class="tag">Ինչու sessionStorage</span>
+      <p>Պատվերի համարը պետք է միայն հաջորդ էջում և միայն այս ներդիրում։ <code>localStorage</code>-ը այն կպահեր ընդմիշտ (Դաս 14)։ Իսկական պատվերը կգնա սերվեր PHP բլոկում։</p>
+    </div>
+
+    <h3>Քայլ 6 · Մուտք և գրանցում · Դաս 13</h3>
+    <ul class="goals">
+      <li>Երկու ֆորմայում՝ «Ցույց տալ» կոճակ գաղտնաբառի դաշտում (<code>type</code>-ը <code>password</code> ↔ <code>text</code>)</li>
+      <li>Գրանցում՝ անուն, էլ. հասցե, գաղտնաբառ (8+ նիշ, մեծատառ, թիվ), կրկնություն, համաձայնություն։ Գաղտնաբառը փոխելիս կրկնության դաշտը ստուգվում է նորից</li>
+      <li>Ուժի ցուցիչ՝ չորս գիծ, <code>data-level="0…4"</code> ատրիբուտով, իսկ գույները՝ CSS-ում</li>
+      <li>Հաջող ուղարկումից հետո՝ հաղորդագրություն <code>textContent</code>-ով (անունը օգտագործողինն է, ոչ <code>innerHTML</code>)</li>
+      <li>Գաղտնաբառը <strong>ոչ մի տեղ</strong> չենք պահում։ Մուտքը իսկապես կաշխատի PHP Դաս 16-ում՝ նույն դաշտերով</li>
+    </ul>
+    <div class="warn note">
+      <span class="tag">Կրկնվող կոդ երեք ֆորմայում</span>
+      <p>Պատվերի, մուտքի և գրանցման ֆորմաները ունեն նույն <code>showError</code>, <code>clearError</code>, <code>blur</code>/<code>input</code> տրամաբանությունը։ Գրիր այն մեկ անգամ՝ <code>validation.js</code>-ում, իսկ էջերում թող լինեն միայն կանոնները։ Օրինակում դա <code>createValidator(form, rules)</code> ֆունկցիան է։</p>
+    </div>
+
+    <h3>Քայլ 7 · Toast · Դաս 14</h3>
+    <p>Կարճ ծանուցում՝ «հեռացվեց», «ավելացվեց հավանածներում», «քանակը՝ 1-ից 10»։ Մեկ <code>showToast(message)</code> ֆունկցիա <code>ui/toast.js</code>-ում։</p>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Հաճախ հանդիպող սխալներ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>Cannot use import statement outside a module</code></td><td><code>&lt;script type="module"&gt;</code></td></tr>
+      <tr><td>CORS սխալ՝ <code>file://</code></td><td>Live Server (Դաս 18)</td></tr>
+      <tr><td><code>Failed to resolve module specifier "utils.js"</code></td><td>Ուղին սկսվում է <code>./</code>-ով կամ <code>../</code>-ով, <code>.js</code>-ը պարտադիր է</td></tr>
+      <tr><td><code>pages/catalog.js</code>-ից <code>import "./utils.js"</code> չի գտնվում</td><td>Ուղին հաշվվում է <strong>ֆայլից</strong>, ոչ HTML-ից․ <code>../utils.js</code></td></tr>
+      <tr><td>Header-ի թիվը չի թարմանում ապրանքի էջում</td><td>Էջի մոդուլը չի կանչում <code>initLayout()</code>-ը</td></tr>
+      <tr><td>Ապրանքի էջում պատկերասրահը չի աշխատում</td><td>Listener-ը կախված է կոճակների վրա մինչև render-ը։ Դելեգացիա <code>#product-root</code>-ի վրա</td></tr>
+      <tr><td>Հեռախոսի ճիշտ համարը սխալ է համարվում</td><td>Ստուգիր regex-ը Console-ում․ <code>patterns.phone.test("+374 91 23 45 67")</code></td></tr>
+      <tr><td>Մուգ թեմա ընտրածը մի պահ տեսնում է բաց էջ</td><td>Թեման կիրառիր <code>head</code>-ի փոքր սկրիպտով, ոչ մոդուլում</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Ընդունման ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>GitHub-ում կա պահոց, Pages-ի հասցեն աշխատում է, README-ն թարմացված է</li>
+      <li>Ամեն էջ ունի մեկ <code>type="module"</code> սկրիպտ, <code>var</code> և գլոբալ փոփոխականներ չկան</li>
+      <li>Բուրգերը փակվում է Escape-ով և հղման սեղմելիս</li>
+      <li>Թեման պահպանվում է էջից էջ, առանց «թարթման»</li>
+      <li><code>product.html?id=1…12</code>-ը ցույց է տալիս ճիշտ ապրանքը, <code>?id=999</code>՝ հաղորդագրություն</li>
+      <li>Պատկերասրահի փոքր նկարները փոխում են մեծը</li>
+      <li>Պատվերի ֆորման ցույց է տալիս բոլոր սխալները միանգամից, «Վերցնել խանութից»-ի դեպքում հասցեն պարտադիր չէ</li>
+      <li>Հաջող պատվերից հետո՝ շնորհակալության էջ պատվերի համարով, զամբյուղը դատարկ է</li>
+      <li>Գրանցումը ստուգում է գաղտնաբառերի համընկնումը և ցույց է տալիս ուժը</li>
+      <li>Ստուգման տրամաբանությունը գրված է մեկ անգամ՝ <code>validation.js</code>-ում</li>
+    </ul>
+    <div class="pager"><a href="task-1.html">← Առաջադրանք 1</a><a href="task-3.html">Առաջադրանք 3 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · նախագիծ · առաջադրանք 2</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

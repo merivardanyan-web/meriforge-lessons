@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 22 · Գրքերը որպես դասեր — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · տնային</b> · Դաս 22</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../js-lesson-22.html">JS Դաս 22</a> · մինի-նախագիծ</p>
+  <h1>Գրքերը որպես դասեր</h1>
+  <p class="lede">Գիրքը, դարակը և ժամաչափը դառնում են դասեր։ <code>Book</code>-ը ստուգում է իր տվյալները setter-ով, <code>AudioBook</code>-ը ժառանգում է այն, <code>Shelf</code>-ը պահպանում է ինքն իրեն, իսկ <code>ReadingTimer</code>-ը ցույց է տալիս, թե ինչու է arrow ֆունկցիան պահում <code>this</code>-ը։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Արդյունքը՝ pages/books.html</span>
+    <span>Live Server</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–22․ <code>class</code>, <code>constructor</code>, <code>get</code>/<code>set</code>, <code>static</code>, <code>#private</code>, <code>extends</code>, <code>super</code>, <code>this</code>։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <figure class="shot">
+      <img src="screenshots/shelf.jpg" alt="Դարակ, որտեղ աուդիոգրքի քարտում երևում է տևողությունը" width="900" height="792" loading="lazy">
+      <figcaption>Book, AudioBook, Shelf</figcaption>
+    </figure>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատիր քո կայքում (կամ <a href="../lesson-21/example/index.html">նախորդ դասի օրինակում</a>)։ CSS-ը տրված է, որ կենտրոնանաս JS-ի վրա․ HTML/CSS-ը արդեն գիտես։</p>
+    <ul class="goals">
+      <li><code>starter/js/data.js</code> — տվյալները՝ աուդիոգրքով</li>
+    </ul>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Book</h3>
+    <ul class="goals">
+      <li><code>#read</code>՝ փակ, <code>set read(value)</code>-ը նետում է սխալ 0-ից փոքր կամ էջերից մեծ արժեքի դեպքում</li>
+      <li>Getter-ներ՝ <code>percent</code>, <code>status</code>, <code>statusText</code>, <code>label</code></li>
+      <li>Մեթոդներ՝ <code>readPages</code>, <code>finish</code>, <code>rate</code>՝ <code>return this</code></li>
+      <li><code>toData()</code>՝ պահպանելու համար (JSON-ը չի տեսնում <code>#read</code>-ը), <code>static fromData(data)</code></li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/models/Book.js — setter</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">set</span> <span class="f">read</span>(value) {
+    <span class="k">if</span> (value &lt; <span class="n">0</span> || value &gt; <span class="k">this</span>.pages) {
+        <span class="k">throw</span> <span class="k">new</span> <span class="f">Error</span>(<span class="s">`Էջը պիտի լինի 0-ից </span>${this.pages}<span class="s">`</span>);
+    }
+    <span class="k">this</span>.#read = value;
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 2 · AudioBook extends Book</h3>
+    <ul class="goals">
+      <li><code>super(data)</code>՝ առաջին տողում, ավելացնում է <code>minutes</code></li>
+      <li><code>get label()</code>՝ <code>super.label + " · 🎧 11 ժ 0 ր"</code></li>
+      <li><code>Book.fromData</code>-ը ընտրում է դասը ըստ <code>type</code>-ի</li>
+    </ul>
+
+    <h3>Քայլ 3 · Shelf</h3>
+    <ul class="goals">
+      <li><code>#books</code>, <code>#filter</code>, <code>#query</code>, <code>#save()</code></li>
+      <li><code>get all</code>, <code>get visible</code>, <code>get doneCount</code>, <code>find</code>, <code>has</code></li>
+      <li><code>update(id, change)</code>՝ օրինակ <code>shelf.update(id, b =&gt; b.readPages(10))</code></li>
+    </ul>
+
+    <h3>Քայլ 4 · ReadingTimer</h3>
+    <ul class="goals">
+      <li><code>#seconds</code>, <code>#intervalId</code>, <code>start/stop/reset</code>, <code>get isRunning</code></li>
+      <li>Ներսում՝ arrow ֆունկցիա <code>setInterval</code>-ում։ Փորձիր <code>function</code>-ով և տես, թե ինչ է լինում <code>this</code>-ի հետ</li>
+    </ul>
+
+    <h3>Քայլ 5 · render</h3>
+    <ul class="goals">
+      <li>Քարտը կարդում է getter-ները․ <code>const { status, percent, label } = book</code></li>
+      <li><code>Book</code>-ի սխալը (օրինակ՝ առանց վերնագրի) բռնիր <code>try/catch</code>-ով և ցույց տուր toast-ում</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Ժամանակավորապես գրիր <code>shelf.all[0].read = 9999</code> <code>pages/books.js</code>-ում՝ պիտի լինի սխալ, իսկ <code>book.#read</code>-ը՝ SyntaxError</li>
+      <li>Աուդիոգրքի քարտում երևում է տևողությունը</li>
+      <li>Թարմացնելուց հետո դարակը նույնն է (toData/fromData)</li>
+      <li><code>pages/books.js</code>-ում <code>getStatus(b)</code> այլևս չկա, միայն <code>b.status</code></li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Թարմացնելուց հետո կարդացած էջերը 0 են</td><td><code>JSON.stringify</code>-ը չի տեսնում <code>#read</code>-ը․ պահիր <code>toData()</code>-ով</td></tr>
+      <tr><td><code>Must call super constructor</code></td><td><code>super(data)</code>՝ ենթադասի constructor-ի առաջին տողում</td></tr>
+      <tr><td>Ժամաչափում <code>Cannot read private member</code></td><td><code>setInterval(function () { this.#seconds++ })</code>․ <code>this</code>-ը կորավ, arrow</td></tr>
+      <tr><td>Getter-ը կանչում ես փակագծերով</td><td><code>book.percent</code>, ոչ <code>book.percent()</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 22-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում։</p>
+    <ol class="hw">
+      <li>Ստեղծիր <code>User</code> դաս՝ <code>name</code>, <code>email</code>, <code>age</code> և <code>greet()</code> մեթոդով։ Ստեղծիր 3 օրինակ։</li>
+      <li>Ավելացրու <code>get isAdult()</code>, որը վերադարձնում է <code>true</code>, եթե տարիքը 18-ից մեծ է։</li>
+      <li>Ավելացրու <code>set email(value)</code>՝ վալիդացիայով (Դաս 13-ի regex-ով)։ Սխալի դեպքում՝ <code>throw</code>։</li>
+      <li>Ցուցադրիր <code>this</code>-ի կորուստը․ պոկիր մեթոդը օբյեկտից և կանչիր։ Ուղղիր <code>bind</code>-ով։</li>
+      <li>Ստեղծիր <code>Rectangle</code> դաս՝ <code>area</code> և <code>perimeter</code> getter-ներով։ Ապա <code>Square extends Rectangle</code>։</li>
+      <li>Ստեղծիր <code>BankAccount</code> դաս <code>#balance</code>-ով, <code>deposit</code>, <code>withdraw</code> և <code>get balance</code> մեթոդներով։ Ստուգիր բոլոր սխալ դեպքերը։</li>
+      <li>Ավելացրու <code>static</code> հաշվիչ՝ քանի՞ հաշիվ է ստեղծվել։</li>
+      <li>Ստեղծիր <code>Timer</code> դաս՝ <code>start()</code>, <code>stop()</code>, <code>reset()</code> մեթոդներով։ Օգտագործիր arrow ֆունկցիա <code>setInterval</code>-ի ներսում և բացատրիր ինչու։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Վերածիր Դաս 16-ի զամբյուղը <code>Cart</code> դասի՝ դասարանական օրինակի պես։ Ստուգիր, որ ամեն ինչ աշխատում է։</li>
+      <li>Ստեղծիր երկրորդ օրինակ՝ <code>wishlist</code>, նույն <code>Cart</code> դասով, բայց տարբեր բանալիով։ Համոզվիր, որ դրանք իրար չեն խանգարում։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/pages/books.html">օրինակը</a> և դրա կոդը <code>example/js/</code>-ում։ Դաս 18-ից օրինակը բացիր Live Server-ով։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-21/task.html">← Դաս 21</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-23/task.html">Դաս 23 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · տնային աշխատանք · Դաս 22</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

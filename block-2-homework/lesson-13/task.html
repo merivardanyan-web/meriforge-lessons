@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 13 · Նոր գրքի ֆորմա — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · տնային</b> · Դաս 13</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../js-lesson-13.html">JS Դաս 13</a> · մինի-նախագիծ</p>
+  <h1>Նոր գրքի ֆորմա</h1>
+  <p class="lede">Անին ավելացնում է գրքեր ֆորմայով։ Ամեն դաշտ ստուգվում է, սխալները՝ դաշտի տակ, կարգավիճակից կախված «Կարդացած էջեր» դաշտը ստուգվում է այլ կերպ։ Կոդը բաժանվում է երեք ֆայլի։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Արդյունքը՝ pages/books.html</span>
+    <span>Աշխատում է նաև file://-ով</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–13․ <code>value</code>, <code>checked</code>, <code>submit</code>, <code>FormData</code>, <code>Object.fromEntries</code>, կանոնների օբյեկտ, <code>blur</code> որսման փուլով, regex։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <figure class="shot">
+      <img src="screenshots/form-errors.jpg" alt="Ավելացնել գիրք ֆորմա կարմիր սխալներով դաշտերի տակ" width="900" height="546" loading="lazy">
+      <figcaption>Սխալներ դաշտերի տակ</figcaption>
+    </figure>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատիր քո կայքում (կամ <a href="../lesson-12/example/index.html">նախորդ դասի օրինակում</a>)։ CSS-ը տրված է, որ կենտրոնանաս JS-ի վրա․ HTML/CSS-ը արդեն գիտես։</p>
+    <ul class="goals">
+      <li><code>starter/css/books-13.css</code> — CSS-ը, որ ավելանում է այս դասին</li>
+      <li><code>starter/pages/books.html</code> — «Գրքեր» էջի markup-ը (JS չկա, միայն <code>&lt;script&gt;</code>-ները)</li>
+    </ul>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Երեք ֆայլ</h3>
+    <ul class="goals">
+      <li><code>data.js</code>՝ զանգվածը և հաստատունները, <code>books.js</code>՝ դարակը, <code>form.js</code>՝ ֆորման</li>
+      <li>Հերթականությունը՝ data → books → form․ defer-ով սկրիպտները կատարվում են գրված հերթականությամբ</li>
+      <li>Ֆորման կանչում է <code>addBook(...)</code>-ը, որը ապրում է books.js-ում</li>
+    </ul>
+
+    <h3>Քայլ 2 · Կանոններ</h3>
+    <ul class="goals">
+      <li>Վերնագիր՝ պարտադիր, 2+ նիշ, հեղինակ՝ պարտադիր, էջեր՝ ամբողջ թիվ 1–3000</li>
+      <li>«Կարդացած էջեր»՝ միայն «Կարդում եմ»-ի դեպքում, 1-ից մինչև <em>էջերից քիչ</em></li>
+      <li>Ամեն կանոն վերադարձնում է սխալի տեքստ կամ <code>""</code></li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/form.js — կանոն, որ կախված է ուրիշ դաշտից</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">read</span>(value) {
+    <span class="k">const</span> status = form.<span class="f">querySelector</span>(<span class="s">'input[name="status"]:checked'</span>).value;
+    <span class="k">if</span> (status !== <span class="s">"reading"</span>) <span class="k">return</span> <span class="s">""</span>;
+    <span class="k">const</span> n = <span class="f">Number</span>(value);
+    <span class="k">const</span> pages = <span class="f">Number</span>(form.pages.value);
+    <span class="k">if</span> (!Number.<span class="f">isInteger</span>(n) || n &lt; <span class="n">1</span>) <span class="k">return</span> <span class="s">"Քանի՞ էջ ես արդեն կարդացել"</span>;
+    <span class="k">if</span> (pages &amp;&amp; n &gt;= pages) <span class="k">return</span> <span class="s">`Պիտի լինի </span>${pages}<span class="s">-ից քիչ`</span>;
+    <span class="k">return</span> <span class="s">""</span>;
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 3 · Երբ ցույց տալ</h3>
+    <ul class="goals">
+      <li><code>blur</code>՝ դաշտից դուրս գալիս (երրորդ արգումենտը՝ <code>true</code>)</li>
+      <li><code>input</code>՝ սխալը վերանում է ուղղելիս</li>
+      <li>Կարգավիճակը փոխելիս՝ «Կարդացած էջեր»-ը ստուգիր նորից (<code>change</code>)</li>
+    </ul>
+
+    <h3>Քայլ 4 · Ուղարկում</h3>
+    <ul class="goals">
+      <li><code>preventDefault</code>, բոլոր դաշտերը՝ <code>map(validateField).every(...)</code>, ֆոկուս առաջին սխալի վրա</li>
+      <li>Ճիշտ դեպքում՝ <code>FormData</code> → օբյեկտ → կարդացած էջերը ըստ կարգավիճակի → <code>addBook</code> → <code>form.reset()</code></li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Դատարկ ֆորման ցույց է տալիս 3 սխալ միանգամից</li>
+      <li>«Կարդում եմ» + 500 էջ 448 էջանոց գրքի համար՝ սխալ</li>
+      <li>«Կարդացել եմ»-ի դեպքում կարդացածը հավասար է էջերին</li>
+      <li>Նոր գիրքը հայտնվում է դարակում, և դրա կոճակները աշխատում են</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Սխալը հայտնվում է առաջին տառից</td><td>Ցույց տուր <code>blur</code>-ով, իսկ <code>input</code>-ով միայն հանիր</td></tr>
+      <tr><td><code>blur</code>-ը չի աշխատում ֆորմայի վրա</td><td><code>blur</code>-ը չի փուչիկանում․ <code>addEventListener("blur", fn, true)</code></td></tr>
+      <tr><td>Էջը վերաբեռնվում է</td><td><code>e.preventDefault()</code></td></tr>
+      <tr><td>Նոր գրքի էջերը «448» տող են</td><td><code>FormData</code>-ի արժեքները տողեր են․ <code>Number()</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 13-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում։</p>
+    <ol class="hw">
+      <li>Ֆորմա մեկ դաշտով և կոճակով։ Սեղմելիս տպիր դաշտի արժեքը։ Համոզվիր, որ էջը չի վերաբեռնվում։</li>
+      <li>Դաշտ և պարբերություն։ <code>input</code>-ով ցույց տուր մուտքագրվածը իրական ժամանակում և նիշերի քանակը։</li>
+      <li>Checkbox՝ «Ցույց տալ գաղտնաբառը»։ Նշելիս <code>type</code>-ը դառնա <code>text</code>, հանելիս՝ նորից <code>password</code>։</li>
+      <li>Radio կոճակներ՝ վճարման եղանակի ընտրություն։ Ընտրվածը ցույց տուր էկրանին։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Select երկրների ցուցակով։ Ընտրվածի փոփոխման ժամանակ ցույց տուր համապատասխան հեռախոսի կոդը։</li>
+      <li>Գրիր <code>validators.js</code> ֆայլ՝ <code>isEmpty</code>, <code>minLength</code>, <code>isEmail</code>, <code>isPhone</code>, <code>isNumber</code>, <code>inRange</code> ֆունկցիաներով։ Ամեն մեկը ստուգիր 3 արժեքով։</li>
+      <li>Կապի ֆորմա՝ անուն, էլ. հասցե, հաղորդագրություն (<code>textarea</code>, առնվազն 10 նիշ)։ Սխալները ցույց տուր դաշտի տակ։</li>
+      <li>Ամբողջական գրանցման ֆորմա դասարանական օրինակի հիման վրա։ Ավելացրու «Կրկնել գաղտնաբառը» դաշտ և ստուգիր համընկնումը։</li>
+      <li>Ավելացրու գաղտնաբառի ուժի ցուցիչ՝ թույլ / միջին / ուժեղ, գունավոր գծով (<code>classList</code>-ով)։</li>
+      <li>Ֆորմա, որը հաջող ուղարկումից հետո ավելացնում է նոր տող աղյուսակում կամ քարտ ցուցակում (միացրու Դաս 10-ի render-ը և Դաս 12-ի դելեգացիան՝ ջնջելու համար)։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/pages/books.html">օրինակը</a> և դրա կոդը <code>example/js/</code>-ում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-12/task.html">← Դաս 12</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-14/task.html">Դաս 14 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · տնային աշխատանք · Դաս 13</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

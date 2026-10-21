@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Տնային · Դաս 08 — box model</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:#fff}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule); background:var(--paper)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  @media (max-width:700px){.shots{grid-template-columns:1fr}}
+  .lede a, .note a, .pager a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code){white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 1 · տնային</b> · Դաս 08</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../html-lesson-08.html">HTML Դաս 08</a> · մինի-նախագիծ</p>
+  <h1>Box model․ բացակներ և քարտեր</h1>
+  <p class="lede">Կայքի բացակները դառնում են համակարգ, բովանդակությունը կենտրոնանում է, իսկ գլխավոր էջում հայտնվում են նախագծերի քարտեր։</p>
+
+  <div class="facts">
+    <span>Ժամանակ՝ ~2 ժամ</span>
+    <span>Սկսիր Դաս 07-ի արդյունքից</span>
+    <span>Արդյունք՝ main.css + քարտեր</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Օգտագործիր միայն Դաս 01–08-ը։ Քարտերը կողք կողքի դնում ենք <code>inline-block</code>-ով (այն կա Դաս 06-ի <code>global.css</code>-ում և Դաս 08-ի կոճակում)։ <code>display</code>-ի մանրամասները Դաս 09-ում են, Flexbox-ը՝ Դաս 11-ում։</p>
+  </div>
+
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Ժամանակավոր բացակները փոխարինվում են իսկական համակարգով։ Բովանդակությունը կենտրոնացված է, գլխավոր էջում հայտնվում են նախագծերի քարտեր, իսկ ֆորման դառնում է կոկիկ։</p>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/index.jpg" alt="Գլխավոր էջ՝ կլոր դիմանկար, կենտրոնացված բովանդակություն և երկու քարտ կողք կողքի" width="800" height="2276" loading="lazy">
+      <figcaption>index.html</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/register.jpg" alt="Գրանցման ֆորմա՝ սպիտակ կլորացված խմբեր և ամբողջ լայնությամբ դաշտեր" width="800" height="2209" loading="lazy">
+      <figcaption>pages/register.html</figcaption>
+    </figure>
+    </div>
+  </section>
+
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <div class="tree">starter/
+├── content.md            ← բացակներ, քարտերի տեքստեր, ձևեր
+└── images/
+    ├── project-site.jpg
+    └── project-schedule.jpg</div>
+    <p>Սկսիր Դաս 07-ի քո կայքից։ Եթե այն չունես, վերցրու <a href="../lesson-07/example/index.html">Դաս 07-ի օրինակը</a>։</p>
+  </section>
+
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+
+    <h3>Քայլ 1 · Չորս շերտ DevTools-ում</h3>
+    <p>Ընտրիր որևէ <code>section</code> և նայիր Computed ներդիրի տուփի դիագրամին՝ content, padding, border, margin։ Այս դասի ընթացքում ամեն փոփոխություն ստուգիր այս դիագրամով։</p>
+
+    <h3>Քայլ 2 · Ժամանակավոր բացակների փոխարինում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/* Տարրերի ՄԻՋԵՎ՝ margin, ներսում՝ padding */</span>
+<span class="k">h1, h2, h3, h4</span> { <span class="f">margin-bottom</span>: <span class="s">12px</span>; }
+<span class="k">p, ul, ol, table, figure, blockquote</span> { <span class="f">margin-bottom</span>: <span class="s">16px</span>; }
+
+<span class="k">header,</span>
+<span class="k">footer</span> { <span class="f">padding</span>: <span class="s">16px 20px</span>; }
+
+<span class="k">main</span> {
+    <span class="f">max-width</span>: <span class="s">960px</span>;
+    <span class="f">margin</span>: <span class="s">0 auto</span>;     <span class="c">/* կենտրոնացում */</span>
+    <span class="f">padding</span>: <span class="s">0 20px</span>;
+}
+
+<span class="k">section</span> { <span class="f">padding</span>: <span class="s">32px 0</span>; }</code></pre>
+    </div>
+    <div class="tip note"><span class="tag">Փորձիր</span><p>Ջնջիր <code>max-width</code>-ը։ <code>margin: 0 auto</code>-ը դադարում է կենտրոնացնել, որովհետև <code>main</code>-ը արդեն զբաղեցնում է ամբողջ լայնությունը, և կողքերում ազատ տեղ չկա բաժանելու։ Վերադարձրու։</p></div>
+    <div class="tip note"><span class="tag">Margin collapse</span><p>Օգտագործում ենք միայն <code>margin-bottom</code>։ Եթե վերնագիրն ունենար <code>margin-top: 20px</code>, իսկ նախորդ պարբերությունը՝ <code>margin-bottom: 16px</code>, նրանց միջև կլիներ 20px, ոչ 36px։ Մեկ ուղղությամբ բացակները պարզեցնում են հաշվարկը։</p></div>
+
+    <h3>Քայլ 3 · box-sizing</h3>
+    <p><code>global.css</code>-ի reset-ում արդեն կա <code>box-sizing: border-box</code>։ Ձևի դաշտերին տվել ենք <code>width: 100%</code> և <code>padding: 8px 12px</code>։ Ժամանակավորապես գրիր <code>* { box-sizing: content-box; }</code> և նայիր․ դաշտերը դուրս են գալիս իրենց խմբից, որովհետև padding-ը գումարվում է 100%-ին։</p>
+
+    <h3>Քայլ 4 · Քարտ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.html</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">article</span> <span class="f">class</span>=<span class="s">"card"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">img</span> <span class="f">src</span>=<span class="s">"images/project-site.jpg"</span> <span class="f">alt</span>=<span class="s">"Անիի կայքի գլխավոր էջի սքրինշոթը"</span> <span class="f">width</span>=<span class="s">"600"</span> <span class="f">height</span>=<span class="s">"400"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__body"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"title-4"</span><span class="p">&gt;</span>Այս կայքը<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"text-muted"</span><span class="p">&gt;</span>Հինգ դասում աճեց մեկ էջից մինչև յոթը։<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span><span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"pill"</span><span class="p">&gt;</span>HTML<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"pill"</span><span class="p">&gt;</span>CSS<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"pages/blog.html"</span> <span class="f">class</span>=<span class="s">"btn"</span><span class="p">&gt;</span>Կարդալ բլոգը<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span></code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.card</span> {
+    <span class="f">display</span>: <span class="s">inline-block</span>;   <span class="c">/* կողք կողքի․ Flexbox-ը՝ Դաս 11-ում */</span>
+    <span class="f">width</span>: <span class="s">300px</span>;
+    <span class="f">margin</span>: <span class="s">0 16px 16px 0</span>;
+    <span class="f">background-color</span>: <span class="s">var(--surface)</span>;
+    <span class="f">border</span>: <span class="s">1px solid #e0e0e0</span>;
+    <span class="f">border-radius</span>: <span class="s">12px</span>;
+    <span class="f">overflow</span>: <span class="s">hidden</span>;        <span class="c">/* նկարը կկտրվի կլորացման տակ */</span>
+}
+
+<span class="k">.card img</span>  { <span class="f">display</span>: <span class="s">block</span>; <span class="f">width</span>: <span class="s">100%</span>; }
+<span class="k">.card__body</span> { <span class="f">padding</span>: <span class="s">16px</span>; }</code></pre>
+    </div>
+
+    <h3>Քայլ 5 · Ձևեր</h3>
+    <ul class="goals">
+      <li>Դիմանկար՝ <code>width</code> և <code>height</code> 160px, <code>border-radius: 50%</code>։ Փորձիր նույնը ոչ քառակուսի տուփի վրա․ կստացվի էլիպս</li>
+      <li>Կոճակ՝ <code>border-radius: 6px</code></li>
+      <li>Պիտակ՝ <code>border-radius: 999px</code>, որ միշտ լինի «դեղահատ», ինչ բարձրության էլ լինի</li>
+      <li>Քարտի տեքստին՝ <code>min-height</code>, ոչ <code>height</code>։ Ավելացրու երկար տեքստ և համեմատիր</li>
+    </ul>
+
+    <h3>Քայլ 6 · Ֆորմա</h3>
+    <p><code>fieldset</code>-ին՝ padding, եզրագիծ և կլորացում։ Դաշտերին՝ <code>width: 100%</code> և <code>max-width: 400px</code>։ Սելեկտորը՝ <code>input[type="text"]</code> և նմանները (Դաս 06), որ checkbox-ները և radio-ները չձգվեն ամբողջ լայնությամբ։</p>
+  </section>
+
+  <section id="s3">
+    <h2><span class="num">03</span>Ընդունման ստուգաթերթ</h2>
+    <h3>Բացակներ</h3>
+    <ul class="goals">
+      <li>Ժամանակավոր բացակները փոխարինված են</li>
+      <li>Տարրերի միջև՝ margin, ներսում՝ padding</li>
+      <li>Բովանդակությունը կենտրոնացված է <code>max-width</code> + <code>margin: 0 auto</code>-ով</li>
+    </ul>
+
+    <h3>Կոմպոնենտներ</h3>
+    <ul class="goals">
+      <li>Երկու քարտ կողք կողքի՝ <code>inline-block</code>-ով</li>
+      <li>Նկարը չի դուրս գալիս քարտի կլորացումից</li>
+      <li>Չորս ձև՝ քառակուսի, կլորացված, դեղահատ, շրջան</li>
+    </ul>
+
+    <h3>Ֆորմա</h3>
+    <ul class="goals">
+      <li>Դաշտերը չեն դուրս գալիս խմբից</li>
+      <li>Checkbox-ները և radio-ները չեն ձգված</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Քարտի նկարի անկյունները դուրս են գալիս կլորացումից</td><td>Քարտին՝ <code>overflow: hidden</code></td></tr>
+      <tr><td>Քարտերը մեկը մյուսի տակ են</td><td>Էկրանը նեղ է երկու 300px քարտի համար, կամ մոռացել ես <code>display: inline-block</code>-ը</td></tr>
+      <tr><td>Քարտերը տարբեր բարձրության վրա են սկսվում</td><td>inline-block-ը հավասարեցնում է ըստ վերջին տողի։ Լուծումը՝ Դաս 09-ում (<code>vertical-align</code>)</td></tr>
+      <tr><td>Երկու տարրի միջև բացակը սպասվածից փոքր է</td><td>Margin collapse․ երկու ուղղահայաց margin-ից մնում է մեծը</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 08-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում կամ նույն թղթապանակում։</p>
+    <ol class="hw">
+      <li>Ստեղծիր բլոկ և ցուցադրիր չորս շերտն էլ՝ տարբեր գույներով։ Ստուգիր DevTools-ի դիագրամով։</li>
+      <li>Գրիր <code>padding</code>-ը չորս ձևով՝ 1, 2, 3 և 4 արժեքով։ Նկարագրիր ամեն մեկի արդյունքը։</li>
+      <li>Ցուցադրիր <code>box-sizing</code>-ի տարբերությունը՝ երկու նույնական բլոկ, տարբեր <code>box-sizing</code>։ Չափիր DevTools-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր margin collapse-ը երկու պարբերությամբ։ Ապա ուղղիր՝ <code>padding</code>-ի անցնելով։</li>
+      <li>Ցուցադրիր երկրորդ դեպքը՝ երեխայի <code>margin</code>-ը դուրս է գալիս ծնողից։ Ուղղիր երեք ձևով։</li>
+      <li>Կենտրոնացրու բլոկը <code>margin: 0 auto</code>-ով։ Հետո ջնջիր <code>max-width</code>-ը և բացատրիր, ինչու դադարեց աշխատել։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ստեղծիր չորս ձև՝ քառակուսի, կլորացված, «դեղահատ», շրջան։ Ցույց տուր, ինչ է լինում <code>50%</code>-ի հետ ոչ քառակուսի տուփի վրա։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Համեմատիր <code>height</code>-ը և <code>min-height</code>-ը երկար տեքստով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>global.css</code>-ում <code>picture</code>-ի և <code>img</code>-ի կանոնները (<code>picture</code> թեգը կօգտագործենք Դաս 16-ից, կանոնն արդեն պատրաստ կլինի)։ Նեղացրու պատուհանը և ցույց տուր, որ <code>max-width: 100%</code>-ով նկարը այլևս դուրս չի գալիս իր տուփից։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կառուցիր ապրանքի քարտ դասարանական օրինակի պես։ Ավելացրու երկրորդ քարտ և տեղադրիր դրանք կողք կողքի (<code>display: inline-block</code>-ով — Flexbox-ը հաջորդ դասերին է)։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/index.html">օրինակը</a> և քո էջը կողք կողքի։ Բացիր երկուսի կոդն էլ խմբագրիչում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-07/task.html">← Դաս 07</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-09/task.html">Դաս 09 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 1 · տնային աշխատանք · Դաս 08</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

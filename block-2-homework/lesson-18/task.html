@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 18 · Մոդուլներ — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · տնային</b> · Դաս 18</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../js-lesson-18.html">JS Դաս 18</a> · մինի-նախագիծ</p>
+  <h1>Մոդուլներ</h1>
+  <p class="lede">«Գրքեր» էջի չորս սովորական սկրիպտները դառնում են ES մոդուլներ․ ամեն ֆայլ արտահանում է միայն այն, ինչ պետք է դրսում, իսկ վիճակագրությունը բեռնվում է միայն կոճակը սեղմելիս։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Արդյունքը՝ pages/books.html</span>
+    <span>Live Server</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–18․ <code>type="module"</code>, <code>export</code>/<code>import</code>, <code>import * as</code>, դինամիկ <code>import()</code>, Live Server։ <code>async/await</code>-ը՝ միայն դինամիկ import-ի համար, ինչպես դասում։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <figure class="shot">
+      <img src="screenshots/stats.jpg" alt="Վիճակագրության ցուցակ դարակի վերևում" width="900" height="633" loading="lazy">
+      <figcaption>Դինամիկ import-ով բեռնված վիճակագրություն</figcaption>
+    </figure>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատիր քո կայքում (կամ <a href="../lesson-17/example/index.html">նախորդ դասի օրինակում</a>)։ CSS-ը տրված է, որ կենտրոնանաս JS-ի վրա․ HTML/CSS-ը արդեն գիտես։</p>
+    <p>Starter չկա․ այս դասին փոխվում է միայն JS-ի կառուցվածքը։</p>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Live Server</h3>
+    <ul class="goals">
+      <li>Մոդուլները չեն աշխատում <code>file://</code>-ով։ VS Code → Open with Live Server</li>
+    </ul>
+
+    <h3>Քայլ 2 · Ֆայլերի բաժանում</h3>
+    <ul class="goals">
+      <li><code>storage.js</code>, <code>utils.js</code> (debounce, formatDuration), <code>data.js</code> (միայն հաստատուններ), <code>shelf.js</code> (վիճակ + գործողություններ), <code>render.js</code>, <code>form.js</code>, <code>timer.js</code>, <code>modal.js</code>, <code>ui.js</code></li>
+      <li><code>site.js</code>՝ ամեն էջի մուտքի կետ, <code>pages/books.js</code>՝ «Գրքեր» էջինը</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/</div><button class="copy">Պատճենել</button></div>
+<pre><code>js/
+├── site.js          ← բոլոր էջերում
+├── ui.js            ← թեմա, բուրգեր, «Վեր», toast
+├── storage.js  utils.js  data.js
+├── shelf.js         ← books + գործողություններ
+├── render.js  form.js  timer.js  modal.js
+├── stats.js         ← դինամիկ import
+└── pages/books.js   ← միայն կապակցում</code></pre>
+    </div>
+
+    <h3>Քայլ 3 · Վիճակը՝ մեկ մոդուլում</h3>
+    <ul class="goals">
+      <li><code>books</code>-ը արտահանված <strong>չէ</strong>։ Դրսից՝ <code>getBooks()</code>, <code>getVisibleBooks()</code> և գործողություններ</li>
+      <li>Ֆորման և ժամաչափը չգիտեն դարակի մասին․ ստանում են ֆունկցիա (<code>initBookForm(onSubmit)</code>)</li>
+    </ul>
+
+    <h3>Քայլ 4 · Մուտքի կետ</h3>
+    <ul class="goals">
+      <li><code>pages/books.js</code>-ում միայն listener-ներ և կապեր․ <code>shelf.readPages(id)</code> → <code>refresh()</code></li>
+    </ul>
+
+    <h3>Քայլ 5 · Դինամիկ import</h3>
+    <ul class="goals">
+      <li>«Ցույց տալ վիճակագրությունը»՝ <code>const { renderStats } = await import("../stats.js")</code></li>
+      <li>Network ներդիրում տես՝ stats.js-ը բեռնվում է միայն սեղմելիս</li>
+    </ul>
+
+    <h3>Քայլ 6 · Կախվածությունների գրաֆ</h3>
+    <ul class="goals">
+      <li>Նկարիր՝ ով ումից է import անում։ Օղակ չպիտի լինի</li>
+      <li>Ստուգիր GitHub Pages-ում․ Pages-ը սերվեր է, մոդուլները կաշխատեն</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Ամեն էջում մեկ <code>site.js</code>, «Գրքեր»-ում՝ նաև <code>pages/books.js</code></li>
+      <li>Ոչ մի գլոբալ փոփոխական</li>
+      <li>stats.js-ը բեռնվում է միայն կոճակից</li>
+      <li>Ամեն ինչ աշխատում է ինչպես Դաս 14-ում</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>Failed to resolve module specifier</code></td><td>Ուղին՝ <code>./</code> կամ <code>../</code>-ով և <code>.js</code>-ով</td></tr>
+      <tr><td><code>does not provide an export named</code></td><td>Անունը սխալ է կամ ֆունկցիան <code>export</code> չունի</td></tr>
+      <tr><td><code>Assignment to constant variable</code>՝ import արված փոփոխականին</td><td>Import-ը միայն կարդալու համար է․ փոխիր ֆունկցիայով մոդուլի ներսում</td></tr>
+      <tr><td><code>pages/books.js</code>-ից <code>"./shelf.js"</code> չի գտնվում</td><td>Ուղին ֆայլից է․ <code>"../shelf.js"</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 18-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում։</p>
+    <ol class="hw">
+      <li>Տեղադրիր Live Server-ը VS Code-ում և բացիր քո կատալոգը դրանով։ Համոզվիր, որ հասցեն սկսվում է <code>http://</code>-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ստեղծիր երկու ֆայլ՝ <code>math.js</code> (արտահանում է <code>add</code>, <code>multiply</code>) և <code>main.js</code>։ Ստուգիր, որ import-ը աշխատում է։</li>
+      <li>Ավելացրու <code>math.js</code>-ում ներքին ֆունկցիա, որը <strong>չես</strong> արտահանում։ Փորձիր դիմել դրան <code>main.js</code>-ից և գրիր՝ ինչ սխալ ստացար։</li>
+      <li>Դիտավորյալ գրիր <code>import { add } from "math.js"</code> (առանց <code>./</code>)։ Գրիր՝ ինչ սխալ ստացար։ Հետո ուղղիր։</li>
+      <li>Փորձիր <code>export default</code>։ Ներմուծիր այն երկու տարբեր անուններով երկու ֆայլում։</li>
+      <li>Վերակառուցիր քո կատալոգը մոդուլներով՝ <code>data.js</code>, <code>storage.js</code>, <code>utils.js</code>, <code>catalog.js</code>, <code>cart.js</code>, <code>main.js</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Համոզվիր, որ ամեն մոդուլ արտահանում է <strong>միայն այն</strong>, ինչ իսկապես պետք է դրսում։ Ներքին օգնականները թողիր առանց <code>export</code>-ի։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Նկարիր (թղթի վրա կամ ֆայլում) քո նախագծի կախվածությունների գրաֆը։ Համոզվիր, որ օղակ չկա։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու նոր մոդուլ՝ <code>wishlist.js</code>, հավանածների ցուցակի համար՝ իր <code>localStorage</code> բանալիով։</li>
+      <li>Commit արա և push արա GitHub։ Ստուգիր, որ GitHub Pages-ի վրա էլ ամեն ինչ աշխատում է (Pages-ը սերվեր է, ուստի մոդուլները պիտի աշխատեն)։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/pages/books.html">օրինակը</a> և դրա կոդը <code>example/js/</code>-ում։ Դաս 18-ից օրինակը բացիր Live Server-ով։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-17/task.html">← Դաս 17</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-19/task.html">Դաս 19 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · տնային աշխատանք · Դաս 18</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

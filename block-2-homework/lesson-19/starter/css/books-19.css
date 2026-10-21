@@ -1,0 +1,4 @@
+/* Ավելացրու main.css-ի վերջում՝ «9. ԱԴԱՊՏԻՎՈՒԹՅՈՒՆ»-ից առաջ */
+/* Ասինխրոն բեռնում — Դաս 19 */
+.book--skeleton .book__cover { background: none; }
+.status-error { color: var(--danger); }

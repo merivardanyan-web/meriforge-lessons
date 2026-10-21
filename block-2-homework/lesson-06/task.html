@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 06 · Դարակի վիճակագրություն — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · տնային</b> · Դաս 06</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../js-lesson-06.html">JS Դաս 06</a> · մինի-նախագիծ</p>
+  <h1>Դարակի վիճակագրություն</h1>
+  <p class="lede">Դարակի ամեն գիրք հիմա օբյեկտ է՝ վերնագիր, էջեր, կարդացած, գնահատական։ Ոչ մի <code>for</code>․ միայն <code>map</code>, <code>filter</code>, <code>reduce</code>, <code>find</code>, <code>some</code>, <code>every</code>, <code>sort</code> և դրանց շղթաներ։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Արդյունքը՝ Console-ում</span>
+    <span>Բաց արա index.html-ը</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–06։ Օբյեկտները մանրամասն՝ Դաս 7-ում․ այսօր միայն կարդում ենք <code>b.title</code>, <code>b.pages</code>, ինչպես դասի catalog.js-ում։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Ահա ինչ պետք է տեսնես Console-ում։ Ձևակերպումները կարող են տարբերվել, թվերը՝ ոչ։</p>
+<pre class="out"><span class="m">Console</span>
+["Փոքրիկ իշխանը", "Սամվել", "Գիքորը", "1984", "Ալքիմիկոսը", "Վերք Հայաստանի"]
+Կարդացել եմ՝ Փոքրիկ իշխանը, Գիքորը, Ալքիմիկոսը
+Կարդացած էջեր՝ 574
+Միջին գնահատական՝ 4.3
+«Սամվել»՝ 140 / 560
+«Քաոս» դարակում չկա
+Կա՞ 5 աստղանի՝ true
+Բոլորը սկսե՞լ եմ՝ false
+Ըստ էջերի՝ ["Սամվել (560)", "1984 (328)", "Վերք Հայաստանի (320)", "Ալքիմիկոսը (208)", "Փոքրիկ իշխանը (96)", "Գիքորը (40)"]
+Բնօրինակի առաջինը՝ Փոքրիկ իշխանը
+Ինչ ավարտել նախ՝ ["Վերք Հայաստանի — 230 էջ", "1984 — 328 էջ", "Սամվել — 420 էջ"]</pre>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատիր նոր թղթապանակում՝ <code>reading-journal/</code>։</p>
+    <ul class="goals">
+      <li><code>starter/index.html</code> — էջ, որը միացնում է <code>js/main.js</code>-ը</li>
+      <li><code>starter/js/main.js</code> — տվյալները, որ չգրես ձեռքով</li>
+    </ul>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Վերնագրեր և կարդացածներ</h3>
+    <ul class="goals">
+      <li><code>map</code>՝ բոլոր վերնագրերը</li>
+      <li><code>filter</code>՝ կարդացածները (<code>b.read === b.pages</code>)</li>
+    </ul>
+
+    <h3>Քայլ 2 · reduce</h3>
+    <ul class="goals">
+      <li>Կարդացած էջերի գումարը</li>
+      <li>Կարդացածների միջին գնահատականը՝ <code>toFixed(1)</code></li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.js — reduce</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> totalRead = books.<span class="f">reduce</span>((sum, b) =&gt; sum + b.read, <span class="n">0</span>);</code></pre>
+    </div>
+
+    <h3>Քայլ 3 · find, some, every</h3>
+    <ul class="goals">
+      <li>Գտնել «Սամվել»-ը, և «Քաոս»-ը, որը չկա․ <code>?? "դարակում չկա"</code></li>
+      <li>Կա՞ 5 աստղանի գիրք, բոլո՞րն եմ սկսել</li>
+    </ul>
+
+    <h3>Քայլ 4 · sort առանց բնօրինակը փոխելու</h3>
+    <ul class="goals">
+      <li>Էջերի նվազման կարգով․ <code>[...books].sort((a, b) =&gt; b.pages - a.pages)</code></li>
+      <li>Ապացուցիր՝ տպիր բնօրինակի առաջին գիրքը</li>
+    </ul>
+
+    <h3>Քայլ 5 · Մեկ շղթա</h3>
+    <ul class="goals">
+      <li>Չավարտածները → քիչ մնացածից շատ մնացած → «վերնագիր — X էջ» տողեր</li>
+      <li>Ինչու՞ <code>filter</code>-ից հետո <code>sort</code>-ը անվտանգ է (նոր զանգված է)</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Ֆայլում չկա ոչ մի <code>for</code> և <code>while</code></li>
+      <li>Բնօրինակ <code>books</code>-ը չի փոխվում</li>
+      <li>Շղթայի ամեն քայլը նոր տողում է</li>
+      <li><code>reduce</code>-ը ունի սկզբնական արժեք՝ <code>0</code></li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>reduce</code>-ը վերադարձնում է <code>[object Object]...</code></td><td>Մոռացել ես սկզբնական <code>0</code>-ն</td></tr>
+      <tr><td>Բնօրինակի հերթականությունը փոխվել է</td><td><code>sort</code>-ը փոխում է զանգվածը․ նախ պատճեն</td></tr>
+      <tr><td><code>find</code>-ից հետո <code>Cannot read properties of undefined</code></td><td>Գիրքը չի գտնվել․ ստուգիր կամ օգտագործիր <code>??</code></td></tr>
+      <tr><td>Տեսակավորումը սխալ է՝ 1000-ը 200-ից առաջ</td><td>Համեմատման ֆունկցիա՝ <code>(a, b) =&gt; a.pages - b.pages</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 06-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում։</p>
+    <ol class="hw">
+      <li>Տրված է թվերի զանգված։ Ստեղծիր նոր զանգված՝ ամեն թիվը քառակուսի բարձրացրած։</li>
+      <li>Անունների զանգվածից ստացիր դրանց երկարությունների զանգված։</li>
+      <li>Ֆիլտրիր բոլոր բացասական թվերը։</li>
+      <li>Ֆիլտրիր 5 տառից երկար բառերը։</li>
+      <li>Հաշվիր զանգվածի բոլոր թվերի գումարը և միջինը՝ <code>reduce</code>-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գտիր առաջին թիվը, որը 100-ից մեծ է։ Եթե չկա — տպիր «Չգտնվեց»։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ստուգիր՝ բոլո՞ր բառերն են սկսվում մեծատառով (<code>every</code>)։</li>
+      <li>Դասավորիր թվերի զանգվածը նվազման կարգով՝ <strong>առանց</strong> բնօրինակը փոխելու։ Ապացուցիր՝ տպելով երկուսն էլ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Օգտագործիր դասարանական <code>products</code> զանգվածը․ գտիր չառկա ապրանքների անունները և դրանց ընդհանուր արժեքը։</li>
+      <li>Մեկ շղթայով․ վերցրու գնահատականները, թող միայն 14-ից բարձրերը, ամեն մեկին ավելացրու 1, դասավորիր նվազման կարգով և վերածիր տողի՝ <code>", "</code> բաժանարարով։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/index.html">օրինակը</a> և դրա կոդը <code>example/js/</code>-ում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-05/task.html">← Դաս 05</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-07/task.html">Դաս 07 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · տնային աշխատանք · Դաս 06</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

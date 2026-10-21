@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 11 · Ֆիլտրեր, որոնում, մոդալ, թեմա — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · տնային</b> · Դաս 11</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../js-lesson-11.html">JS Դաս 11</a> · մինի-նախագիծ</p>
+  <h1>Ֆիլտրեր, որոնում, մոդալ, թեմա</h1>
+  <p class="lede">Էջը արձագանքում է օգտագործողին․ ֆիլտրի կոճակներ, որոնում ամեն տառի հետ, «Մանրամասն» պատուհան, մուգ թեմա և բուրգեր, որը փակվում է հղման սեղմելիս։ Կհանդիպես Դաս 11-ի տնայինի խնդրին՝ render-ից հետո կոճակները «մոռանում» են իրենց մշակիչները։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Արդյունքը՝ pages/books.html</span>
+    <span>Աշխատում է նաև file://-ով</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–11․ <code>addEventListener</code>, <code>click</code>, <code>input</code>, <code>keydown</code>, իրադարձության օբյեկտ, «հանել բոլորից → ավելացնել ընտրվածին»։ Դաշտի <code>value</code>-ն՝ առանց մանրամասների (Դաս 13)։ Դելեգացիան՝ Դաս 12-ում։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/filter.jpg" alt="Ակտիվ «Կարդում եմ» ֆիլտր և երկու քարտ" width="900" height="809" loading="lazy">
+      <figcaption>Ֆիլտր «Կարդում եմ»</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/modal.jpg" alt="Բաց մոդալ՝ գրքի մանրամասներով" width="900" height="633" loading="lazy">
+      <figcaption>Մանրամասն</figcaption>
+    </figure>
+    </div>
+    <figure class="shot">
+      <img src="screenshots/dark.jpg" alt="Էջը մուգ թեմայով" width="900" height="633" loading="lazy">
+      <figcaption>Մուգ թեմա</figcaption>
+    </figure>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատիր քո կայքում (կամ <a href="../lesson-10/example/index.html">նախորդ դասի օրինակում</a>)։ CSS-ը տրված է, որ կենտրոնանաս JS-ի վրա․ HTML/CSS-ը արդեն գիտես։</p>
+    <ul class="goals">
+      <li><code>starter/css/books-11.css</code> — CSS-ը, որ ավելանում է այս դասին</li>
+      <li><code>starter/pages/books.html</code> — «Գրքեր» էջի markup-ը (JS չկա, միայն <code>&lt;script&gt;</code>-ները)</li>
+    </ul>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Նոր HTML</h3>
+    <ul class="goals">
+      <li>Ֆիլտրի կոճակներ <code>data-filter</code>-ով և որոնման դաշտ (<code>starter/pages/books.html</code>)</li>
+      <li>Մոդալի markup-ը՝ <code>main</code>-ի վերջում</li>
+      <li>Header-ում՝ թեմայի կոճակ <strong>բոլոր</strong> էջերում, և <code>js/site.js</code>՝ բոլոր էջերում</li>
+    </ul>
+
+    <h3>Քայլ 2 · Ֆիլտր և որոնում</h3>
+    <ul class="goals">
+      <li>Երկու փոփոխական՝ <code>currentFilter</code> և <code>query</code></li>
+      <li><code>getVisibleBooks()</code>՝ երկու <code>filter</code></li>
+      <li>Կոճակի սեղմում → փոխել փոփոխականը → «հանել բոլորից, ավելացնել ընտրվածին» → <code>render()</code></li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/books.js — ֆիլտրի կոճակներ</div><button class="copy">Պատճենել</button></div>
+<pre><code>filterButtons.<span class="f">forEach</span>(button =&gt; {
+    button.<span class="f">addEventListener</span>(<span class="s">"click"</span>, () =&gt; {
+        currentFilter = button.dataset.filter;
+        filterButtons.<span class="f">forEach</span>(b =&gt; b.classList.<span class="f">remove</span>(<span class="s">"is-active"</span>));
+        button.classList.<span class="f">add</span>(<span class="s">"is-active"</span>);
+        <span class="f">render</span>();
+    });
+});</code></pre>
+    </div>
+
+    <h3>Քայլ 3 · Մոդալ</h3>
+    <ul class="goals">
+      <li>«Մանրամասն»-ը բացում է մոդալը գրքի տվյալներով</li>
+      <li>Փակվում է խաչիկով, ֆոնին սեղմելով (<code>e.target === modal</code>) և Escape-ով</li>
+      <li>Բաց մոդալի տակ էջը չի սքրոլվում՝ <code>no-scroll</code></li>
+    </ul>
+
+    <h3>Քայլ 4 · Խնդիրը</h3>
+    <ul class="goals">
+      <li>Ֆիլտրից հետո «Մանրամասն»-ը չի աշխատում։ Ինչու՞․ <code>innerHTML</code>-ը ստեղծել է նոր կոճակներ՝ առանց մշակիչների</li>
+      <li>Այսօրվա լուծում՝ <code>render()</code>-ի վերջում կանչիր <code>bindDetailsButtons()</code>։ Դաս 12-ում կգտնենք ավելի լավը</li>
+    </ul>
+
+    <h3>Քայլ 5 · Թեմա և բուրգեր</h3>
+    <ul class="goals">
+      <li><code>document.body.classList.toggle("dark")</code>, իսկ մուգ տոկենները՝ CSS-ում (<code>body.dark</code>)</li>
+      <li>Կոճակի նշանը՝ ☾ / ☀</li>
+      <li>Բուրգեր՝ ամեն հղման սեղմելիս և Escape-ով <code>navToggle.checked = false</code></li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>«Կարդացել եմ»-ը թողնում է 3 գիրք, ակտիվ կոճակը մեկն է</li>
+      <li>Որոնումը աշխատում է վերնագրով և հեղինակով, մեծատառ-փոքրատառ չի զգում</li>
+      <li>Մոդալը աշխատում է նաև ֆիլտրից հետո</li>
+      <li>Մուգ թեման աշխատում է բոլոր էջերում (բայց թարմացնելիս կորչում է․ Դաս 14)</li>
+      <li>Հեռախոսում մենյուն փակվում է հղման սեղմելիս</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Մոդալը փակվում է ներսում սեղմելիս</td><td>Ստուգիր <code>e.target === modal</code>, ոչ պարզապես սեղմումը</td></tr>
+      <tr><td>«Մանրամասն»-ը աշխատում է միայն մինչև առաջին ֆիլտրը</td><td>Մշակիչները կորել են <code>innerHTML</code>-ից։ Կախիր նորից render-ից հետո</td></tr>
+      <tr><td>Մի քանի կոճակ ակտիվ է</td><td>Նախ հանիր <code>is-active</code>-ը բոլորից</td></tr>
+      <tr><td>site.js-ը սխալ է տալիս էջում, որտեղ մոդալ չկա</td><td>site.js-ում միայն այն, ինչ կա <strong>բոլոր</strong> էջերում</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 11-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում։</p>
+    <ol class="hw">
+      <li>Կոճակ, որը սեղմելիս փոխում է <code>h1</code>-ի տեքստը։ Երկրորդ սեղմումին՝ վերադարձնում է հինը։</li>
+      <li>Հաշվիչ․ երկու կոճակ (<code>+</code> և <code>−</code>) և թիվ էկրանին։ Թիվը 0-ից ցածր չպիտի իջնի։</li>
+      <li>Մուգ/բաց թեմայի փոխարկիչ՝ <code>document.body.classList.toggle("dark")</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Բուրգեր մենյու։ Ավելացրու՝ մենյուն փակվի նաև ցանկացած հղումի սեղմելիս։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Մոդալ պատուհան՝ բացում, փակում խաչիկով, ֆոնին սեղմելով և <code>Escape</code>-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ակորդեոն առնվազն 4 հարցով։ Միաժամանակ միայն մեկը պիտի բաց լինի։</li>
+      <li>Թաբեր՝ 3 ներդիրով և 3 պանելով, <code>data-*</code> ատրիբուտներով։</li>
+      <li>Դաշտ և պարբերություն։ <code>input</code> իրադարձությամբ պարբերությունը պիտի ցույց տա մուտքագրվածը իրական ժամանակում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Նույն դաշտի տակ ցույց տուր՝ քանի՞ նիշ է մնացել 100-ից։ 90-ից հետո տեքստը դառնա կարմիր (<code>classList</code>-ով)։</li>
+      <li>Վերցրու Դաս 10-ի կատալոգը։ Ավելացրու 3 ֆիլտրի կոճակ՝ «Բոլորը», «Առկա», «Էժան»։ Ամեն սեղմումին կանչիր <code>render()</code>-ը ֆիլտրված զանգվածով և ակտիվ կոճակին տուր <code>is-active</code> դասը։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/pages/books.html">օրինակը</a> և դրա կոդը <code>example/js/</code>-ում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-10/task.html">← Դաս 10</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-12/task.html">Դաս 12 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · տնային աշխատանք · Դաս 11</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

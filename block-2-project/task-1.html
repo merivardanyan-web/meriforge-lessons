@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Առաջադրանք 1 — կատալոգ և զամբյուղ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lesson.css">
+<script src="../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · նախագիծ</b> · առաջադրանք 1</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Առաջադրանք 1 / 3 · JS Դաս 15–16 · 2 դաս + տնային</p>
+  <h1>Կատալոգ և զամբյուղ</h1>
+  <p class="lede">Դաս 15–16-ի կատալոգը և զամբյուղը կառուցում ենք ոչ թե նոր դատարկ էջում, այլ <strong>քո</strong> ՏեխնոՄարկետում՝ Բլոկ 1-ի markup-ի և CSS-ի վրա։ JS-ը միայն լցնում է բովանդակությունը և փոխում դասերը, տեսքը մնում է CSS-ում։ Համեմատիր քեզ <a href="example-1-catalog-cart/index.html">օրինակ 1</a>-ի հետ, բայց միայն ավարտելուց հետո։</p>
+
+  <div class="facts">
+    <span>Արդյունք՝ 9 էջ + js/ (սովորական սկրիպտներ)</span>
+    <span>Սկսիր քո Բլոկ 1-ի նախագծից</span>
+    <span>Ստուգում՝ բաժին 05</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Բլոկ 1-ի ՏեխնոՄարկետը արտաքինից նույնն է, բայց հիմա կատալոգը ֆիլտրում է, «Գնել»-ը ավելացնում է զամբյուղ, header-ի թիվը աճում է բոլոր էջերում, իսկ զամբյուղի էջը հաշվում է գումարները։ Էջը թարմացնելուց հետո ոչինչ չի կորչում։</p>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/ex1-catalog.jpg" alt="Կատալոգի էջ․ ձախում ֆիլտրեր, վերևում որոնում և դասավորում, վեց քարտ և էջավորում 1, 2" width="900" height="1055" loading="lazy">
+      <figcaption>catalog.html՝ 12 ապրանք, 6-ական էջում</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/ex1-modal.jpg" alt="Կատալոգ, որի վրա բաց է «Ավելացվեց զամբյուղ» պատուհանը՝ ականջակալի նկարով և երկու կոճակով" width="900" height="633" loading="lazy">
+      <figcaption>«Գնել»-ից հետո՝ մոդալ, header-ում՝ 1</figcaption>
+    </figure>
+    </div>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/ex1-cart.jpg" alt="Զամբյուղի էջ երեք ապրանքով, քանակի դաշտերով և աջում ամփոփմամբ" width="900" height="633" loading="lazy">
+      <figcaption>cart.html՝ տողերը և ամփոփումը JS-ից</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/ex1-cart-empty.jpg" alt="Դատարկ զամբյուղ՝ հաղորդագրություն և «Անցնել կատալոգ» կոճակ" width="900" height="633" loading="lazy">
+      <figcaption>Դատարկ վիճակ</figcaption>
+    </figure>
+    </div>
+    <div class="shots shots--wide">
+    <figure class="shot">
+      <img src="screenshots/ex1-catalog-empty.jpg" alt="Կատալոգ, որտեղ ֆիլտրերով ապրանք չի մնացել․ հաղորդագրություն և «Մաքրել ֆիլտրերը» կոճակ" width="900" height="633" loading="lazy">
+      <figcaption>Ոչինչ չգտնվեց</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/ex1-catalog-mobile.jpg" alt="Կատալոգը հեռախոսում․ ֆիլտրերը վերևում, քարտերը մեկ սյունով" width="375" height="2200" loading="lazy">
+      <figcaption>375px</figcaption>
+    </figure>
+    </div>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Էջ</th><th>Ինչ է անում JS-ը</th><th>Դաս</th></tr>
+      <tr><td>Բոլոր էջերը</td><td>Header-ի զամբյուղի թիվը, դատարկ զամբյուղում՝ թաքնված</td><td>10, 14, 16</td></tr>
+      <tr><td><code>catalog.html</code></td><td>Քարտերը՝ <code>data.js</code>-ից, ֆիլտրեր, որոնում, դասավորում, էջավորում, դատարկ վիճակ, <code>?cat=</code> header-ի ենթամենյուից</td><td>15</td></tr>
+      <tr><td><code>index.html</code>, <code>catalog.html</code>, <code>product.html</code></td><td>«Գնել» → զամբյուղ → «Ավելացվեց» մոդալ, որ փակվում է երեք եղանակով</td><td>11, 12, 16</td></tr>
+      <tr><td><code>cart.html</code></td><td>Տողեր, քանակ, հեռացում, դատարկում, ամփոփում, դատարկ վիճակ</td><td>16</td></tr>
+      <tr><td><code>checkout.html</code></td><td>Պատվերի ամփոփումը զամբյուղից, կոճակի վրա՝ ընդհանուր գումարը</td><td>16</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատում ես <strong>քո</strong> Բլոկ 1-ի նախագծի պատճենի վրա։ Եթե այն դեռ ավարտված չէ, սկսիր <a href="../block-1-project/example-2-final/index.html">Բլոկ 1-ի օրինակից</a>։ <code>starter/</code>-ում կա միայն այն, ինչ պետք չէ հորինել․</p>
+    <div class="tree">starter/
+├── js/data.js            ← 12 ապրանք, կատեգորիաներ, ապրանքանիշեր (Առաջադրանք 1–2)
+├── data/products.json    ← նույնը JSON-ով՝ բնութագրերով (Առաջադրանք 3)
+└── content.md            ← հաղորդագրությունների տեքստերը</div>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դաշտ</th><th>Օրինակ</th><th>Ինչի համար</th></tr>
+      <tr><td><code>id</code></td><td><code>1</code></td><td>Զամբյուղում պահում ենք միայն այն (Դաս 16)</td></tr>
+      <tr><td><code>image</code>, <code>alt</code></td><td><code>"laptop"</code></td><td>Նկարը՝ <code>images/laptop.webp</code> և <code>.jpg</code></td></tr>
+      <tr><td><code>price</code>, <code>oldPrice</code></td><td><code>315000</code>, <code>450000</code></td><td>Զեղչ չկա՝ <code>oldPrice: null</code></td></tr>
+      <tr><td><code>category</code>, <code>brand</code></td><td><code>"laptops"</code>, <code>"arev"</code></td><td>Նույն արժեքները, ինչ ֆիլտրերի checkbox-ների <code>value</code>-ում</td></tr>
+      <tr><td><code>inStock</code>, <code>isNew</code></td><td><code>true</code>, <code>false</code></td><td>«Սպառված», «Նոր» պիտակ</td></tr>
+      <tr><td><code>rating</code>, <code>popularity</code>, <code>added</code></td><td><code>4.8</code>, <code>98</code>, <code>"2026-03-02"</code></td><td>Դասավորում՝ վարկանիշով, հանրաճանաչ, նորերը</td></tr>
+    </table>
+    </div>
+    <div class="tip note">
+      <span class="tag">Ինչու նախ data.js, հետո JSON</span>
+      <p>Այս առաջադրանքում ապրանքները հաստատուն զանգված են, ինչպես Դաս 15-ում։ Առաջադրանք 3-ում նույն տվյալները կգան <code>fetch</code>-ով, և կտեսնես, թե որքան քիչ կոդ է փոխվում, եթե ճարտարապետությունը ճիշտ է։</p>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <p>Աշխատիր ստուգակետերով, ինչպես Դաս 15-ում․ ամեն քայլից հետո բացիր բրաուզերը, Console-ը պիտի մաքուր լինի։ Ամեն քայլից հետո՝ commit, երբ Դաս 17-ից հետո Git-ը կսովորես (կամ պահիր թղթապանակի պատճեն)։</p>
+
+    <h3>Քայլ 1 · Ֆայլեր և հերթականություն</h3>
+    <div class="tree">js/
+├── data.js         ← PRODUCTS, CATEGORIES, BRANDS
+├── storage.js      ← save, load (Դաս 14)
+├── utils.js        ← formatPrice, debounce, showToast (Դաս 16)
+├── cart.js         ← զամբյուղի մոդելը + header-ի թիվը, բոլոր էջերում
+├── add-to-cart.js  ← «Գնել» կոճակը և մոդալը՝ index, catalog, product
+├── catalog.js      ← կատալոգի էջը
+├── product.js      ← ապրանքի էջի ֆորման
+├── cart-page.js    ← զամբյուղի էջը
+└── checkout.js     ← պատվերի ամփոփումը</div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>catalog.html</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">head</span><span class="p">&gt;</span>
+    ...
+    <span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"stylesheet"</span> <span class="f">href</span>=<span class="s">"css/main.css"</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- Ընդհանուրը՝ բոլոր էջերում, այս հերթականությամբ --&gt;</span>
+    <span class="p">&lt;</span><span class="t">script</span> <span class="f">src</span>=<span class="s">"js/data.js"</span> <span class="f">defer</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">script</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">script</span> <span class="f">src</span>=<span class="s">"js/storage.js"</span> <span class="f">defer</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">script</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">script</span> <span class="f">src</span>=<span class="s">"js/utils.js"</span> <span class="f">defer</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">script</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">script</span> <span class="f">src</span>=<span class="s">"js/cart.js"</span> <span class="f">defer</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">script</span><span class="p">&gt;</span>
+
+    <span class="c">&lt;!-- Միայն catalog.html-ում --&gt;</span>
+    <span class="p">&lt;</span><span class="t">script</span> <span class="f">src</span>=<span class="s">"js/add-to-cart.js"</span> <span class="f">defer</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">script</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">script</span> <span class="f">src</span>=<span class="s">"js/catalog.js"</span> <span class="f">defer</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">head</span><span class="p">&gt;</span></code></pre>
+    </div>
+    <div class="warn note">
+      <span class="tag">Ինչու է հերթականությունը կարևոր</span>
+      <p><code>defer</code>-ով սկրիպտները կատարվում են գրված հերթականությամբ (Դաս 15)։ <code>cart.js</code>-ը օգտագործում է <code>PRODUCTS</code>-ը և <code>load</code>-ը, ուստի գալիս է <code>data.js</code>-ից և <code>storage.js</code>-ից հետո։ Եթե Console-ում տեսնես <code>PRODUCTS is not defined</code>, ստուգիր հերթականությունը։ Դաս 18-ում այս խնդիրը կվերանա մոդուլներով։</p>
+    </div>
+
+    <h3>Քայլ 2 · Զամբյուղի մոդելը՝ <code>cart.js</code></h3>
+    <p>Ինչպես Դաս 16-ում՝ զամբյուղում միայն <code>{ id, qty }</code>։ Գինը, անունը և նկարը միշտ վերցնում ենք <code>PRODUCTS</code>-ից։ Նոր բան՝ <code>fullSubtotal</code>-ը, որ ամփոփումը կարողանա ցույց տալ զեղչը։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/cart.js — կարդալու համար</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">getCartItems</span>() {
+    <span class="k">return</span> cart
+        .<span class="f">map</span>(item =&gt; {
+            <span class="k">const</span> product = PRODUCTS.<span class="f">find</span>(p =&gt; p.id === item.id);
+            <span class="k">if</span> (!product) <span class="k">return</span> <span class="k">null</span>;                 <span class="c">// ապրանքը հանվել է կատալոգից</span>
+            <span class="k">const</span> fullPrice = product.oldPrice ?? product.price;
+            <span class="k">return</span> {
+                ...product,                            <span class="c">// JS Դաս 7</span>
+                qty: item.qty,
+                subtotal: product.price * item.qty,
+                fullSubtotal: fullPrice * item.qty
+            };
+        })
+        .<span class="f">filter</span>(Boolean);                              <span class="c">// հանում է null-երը</span>
+}</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/cart.js — փոփոխելու համար</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">addToCart</span>(id, qty = <span class="n">1</span>) {
+    <span class="k">const</span> existing = cart.<span class="f">find</span>(item =&gt; item.id === id);
+    <span class="k">if</span> (existing) {
+        existing.qty = Math.<span class="f">min</span>(existing.qty + qty, MAX_QTY);
+    } <span class="k">else</span> {
+        cart.<span class="f">push</span>({ id, qty: Math.<span class="f">min</span>(qty, MAX_QTY) });
+    }
+    <span class="f">saveCart</span>();
+}
+
+<span class="k">function</span> <span class="f">setQty</span>(id, qty) {
+    <span class="k">const</span> item = cart.<span class="f">find</span>(i =&gt; i.id === id);
+    <span class="k">if</span> (!item) <span class="k">return</span>;
+    item.qty = Math.<span class="f">min</span>(Math.<span class="f">max</span>(qty, <span class="n">1</span>), MAX_QTY);  <span class="c">// 1-ից 10</span>
+    <span class="f">saveCart</span>();
+}
+
+<span class="k">function</span> <span class="f">removeFromCart</span>(id) {
+    cart = cart.<span class="f">filter</span>(item =&gt; item.id !== id);      <span class="c">// cart-ը let է, որովհետև վերագրում ենք</span>
+    <span class="f">saveCart</span>();
+}
+
+<span class="k">function</span> <span class="f">clearCart</span>() {
+    cart = [];
+    <span class="f">saveCart</span>();
+}
+
+<span class="c">// Ամեն փոփոխությունից հետո՝ պահպանում և header-ի թիվը։ Մեկ տեղ, ոչինչ չի մոռացվում։</span>
+<span class="k">function</span> <span class="f">saveCart</span>() {
+    <span class="f">save</span>(CART_KEY, cart);
+    <span class="f">renderCartCount</span>();
+}
+
+<span class="c">// Header-ի թիվը՝ բոլոր էջերում</span>
+<span class="k">function</span> <span class="f">renderCartCount</span>() {
+    <span class="k">const</span> count = <span class="f">getCartCount</span>();
+    document.<span class="f">querySelectorAll</span>(<span class="s">"[data-cart-count]"</span>).<span class="f">forEach</span>(el =&gt; {
+        el.textContent = count;
+        el.classList.<span class="f">toggle</span>(<span class="s">"is-empty"</span>, count === <span class="n">0</span>);
+    });
+}
+
+<span class="f">renderCartCount</span>();</code></pre>
+    </div>
+    <div class="tip note">
+      <span class="tag">Մեկ տեղ պահպանման համար</span>
+      <p>Դաս 16-ում <code>save</code>-ը կանչվում էր <code>renderCart</code>-ում։ Այստեղ յուրաքանչյուր էջ ունի իր render-ը, ուստի պահպանումը և header-ի թիվը հավաքված են <code>saveCart()</code>-ում, որը կանչում է ամեն փոփոխող ֆունկցիա։ Կանոնը նույնն է․ մեկ տեղ, ոչինչ չի մոռացվում։</p>
+    </div>
+
+    <h3>Քայլ 3 · Կատալոգ՝ վիճակ և pipeline</h3>
+    <ul class="goals">
+      <li>Ջնջիր կատալոգի ինը ստատիկ <code>article</code>-ը։ Թող դատարկ <code>&lt;div class="grid-auto gap-20" id="products"&gt;&lt;/div&gt;</code>։ Ֆիլտրերի ֆորմային տուր <code>id="filters"</code>, վիճակագրության <code>p</code>-ին՝ <code>id="catalog-stats"</code>, էջավորմանը՝ <code>id="pagination"</code></li>
+      <li>Գործիքագոտում ավելացրու որոնման դաշտ <code>type="search"</code>, իսկ դասավորման select-ին՝ «Վարկանիշով» տարբերակ։ «Կիրառել» կոճակները հանիր․ ֆիլտրերը կիրառվում են անմիջապես</li>
+      <li>Վիճակը՝ մեկ օբյեկտ։ Կատեգորիաները և ապրանքանիշերը <strong>զանգվածներ</strong> են, որովհետև checkbox-ով կարելի է ընտրել մի քանիսը</li>
+      <li>Քարտի HTML-ը պիտի լինի ճիշտ նույնը, ինչ Բլոկ 1-ում, որ CSS-ը չփոխես։ Ավելացրու միայն <code>data-id</code> և <code>data-action="add"</code></li>
+    </ul>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/catalog.js — վիճակ և ֆորմայից կարդալը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> state = {
+    categories: [],      <span class="c">// ["laptops", "phones"]</span>
+    brands: [],
+    min: <span class="k">null</span>,
+    max: <span class="k">null</span>,
+    stock: <span class="s">"all"</span>,        <span class="c">// all · in · sale</span>
+    search: <span class="s">""</span>,
+    sort: <span class="s">"popular"</span>,
+    page: <span class="n">1</span>
+};
+
+<span class="c">// ---------- Էլեմենտներ ----------</span>
+<span class="k">const</span> filtersForm = document.<span class="f">querySelector</span>(<span class="s">"#filters"</span>);
+<span class="k">const</span> productsEl = document.<span class="f">querySelector</span>(<span class="s">"#products"</span>);
+<span class="k">const</span> statsEl = document.<span class="f">querySelector</span>(<span class="s">"#catalog-stats"</span>);
+<span class="k">const</span> paginationEl = document.<span class="f">querySelector</span>(<span class="s">"#pagination"</span>);
+<span class="k">const</span> searchInput = document.<span class="f">querySelector</span>(<span class="s">"#q"</span>);
+<span class="k">const</span> sortSelect = document.<span class="f">querySelector</span>(<span class="s">"#sort"</span>);
+
+<span class="c">// ---------- Ֆորմայից վիճակ ----------</span>
+<span class="k">const</span> getChecked = name =&gt;
+    [...filtersForm.<span class="f">querySelectorAll</span>(<span class="s">`input[name="</span>${name}<span class="s">"]:checked`</span>)].<span class="f">map</span>(input =&gt; input.value);
+
+<span class="c">// Դատարկ դաշտը null է, ոչ 0 — այլապես «Մինչև» դատարկը կթաքցներ ամեն ինչ</span>
+<span class="k">const</span> toNumberOrNull = value =&gt; (value === <span class="s">""</span> ? <span class="k">null</span> : <span class="f">Number</span>(value));<span class="k">function</span> <span class="f">readFilters</span>() {
+    state.categories = <span class="f">getChecked</span>(<span class="s">"cat"</span>);
+    state.brands = <span class="f">getChecked</span>(<span class="s">"brand"</span>);
+    state.min = <span class="f">toNumberOrNull</span>(filtersForm.min.value);
+    state.max = <span class="f">toNumberOrNull</span>(filtersForm.max.value);
+    state.stock = filtersForm.<span class="f">querySelector</span>(<span class="s">'input[name="stock"]:checked'</span>).value;
+}</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/catalog.js — pipeline</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">getVisibleProducts</span>() {
+    <span class="k">let</span> result = [...PRODUCTS];                          <span class="c">// պատճեն — բնօրինակը չենք դիպչում</span>
+
+    <span class="k">if</span> (state.categories.length &gt; <span class="n">0</span>) {
+        result = result.<span class="f">filter</span>(p =&gt; state.categories.<span class="f">includes</span>(p.category));
+    }
+    <span class="k">if</span> (state.brands.length &gt; <span class="n">0</span>) {
+        result = result.<span class="f">filter</span>(p =&gt; state.brands.<span class="f">includes</span>(p.brand));
+    }
+    <span class="k">if</span> (state.min !== <span class="k">null</span>) {
+        result = result.<span class="f">filter</span>(p =&gt; p.price &gt;= state.min);
+    }
+    <span class="k">if</span> (state.max !== <span class="k">null</span>) {
+        result = result.<span class="f">filter</span>(p =&gt; p.price &lt;= state.max);
+    }
+    <span class="k">if</span> (state.stock === <span class="s">"in"</span>) {
+        result = result.<span class="f">filter</span>(p =&gt; p.inStock);
+    }
+    <span class="k">if</span> (state.stock === <span class="s">"sale"</span>) {
+        result = result.<span class="f">filter</span>(p =&gt; p.oldPrice !== <span class="k">null</span>);
+    }
+    <span class="k">if</span> (state.search !== <span class="s">""</span>) {
+        <span class="k">const</span> query = state.search.<span class="f">toLowerCase</span>();
+        result = result.<span class="f">filter</span>(p =&gt;
+            p.name.<span class="f">toLowerCase</span>().<span class="f">includes</span>(query) ||
+            CATEGORIES[p.category].<span class="f">toLowerCase</span>().<span class="f">includes</span>(query)
+        );
+    }
+
+    <span class="k">switch</span> (state.sort) {
+        <span class="k">case</span> <span class="s">"price-asc"</span>:  result.<span class="f">sort</span>((a, b) =&gt; a.price - b.price); <span class="k">break</span>;
+        <span class="k">case</span> <span class="s">"price-desc"</span>: result.<span class="f">sort</span>((a, b) =&gt; b.price - a.price); <span class="k">break</span>;
+        <span class="k">case</span> <span class="s">"rating"</span>:     result.<span class="f">sort</span>((a, b) =&gt; b.rating - a.rating); <span class="k">break</span>;
+        <span class="k">case</span> <span class="s">"new"</span>:        result.<span class="f">sort</span>((a, b) =&gt; b.added.<span class="f">localeCompare</span>(a.added)); <span class="k">break</span>;
+        <span class="k">default</span>:           result.<span class="f">sort</span>((a, b) =&gt; b.popularity - a.popularity);
+    }
+    <span class="k">return</span> result;
+}</code></pre>
+    </div>
+    <div class="warn note">
+      <span class="tag">null, ոչ 0</span>
+      <p>Դատարկ «Մինչև» դաշտից <code>Number("")</code>-ը <code>0</code> է, և ֆիլտրը կթաքցնի բոլոր ապրանքները։ Ուստի դատարկ դաշտը դարձնում ենք <code>null</code> և ֆիլտրում ենք միայն <code>state.max !== null</code> դեպքում։</p>
+    </div>
+
+    <h3>Քայլ 4 · Render և էջավորում</h3>
+    <p>Էջավորումը <code>slice</code> է (Դաս 5)․ 12 ապրանք, 6-ական էջում։ Ֆիլտրից հետո էջերը կարող են քչանալ, ուստի <code>state.page</code>-ը սահմանափակում ենք։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/catalog.js — render</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">render</span>() {
+    <span class="k">const</span> visible = <span class="f">getVisibleProducts</span>();
+    <span class="k">const</span> totalPages = Math.<span class="f">ceil</span>(visible.length / PAGE_SIZE);
+    state.page = Math.<span class="f">min</span>(state.page, Math.<span class="f">max</span>(totalPages, <span class="n">1</span>));  <span class="c">// ֆիլտրից հետո էջը կարող է չլինել</span>
+
+    <span class="k">if</span> (visible.length === <span class="n">0</span>) {
+        productsEl.innerHTML = <span class="s">`
+            &lt;div class="empty-state"&gt;
+                &lt;p&gt;Այս ֆիլտրերով ապրանք չգտնվեց։&lt;/p&gt;
+                &lt;button type="button" class="btn btn--primary" data-action="reset"&gt;Մաքրել ֆիլտրերը&lt;/button&gt;
+            &lt;/div&gt;
+        `</span>;
+        statsEl.textContent = <span class="s">`Ցուցադրված է 0՝ </span>${PRODUCTS.length}<span class="s"> ապրանքից`</span>;
+        <span class="f">renderPagination</span>(<span class="n">0</span>);
+        <span class="k">return</span>;
+    }
+
+    <span class="k">const</span> start = (state.page - <span class="n">1</span>) * PAGE_SIZE;
+    <span class="k">const</span> pageItems = visible.<span class="f">slice</span>(start, start + PAGE_SIZE);   <span class="c">// JS Դաս 5</span>
+    productsEl.innerHTML = pageItems.<span class="f">map</span>(createCard).<span class="f">join</span>(<span class="s">""</span>);
+    statsEl.textContent =
+        <span class="s">`Ցուցադրված է </span>${start + 1}<span class="s">–</span>${start + pageItems.length}<span class="s">՝ </span>${visible.length}<span class="s"> ապրանքից`</span>;
+    <span class="f">renderPagination</span>(totalPages);
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 5 · Իրադարձություններ</h3>
+    <ul class="goals">
+      <li>Ամբողջ ֆիլտրերի ֆորմայի համար <strong>մեկ</strong> <code>change</code> listener․ իրադարձությունը փուչիկանում է (Դաս 12)</li>
+      <li>Որոնում՝ <code>debounce</code>-ով, 300 մվ (Դաս 14, 16)</li>
+      <li>Էջավորման հղումներ՝ <code>preventDefault</code> և <code>scrollIntoView</code> (Դաս 11, 14)</li>
+      <li>«Մաքրել ֆիլտրերը»՝ և՛ ֆորմայում, և՛ դատարկ վիճակում։ <code>form.reset()</code>-ը վերադարձնում է բոլոր դաշտերը</li>
+      <li>Header-ի ենթամենյուն բացում է <code>catalog.html?cat=laptops</code>։ Կարդա պարամետրը Դաս 15-ի տնայինի հուշումով և նշիր համապատասխան checkbox-ը</li>
+    </ul>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/catalog.js — ֆորմայի change</div><button class="copy">Պատճենել</button></div>
+<pre><code>filtersForm.<span class="f">addEventListener</span>(<span class="s">"change"</span>, () =&gt; {
+    <span class="k">const</span> before = JSON.<span class="f">stringify</span>(state);
+    <span class="f">readFilters</span>();
+    <span class="c">// Գնի դաշտից դուրս գալիս change-ը կրկին է գալիս։ Եթե ոչինչ չի փոխվել, չենք վերագծում,</span>
+    <span class="c">// այլապես քարտերը կփոխարինվեին հենց սեղմման պահին, և սեղմումը կկորչեր</span>
+    <span class="k">if</span> (JSON.<span class="f">stringify</span>(state) === before) <span class="k">return</span>;
+    state.page = <span class="n">1</span>;
+    <span class="f">render</span>();
+});</code></pre>
+    </div>
+    <div class="warn note">
+      <span class="tag">Կորչող սեղմում</span>
+      <p>Գրիր «Մինչև» դաշտում 1000, և դատարկ վիճակում սեղմիր «Մաքրել ֆիլտրերը»։ Առանց վերևի ստուգման առաջին սեղմումը չի աշխատում։ Ինչու․ դաշտից դուրս գալիս բրաուզերը նորից ուղարկում է <code>change</code>, <code>render()</code>-ը փոխարինում է կոճակը նորով հենց սեղմման պահին, և սեղմումը «ընկնում» է արդեն ջնջված էլեմենտի վրա։ Լուծում՝ եթե վիճակը չի փոխվել, չենք վերագծում։</p>
+    </div>
+
+    <h3>Քայլ 6 · «Գնել» և մոդալ</h3>
+    <p>«Գնել» կոճակներ կան երեք էջում, և կատալոգում դրանք ստեղծում է JS-ը։ Ուստի listener-ը կախում ենք <code>document</code>-ի վրա՝ դելեգացիա ամբողջ էջի համար (Դաս 12)։ Մոդալի HTML-ը դիր <code>main</code>-ի վերջում (տեքստը՝ <code>content.md</code>-ում)։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/add-to-cart.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">addProduct</span>(id, qty = <span class="n">1</span>) {
+    <span class="k">const</span> product = PRODUCTS.<span class="f">find</span>(p =&gt; p.id === id);
+    <span class="k">if</span> (!product || !product.inStock) <span class="k">return</span>;
+    <span class="f">addToCart</span>(id, qty);
+    <span class="f">openCartModal</span>(product, qty);
+}
+
+<span class="c">// ★ Դելեգացիա ամբողջ էջի վրա։ Աշխատում է նաև այն քարտերի համար,</span>
+<span class="c">// որոնք JS-ը կստեղծի ավելի ուշ (կատալոգ) — JS Դաս 12</span>
+document.<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+    <span class="k">const</span> addBtn = e.target.<span class="f">closest</span>(<span class="s">'[data-action="add"]'</span>);
+    <span class="k">if</span> (!addBtn) <span class="k">return</span>;
+    <span class="f">addProduct</span>(<span class="f">Number</span>(addBtn.dataset.id));               <span class="c">// dataset-ը միշտ տող է</span>
+});
+
+<span class="c">// Մոդալը փակվում է երեք եղանակով — JS Դաս 11</span>
+cartModal.<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+    <span class="k">if</span> (e.target === cartModal || e.target.<span class="f">closest</span>(<span class="s">'[data-action="close-modal"]'</span>)) {
+        <span class="f">closeCartModal</span>();
+    }
+});
+
+document.<span class="f">addEventListener</span>(<span class="s">"keydown"</span>, (e) =&gt; {
+    <span class="k">if</span> (e.key === <span class="s">"Escape"</span> &amp;&amp; cartModal.classList.<span class="f">contains</span>(<span class="s">"is-open"</span>)) {
+        <span class="f">closeCartModal</span>();
+    }
+});</code></pre>
+    </div>
+    <p>Ապրանքի էջը դեռ ստատիկ է (Նոութբուք Pro 14)։ Ֆորմային տուր <code>data-id="1"</code>, իսկ <code>submit</code>-ում կանչիր <code>addProduct(id, qty)</code>՝ <code>preventDefault</code>-ով։ Այն կդառնա դինամիկ Առաջադրանք 2-ում։</p>
+
+    <h3>Քայլ 7 · Զամբյուղի էջ</h3>
+    <ul class="goals">
+      <li>Ջնջիր աղյուսակի ստատիկ տողերը՝ <code>&lt;tbody id="cart-rows"&gt;&lt;/tbody&gt;</code>։ Ամփոփման <code>ul</code>-ին՝ <code>id="cart-summary"</code></li>
+      <li>Տողի HTML-ը՝ Բլոկ 1-ի նույնը, <code>tr</code>-ին՝ <code>data-id</code>։ Քանակի դաշտի <code>change</code>-ը և «Հեռացնել»-ը՝ դելեգացիայով <code>tbody</code>-ի վրա</li>
+      <li>Ամփոփում՝ ապրանքներ (հին գներով), զեղչ, առաքում (50 000 ֏-ից անվճար, այլապես 2 000 ֏), ընդամենը։ Ամփոփման HTML-ը պետք է նաև պատվերի էջում, ուստի գրիր այն մեկ անգամ՝ <code>cart.js</code>-ում</li>
+      <li>Դատարկ վիճակ՝ առանձին բլոկ <code>hidden</code> դասով։ <code>classList.toggle("hidden", isEmpty)</code> (Դաս 10)</li>
+      <li>«Դատարկել զամբյուղը»՝ <code>confirm</code>-ով (Դաս 12)</li>
+    </ul>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/cart-page.js — render</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">renderCartPage</span>() {
+    <span class="k">const</span> items = <span class="f">getCartItems</span>();
+    <span class="k">const</span> totals = <span class="f">getCartTotals</span>();
+    <span class="k">const</span> isEmpty = items.length === <span class="n">0</span>;
+
+    <span class="c">// Դատարկ վիճակ՝ միայն դասերով — JS Դաս 10</span>
+    filledEl.classList.<span class="f">toggle</span>(<span class="s">"hidden"</span>, isEmpty);
+    asideEl.classList.<span class="f">toggle</span>(<span class="s">"hidden"</span>, isEmpty);
+    emptyEl.classList.<span class="f">toggle</span>(<span class="s">"hidden"</span>, !isEmpty);
+
+    leadEl.textContent = isEmpty ? <span class="s">"Զամբյուղում ապրանք չկա"</span> : <span class="s">`</span>${totals.count}<span class="s"> ապրանք`</span>;
+    rowsEl.innerHTML = items.<span class="f">map</span>(createCartRow).<span class="f">join</span>(<span class="s">""</span>);
+    summaryEl.innerHTML = <span class="f">createTotalsHtml</span>(totals);
+
+    <span class="k">const</span> left = FREE_DELIVERY_FROM - totals.goods;
+    deliveryHint.textContent = left &gt; <span class="n">0</span>
+        ? <span class="s">`Ավելացրու ևս </span>${formatPrice(left)}<span class="s">՝ անվճար առաքման համար`</span>
+        : <span class="s">"Առաքումը Երևանում անվճար է"</span>;
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 8 · Պատվերի ամփոփում</h3>
+    <p><code>checkout.html</code>-ում աջ բլոկը և կոճակի գումարը նույնպես զամբյուղից են։ Դատարկ զամբյուղի դեպքում կոճակը <code>disabled</code> է։ Ֆորմայի ստուգումը՝ Առաջադրանք 2-ում։</p>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Հաճախ հանդիպող սխալներ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>PRODUCTS is not defined</code></td><td>Սկրիպտների հերթականությունը․ <code>data.js</code>-ը առաջինն է</td></tr>
+      <tr><td><code>Identifier 'state' has already been declared</code></td><td>Սովորական սկրիպտների փոփոխականները ընդհանուր են բոլոր ֆայլերի համար։ Տուր եզակի անուններ կամ սպասիր մոդուլներին (Դաս 18)</td></tr>
+      <tr><td>«Գնել»-ը աշխատում է միայն առաջին render-ից առաջ</td><td>Listener-ը կախված է կոճակների վրա, որոնք <code>innerHTML</code>-ը ջնջում է։ Կախիր <code>document</code>-ի կամ <code>#products</code>-ի վրա (Դաս 12)</td></tr>
+      <tr><td>Ապրանքը չի գտնվում զամբյուղում</td><td><code>dataset.id</code>-ը տող է․ <code>Number(btn.dataset.id)</code></td></tr>
+      <tr><td>Էջը թարմացնելուց հետո զամբյուղը դատարկ է</td><td>Ստուգիր DevTools → Application → Local Storage։ Կանչվո՞ւմ է <code>save</code>-ը ամեն փոփոխությունից հետո</td></tr>
+      <tr><td>Header-ի թիվը թարմանում է միայն էջը թարմացնելիս</td><td><code>renderCartCount()</code>-ը չի կանչվում փոփոխությունից հետո</td></tr>
+      <tr><td>Զամբյուղում «NaN ֏»</td><td>Քանակի դաշտի արժեքը տող է կամ դատարկ․ <code>Number()</code> և սահմանափակում 1–10</td></tr>
+      <tr><td>Մոդալը փակվում է ներսում սեղմելիս</td><td>Ստուգիր <code>e.target === cartModal</code>, ոչ թե պարզապես սեղմում մոդալի վրա (Դաս 11)</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Համեմատիր օրինակի հետ</h2>
+    <div class="warn note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 05-ը ամբողջությամբ նշված է, բացիր <a href="example-1-catalog-cart/catalog.html">example-1-catalog-cart</a>-ը։ Համեմատիր․<br><br><strong>1. Քանի՞ տող.</strong> Քո <code>catalog.js</code>-ը և օրինակինը։ Եթե քոնը երկու անգամ երկար է, փնտրիր կրկնվող կոդը։<br><strong>2. Ֆունկցիաներ.</strong> Կա՞ քո մոտ ֆունկցիա, որ անում է երկու գործ, օրինակ՝ և՛ հաշվում, և՛ <code>innerHTML</code> գրում։<br><strong>3. DevTools.</strong> Դիր breakpoint <code>addToCart</code>-ի մեջ և անցիր քայլ առ քայլ (Դաս 16)։<br><br>Օրինակը աշխատում է նաև <code>file://</code>-ով, որովհետև սովորական սկրիպտներ են։ Առաջադրանք 2-ից հետո կպահանջվի Live Server։</p>
+    </div>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Ընդունման ստուգաթերթ</h2>
+    <h3>Կատալոգ</h3>
+    <ul class="goals">
+      <li>Էջը բացվում է 6 քարտով և «Ցուցադրված է 1–6՝ 12 ապրանքից», կա 2 էջ</li>
+      <li>«Նոութբուքեր»-ը թողնում է 4 ապրանք, «Նոութբուքեր» + «Միայն զեղչվածները»՝ 2</li>
+      <li>Որոնումը աշխատում է 0.3 վրկ հետո և չի զգում մեծատառ/փոքրատառ, փնտրում է նաև կատեգորիայի անվան մեջ («աքսես»)</li>
+      <li>Գինը «Մինչև 1000»՝ դատարկ վիճակ, «Մաքրել ֆիլտրերը»-ը վերականգնում է ամեն ինչ, ներառյալ դաշտերը</li>
+      <li>Header-ի «Կատալոգ → Սմարթֆոններ»-ը բացում է ֆիլտրված կատալոգ՝ նշված checkbox-ով</li>
+      <li>Սպառված ապրանքի կոճակը <code>disabled</code> է</li>
+    </ul>
+
+    <h3>Զամբյուղ</h3>
+    <ul class="goals">
+      <li>«Գնել»-ը բացում է մոդալը, որը փակվում է խաչիկով, ֆոնին սեղմելով և Escape-ով</li>
+      <li>Header-ի թիվը թարմանում է անմիջապես և բոլոր էջերում, դատարկի դեպքում թաքնված է</li>
+      <li>Նույն ապրանքը երկրորդ անգամ մեծացնում է քանակը, նոր տող չի ավելացնում</li>
+      <li>Քանակը 1-ից 10 է․ 0 կամ 50 գրելիս դառնում է 1 կամ 10</li>
+      <li>Գումարները ճիշտ են, 50 000 ֏-ից ցածր պատվերում առաքումը 2 000 ֏ է</li>
+      <li>Դատարկ զամբյուղում երևում է հաղորդագրություն, աղյուսակը և ամփոփումը թաքնված են</li>
+      <li>Էջը թարմացնելուց և այլ էջ անցնելուց հետո զամբյուղը տեղում է</li>
+    </ul>
+
+    <h3>Կոդ</h3>
+    <ul class="goals">
+      <li>Console-ը մաքուր է բոլոր 9 էջում</li>
+      <li>Ոչ մի <code>var</code>, ոչ մի մոռացված <code>console.log</code>, ոչ մի կախարդական թիվ (Դաս 16)</li>
+      <li>Ամեն մշակիչ փոխում է վիճակը և կանչում render, DOM-ը ուղիղ չի խմբագրվում</li>
+      <li>Ամփոփման HTML-ը գրված է մեկ անգամ և օգտագործվում է երկու էջում</li>
+    </ul>
+    <div class="pager"><a href="index.html">← Նախագծի էջ</a><a href="task-2.html">Առաջադրանք 2 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · նախագիծ · առաջադրանք 1</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 12 · Մեկ listener ամբողջ դարակի համար — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · տնային</b> · Դաս 12</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../js-lesson-12.html">JS Դաս 12</a> · մինի-նախագիծ</p>
+  <h1>Մեկ listener ամբողջ դարակի համար</h1>
+  <p class="lede">Դաս 11-ի խնդիրը լուծվում է դելեգացիայով․ մեկ մշակիչ <code>#books</code>-ի վրա, որը երբեք չի ջնջվում։ Դարակի քարտերը ստանում են գործողություններ՝ «+10 էջ», «Կարդացի», աստղերով գնահատական, «Հանել»։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Արդյունքը՝ pages/books.html</span>
+    <span>Աշխատում է նաև file://-ով</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–12․ փուչիկացում, <code>closest</code>, <code>data-action</code>, մեկ ճշմարտության աղբյուր, <code>confirm</code>։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <figure class="shot">
+      <img src="screenshots/actions.jpg" alt="Դարակ, որտեղ կարդացած գրքերը ունեն աստղեր, իսկ կիսատները՝ «+10 էջ» և «Կարդացի» կոճակներ" width="900" height="752" loading="lazy">
+      <figcaption>Գործողություններ քարտերում</figcaption>
+    </figure>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատիր քո կայքում (կամ <a href="../lesson-11/example/index.html">նախորդ դասի օրինակում</a>)։ CSS-ը տրված է, որ կենտրոնանաս JS-ի վրա․ HTML/CSS-ը արդեն գիտես։</p>
+    <ul class="goals">
+      <li><code>starter/css/books-12.css</code> — CSS-ը, որ ավելանում է այս դասին</li>
+      <li><code>starter/pages/books.html</code> — «Գրքեր» էջի markup-ը (JS չկա, միայն <code>&lt;script&gt;</code>-ները)</li>
+    </ul>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · books՝ let</h3>
+    <ul class="goals">
+      <li>Զանգվածը կփոխարինենք <code>filter</code>-ով, ուստի <code>let books</code></li>
+      <li>Ամեն գրքի՝ <code>rating</code></li>
+    </ul>
+
+    <h3>Քայլ 2 · Գործողություններ</h3>
+    <ul class="goals">
+      <li><code>readPages(id)</code>, <code>markDone(id)</code>, <code>rateBook(id, stars)</code>, <code>deleteBook(id)</code>, <code>clearDone()</code></li>
+      <li>Ամեն մեկը փոխում է <code>books</code>-ը և կանչում <code>render()</code>։ DOM-ին ուղիղ չի դիպչում</li>
+    </ul>
+
+    <h3>Քայլ 3 · Մեկ listener</h3>
+    <ul class="goals">
+      <li><code>e.target.closest("[data-action]")</code> → քարտը՝ <code>closest(".book")</code> → <code>Number(dataset.id)</code></li>
+      <li><code>switch</code>՝ ըստ <code>data-action</code>-ի</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/books.js — դելեգացիա</div><button class="copy">Պատճենել</button></div>
+<pre><code>container.<span class="f">addEventListener</span>(<span class="s">"click"</span>, (e) =&gt; {
+    <span class="k">const</span> button = e.target.<span class="f">closest</span>(<span class="s">"[data-action]"</span>);
+    <span class="k">if</span> (!button) <span class="k">return</span>;
+    <span class="k">const</span> id = <span class="f">Number</span>(button.<span class="f">closest</span>(<span class="s">".book"</span>).dataset.id);
+
+    <span class="k">switch</span> (button.dataset.action) {
+        <span class="k">case</span> <span class="s">"read"</span>:   <span class="f">readPages</span>(id); <span class="k">break</span>;
+        <span class="k">case</span> <span class="s">"done"</span>:   <span class="f">markDone</span>(id); <span class="k">break</span>;
+        <span class="k">case</span> <span class="s">"delete"</span>: <span class="f">deleteBook</span>(id); <span class="k">break</span>;
+        <span class="c">// ...</span>
+    }
+});</code></pre>
+    </div>
+
+    <h3>Քայլ 4 · Աստղեր</h3>
+    <ul class="goals">
+      <li>Կարդացած գրքի քարտում՝ 5 կոճակ <code>data-action="rate" data-rating="1…5"</code></li>
+      <li>Ընտրվածները՝ <code>is-on</code>, գույնը՝ CSS-ում</li>
+    </ul>
+
+    <h3>Քայլ 5 · Ֆիլտրերը նույնպես</h3>
+    <ul class="goals">
+      <li>Ֆիլտրի կոճակները՝ դելեգացիայով <code>#filters</code>-ի վրա</li>
+      <li><code>classList.toggle("is-active", b === button)</code>՝ մեկ տողով</li>
+      <li><code>bindDetailsButtons()</code>-ը այլևս պետք չէ․ ջնջիր</li>
+    </ul>
+
+    <h3>Քայլ 6 · Հաստատում</h3>
+    <ul class="goals">
+      <li>«Հանել»-ը և «Հանել կարդացածները»-ը՝ <code>confirm</code>-ով</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Մեկ <code>click</code> listener դարակի համար, մեկը՝ ֆիլտրերի</li>
+      <li>Ֆիլտրից հետո բոլոր կոճակները աշխատում են</li>
+      <li>+10 էջը չի անցնում գրքի էջերից, 100%-ից հետո հայտնվում են աստղերը</li>
+      <li>Ամեն գործողություն փոխում է զանգվածը, ոչ DOM-ը</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Ոչինչ չի գտնվում ըստ id-ի</td><td><code>dataset.id</code>-ը տող է․ <code>Number()</code></td></tr>
+      <tr><td>Աստղին սեղմելիս սխալ</td><td>Աստղի կոճակը քարտի ներսում է, բայց <code>data-rating</code>-ը կարդա կոճակից, ոչ քարտից</td></tr>
+      <tr><td><code>books = ...</code>-ը սխալ է տալիս</td><td><code>const books</code>․ փոխիր <code>let</code>-ի</td></tr>
+      <tr><td>Երկու անգամ է բացվում confirm-ը</td><td>Listener-ը կախված է երկու անգամ (render-ի ներսում)</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 12-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում։</p>
+    <ol class="hw">
+      <li>Կառուցիր ներդրված երեք բլոկ և ամեն մեկին կախիր մշակիչ։ Սեղմիր ամենաներքինին և գրիր մեկնաբանության մեջ՝ ինչ հերթականությամբ աշխատեցին։</li>
+      <li>Նույն կոդում ավելացրու <code>stopPropagation</code> միջինին։ Նկարագրիր՝ ինչ փոխվեց։</li>
+      <li>Ցուցակ 5 էլեմենտով։ Մեկ դելեգացված listener-ով՝ սեղմած էլեմենտին ավելացրու <code>is-selected</code> դաս, մյուսներից հանիր։</li>
+      <li>Նույն ցուցակին ավելացրու «Ավելացնել» կոճակ։ Համոզվիր, որ նոր էլեմենտների վրա էլ ընտրությունն աշխատում է։</li>
+      <li>Ամբողջական to-do ցուցակ դասարանական օրինակի հիման վրա։ Գրիր զրոյից՝ առանց նայելու, հետո համեմատիր։</li>
+      <li>To-do-ին ավելացրու ֆիլտրի կոճակներ՝ «Բոլորը», «Ակտիվ», «Կատարված»։ Ֆիլտրը պահիր փոփոխականում և հաշվի առ <code>render()</code>-ում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>To-do-ին ավելացրու «Ջնջել կատարվածները» կոճակ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու հաստատում ջնջելուց առաջ՝ <code>confirm("Վստա՞հ եք")</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Վերցրու Դաս 11-ի 10-րդ տնայինը (կատալոգի ֆիլտրերը) և վերաշարադրիր դելեգացիայով։ Համոզվիր, որ «Գնել» կոճակներն այժմ աշխատում են ֆիլտրից հետո։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կատալոգին ավելացրու զամբյուղ․ առանձին զանգված, «Գնել» սեղմելիս ապրանքն ավելանում է, էկրանին ցուցադրվում է քանակը և ընդհանուր գումարը։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/pages/books.html">օրինակը</a> և դրա կոդը <code>example/js/</code>-ում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-11/task.html">← Դաս 11</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-13/task.html">Դաս 13 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · տնային աշխատանք · Դաս 12</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

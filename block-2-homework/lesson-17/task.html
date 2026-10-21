@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 17 · Կայքը GitHub-ում — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · տնային</b> · Դաս 17</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../js-lesson-17.html">JS Դաս 17</a> · մինի-նախագիծ</p>
+  <h1>Կայքը GitHub-ում</h1>
+  <p class="lede">Անիի կայքը դառնում է պահոց․ առաջին commit, իմաստալից պատմություն, ճյուղ նոր հնարավորության համար և GitHub Pages։ Այսօր կոդ չենք գրում․ կազմակերպում ենք այն, ինչ կա։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Արդյունքը՝ GitHub Pages</span>
+    <span>Աշխատում է նաև file://-ով</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 17․ <code>git init</code>, <code>add</code>, <code>commit</code>, <code>status</code>, <code>diff</code>, <code>log</code>, ճյուղեր, <code>merge</code>, կոնֆլիկտ, <code>remote</code>, <code>push</code>, Pages։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Կոդը նույնն է, ինչ Դաս 14-ից հետո։ Արդյունքը՝ պահոց GitHub-ում և աշխատող հասցե։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>git log --oneline</div><button class="copy">Պատճենել</button></div>
+<pre><code>a91c2f4 Ավելացվել է տարվա նպատակը (feature/reading-goal)
+7d03b18 localStorage, ժամաչափ, toast և «Վեր» կոճակ
+5e8a611 Նոր գրքի ֆորմա՝ ստուգումով
+3f9d0c2 Դարակը՝ դելեգացիայով, գնահատական աստղերով
+c4b7e90 Ֆիլտրեր, որոնում, մոդալ և մուգ թեմա
+1a62d4e Դարակը JS-ով՝ render զանգվածից
+0b5e7a3 Անիի կայքը՝ HTML/CSS բլոկ</code></pre>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատիր քո կայքում (կամ <a href="../lesson-14/example/index.html">նախորդ դասի օրինակում</a>)։ CSS-ը տրված է, որ կենտրոնանաս JS-ի վրա․ HTML/CSS-ը արդեն գիտես։</p>
+    <ul class="goals">
+      <li><code>starter/.gitignore</code> — պատրաստի կանոններ</li>
+      <li><code>starter/README.md</code> — README-ի ձևանմուշ</li>
+    </ul>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Պահոց</h3>
+    <ul class="goals">
+      <li>Կայքի թղթապանակում՝ <code>git init</code>, <code>.gitignore</code> (<code>starter/</code>-ից)</li>
+      <li>Առաջին commit-ը՝ HTML/CSS բլոկի վիճակը, երկրորդը՝ JS-ը</li>
+      <li>Եթե արդեն ունես հին պատմություն՝ շարունակիր դրանից</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>terminal</div><button class="copy">Պատճենել</button></div>
+<pre><code>git init
+git add .
+git commit -m "Անիի կայքը՝ HTML/CSS բլոկ"
+git log --oneline</code></pre>
+    </div>
+
+    <h3>Քայլ 2 · Իմաստալից պատմություն</h3>
+    <ul class="goals">
+      <li>Առնվազն 5 commit՝ ամեն մեկը մեկ փոփոխություն</li>
+      <li>Օրինակներ․ «Գրքեր էջ՝ ստատիկ քարտեր», «Դարակի render զանգվածից», «Ֆիլտրեր և մոդալ», «Դելեգացիա», «Նոր գրքի ֆորմա», «localStorage և ժամաչափ»</li>
+    </ul>
+
+    <h3>Քայլ 3 · Ճյուղ</h3>
+    <ul class="goals">
+      <li><code>git switch -c feature/reading-goal</code></li>
+      <li>Ավելացրու փոքր հնարավորություն․ օրինակ՝ «Տարվա նպատակ՝ 12 գիրք» տողը վիճակագրությունում</li>
+      <li>Commit, <code>switch main</code>, <code>merge</code>, <code>branch -d</code></li>
+    </ul>
+
+    <h3>Քայլ 4 · GitHub և Pages</h3>
+    <ul class="goals">
+      <li>Պահոց՝ <code>ani-site</code>, <code>remote add origin</code>, <code>push -u origin main</code></li>
+      <li>Settings → Pages → main</li>
+      <li>Ստուգիր հրապարակված «Գրքեր» էջը հեռախոսում</li>
+    </ul>
+
+    <h3>Քայլ 5 · README</h3>
+    <ul class="goals">
+      <li>Նկարագրություն, հասցե, հնարավորություններ, կառուցվածք (<code>starter/README.md</code>-ի ձևանմուշը)</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li><code>git log --oneline</code>-ում առնվազն 5 commit</li>
+      <li>Կա <code>.gitignore</code> և <code>README.md</code></li>
+      <li>Pages-ի հասցեն աշխատում է, «Գրքեր» էջը պահում է դարակը</li>
+      <li>Ճյուղը միացված է և ջնջված</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>fatal: not a git repository</code></td><td>Թղթապանակը սխալ է կամ <code>git init</code> չի արվել</td></tr>
+      <tr><td>Pages-ում 404</td><td>Ճյուղը կամ թղթապանակը սխալ է ընտրված, կամ <code>index.html</code>-ը արմատում չէ</td></tr>
+      <tr><td><code>rejected (fetch first)</code></td><td>GitHub-ում README եք ստեղծել․ <code>git pull</code>, հետո <code>push</code></td></tr>
+      <tr><td>Commit-ի հաղորդագրություն «fix»</td><td>Գրիր՝ <em>ինչ</em> փոխվեց․ «Թեման պահվում է localStorage-ում»</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 17-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում։</p>
+    <ol class="hw">
+      <li>Կարգավորիր Git-ը՝ <code>user.name</code> և <code>user.email</code>։ Ուղարկիր <code>git config --global --list</code>-ի արդյունքի սքրինշոթը։</li>
+      <li>Հրապարակիր քո կատալոգը GitHub Pages-ով։ Ուղարկիր աշխատող հասցեն։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գրիր README.md՝ նկարագրությամբ, հնարավորությունների ցուցակով և հասցեով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կատարիր առնվազն <strong>5 իմաստալից commit</strong>՝ առանձին փոփոխություններով։ Ուղարկիր <code>git log --oneline</code>-ի արդյունքը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ստեղծիր <code>feature/</code> ճյուղ, ավելացրու նոր հնարավորություն, միացրու <code>main</code>-ին և ջնջիր ճյուղը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Դիտավորյալ ստեղծիր կոնֆլիկտ․ երկու ճյուղում փոխիր նույն տողը և միացրու։ Լուծիր և նկարագրիր՝ ինչ արեցիր։</li>
+      <li>Ավելացրու <code>.gitignore</code> առնվազն 5 կանոնով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Հրապարակիր նաև քո HTML/CSS բլոկի նախագծերից մեկը՝ առանձին պահոցում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Փորձիր <code>git clone</code>-ը՝ ներբեռնիր քո սեփական պահոցը ուրիշ թղթապանակում և համոզվիր, որ ամեն ինչ տեղում է։</li>
+      <li>Գտիր GitHub-ում որևէ հետաքրքիր բաց նախագիծ, նայիր դրա README-ն և commit-երի պատմությունը։ Գրիր՝ ի՞նչ նկատեցիր։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/pages/books.html">օրինակը</a> և դրա կոդը <code>example/js/</code>-ում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-14/task.html">← Դաս 14</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-18/task.html">Դաս 18 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · տնային աշխատանք · Դաս 17</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

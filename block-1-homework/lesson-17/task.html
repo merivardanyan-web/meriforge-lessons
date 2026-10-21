@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Տնային · Դաս 17 — կոմպոնենտներ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:#fff}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule); background:var(--paper)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  @media (max-width:700px){.shots{grid-template-columns:1fr}}
+  .lede a, .note a, .pager a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code){white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 1 · տնային</b> · Դաս 17</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../html-lesson-17.html">HTML Դաս 17</a> · մինի-նախագիծ</p>
+  <h1>Կոմպոնենտների գրադարան</h1>
+  <p class="lede">Կայքի կրկնվող տարրերը դառնում են կոմպոնենտներ՝ կոճակների համակարգ, BEM քարտ մոդիֆիկատորներով, ստվերների սանդղակ և <code>::before</code>/<code>::after</code>։</p>
+
+  <div class="facts">
+    <span>Ժամանակ՝ ~2.5 ժամ</span>
+    <span>Սկսիր Դաս 16-ի արդյունքից</span>
+    <span>Արդյունք՝ components.html + թարմացված կայք</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Օգտագործիր միայն Դաս 01–17-ը։ Փշրանքներում ընթացիկ էջը առայժմ պարզ <code>li</code> է․ <code>aria-current</code>-ը Դաս 18-ում է։ Գույները դեռ մեկ շերտով են, երկու շերտի տոկենները Դաս 19-ում են։</p>
+  </div>
+
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Կայքը ստանում է կոմպոնենտների գրադարան՝ առանձին էջ, որտեղ հավաքված են բոլոր կոճակները, քարտերը, ստվերները և ցուցակները։ Ամբողջ կայքում կոճակները օգտագործում են մեկ համակարգ։</p>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/components.jpg" alt="Կոմպոնենտների էջ․ կոճակների չորս տեսակ և երեք չափ, երեք քարտ, որոնցից մեկը ընդգծված եզրագծով, հորիզոնական քարտ, ստվերների երեք մակարդակ" width="900" height="1977" loading="lazy">
+      <figcaption>components.html</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/projects.jpg" alt="Նախագծերի էջ փշրանքներով, վերնագրի տակ գծով և ընդգծված առաջին քարտով" width="900" height="1249" loading="lazy">
+      <figcaption>pages/projects.html</figcaption>
+    </figure>
+    </div>
+  </section>
+
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <div class="tree">starter/
+└── content.md     ← կոմպոնենտների ցուցակ, ստվերներ, մոդիֆիկատորներ</div>
+    <p>Սկսիր Դաս 16-ի քո կայքից։ Եթե այն չունես, վերցրու <a href="../lesson-16/example/index.html">Դաս 16-ի օրինակը</a>։</p>
+  </section>
+
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+
+    <h3>Քայլ 1 · Կոճակների համակարգ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.btn</span> {
+    <span class="f">display</span>: <span class="s">inline-flex</span>;
+    <span class="f">align-items</span>: <span class="s">center</span>;
+    <span class="f">justify-content</span>: <span class="s">center</span>;
+    <span class="f">gap</span>: <span class="s">8px</span>;
+    <span class="f">padding</span>: <span class="s">12px 24px</span>;
+    <span class="f">min-height</span>: <span class="s">44px</span>;
+    <span class="f">border</span>: <span class="s">1px solid transparent</span>;   <span class="c">/* որ hover-ին չցատկի */</span>
+    <span class="f">border-radius</span>: <span class="s">6px</span>;
+    <span class="f">font-weight</span>: <span class="s">700</span>;
+    <span class="f">cursor</span>: <span class="s">pointer</span>;
+    <span class="f">transition</span>: <span class="s">background-color .15s, color .15s, border-color .15s</span>;
+}
+
+<span class="k">.btn--primary</span>       { <span class="f">background</span>: <span class="s">var(--secondary)</span>; <span class="f">color</span>: <span class="s">var(--on-dark)</span>; }
+<span class="k">.btn--primary:hover</span> { <span class="f">background</span>: <span class="s">#00253f</span>; }
+
+<span class="k">.btn--outline</span>       { <span class="f">background</span>: <span class="s">transparent</span>; <span class="f">color</span>: <span class="s">var(--secondary)</span>; <span class="f">border-color</span>: <span class="s">var(--secondary)</span>; }
+
+<span class="k">.btn--sm</span> { <span class="f">padding</span>: <span class="s">8px 16px</span>; <span class="f">min-height</span>: <span class="s">36px</span>; <span class="f">font-size</span>: <span class="s">0.875rem</span>; }
+
+<span class="k">.btn:focus-visible</span> { <span class="f">outline</span>: <span class="s">2px solid var(--secondary)</span>; <span class="f">outline-offset</span>: <span class="s">2px</span>; }
+<span class="k">.btn:disabled</span>      { <span class="f">opacity</span>: <span class="s">.5</span>; <span class="f">cursor</span>: <span class="s">not-allowed</span>; <span class="f">pointer-events</span>: <span class="s">none</span>; }</code></pre>
+    </div>
+    <p>Անցիր ամբողջ կայքով և ամեն <code>class="btn"</code>-ին ավելացրու տեսակը։ Ջնջիր <code>:focus-visible</code>-ը և անցիր էջը <kbd>Tab</kbd>-ով․ նկարագրիր, թե ինչ զգացիր։ Վերադարձրու։</p>
+
+    <h3>Քայլ 2 · components.html</h3>
+    <p>Կայքի արմատում ստեղծիր <code>components.html</code>՝ նույն header-ով և footer-ով։ Ցուցադրիր բոլոր կոճակները՝ չորս տեսակ, երեք չափ, անջատված վիճակ, և բաց կոճակը մուգ ֆոնի վրա։ Ավելացրու հղում footer-ում։</p>
+
+    <h3>Քայլ 3 · Ստվերների սանդղակ</h3>
+    <p>Երեք տոկեն <code>:root</code>-ում և երեք դաս՝ <code>.shadow-sm</code>, <code>.shadow-md</code>, <code>.shadow-lg</code>։ Ցուցադրիր դրանք երեք բլոկի վրա։ Քարտը հանգստի վիճակում՝ <code>sm</code>, hover-ի ժամանակ՝ <code>md</code>։ Փորձիր <code>0 10px 3px</code>․ երբ լղոզումը փոքր է տեղաշարժից, ստվերը նման է կեղտի։</p>
+
+    <h3>Քայլ 4 · Քարտի մոդիֆիկատորներ</h3>
+    <ul class="goals">
+      <li><code>.card--featured</code>՝ ընդգծված եզրագիծ։ Տուր այն «Այս կայքը» քարտին Նախագծերի էջում</li>
+      <li><code>.card--horizontal</code>՝ <code>flex-direction: row</code>, նկարը՝ 40%։ Տեքստը և կոճակը փաթաթիր <code>.card__main</code>-ի մեջ։ Հեռախոսում՝ նորից ուղղահայաց</li>
+    </ul>
+
+    <h3>Քայլ 5 · ::before և ::after</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.section-title</span> { <span class="f">position</span>: <span class="s">relative</span>; <span class="f">padding-bottom</span>: <span class="s">12px</span>; }
+<span class="k">.section-title::after</span> {
+    <span class="f">content</span>: <span class="s">""</span>;               <span class="c">/* առանց սրա ոչինչ չի երևա */</span>
+    <span class="f">position</span>: <span class="s">absolute</span>;
+    <span class="f">left</span>: <span class="s">0</span>;
+    <span class="f">bottom</span>: <span class="s">0</span>;
+    <span class="f">width</span>: <span class="s">48px</span>;
+    <span class="f">height</span>: <span class="s">3px</span>;
+    <span class="f">background</span>: <span class="s">var(--secondary)</span>;
+}
+
+<span class="k">.check-list li</span> { <span class="f">position</span>: <span class="s">relative</span>; <span class="f">padding-left</span>: <span class="s">28px</span>; }
+<span class="k">.check-list li::before</span> { <span class="f">content</span>: <span class="s">"✓"</span>; <span class="f">position</span>: <span class="s">absolute</span>; <span class="f">left</span>: <span class="s">0</span>; <span class="f">color</span>: <span class="s">#0f7b4f</span>; }
+
+<span class="k">.crumbs li + li::before</span> { content: "/"; <span class="f">margin</span>: <span class="s">0 8px</span>; }</code></pre>
+    </div>
+    <p>Բոլոր բաժինների <code>h2</code>-երին ավելացրու <code>class="section-title"</code>։ Ներքին էջերի վերևում ավելացրու փշրանքներ՝ <code>nav &gt; ol.crumbs</code>։ Բաժանարար «/»-ը HTML-ում չկա, այն <code>::before</code>-ն է։</p>
+  </section>
+
+  <section id="s3">
+    <h2><span class="num">03</span>Ընդունման ստուգաթերթ</h2>
+    <h3>Կոճակներ</h3>
+    <ul class="goals">
+      <li>Մեկ բազա և մոդիֆիկատորներ</li>
+      <li>Չորս վիճակ</li>
+      <li>Կայքում չկա կոճակ առանց տեսակի</li>
+    </ul>
+
+    <h3>Կոմպոնենտներ</h3>
+    <ul class="goals">
+      <li>components.html-ը ցույց է տալիս բոլոր կոմպոնենտները</li>
+      <li>Քարտը BEM-ով է, կա <code>--featured</code> և <code>--horizontal</code></li>
+      <li>Ստվերների երեք մակարդակ</li>
+    </ul>
+
+    <h3>Կեղծ-տարրեր</h3>
+    <ul class="goals">
+      <li>Բաժինների վերնագրերի տակ գիծ կա</li>
+      <li>✓ ցուցակ և փշրանքներ՝ առանց լրացուցիչ HTML-ի</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>::after</code>-ը չի երևում</td><td>Չկա <code>content: ""</code></td></tr>
+      <tr><td>Գիծը հայտնվեց էջի ներքևում</td><td>Վերնագիրը չունի <code>position: relative</code></td></tr>
+      <tr><td>Կոճակը hover-ին «ցատկում» է 2px-ով</td><td>Բազային կոճակին՝ <code>border: 1px solid transparent</code></td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 17-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում կամ նույն թղթապանակում։</p>
+    <ol class="hw">
+      <li>Կառուցիր <code>components.html</code>՝ բոլոր կոճակների տեսակներով, չափերով և վիճակներով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր չորս վիճակը մեկ կոճակի վրա։ Ուղարկիր չորս սքրինշոթ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ջնջիր <code>:focus-visible</code>-ը և փորձիր նավարկել <kbd>Tab</kbd>-ով։ Նկարագրիր զգացողությունը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Վերաշարադրիր Դաս 16-ի քարտը ամբողջովին BEM-ով։ Համեմատիր utility տարբերակի հետ։</li>
+      <li>Ստեղծիր <code>.card--horizontal</code> մոդիֆիկատոր՝ նկարը ձախում, տեքստը աջում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կառուցիր ստվերների սանդղակ՝ երեք մակարդակ։ Ցուցադրիր դրանք երեք քարտի վրա։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր, ինչ է լինում, երբ լղոզումը փոքր է տեղաշարժից՝ <code>0 10px 3px</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կառուցիր ✓ ցուցակ և bread crumbs՝ միայն <code>::before</code>-ով, առանց լրացուցիչ HTML-ի։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>::after</code> գիծ բոլոր բաժինների վերնագրերին։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Անցիր ամբողջ նախագծով և գտիր բոլոր կրկնվող տարրերը։ Կազմիր ցուցակ՝ ի՞նչը պիտի դառնա կոմպոնենտ և ինչու։</li>
+    </ol>
+  </section>
+
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/index.html">օրինակը</a> և քո էջը կողք կողքի։ Բացիր երկուսի կոդն էլ խմբագրիչում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-16/task.html">← Դաս 16</a><a href="../index.html">Բոլոր տնայինները</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 1 · տնային աշխատանք · Դաս 17</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

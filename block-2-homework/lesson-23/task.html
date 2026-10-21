@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 23 · Փակույթներ, Set, Map, սխալներ — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · տնային</b> · Դաս 23</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../js-lesson-23.html">JS Դաս 23</a> · մինի-նախագիծ</p>
+  <h1>Փակույթներ, Set, Map, սխալներ</h1>
+  <p class="lede">Վերջին քայլը մինչև ամփոփումը․ ժանրերի կոճակները կառուցվում են դարակից <code>Set</code>-ով և քանակներով <code>Map</code>-ով, որոնումը քեշավորվում է, ֆորման ստուգում է <code>ValidationError</code>-ով, իսկ փակույթները բացատրում են <code>debounce</code>-ը և <code>once</code>-ը։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Արդյունքը՝ pages/books.html</span>
+    <span>Live Server</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–23․ փակույթներ, սեփական սխալների դասեր, <code>instanceof</code>, <code>Set</code>, <code>Map</code>, անփոփոխ թարմացումներ, <code>Object.freeze</code>։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <figure class="shot">
+      <img src="screenshots/genres.jpg" alt="Ժանրերի կոճակներ քանակներով, ընտրված «պատմավեպ»" width="900" height="633" loading="lazy">
+      <figcaption>Ժանրեր՝ Set + Map</figcaption>
+    </figure>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատիր քո կայքում (կամ <a href="../lesson-22/example/index.html">նախորդ դասի օրինակում</a>)։ CSS-ը տրված է, որ կենտրոնանաս JS-ի վրա․ HTML/CSS-ը արդեն գիտես։</p>
+    <ul class="goals">
+      <li><code>starter/pages/books.html</code> — «Գրքեր» էջի markup-ը (JS չկա, միայն <code>&lt;script&gt;</code>-ները)</li>
+    </ul>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Ժանրեր տվյալներից</h3>
+    <ul class="goals">
+      <li><code>get genres()</code>՝ <code>[...new Set(books.map(b =&gt; b.genre))]</code></li>
+      <li><code>get genreCounts()</code>՝ <code>Map</code>․ ժանր → քանակ</li>
+      <li><code>renderGenres</code>՝ «պատմավեպ (2)» կոճակներ, <code>Shelf.setGenre</code></li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/models/Shelf.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">get</span> <span class="f">genreCounts</span>() {
+    <span class="k">const</span> counts = <span class="k">new</span> <span class="f">Map</span>();
+    <span class="k">this</span>.#books.<span class="f">forEach</span>(b =&gt; counts.<span class="k">set</span>(b.genre, (counts.<span class="k">get</span>(b.genre) ?? <span class="n">0</span>) + <span class="n">1</span>));
+    <span class="k">return</span> counts;
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 2 · Քեշ որոնման համար</h3>
+    <ul class="goals">
+      <li><code>const searchCache = new Map()</code>՝ բանալին հասցեն է</li>
+      <li>Արդեն բեռնված էջը՝ առանց հարցման, իսկ կարգավիճակում՝ «· քեշից»</li>
+    </ul>
+
+    <h3>Քայլ 3 · ValidationError</h3>
+    <ul class="goals">
+      <li><code>errors.js</code>՝ <code>ValidationError(field, message)</code>, <code>ApiError(status, message)</code> և <code>get isServerError</code></li>
+      <li>Ֆորմայի կանոնները <strong>նետում</strong> են սխալ, իսկ <code>validateField</code>-ը catch-ում ստուգում է <code>instanceof</code></li>
+      <li>Մնացած սխալները՝ <code>throw error</code>․ ծրագրի սխալը չենք թաքցնում</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>js/form.js — validateField</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">try</span> {
+    <span class="f">rule</span>(input.value);
+    <span class="f">setError</span>(input, <span class="s">""</span>);
+    <span class="k">return</span> <span class="k">true</span>;
+} <span class="k">catch</span> (error) {
+    <span class="k">if</span> (!(error <span class="k">instanceof</span> ValidationError)) <span class="k">throw</span> error;
+    <span class="f">setError</span>(form.<span class="f">querySelector</span>(<span class="s">`[name="</span>${error.field}<span class="s">"]`</span>), error.message);
+    <span class="k">return</span> <span class="k">false</span>;
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 4 · Փակույթներ</h3>
+    <ul class="goals">
+      <li><code>debounce</code>-ի <code>timer</code>-ը և <code>once</code>-ի <code>called</code>-ը «հիշվում» են</li>
+      <li><code>once</code>՝ «Բարի ընթերցանություն» միայն առաջին «Սկսել»-ից</li>
+    </ul>
+
+    <h3>Քայլ 5 · Անփոփոխություն</h3>
+    <ul class="goals">
+      <li><code>Shelf.add</code>՝ <code>[...this.#books, book]</code>, ոչ <code>push</code></li>
+      <li><code>INITIAL_BOOKS</code>՝ <code>Object.freeze</code></li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Նոր ժանրով գիրք ավելացնելիս նոր կոճակ է հայտնվում՝ առանց HTML փոխելու</li>
+      <li>1-ին էջ → 2-րդ → 1-ին․ երրորդը «քեշից» է</li>
+      <li>Ֆորմայի սխալները նույնն են, ինչ Դաս 13-ում</li>
+      <li><code>push</code> և <code>splice</code> Shelf-ում չկան</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Ժանրերի կոճակները կրկնվում են</td><td><code>Set</code>-ից հետո spread՝ <code>[...new Set(...)]</code></td></tr>
+      <tr><td><code>Map</code>-ի քանակը <code>NaN</code> է</td><td>Առաջին անգամ <code>counts.get(...)</code>-ը <code>undefined</code> է․ <code>?? 0</code></td></tr>
+      <tr><td>catch-ը թաքցնում է տառասխալները</td><td>Ստուգիր <code>instanceof ValidationError</code>, մնացածը նետիր կրկին</td></tr>
+      <tr><td>Քեշը տալիս է հին արդյունք այլ limit-ի համար</td><td>Բանալին պիտի ներառի բոլոր պարամետրերը (ամբողջ հասցեն)</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 23-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում։</p>
+    <ol class="hw">
+      <li>Գրիր <code>createCounter(start)</code>, որը վերադարձնում է <code>increment</code>, <code>decrement</code>, <code>reset</code> և <code>get value</code>։ Ստեղծիր երկու անկախ հաշվիչ։</li>
+      <li>Գրիր <code>once(fn)</code> և ստուգիր, որ երկրորդ կանչը չի կատարում ֆունկցիան։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գրիր <code>memoize(fn)</code> և կիրառիր դանդաղ ֆունկցիայի վրա։ Ցույց տուր տարբերությունը <code>console.time</code>-ով։</li>
+      <li>Բացատրիր մեկնաբանության մեջ, ինչու <code>var</code>-ով ցիկլը տալիս է 4, 4, 4։ Ուղղիր երկու տարբեր ձևով։</li>
+      <li>Գրիր <code>ValidationError</code> և <code>NetworkError</code> դասեր։ Ֆունկցիա, որը պատահականորեն նետում է մեկը, և <code>catch</code>, որը տարբերում է դրանք։</li>
+      <li>Վերցրու Դաս 13-ի ֆորմայի վալիդացիան և վերաշարադրիր <code>ValidationError</code>-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Զանգվածից հանիր կրկնվող արժեքները <code>Set</code>-ով։ Համեմատիր <code>filter + indexOf</code> տարբերակի հետ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Դաս 15-ի կատալոգում ֆիլտրի կոճակները գեներացրու ինքնաբերաբար՝ <code>Set</code>-ով, ապրանքների կատեգորիաներից։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>Map</code>-ով քեշ Դաս 21-ի էջավորմանը։ Ցույց տուր Console-ում՝ «քեշից» թե «սերվերից»։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Վերցրու Դաս 12-ի to-do-ն և վերաշարադրիր <strong>անփոփոխ</strong> ձևով․ ոչ մի <code>push</code>, <code>splice</code> կամ ուղիղ վերագրում — միայն <code>map</code>, <code>filter</code> և spread։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/pages/books.html">օրինակը</a> և դրա կոդը <code>example/js/</code>-ում։ Դաս 18-ից օրինակը բացիր Live Server-ով։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-22/task.html">← Դաս 22</a><a href="../index.html">Բոլոր տնայինները</a><a href="../../block-2-project/task-3.html#s6">Պաշտպանություն →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · տնային աշխատանք · Դաս 23</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Տնային · Դաս 20 — Grid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:#fff}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule); background:var(--paper)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  @media (max-width:700px){.shots{grid-template-columns:1fr}}
+  .lede a, .note a, .pager a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code){white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 1 · տնային</b> · Դաս 20</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../html-lesson-20.html">HTML Դաս 20</a> · մինի-նախագիծ</p>
+  <h1>Grid․ պատկերասրահ, բլոգ, ֆորմա</h1>
+  <p class="lede">Grid-ը վերցնում է այն գործերը, որոնց համար նախատեսված է․ ցանցեր, 2 × 2 նկար, անվանված տարածքներ և ֆորմա պիտակներով ձախում։</p>
+
+  <div class="facts">
+    <span>Ժամանակ՝ ~2 ժամ</span>
+    <span>Սկսիր Դաս 19-ի արդյունքից</span>
+    <span>Արդյունք՝ նոր ցանցեր 4 էջում</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Օգտագործիր միայն Դաս 01–20-ը։ Էջի կմախքը (<code>section &gt; .row &gt; .col</code>) մնում է նույնը․ Grid-ը օգտագործում ենք <code>.col</code>-ի ներսում։</p>
+  </div>
+
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Պատկերասրահում առաջին նկարը զբաղեցնում է չորս վանդակ, բլոգը կառուցված է անվանված տարածքներով, իսկ քարտերի ցանցերը կորցրել են սյուների բոլոր դասերը։</p>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/gallery.jpg" alt="Պատկերասրահ․ առաջին նկարը մեծ՝ երկու սյուն և երկու տող, մնացած հինգը փոքր վանդակներում" width="900" height="1463" loading="lazy">
+      <figcaption>pages/gallery.html</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/blog.jpg" alt="Բլոգ․ ձախում գրառումները, աջում 300px լայնությամբ բլոկ" width="900" height="1454" loading="lazy">
+      <figcaption>pages/blog.html</figcaption>
+    </figure>
+    </div>
+  </section>
+
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <div class="tree">starter/
+└── content.md     ← որտեղ և ինչպես կիրառել Grid</div>
+    <p>Սկսիր Դաս 19-ի քո կայքից։ Եթե այն չունես, վերցրու <a href="../lesson-19/example/index.html">Դաս 19-ի օրինակը</a>։</p>
+  </section>
+
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+
+    <h3>Քայլ 1 · Grid օգնականներ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>global.css — Դաս 20</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.grid</span> { <span class="f">display</span>: <span class="s">grid</span>; }
+
+<span class="k">.grid-auto</span> {
+    <span class="f">display</span>: <span class="s">grid</span>;
+    <span class="f">grid-template-columns</span>: <span class="s">repeat(auto-fit, minmax(min(260px, 100%), 1fr))</span>;
+}
+
+<span class="k">.col-full</span> { grid-column: 1 / -1; }</code></pre>
+    </div>
+    <div class="tip note"><span class="tag">Ինչու min()</span><p><code>minmax(260px, 1fr)</code>-ը 240px լայն էկրանին ստիպում է ցանցին լինել 260px և դուրս գալ։ <code>min(260px, 100%)</code>-ը ասում է․ «260px, բայց ոչ ավելի, քան տեղը»։</p></div>
+
+    <h3>Քայլ 2 · Քարտերի ցանցեր</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.html — առաջ և հետո</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- Առաջ՝ երեք սյուն, ամեն մեկը իր դասերով --&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row flex-wrap"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-33 w-md-50 w-sm-100"</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="t">article</span> <span class="f">class</span>=<span class="s">"wrapper card"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span> <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    ...
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+<span class="c">&lt;!-- Հետո --&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-100"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"wrapper"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"grid-auto gap-20"</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">article</span> <span class="f">class</span>=<span class="s">"card"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">article</span> <span class="f">class</span>=<span class="s">"card"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="t">article</span> <span class="f">class</span>=<span class="s">"card"</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+    </div>
+    <p>Հաշվիր, թե քանի դաս կրճատվեց HTML-ից։ Նախագծերի էջում «Այս կայքը» քարտը (<code>.card--featured</code>) զբաղեցնում է երկու սյուն՝ <code>grid-column: span 2</code>, իսկ հեռախոսում՝ մեկ։</p>
+
+    <h3>Քայլ 3 · Պատկերասրահ 2 × 2-ով</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.gallery</span> {
+    <span class="f">display</span>: <span class="s">grid</span>;
+    <span class="f">grid-template-columns</span>: <span class="s">repeat(3, 1fr)</span>;
+    <span class="f">gap</span>: <span class="s">20px</span>;
+}
+
+<span class="k">.gallery__item:first-child</span> {
+    <span class="f">grid-column</span>: <span class="s">span 2</span>;
+    <span class="f">grid-row</span>: <span class="s">span 2</span>;
+}</code></pre>
+    </div>
+    <p>Մեծ նկարի <code>sizes</code>-ը փոխիր․ համակարգչում այն հիմա էջի երկու երրորդն է (<code>66vw</code>)։</p>
+
+    <h3>Քայլ 4 · Բլոգը grid-template-areas-ով</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.blog-layout</span> {
+    <span class="f">display</span>: <span class="s">grid</span>;
+    <span class="f">grid-template-columns</span>: <span class="s">1fr 300px</span>;
+    <span class="f">grid-template-areas</span>: <span class="s">"posts aside"</span>;
+}
+
+<span class="k">.blog-layout &gt; .posts</span> { <span class="f">grid-area</span>: <span class="s">posts</span>; }
+<span class="k">.blog-layout &gt; aside</span>  { <span class="f">grid-area</span>: <span class="s">aside</span>; }
+
+<span class="k">@media (max-width: 768px)</span> {
+    .blog-layout {
+        <span class="f">grid-template-columns</span>: <span class="s">1fr</span>;
+        <span class="f">grid-template-areas</span>:
+            <span class="s">"posts"
+            "aside"</span>;
+    }
+}</code></pre>
+    </div>
+    <div class="tip note"><span class="tag">Ստուգիր Tab-ով</span><p>Grid-ը կարող է տարածքները դասավորել ցանկացած հերթականությամբ, բայց <kbd>Tab</kbd>-ը միշտ գնում է HTML-ի հերթականությամբ։ Այստեղ HTML-ում գրառումները <code>aside</code>-ից առաջ են, ուստի տեսողական և ստեղնաշարի հերթականությունները համընկնում են։</p></div>
+
+    <h3>Քայլ 5 · Ֆորմա Grid-ով</h3>
+    <p>«Հաշիվ» և «Անձնական տվյալներ» խմբերում <code>p &gt; label + br + input</code>-ը փոխարինիր <code>&lt;div class="form-grid"&gt;</code>-ով, որի ներսում label-ը և դաշտը հաջորդում են իրար։ Սյուները՝ <code>140px minmax(0, 1fr)</code>։ <code>minmax(0, …)</code>-ը պետք է, որ լայն դաշտը (օրինակ՝ ֆայլի) չընդարձակի սյունը նեղ էկրանին։</p>
+  </section>
+
+  <section id="s3">
+    <h2><span class="num">03</span>Ընդունման ստուգաթերթ</h2>
+    <h3>Ցանցեր</h3>
+    <ul class="goals">
+      <li>Քարտերի ցանցերը՝ <code>.grid-auto</code>, առանց սյուների դասերի</li>
+      <li>Առանձնահատուկ քարտը՝ երկու սյուն համակարգչում</li>
+      <li>320px-ում ոչինչ դուրս չի գալիս</li>
+    </ul>
+
+    <h3>Պատկերասրահ և բլոգ</h3>
+    <ul class="goals">
+      <li>Առաջին նկարը՝ 2 × 2</li>
+      <li>Բլոգը՝ անվանված տարածքներով, հեռախոսում՝ մեկ սյուն</li>
+      <li>Tab-ի հերթականությունը տրամաբանական է</li>
+    </ul>
+
+    <h3>Ֆորմա</h3>
+    <ul class="goals">
+      <li>Պիտակները ձախում, դաշտերը աջում</li>
+      <li>Հեռախոսում՝ մեկը մյուսի տակ</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Ցանցը տոկոսներով և gap-ով դուրս է գալիս</td><td><code>33% × 3 + 2 × gap &gt; 100%</code>։ Օգտագործիր <code>1fr</code></td></tr>
+      <tr><td>Երկու տարրով auto-fit-ը ձգում է դրանք ամբողջ լայնությամբ</td><td>Այդպես է աշխատում <code>auto-fit</code>-ը։ <code>auto-fill</code>-ը պահում է դատարկ սյուները</td></tr>
+      <tr><td>grid-area-ն չի աշխատում</td><td>Տարածքի անունը չակերտներով է գրված, կամ <code>grid-template-areas</code>-ի տողերում տարբեր քանակի սյուներ կան</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 20-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում կամ նույն թղթապանակում։</p>
+    <ol class="hw">
+      <li>Կառուցիր ցանց <code>1fr</code>-ով և ցանց տոկոսներով՝ երկուսն էլ <code>gap: 20px</code>-ով։ Ցույց տուր, ինչու տոկոսներով տարբերակը դուրս է գալիս։</li>
+      <li>Ցուցադրիր <code>auto-fit</code>-ի և <code>auto-fill</code>-ի տարբերությունը՝ 2 տարրով լայն էկրանին։</li>
+      <li>Կառուցիր ապրանքների ցանց <code>auto-fit</code>-ով։ Համեմատիր Դաս 14-ի flex տարբերակի հետ՝ քանի՞ տող կոդ և քանի՞ դաս կրճատվեց։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր <code>minmax(400px, 1fr)</code>-ի խնդիրը 320px էկրանին։ Ուղղիր <code>min()</code>-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կառուցիր գալերեա, որտեղ առաջին նկարը զբաղեցնում է 2×2 վանդակ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Օգտագործիր <code>grid-column: 1 / -1</code> բաժնի վերնագրի համար ցանցի ներսում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կառուցիր էջի կմախք <code>grid-template-areas</code>-ով՝ header, sidebar, main, footer։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու հեռախոսի տարբերակը, որտեղ sidebar-ը գնում է main-ից հետո։ Ստուգիր <kbd>Tab</kbd>-ի հերթականությունը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կառուցիր ֆորմա Grid-ով՝ պիտակները ձախում, դաշտերը աջում (<code>grid-template-columns: 140px 1fr</code>)։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գրիր ցուցակ՝ քո նախագծի որ բաժիններում կօգտագործեիր Grid, որտեղ՝ Flex, և ինչու։</li>
+    </ol>
+  </section>
+
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/index.html">օրինակը</a> և քո էջը կողք կողքի։ Բացիր երկուսի կոդն էլ խմբագրիչում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-19/task.html">← Դաս 19</a><a href="../index.html">Բոլոր տնայինները</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 1 · տնային աշխատանք · Դաս 20</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

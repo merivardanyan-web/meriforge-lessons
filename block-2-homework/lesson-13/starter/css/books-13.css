@@ -1,0 +1,7 @@
+/* Ավելացրու main.css-ի վերջում՝ «9. ԱԴԱՊՏԻՎՈՒԹՅՈՒՆ»-ից առաջ */
+/* Ֆորմայի սխալներ — Դաս 13 */
+.field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.field__error { min-height: 1em; color: var(--danger); font-size: 0.875rem; }
+.field.has-error input,
+.field.has-error textarea { border-color: var(--danger); }
+.form-success { margin-top: 12px; color: var(--success); font-weight: 700; }

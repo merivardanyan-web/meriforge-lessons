@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 07 · Գիրքը որպես օբյեկտ — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · տնային</b> · Դաս 07</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../js-lesson-07.html">JS Դաս 07</a> · մինի-նախագիծ</p>
+  <h1>Գիրքը որպես օբյեկտ</h1>
+  <p class="lede">Գիրքը դառնում է իսկական օբյեկտ՝ ներդրված հրատարակչով, ժանրերի զանգվածով և մեթոդներով, որոնք <code>this</code>-ով փոխում են իր իսկ տվյալները։ Վերջում՝ դարակ օբյեկտների զանգվածից և նոր օբյեկտներ spread-ով։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Արդյունքը՝ Console-ում</span>
+    <span>Բաց արա index.html-ը</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–07․ օբյեկտներ, մեթոդներ և <code>this</code>, ներդրված օբյեկտներ, <code>for...in</code>, <code>Object.keys/values/entries</code>, destructuring, spread, <code>?.</code>։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Ահա ինչ պետք է տեսնես Console-ում։ Ձևակերպումները կարող են տարբերվել, թվերը՝ ոչ։</p>
+<pre class="out"><span class="m">Console</span>
+«Վերք Հայաստանի» — Խաչատուր Աբովյան, 1858
+Հրատարակիչ՝ Սովետական գրող, Երևան
+Ժանրեր՝ պատմավեպ, դասական
+Նախքան՝ false 90
+100 էջից հետո՝ 190
+Ավարտից հետո՝ true 320
+Գինը՝ նշված չէ
+Երկիր՝ նշված չէ
+Թարգմանիչ՝ չկա
+  title: Վերք Հայաստանի
+  author: Խաչատուր Աբովյան
+  year: 1858
+  pages: 320
+  pagesRead: 320
+  isRead: true
+Վերք Հայաստանի · Խաչատուր Աբովյան · Երևան
+Ժանրեր՝ վեպ, պատմավեպ, հեքիաթ, պատմվածք, պոեզիա
+Միջինը՝ 4.48, ամենասիրածը՝ հեքիաթ (5)
+Կարդացած՝ ["Փոքրիկ իշխանը", "Գիքորը", "Վերք Հայաստանի"]
+Կարդացած էջեր՝ 456
+Ամենամեծը՝ Սամվել
+["Վերք Հայաստանի — 320 էջ", "Սամվել — 560 էջ"]
+Նոր՝ true · բնօրինակ՝ false</pre>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատիր նոր թղթապանակում՝ <code>reading-journal/</code>։</p>
+    <ul class="goals">
+      <li><code>starter/index.html</code> — էջ, որը միացնում է <code>js/main.js</code>-ը</li>
+      <li><code>starter/js/main.js</code> — տվյալները, որ չգրես ձեռքով</li>
+    </ul>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · book օբյեկտ</h3>
+    <ul class="goals">
+      <li>Վերնագիր, հեղինակ, տարի, էջեր, կարդացած, <code>isRead</code>, <code>genres</code> զանգված, <code>publisher</code>՝ ներդրված օբյեկտ</li>
+      <li>Տպիր հրատարակչի քաղաքը</li>
+    </ul>
+
+    <h3>Քայլ 2 · Մեթոդներ և this</h3>
+    <ul class="goals">
+      <li><code>getInfo()</code>՝ «[վերնագիր] — [հեղինակ], [տարի]»</li>
+      <li><code>read(count)</code>՝ ավելացնում է էջեր, բայց ոչ ավելի, քան <code>pages</code>-ն է, և վերջում կանչում <code>this.markAsRead()</code></li>
+      <li><code>markAsRead()</code></li>
+      <li>Տպիր վիճակը նախքան և հետո</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.js — մեթոդ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="f">read</span>(count) {
+    <span class="k">this</span>.pagesRead = Math.<span class="f">min</span>(<span class="k">this</span>.pagesRead + count, <span class="k">this</span>.pages);
+    <span class="k">if</span> (<span class="k">this</span>.pagesRead === <span class="k">this</span>.pages) {
+        <span class="k">this</span>.<span class="f">markAsRead</span>();
+    }
+    <span class="k">return</span> <span class="k">this</span>.pagesRead;
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 3 · Չեղած դաշտեր</h3>
+    <ul class="goals">
+      <li><code>book.price ?? "նշված չէ"</code>, <code>book.publisher?.country</code>, <code>book.translator?.name</code></li>
+    </ul>
+
+    <h3>Քայլ 4 · for...in և destructuring</h3>
+    <ul class="goals">
+      <li>Տպիր բոլոր պարզ դաշտերը․ մեթոդները, զանգվածը և ներդրված օբյեկտը բաց թող</li>
+      <li>Destructuring՝ <code>author</code>-ը վերանվանիր <code>writer</code></li>
+    </ul>
+
+    <h3>Քայլ 5 · Գնահատականներ ըստ ժանրի</h3>
+    <ul class="goals">
+      <li>Օբյեկտ՝ 5 ժանր → գնահատական</li>
+      <li>Բանալիները, միջինը, ամենասիրած ժանրը (<code>Object.entries</code> + <code>sort</code>)</li>
+    </ul>
+
+    <h3>Քայլ 6 · Դարակ և անփոփոխ թարմացում</h3>
+    <ul class="goals">
+      <li>5 գրքի զանգված, ֆունկցիաներ՝ կարդացածներ, էջերի գումար, ամենամեծը</li>
+      <li>Շղթա՝ պատմավեպեր կարճից երկար</li>
+      <li><code>updateBook(book, changes)</code>՝ <code>{ ...book, ...changes }</code>։ Ապացուցիր, որ բնօրինակը նույնն է</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Մեթոդները օգտագործում են <code>this</code>, ոչ <code>book</code></li>
+      <li>Կարդացած էջերը երբեք չեն անցնում <code>pages</code>-ից</li>
+      <li><code>?.</code>-ը չի գցում սխալ չեղած օբյեկտի դեպքում</li>
+      <li>Բնօրինակը չի փոխվում <code>updateBook</code>-ից</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>this.title</code>-ը <code>undefined</code> է</td><td>Մեթոդը գրել ես arrow ֆունկցիայով։ Օբյեկտի մեթոդների համար՝ <code>getInfo() { }</code></td></tr>
+      <tr><td><code>for...in</code>-ը տպում է <code>[object Object]</code></td><td>Ներդրված օբյեկտը տող չէ․ բաց թող <code>typeof ... === "object"</code> դաշտերը</td></tr>
+      <tr><td><code>updateBook</code>-ից հետո բնօրինակն էլ փոխվեց</td><td>Գրել ես <code>original.isRead = true</code>․ վերադարձրու նոր օբյեկտ spread-ով</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 07-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում։</p>
+    <ol class="hw">
+      <li>Ստեղծիր <code>book</code> օբյեկտ՝ վերնագիր, հեղինակ, տարեթիվ, էջերի քանակ, <code>isRead</code>։ Տպիր բոլորը template literal-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>genres</code> զանգված և <code>publisher</code> ներդրված օբյեկտ (անուն, քաղաք)։ Տպիր հրատարակչի քաղաքը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>getInfo()</code> մեթոդ, որը <code>this</code>-ով վերադարձնում է «[վերնագիր] — [հեղինակ], [տարեթիվ]»։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>markAsRead()</code> մեթոդ, որը <code>isRead</code>-ը դարձնում է <code>true</code>։ Ստուգիր՝ տպելով նախքան և հետո։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ստեղծիր օբյեկտ առանց <code>price</code> հատկության։ Տպիր <code>book.price ?? "Գինը նշված չէ"</code>։ Ապա փորձիր <code>book.publisher?.country</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Destructuring-ով հանիր վերնագիրը և հեղինակին առանձին փոփոխականների։ Հեղինակին վերանվանիր <code>writer</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ստեղծիր գնահատականների օբյեկտ (5 առարկա)։ Տպիր՝ բանալիները, արժեքները, միջինը և ամենաբարձր առարկան։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ստեղծիր 5 ապրանքի զանգված (անուն, գին, կատեգորիա, <code>inStock</code>)։ Գրիր ֆունկցիաներ՝ բոլոր առկա ապրանքները, ընդհանուր արժեքը, ամենաթանկը։</li>
+      <li>Նույն զանգվածով՝ մեկ շղթայով գտիր որոշակի կատեգորիայի առկա ապրանքները, դասավորիր գնով և վերադարձրու «անուն — գին֏» տողերի զանգված։</li>
+      <li>Գրիր <code>updateProduct(product, changes)</code> ֆունկցիա, որը վերադարձնում է <strong>նոր</strong> օբյեկտ՝ <code>{ ...product, ...changes }</code>։ Ապացուցիր, որ բնօրինակը չի փոխվել։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/index.html">օրինակը</a> և դրա կոդը <code>example/js/</code>-ում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-06/task.html">← Դաս 06</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-08/task.html">Դաս 08 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · տնային աշխատանք · Դաս 07</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

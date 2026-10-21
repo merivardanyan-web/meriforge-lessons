@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Պատվերի ձևակերպում — ՏեխնոՄարկետ</title>
+    <meta name="description" content="Լրացրեք առաքման և վճարման տվյալները">
+
+    <meta property="og:title" content="Պատվերի ձևակերպում — ՏեխնոՄարկետ">
+    <meta property="og:description" content="Լրացրեք առաքման և վճարման տվյալները">
+    <meta property="og:image" content="images/og.jpg">
+
+    <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script>
+        // Թեման կիրառում ենք մինչև էջի նկարվելը, որ «թարթում» չլինի — JS Դաս 14
+        try {
+            const savedTheme = localStorage.getItem("tm:theme");
+            if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
+        } catch (e) { /* localStorage-ը անհասանելի է՝ մնում է համակարգի թեման */ }
+    </script>
+
+    <!-- JS — մեկ մուտքի կետ, մնացածը import-ով (JS Դաս 18) -->
+    <script type="module" src="js/pages/checkout.js"></script>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Անցնել բովանդակությանը</a>
+
+<!-- ================= HEADER ================= -->
+<header class="header">
+    <input type="checkbox" id="nav" class="nav-toggle">
+
+    <div class="row align-center justify-between">
+
+        <div class="col">
+            <a href="index.html" class="logo">ՏեխնոՄարկետ</a>
+        </div>
+
+        <div class="col">
+            <label for="nav" class="burger">
+                <span></span><span></span><span></span>
+                <span class="visually-hidden">Մենյու</span>
+            </label>
+
+            <nav aria-label="Գլխավոր մենյու">
+                <ul class="menu flex align-center gap-10">
+                    <li><a href="index.html">Գլխավոր</a></li>
+                    <li class="has-sub">
+                        <a href="catalog.html">Կատալոգ <span aria-hidden="true">▾</span></a>
+                        <ul class="submenu">
+                            <li><a href="catalog.html?cat=laptops">Նոութբուքեր</a></li>
+                            <li><a href="catalog.html?cat=monitors">Մոնիտորներ</a></li>
+                            <li><a href="catalog.html?cat=phones">Սմարթֆոններ</a></li>
+                            <li><a href="catalog.html?cat=tablets">Պլանշետներ</a></li>
+                            <li><a href="catalog.html?cat=accessories">Աքսեսուարներ</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#contact">Կապ</a></li>
+                    <li><a href="login.html">Մուտք</a></li>
+                    <li><button type="button" class="theme-toggle" data-action="theme" aria-label="Մուգ թեմա">☾</button></li>
+                    <li><a href="cart.html" class="btn btn--primary btn--sm">Զամբյուղ <span class="count is-empty" data-cart-count>0</span><span class="visually-hidden"> ապրանք</span></a></li>
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+</header>
+
+<main id="main">
+
+    <section class="page-head">
+        <div class="row">
+            <div class="col w-100">
+                <nav aria-label="Դուք այստեղ եք">
+                <ol class="crumbs">
+                    <li><a href="index.html">Գլխավոր</a></li>
+                    <li><a href="cart.html">Զամբյուղ</a></li>
+                    <li aria-current="page">Պատվերի ձևակերպում</li>
+                </ol>
+                </nav>
+                <h1 class="mb-10">Պատվերի ձևակերպում</h1>
+                <p class="text-muted">Մնաց մեկ քայլ։ <span class="req" aria-hidden="true">*</span> նշված դաշտերը պարտադիր են։</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= ՊԱՏՎԵՐ ================= -->
+    <section id="checkout">
+        <div class="row flex-wrap">
+
+            <div class="col w-60 w-md-100">
+                <!-- Ֆորմա — Դաս 4 -->
+                <!-- novalidate՝ սխալները ցույց ենք տալիս ինքներս (JS Դաս 13) -->
+                <form action="thanks.html" method="get" id="checkout-form" novalidate>
+
+                    <div class="form-section">
+                        <fieldset class="fieldset">
+                            <legend>1. Կոնտակտային տվյալներ</legend>
+                            <div class="form-grid">
+                                <div class="field">
+                                    <label for="name" class="field__label">Անուն, ազգանուն <span class="req" aria-hidden="true">*</span></label>
+                                    <input id="name" name="name" class="input" autocomplete="name" required>
+                                    <span class="field__error" data-error-for="name"></span>
+                                </div>
+                                <div class="field">
+                                    <label for="phone" class="field__label">Հեռախոս <span class="req" aria-hidden="true">*</span></label>
+                                    <input id="phone" name="phone" type="tel" class="input" autocomplete="tel" placeholder="+374 XX XX XX XX" required>
+                                    <span class="field__error" data-error-for="phone"></span>
+                                </div>
+                                <div class="field field--full">
+                                    <label for="email" class="field__label">Էլ. հասցե</label>
+                                    <input id="email" name="email" type="email" class="input" autocomplete="email" placeholder="ani@example.com">
+                                    <span class="field__hint">Կուղարկենք պատվերի հաստատումը</span>
+                                    <span class="field__error" data-error-for="email"></span>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="form-section">
+                        <fieldset class="fieldset">
+                            <legend>2. Առաքում</legend>
+                            <div class="choices">
+                            <label class="choice">
+                                <input type="radio" name="delivery" value="courier" checked>
+                                <span class="choice__body"><strong>Առաքում Երևանում</strong><span class="text-muted">Վաղը · անվճար</span></span>
+                            </label>
+                            <label class="choice">
+                                <input type="radio" name="delivery" value="pickup">
+                                <span class="choice__body"><strong>Վերցնել խանութից</strong><span class="text-muted">Այսօր՝ 18:00-ից · Աբովյան 1</span></span>
+                            </label>
+                            <label class="choice">
+                                <input type="radio" name="delivery" value="region">
+                                <span class="choice__body"><strong>Առաքում մարզեր</strong><span class="text-muted">2–3 օր · 2&nbsp;000&nbsp;֏</span></span>
+                            </label>
+                            </div>
+                            <div class="form-grid">
+                                <div class="field">
+                                    <label for="region" class="field__label">Մարզ</label>
+                                    <select id="region" name="region" class="input" autocomplete="address-level1">
+                                    <option>Երևան</option>
+                                    <option>Արագածոտն</option>
+                                    <option>Արարատ</option>
+                                    <option>Արմավիր</option>
+                                    <option>Գեղարքունիք</option>
+                                    <option>Կոտայք</option>
+                                    <option>Լոռի</option>
+                                    <option>Շիրակ</option>
+                                    <option>Սյունիք</option>
+                                    <option>Տավուշ</option>
+                                    <option>Վայոց ձոր</option>
+                                    </select>
+                                </div>
+                                <div class="field">
+                                    <label for="address" class="field__label">Հասցե <span class="req" aria-hidden="true" id="address-req">*</span></label>
+                                    <input id="address" name="address" class="input" autocomplete="street-address" placeholder="Փողոց, շենք, բնակարան" required>
+                                    <span class="field__error" data-error-for="address"></span>
+                                </div>
+                                <div class="field field--full">
+                                    <label for="comment" class="field__label">Մեկնաբանություն առաքիչին</label>
+                                    <textarea id="comment" name="comment" rows="3" class="input" placeholder="Օրինակ՝ զանգել մուտքի մոտից"></textarea>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="form-section">
+                        <fieldset class="fieldset">
+                            <legend>3. Վճարում</legend>
+                            <div class="choices">
+                            <label class="choice">
+                                <input type="radio" name="payment" value="cash" checked>
+                                <span class="choice__body"><strong>Կանխիկ</strong><span class="text-muted">Առաքման ժամանակ</span></span>
+                            </label>
+                            <label class="choice">
+                                <input type="radio" name="payment" value="card">
+                                <span class="choice__body"><strong>Քարտով</strong><span class="text-muted">Առաքիչի տերմինալով</span></span>
+                            </label>
+                            <label class="choice">
+                                <input type="radio" name="payment" value="transfer">
+                                <span class="choice__body"><strong>Բանկային փոխանցում</strong><span class="text-muted">Իրավաբանական անձանց համար</span></span>
+                            </label>
+                            </div>
+                            <label class="check">
+                                <input type="checkbox" name="terms" required>
+                                <span>Համաձայն եմ <a href="#" class="link">առաքման և վերադարձի պայմաններին</a> <span class="req" aria-hidden="true">*</span></span>
+                            </label>
+                            <span class="field__error" data-error-for="terms"></span>
+                        </fieldset>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary w-100">Հաստատել պատվերը · <span id="checkout-total"></span></button>
+                </form>
+            </div>
+
+            <div class="col w-40 w-md-100">
+                <aside class="summary" aria-label="Ձեր պատվերը">
+                    <h2 class="title-3 mb-20">Ձեր պատվերը</h2>
+                    <ul class="summary__items mb-20" id="checkout-items"></ul>
+                    <ul class="summary__list mb-20" id="checkout-summary"></ul>
+                    <a href="cart.html" class="link">Փոխել զամբյուղը</a>
+                </aside>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+    <div class="row flex-wrap">
+
+        <div class="col w-40 w-md-100">
+            <p class="logo mb-10"><a href="index.html">ՏեխնոՄարկետ</a></p>
+            <p>Տեխնիկայի խանութ Երևանում 2018 թվականից։ Ուսումնական նախագիծ։</p>
+        </div>
+
+        <div class="col w-25 w-md-50 w-sm-100">
+            <h2 class="footer__title">Բաժիններ</h2>
+            <nav aria-label="Ստորին մենյու">
+                <ul>
+                    <li><a href="catalog.html">Կատալոգ</a></li>
+                    <li><a href="cart.html">Զամբյուղ</a></li>
+                    <li><a href="checkout.html">Պատվերի ձևակերպում</a></li>
+                    <li><a href="login.html">Իմ հաշիվը</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="col w-25 w-md-50 w-sm-100" id="contact">
+            <h2 class="footer__title">Կապ</h2>
+            <ul>
+                <li>Երևան, Աբովյան 1</li>
+                <li><a href="tel:+37410000000">+374 10 00 00 00</a></li>
+                <li><a href="mailto:info@technomarket.example">info@technomarket.example</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="row flex-wrap justify-between footer__bottom">
+        <div class="col">© 2026 ՏեխնոՄարկետ</div>
+        <div class="col">Կառուցված է առանց գրադարանների՝ HTML և CSS</div>
+    </div>
+</footer>
+
+</body>
+</html>

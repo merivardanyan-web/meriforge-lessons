@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ակումբ — Անի Սարգսյան</title>
+
+    <meta name="description" content="Գրանցվիր շաբաթական վեբ ակումբին">
+    <meta property="og:title" content="Ակումբ — Անի Սարգսյան">
+    <meta property="og:description" content="Գրանցվիր շաբաթական վեբ ակումբին">
+    <meta property="og:image" content="../images/og.jpg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="icon" href="../images/favicon.svg">
+
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+
+    <a href="#main" class="skip-link">Անցնել բովանդակությանը</a>
+
+    <header>
+        <div class="row align-center justify-between">
+            <div class="col">
+                <a href="../index.html" class="logo">Անի Սարգսյան</a>
+            </div>
+            <div class="col">
+                <nav aria-label="Գլխավոր մենյու">
+                    <ul class="menu flex align-center flex-wrap">
+                        <li><a href="../index.html">Գլխավոր</a></li>
+                        <li><a href="about.html">Իմ մասին</a></li>
+                        <li><a href="projects.html">Նախագծեր</a></li>
+                        <li><a href="gallery.html">Պատկերասրահ</a></li>
+                        <li><a href="blog.html">Բլոգ</a></li>
+                        <li><a href="register.html" class="is-active">Ակումբ</a></li>
+                        <li><a href="contact.html">Կապ</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main id="main">
+        <section id="register">
+            <div class="row flex-wrap align-start">
+                <div class="col w-70 w-md-100">
+                    <div class="wrapper">
+                        <nav aria-label="Դուք այստեղ եք">
+                            <ol class="crumbs">
+                                <li><a href="../index.html">Գլխավոր</a></li>
+                                <li>Ակումբ</li>
+                            </ol>
+                        </nav>
+                        <h1>Գրանցում վեբ ակումբին</h1>
+                        <p>Ամեն շաբաթ հանդիպում ենք և միասին կառուցում փոքր կայքեր։ Լրացրու ֆորման, և ես կգրեմ քեզ։</p>
+                        <p><small>* նշված դաշտերը պարտադիր են</small></p>
+
+                        <!--
+                            action — ուր են գնում տվյալները (thanks.html՝ մոդալով, Դաս 15),
+                            method="get" — տվյալները երևում են հասցեում։ Ուղարկելուց հետո նայիր հասցեին։
+                        -->
+                        <form action="thanks.html" method="get">
+
+                            <fieldset>
+                                <legend>Հաշիվ</legend>
+
+                                <p>
+                                    <label for="name">Անուն, ազգանուն *</label><br>
+                                    <input type="text" id="name" name="name" autocomplete="name" minlength="2" required>
+                                </p>
+
+                                <p>
+                                    <label for="email">Էլ. հասցե *</label><br>
+                                    <input type="email" id="email" name="email" autocomplete="email" placeholder="ani@example.com" required>
+                                </p>
+
+                                <p>
+                                    <label for="password">Գաղտնաբառ * (առնվազն 8 նիշ)</label><br>
+                                    <input type="password" id="password" name="password" autocomplete="new-password" minlength="8" required>
+                                </p>
+                            </fieldset>
+
+                            <fieldset>
+                                <legend>Անձնական տվյալներ</legend>
+
+                                <p>
+                                    <label for="age">Տարիք</label><br>
+                                    <input type="number" id="age" name="age" min="10" max="99">
+                                </p>
+
+                                <p>
+                                    <label for="birthday">Ծննդյան օր</label><br>
+                                    <input type="date" id="birthday" name="birthday">
+                                </p>
+
+                                <p>
+                                    <label for="phone">Հեռախոս (օրինակ՝ 091123456)</label><br>
+                                    <!-- pattern — 0, հետո ուղիղ 8 թիվ -->
+                                    <input type="tel" id="phone" name="phone" autocomplete="tel" pattern="0[0-9]{8}" title="0-ով սկսվող 9 թիվ">
+                                </p>
+
+                                <p>
+                                    <label for="city">Քաղաք</label><br>
+                                    <select id="city" name="city">
+                                        <optgroup label="Երևան">
+                                            <option value="kentron">Կենտրոն</option>
+                                            <option value="arabkir">Արաբկիր</option>
+                                            <option value="ajapnyak">Աջափնյակ</option>
+                                        </optgroup>
+                                        <optgroup label="Մարզեր">
+                                            <option value="sevan" selected>Սևան</option>
+                                            <option value="gyumri">Գյումրի</option>
+                                            <option value="vanadzor">Վանաձոր</option>
+                                        </optgroup>
+                                    </select>
+                                </p>
+
+                                <p>
+                                    <label for="photo">Լուսանկար</label><br>
+                                    <input type="file" id="photo" name="photo" accept="image/*">
+                                </p>
+                            </fieldset>
+
+                            <fieldset>
+                                <legend>Ակումբ</legend>
+
+                                <!-- radio — բոլորն ունեն նույն name, ուստի ընտրվում է միայն մեկը -->
+                                <p>Ե՞րբ է քեզ հարմար</p>
+                                <p>
+                                    <label><input type="radio" name="time" value="morning"> Առավոտյան</label><br>
+                                    <label><input type="radio" name="time" value="day"> Ցերեկը</label><br>
+                                    <label><input type="radio" name="time" value="evening" checked> Երեկոյան</label><br>
+                                    <label><input type="radio" name="time" value="weekend"> Հանգստյան օրերին</label>
+                                </p>
+
+                                <!-- checkbox — կարելի է ընտրել մի քանիսը -->
+                                <p>Ինչն է քեզ հետաքրքրում</p>
+                                <p>
+                                    <label><input type="checkbox" name="interest" value="html"> HTML</label><br>
+                                    <label><input type="checkbox" name="interest" value="css"> CSS</label><br>
+                                    <label><input type="checkbox" name="interest" value="js"> JavaScript</label><br>
+                                    <label><input type="checkbox" name="interest" value="design"> Դիզայն</label>
+                                </p>
+
+                                <p>
+                                    <label for="about">Ինչու ես ուզում միանալ</label><br>
+                                    <textarea id="about" name="about" rows="4" maxlength="500"></textarea>
+                                </p>
+                            </fieldset>
+
+                            <p>
+                                <label><input type="checkbox" name="agree" required> Համաձայն եմ, որ իմ տվյալները օգտագործվեն միայն ակումբի համար *</label>
+                            </p>
+
+                            <button type="submit" class="btn btn--primary">Գրանցվել</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col w-30 w-md-100">
+                    <div class="wrapper box">
+                        <h2 class="title-4">Ինչ է ակումբը</h2>
+                        <ul class="check-list">
+                            <li>Հանդիպում՝ շաբաթը մեկ անգամ</li>
+                            <li>Փոքր խմբեր՝ մինչև 8 հոգի</li>
+                            <li>Ամեն հանդիպումից հետո՝ մեկ փոքր կայք</li>
+                        </ul>
+                        <p class="text-muted text-small">Անվճար է։ Պետք է միայն նոութբուք։</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <h2 class="visually-hidden">Կայքի ներքևի մաս</h2>
+
+        <div class="row flex-wrap">
+            <div class="col w-40 w-md-100">
+                <div class="wrapper">
+                    <p class="logo">Անի Սարգսյան</p>
+                    <p>Սովորում եմ վեբ ծրագրավորում և գրում եմ այդ մասին։</p>
+                </div>
+            </div>
+
+            <div class="col w-20 w-md-50 w-sm-100">
+                <div class="wrapper">
+                    <h3 class="footer__title">Բաժիններ</h3>
+                    <nav aria-label="Footer-ի հղումներ">
+                        <ul class="flex flex-column gap-10">
+                            <li><a href="../index.html">Գլխավոր</a></li>
+                            <li><a href="projects.html">Նախագծեր</a></li>
+                            <li><a href="blog.html">Բլոգ</a></li>
+                            <li><a href="contact.html">Կապ</a></li>
+                            <li><a href="../components.html">Կոմպոնենտներ</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="col w-40 w-md-50 w-sm-100">
+                <div class="wrapper">
+                    <h3 class="footer__title">Նոր գրառումներ</h3>
+                    <!-- Դաշտը ձգվում է, կոճակը չի սեղմվում — Դաս 12 -->
+                    <form class="inline-form flex gap-10" action="../index.html" method="get">
+                        <label for="mail" class="visually-hidden">Էլ. հասցե</label>
+                        <input type="email" id="mail" name="mail" placeholder="ani@example.com" autocomplete="email" required>
+                        <button type="submit" class="btn btn--primary">Բաժանորդագրվել</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col w-100">
+                <div class="wrapper footer__bottom flex justify-between align-center flex-wrap gap-10">
+                    <p>&copy; 2026&nbsp;Անի Սարգսյան</p>
+                    <address><a href="mailto:ani@example.com">ani@example.com</a> · Սևան, Հայաստան</address>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- «Վեր» կոճակ — position: fixed, Դաս 15 -->
+    <a href="#" class="to-top" aria-label="Վերադառնալ էջի սկիզբ">↑</a>
+
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 04 · Ֆունկցիաների գրադարան — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · տնային</b> · Դաս 04</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../js-lesson-04.html">JS Դաս 04</a> · մինի-նախագիծ</p>
+  <h1>Ֆունկցիաների գրադարան</h1>
+  <p class="lede">Կրկնվող հաշվարկները դառնում են ֆունկցիաներ․ տոկոս, կարգավիճակ, մնացած օրեր, ընթերցանության ժամանակ։ Մեկ ֆունկցիան՝ <code>describeBook</code>-ը, օգտագործում է մնացածը և նկարագրում ցանկացած գիրք։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Արդյունքը՝ Console-ում</span>
+    <span>Բաց արա index.html-ը</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–04․ <code>function</code>, պարամետրեր, լռելյայն արժեք, <code>return</code>, տեսանելիության տիրույթ, arrow ֆունկցիաներ։ Զանգվածներ դեռ չկան, ուստի գրքերը փոխանցում ենք արգումենտներով։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Ահա ինչ պետք է տեսնես Console-ում։ Ձևակերպումները կարող են տարբերվել, թվերը՝ ոչ։</p>
+<pre class="out"><span class="m">Console</span>
+«Փոքրիկ իշխանը» — Անտուան դը Սենտ-Էքզյուպերի, 1943
+  ██████████ 100% · Կարդացել եմ
+  Մնաց 0 օր · ամբողջը կարդալու համար՝ 3 ժ 12 ր
+«Սամվել» — Րաֆֆի, 1886
+  ██░░░░░░░░ 25% · Կարդում եմ
+  Մնաց 14 օր · ամբողջը կարդալու համար՝ 18 ժ 40 ր
+  Մեծ գիրք է
+«1984» — Ջորջ Օրուել, 1949
+  ░░░░░░░░░░ 0% · Կարդալու եմ
+  Մնաց 11 օր · ամբողջը կարդալու համար՝ 10 ժ 56 ր
+  Մեծ գիրք է
+Օրական 30 էջ՝ 14 օր
+Օրական 60 էջ՝ 7 օր</pre>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատիր նոր թղթապանակում՝ <code>reading-journal/</code>։</p>
+    <ul class="goals">
+      <li><code>starter/index.html</code> — էջ, որը միացնում է <code>js/main.js</code>-ը</li>
+      <li><code>starter/js/main.js</code> — դատարկ ֆայլ</li>
+    </ul>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Մեկ ֆունկցիա = մեկ գործ</h3>
+    <ul class="goals">
+      <li><code>getProgress(read, total)</code>՝ ամբողջ տոկոս</li>
+      <li><code>getStatus(read, total)</code>՝ <code>return</code> առանց <code>else</code>-ի</li>
+      <li><code>getDaysLeft(read, total, perDay = 30)</code>՝ լռելյայն պարամետրով</li>
+      <li><code>getReadingTime(pages, minutesPerPage = 2)</code>՝ «3 ժ 12 ր»</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.js — return առանց else</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">getStatus</span>(read, total) {
+    <span class="k">if</span> (read === <span class="n">0</span>) <span class="k">return</span> <span class="s">"Կարդալու եմ"</span>;
+    <span class="k">if</span> (read &lt; total) <span class="k">return</span> <span class="s">"Կարդում եմ"</span>;
+    <span class="k">return</span> <span class="s">"Կարդացել եմ"</span>;
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 2 · Arrow ֆունկցիաներ</h3>
+    <ul class="goals">
+      <li><code>isLongBook</code>, <code>formatBook</code>, <code>createBar</code>՝ մեկ տողով</li>
+    </ul>
+
+    <h3>Քայլ 3 · describeBook</h3>
+    <ul class="goals">
+      <li>Ընդունում է վերնագիր, հեղինակ, տարի, էջեր, կարդացած</li>
+      <li>Ինքը ոչինչ չի հաշվում՝ միայն կանչում է մյուս ֆունկցիաները և տպում</li>
+      <li>Կանչիր երեք գրքի համար․ կարդացած, կիսատ, չսկսած</li>
+    </ul>
+
+    <h3>Քայլ 4 · Լռելյայն արժեք</h3>
+    <ul class="goals">
+      <li>Կանչիր <code>getDaysLeft</code>-ը առանց երրորդ արգումենտի, հետո՝ 60-ով։ Համեմատիր</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Բոլոր հաշվող ֆունկցիաները <strong>վերադարձնում</strong> են արժեք, ոչ թե տպում</li>
+      <li>Ֆունկցիաների անունները սկսվում են բայով՝ get, is, create, describe</li>
+      <li>Հաստատունը (30)՝ անվանված փոփոխական</li>
+      <li>Կա առնվազն 3 arrow ֆունկցիա</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Տպվում է <code>undefined</code></td><td>Ֆունկցիան <code>console.log</code> է անում, բայց <code>return</code> չունի</td></tr>
+      <tr><td><code>x is not defined</code> ֆունկցիայից դուրս</td><td>Ֆունկցիայի ներսի փոփոխականը դրսից տեսանելի չէ (Դաս 4, scope)</td></tr>
+      <tr><td>Լռելյայն արժեքը չի աշխատում</td><td>Լռելյայն պարամետրերը՝ վերջում․ <code>(read, total, perDay = 30)</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 04-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում։</p>
+    <ol class="hw">
+      <li><code>getSum(a, b)</code> — վերադարձնում է երկու թվի գումարը։</li>
+      <li><code>getRectangleArea(w, h)</code> — մակերես։ Եթե պարամետր չուղարկեն, լռելյայն երկուսն էլ 1։</li>
+      <li><code>isPositive(n)</code> — վերադարձնում է <code>true</code> կամ <code>false</code>։</li>
+      <li><code>maxOfThree(a, b, c)</code> — երեք թվից ամենամեծը։</li>
+      <li><code>celsiusToFahrenheit(c)</code> — բանաձևը՝ <code>c * 9 / 5 + 32</code>։</li>
+      <li><code>getGrade(mark)</code> — վերադարձնում է «Գերազանց», «Լավ», «Բավարար» կամ «Անբավարար»։ Օգտագործիր <code>return</code>-ը առանց <code>else</code>-ի։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li><code>sumTo(n)</code> — 1-ից <code>n</code> թվերի գումարը (ցիկլով)։</li>
+      <li><code>countDigits(n)</code> — քանի՞ թվանշան ունի թիվը։</li>
+      <li><code>isPrime(n)</code> — պարզ թիվ է թե ոչ։ Օգտագործիր Դաս 3-ի դրոշակի հնարքը։</li>
+      <li>Գրիր <code>getTicketPrice(age, isStudent)</code>․ մինչև 6 տարեկան՝ 0, ուսանող՝ 1000, մինչև 65՝ 2500, 65-ից բարձր՝ 1000։ Ստուգիր 5 տարբեր դեպք։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/index.html">օրինակը</a> և դրա կոդը <code>example/js/</code>-ում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-03/task.html">← Դաս 03</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-05/task.html">Դաս 05 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · տնային աշխատանք · Դաս 04</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 01 · Առաջին գիրքը Console-ում — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 2 · տնային</b> · Դաս 01</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../js-lesson-01.html">JS Դաս 01</a> · մինի-նախագիծ</p>
+  <h1>Առաջին գիրքը Console-ում</h1>
+  <p class="lede">Անին սկսում է ընթերցանության օրագիր։ Այս դասին այն ապրում է միայն Console-ում․ մեկ գիրք, դրա տվյալները փոփոխականներում և այսօրվա կարդացած էջերը՝ prompt-ով։ Ամեն հաջորդ դասի հետ օրագիրը կաճի, և Դաս 9-ից այն կհայտնվի Անիի կայքում։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Արդյունքը՝ Console-ում</span>
+    <span>Բաց արա index.html-ը</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Միայն Դաս 01-ը․ <code>const</code>/<code>let</code>, տիպեր, template literal, <code>typeof</code>, <code>prompt</code>, <code>alert</code>, <code>Number()</code>։ Պայմաններ դեռ չկան, ուստի սխալ մուտքը չենք ստուգում։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Ահա ինչ պետք է տեսնես Console-ում (prompt-ում գրված է 12)։ Ձևակերպումները կարող են տարբերվել, թվերը՝ ոչ։</p>
+<pre class="out"><span class="m">Console</span>
+Ընթերցանության օրագիր․ Անի
+Գիրք՝ «Փոքրիկ իշխանը», Անտուան դը Սենտ-Էքզյուպերի, 1943
+Գիրքը 83 տարեկան է
+Կարդացել եմ 30 / 96 էջ, մնաց 66
+Առաջընթաց՝ 31.25%
+title → string
+pages → number
+isFavorite → boolean
+note → undefined
+rating → object
+Առանց Number-ի՝ 3012
+Number-ով՝ 42
+[alert] Ապրես, Անի։ Արդեն 42 էջ է, մնաց 54։</pre>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատիր նոր թղթապանակում՝ <code>reading-journal/</code>։</p>
+    <ul class="goals">
+      <li><code>starter/index.html</code> — էջ, որը միացնում է <code>js/main.js</code>-ը</li>
+      <li><code>starter/js/main.js</code> — դատարկ ֆայլ</li>
+    </ul>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Նախագծի թղթապանակ</h3>
+    <ul class="goals">
+      <li>Ստեղծիր <code>reading-journal/</code>՝ <code>index.html</code> և <code>js/main.js</code>։ Սկրիպտը՝ <code>defer</code>-ով (Դաս 1)</li>
+      <li>Բաց արա <code>index.html</code>-ը բրաուզերում և Console-ը՝ <kbd>F12</kbd></li>
+    </ul>
+
+    <h3>Քայլ 2 · Գրքի տվյալները</h3>
+    <ul class="goals">
+      <li>Ընթերցողի անունը և ընթացիկ տարին՝ <code>const</code></li>
+      <li>Գրքի վերնագիր, հեղինակ, տարեթիվ, էջերի քանակ՝ <code>const</code></li>
+      <li>Կարդացած էջերը՝ <code>let</code>, որովհետև այսօր կփոխվեն</li>
+      <li><code>isFavorite</code> (boolean), <code>rating = null</code> (դեռ չես գնահատել), <code>note</code>՝ առանց արժեքի</li>
+    </ul>
+
+    <h3>Քայլ 3 · Տպիր օրագիրը</h3>
+    <ul class="goals">
+      <li>Մեկ նախադասությամբ՝ վերնագիր, հեղինակ, տարի</li>
+      <li>Քանի՞ տարեկան է գիրքը</li>
+      <li>Կարդացել եմ X / Y էջ, մնաց Z</li>
+      <li>Առաջընթացը տոկոսով՝ <code>pagesRead / pages * 100</code></li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.js — հատված</div><button class="copy">Պատճենել</button></div>
+<pre><code>console.<span class="f">log</span>(<span class="s">`Կարդացել եմ </span>${pagesRead}<span class="s"> / </span>${pages}<span class="s"> էջ, մնաց </span>${pages - pagesRead}<span class="s">`</span>);</code></pre>
+    </div>
+
+    <h3>Քայլ 4 · Տիպերը</h3>
+    <ul class="goals">
+      <li>Տպիր ամեն փոփոխականի տիպը <code>typeof</code>-ով</li>
+      <li>Ինչու՞ է <code>typeof null</code>-ը <code>"object"</code>։ Գրիր մեկնաբանության մեջ (Դաս 1-ի «հին սխալը»)</li>
+    </ul>
+
+    <h3>Քայլ 5 · Այսօրվա էջերը</h3>
+    <ul class="goals">
+      <li>Հարցրու <code>prompt</code>-ով՝ քանի էջ կարդացիր այսօր</li>
+      <li>Նախ դիտավորյալ գումարիր առանց <code>Number()</code>-ի և տես արդյունքը, հետո՝ <code>Number()</code>-ով</li>
+      <li>Վերջում <code>alert</code>-ով շնորհավորիր և ասա՝ քանի էջ է մնացել</li>
+      <li>Ֆայլի վերջում՝ մեկնաբանություն․ ինչու՞ է <code>"10" + 5</code>-ը <code>"105"</code>, իսկ <code>"10" - 5</code>-ը՝ <code>5</code></li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Console-ում կա առնվազն 10 տող՝ առանց կարմիր սխալի</li>
+      <li>Ոչ մի <code>var</code></li>
+      <li>Փոփոխականների անունները՝ camelCase և հասկանալի</li>
+      <li>Գրքի տվյալները գրված են մեկ տեղում՝ ֆայլի սկզբում</li>
+      <li>prompt-ի արժեքը դարձվում է թիվ, ապա գումարվում</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>Assignment to constant variable</code></td><td>Փոխում ես <code>const</code> փոփոխական։ Կարդացած էջերը՝ <code>let</code></td></tr>
+      <tr><td>Տեսնում ես <code>${pages}</code> բառացի</td><td>Template literal-ը backtick-ով է՝ <code>`...`</code>, ոչ չակերտներով</td></tr>
+      <tr><td>30 + 12 = «3012»</td><td><code>prompt</code>-ը միշտ տող է տալիս․ <code>Number(prompt(...))</code></td></tr>
+      <tr><td>Console-ը դատարկ է</td><td>Ստուգիր սկրիպտի ուղին և <code>defer</code>-ը, թարմացրու էջը</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 01-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում։</p>
+    <ol class="hw">
+      <li>Ստեղծիր 5 փոփոխական քո մասին (անուն, ազգանուն, տարիք, քաղաք, սիրած գույն) և տպիր դրանք template literal-ով՝ մեկ գեղեցիկ նախադասությամբ։</li>
+      <li>Ստեղծիր <code>a = 15</code> և <code>b = 4</code> փոփոխականները։ Տպիր դրանց գումարը, տարբերությունը, արտադրյալը, քանորդը և բաժանման մնացորդը (<code>%</code>)։</li>
+      <li>Ստեղծիր փոփոխական յուրաքանչյուր տիպի համար (string, number, boolean, undefined, null) և <code>typeof</code>-ով տպիր դրանց տիպերը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ուղղանկյան կողմերը՝ 8 և 5։ Հաշվիր և տպիր մակերեսը և պարագիծը։</li>
+      <li><code>prompt</code>-ով հարցրու օգտագործողի անունը և տարիքը, ապա <code>alert</code>-ով ցույց տուր՝ «Բարև, [անուն]։ 10 տարի հետո կլինես [X] տարեկան։» <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Խանութում խնձորը 450 դրամ է կիլոգրամը։ Հարցրու քանի կիլոգրամ և տպիր ընդհանուր գումարը։</li>
+      <li>Երկու փոփոխական՝ <code>x = 10</code>, <code>y = 20</code>։ Գրիր կոդ, որ դրանց արժեքները փոխանակի (հետո՝ <code>x = 20</code>, <code>y = 10</code>)։</li>
+      <li>Բացատրիր մեկնաբանության մեջ՝ ինչո՞ւ է <code>"10" + 5</code>-ը <code>"105"</code>, իսկ <code>"10" - 5</code>-ը <code>5</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/index.html">օրինակը</a> և դրա կոդը <code>example/js/</code>-ում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><span></span><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-02/task.html">Դաս 02 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 2 · տնային աշխատանք · Դաս 01</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

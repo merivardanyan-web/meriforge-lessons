@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Տնային · Դաս 12 — Flexbox II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:#fff}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule); background:var(--paper)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  @media (max-width:700px){.shots{grid-template-columns:1fr}}
+  .lede a, .note a, .pager a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code){white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 1 · տնային</b> · Դաս 12</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../html-lesson-12.html">HTML Դաս 12</a> · մինի-նախագիծ</p>
+  <h1>Flexbox II․ ֆորմաներ և footer</h1>
+  <p class="lede">Գործնականում ես կիրառում <code>flex-grow</code>-ը, <code>flex-shrink</code>-ը, <code>gap</code>-ը և <code>flex-wrap</code>-ը․ բաժանորդագրման ֆորմա footer-ում և որոնում բլոգում։</p>
+
+  <div class="facts">
+    <span>Ժամանակ՝ ~1.5 ժամ</span>
+    <span>Սկսիր Դաս 11-ի արդյունքից</span>
+    <span>Արդյունք՝ footer + որոնում</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Օգտագործիր միայն Դաս 01–12-ը։ Media query-ներ դեռ չենք օգտագործում (Դաս 14), իսկ դիզայնի տոկենները (<code>--wall</code>, <code>--gap</code>) Դաս 13-ում են։</p>
+  </div>
+
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Footer-ը ստանում է բաժանորդագրման ֆորմա, իսկ բլոգը՝ որոնման դաշտ։ Երկու դեպքում էլ դաշտը ձգվում է, իսկ կոճակը երբեք չի սեղմվում։ Սյուներով տողերը փաթաթվում են նեղ էկրանին։</p>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/index.jpg" alt="Գլխավոր էջ նոր footer-ով․ երեք սյուն, աջում էլ. հասցեի դաշտ կոճակով, ներքևում բաժանարար գծով տող" width="900" height="1419" loading="lazy">
+      <figcaption>index.html</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/blog.jpg" alt="Բլոգ, որի կողային բլոկում որոնման դաշտ կա կոճակով" width="900" height="1338" loading="lazy">
+      <figcaption>pages/blog.html</figcaption>
+    </figure>
+    </div>
+  </section>
+
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <div class="tree">starter/
+└── content.md     ← footer, որոնում, spacing դասեր</div>
+    <p>Սկսիր Դաս 11-ի քո կայքից։ Եթե այն չունես, վերցրու <a href="../lesson-11/example/index.html">Դաս 11-ի օրինակը</a>։</p>
+  </section>
+
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+
+    <h3>Քայլ 1 · Օգնականներ</h3>
+    <p><code>global.css</code>-ում՝ <code>.flex-wrap { flex-wrap: wrap; }</code>։ <code>main.css</code>-ում՝ <code>.gap-*</code> և <code>.mb-*</code> դասերը (բաժին 5)։</p>
+
+    <h3>Քայլ 2 · Դաշտ + կոճակ մեկ տողում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>footer-ի ֆորմա</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">form</span> <span class="f">class</span>=<span class="s">"inline-form flex gap-10"</span> <span class="f">action</span>=<span class="s">"index.html"</span> <span class="f">method</span>=<span class="s">"get"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"mail"</span> <span class="f">class</span>=<span class="s">"visually-hidden"</span><span class="p">&gt;</span>Էլ. հասցե<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">input</span> <span class="f">type</span>=<span class="s">"email"</span> <span class="f">id</span>=<span class="s">"mail"</span> <span class="f">name</span>=<span class="s">"mail"</span> <span class="f">placeholder</span>=<span class="s">"ani@example.com"</span> <span class="f">required</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">button</span> <span class="f">type</span>=<span class="s">"submit"</span> <span class="f">class</span>=<span class="s">"btn"</span><span class="p">&gt;</span>Բաժանորդագրվել<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">form</span><span class="p">&gt;</span></code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>main.css</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">.inline-form input</span> {
+    <span class="f">flex-grow</span>: <span class="s">1</span>;      <span class="c">/* ձգվում է ազատ տեղի վրա */</span>
+    <span class="f">min-width</span>: <span class="s">0</span>;      <span class="c">/* թույլ է տալիս սեղմվել իր բովանդակությունից փոքր */</span>
+}
+
+<span class="k">.inline-form .btn</span> {
+    <span class="f">flex-shrink</span>: <span class="s">0</span>;    <span class="c">/* կոճակը չի սեղմվում */</span>
+}</code></pre>
+    </div>
+    <div class="tip note"><span class="tag">Փորձիր</span><p>Ջնջիր <code>flex-shrink: 0</code>-ն և նեղացրու պատուհանը․ կոճակի տեքստը կսկսի կոտրվել երկու տողի։ Ջնջիր <code>min-width: 0</code>-ն․ երկար placeholder-ով դաշտը դուրս կգա սյունից։</p></div>
+
+    <h3>Քայլ 3 · Footer ըստ դասարանականի</h3>
+    <p>Երեք սյուն՝ 40/20/40, ներքևի տողը՝ <code>flex justify-between align-center flex-wrap gap-10</code>, իսկ բաժանարար գիծը՝ <code>.footer__bottom</code>-ի <code>border-top</code>-ով։</p>
+
+    <h3>Քայլ 4 · Որոնում բլոգում</h3>
+    <p>Նույն <code>.inline-form</code> կոմպոնենտը, ուրիշ տեղում։ Նոր CSS պետք չէ․ եթե պետք եղավ, ուրեմն կոմպոնենտը կախված է իր տեղից։</p>
+
+    <h3>Քայլ 5 · flex-wrap</h3>
+    <p>Բոլոր այն <code>.row</code>-երին, որոնցում մեկից ավելի սյուն կա, ավելացրու <code>flex-wrap</code>։ Մենյուի <code>ul</code>-ին՝ նույնպես։ Նեղացրու պատուհանը և նկարագրիր, թե ինչ է կատարվում։ Լիարժեք ադապտիվությունը Դաս 14-ում է․ այսօր միայն համոզվում ենք, որ ոչինչ դուրս չի գալիս։</p>
+    <div class="tip note"><span class="tag">gap և տոկոսներ</span><p>Մեր սյուներն ունեն <code>.w-*</code> տոկոսներով և <code>padding</code>՝ բացակի համար։ Եթե <code>.row</code>-ին տաս <code>gap</code>, 33% + 33% + 33% + 2 × gap &gt; 100%, և վերջին սյունը կանցնի նոր տող։ Ուստի սյուների համար gap չենք օգտագործում, իսկ ներսի flex բլոկների համար՝ այո։</p></div>
+  </section>
+
+  <section id="s3">
+    <h2><span class="num">03</span>Ընդունման ստուգաթերթ</h2>
+    <h3>Ֆորմաներ</h3>
+    <ul class="goals">
+      <li>Երկու ֆորմայում էլ դաշտը ձգվում է, կոճակը չի սեղմվում</li>
+      <li>Ամեն դաշտ ունի label (թեկուզ թաքնված)</li>
+      <li>Մեկ <code>.inline-form</code> կոմպոնենտ՝ երկու տեղում</li>
+    </ul>
+
+    <h3>Footer</h3>
+    <ul class="goals">
+      <li>40/20/40 սյուներ, ներքևի տող բաժանարարով</li>
+      <li>Ստուգված է <kbd>Tab</kbd>-ով</li>
+    </ul>
+
+    <h3>Փաթաթում</h3>
+    <ul class="goals">
+      <li>Սյուներով բոլոր տողերն ունեն <code>flex-wrap</code></li>
+      <li>Նեղ էկրանին ոչինչ դուրս չի գալիս</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Դաշտը դուրս է գալիս սյունից</td><td>Բացակայում է <code>min-width: 0</code></td></tr>
+      <tr><td>Կոճակի տեքստը կոտրվում է</td><td>Բացակայում է <code>flex-shrink: 0</code></td></tr>
+      <tr><td>Վերջին սյունը միշտ նոր տողում է</td><td><code>.row</code>-ին տրված է <code>gap</code>, և տոկոսների գումարը 100%-ից անցավ</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի մյուս վարժությունները</h2>
+    <p>Սրանք Դաս 12-ի տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում, մնացածը կատարիր առանձին ֆայլերում կամ նույն թղթապանակում։</p>
+    <ol class="hw">
+      <li>Ցուցադրիր <code>flex-grow</code>-ի ազդեցությունը՝ երեք բլոկ, <code>grow</code>-ը միայն մեկին։</li>
+      <li>Ցուցադրիր համամասնությունը 1:2:1 և 1:3:1։</li>
+      <li>Կողք կողքի համեմատիր <code>flex-grow: 1</code>-ը և <code>flex: 1</code>-ը՝ շատ տարբեր երկարության տեքստերով։ Բացատրիր տարբերությունը։</li>
+      <li>Կառուցիր որոնման դաշտ կոճակով՝ <code>flex-grow</code> և <code>flex-shrink: 0</code>-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր <code>flex-shrink: 0</code>-ի կարևորությունը լոգոյի օրինակով՝ առաջ և հետո։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր <code>gap</code>-ի և տոկոսային լայնությունների կոնֆլիկտը։ Ապա լուծիր՝ <code>flex: 1</code>-ի անցնելով։</li>
+      <li>Կառուցիր ինքնահարմարվող ցանց՝ <code>flex: 1 1 250px</code>-ով, 6 տարրով։ Ստուգիր տարբեր լայնություններով։</li>
+      <li>Ավելացրու <code>flex-wrap: wrap</code> Դաս 10-ի «Մեր թիմը» բաժնին։ Նեղացրու պատուհանը և նկարագրիր վարքագիծը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կառուցիր footer դասարանական օրինակի պես։ Ստուգիր <kbd>Tab</kbd>-ով և նեղ էկրանով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր <code>order</code>-ի հասանելիության խնդիրը․ երեք հղում, <code>order</code>-ով փոխված հերթականությամբ։ Անցիր <kbd>Tab</kbd>-ով և նկարագրիր, ինչ ես տեսնում։</li>
+    </ol>
+  </section>
+
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/index.html">օրինակը</a> և քո էջը կողք կողքի։ Բացիր երկուսի կոդն էլ խմբագրիչում։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-11/task.html">← Դաս 11</a><a href="../index.html">Բոլոր տնայինները</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 1 · տնային աշխատանք · Դաս 12</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>
