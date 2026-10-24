@@ -53,7 +53,8 @@ body{
 
 /* ============ LAYOUT ============ */
 .sheet{
-  max-width:860px;
+  max-width:1800px;
+  width: 90%;
   margin:0 auto;
   background:var(--sheet);
   border-left:1px solid var(--rule);
