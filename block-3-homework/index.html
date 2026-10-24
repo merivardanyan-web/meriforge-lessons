@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Բլոկ 3 · տնային աշխատանքներ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lesson.css">
+<script src="../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · PHP</b> · տնային</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Բլոկ 3 · տնային աշխատանքներ · 22 մինի-նախագիծ</p>
+  <h1>Անիի գրքերի ակումբը</h1>
+  <p class="lede">Ամեն դասի տնային աշխատանքը ունի մեկ մինի-նախագիծ՝ քայլերով, starter ֆայլերով, պատրաստի օրինակով և սքրինշոթներով։ Բոլորը մեկ նախագիծ են․ Անիի «Գրքեր» էջը դառնում է գրքերի ակումբ՝ MySQL-ով, սեփական MVC-ով, մուտքով և API-ով, իսկ վերջում՝ Laravel-ով և հրապարակված պորտֆոլիոյում։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Դաս 01–17՝ մաքուր PHP, 18–22՝ Laravel</span>
+    <span>Դաս 23–24՝ ՏեխնոՄարկետի պաշտպանություն</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչպես աշխատել</h2>
+    <div class="tree">lesson-NN/
+├── task.html       ← առաջադրանքը․ սկսիր այստեղից
+├── starter/        ← տվյալներ, SQL և CSS, որ չգրես ձեռքով
+├── example/        ← պատրաստի օրինակ․ բացիր միայն ավարտելուց հետո
+└── screenshots/    ← ինչ պետք է ստացվի</div>
+    <div class="warn note">
+      <span class="tag">Կանոն</span>
+      <p>Նախ կատարիր առաջադրանքը և անցիր ստուգաթերթով, հետո բացիր օրինակը։ Ամեն դասի օրինակը նախորդի շարունակությունն է, ուստի եթե բաց ես թողել դասը, հաջորդը կարող ես սկսել նախորդի օրինակից։</p>
+    </div>
+    <div class="note">
+      <span class="tag">Օրինակները սերվեր են ուզում</span>
+      <p>PHP-ի օրինակները չեն բացվում կրկնակի սեղմումով։ Դաս 01–09՝ <code>php -S localhost:8000</code> թղթապանակում, Դաս 10–13՝ նաև բազա (<code>sql/</code>) և <code>config.php</code>, Դաս 14–17՝ <code>composer install</code> և <code>.env</code>, Դաս 15-ից՝ <code>-t public public/index.php</code>։ Ամեն task.html-ի բաժին 01-ում՝ ճշգրիտ հրամանը։</p>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Մեկ նախագիծ, որը աճում է</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դասեր</th><th>Որտեղ</th><th>Ինչ է աճում</th></tr>
+      <tr><td>01–07</td><td>PHP առանց բազայի</td><td>index.php → foreach → ֆունկցիաներ → AI վերանայում → շաբլոններ և XSS → ֆորմա → սեսիա, cookie, վերբեռնում</td></tr>
+      <tr><td>08–11</td><td>MySQL և PDO</td><td>Աղյուսակ → կապեր և JOIN → կայքը բազայից ֆիլտրերով → ադմին CRUD և տրանզակցիա</td></tr>
+      <tr><td>12–17</td><td>OOP և սեփական MVC</td><td>Դասեր → ժառանգում և ինտերֆեյսներ → Composer և Repository → Router → մուտք, դերեր, CSRF → JSON API և fetch</td></tr>
+      <tr><td>18–22</td><td>Laravel</td><td>Routing → Blade → Eloquent → Form Request, Fortify, Gate-եր → գնահատականներ, deploy և README</td></tr>
+    </table>
+    </div>
+    <div class="note">
+      <span class="tag">Ինչու Անիի ակումբը</span>
+      <p>Անին նույն ուսանողն է, որի կայքը աճեց Բլոկ 1 և 2-ի տնայիններում։ Այստեղ նրա «Գրքեր» էջը դառնում է իսկական ծրագիր՝ բազայով, անդամներով և ադմինով։ Ամեն քայլ նույնն է, ինչ դասում ՏեխնոՄարկետի հետ, բայց այլ տվյալներով, ուստի պատճենելը չի աշխատի․ պետք է հասկանալ։ Յուրաքանչյուր առաջադրանք օգտագործում է միայն այն, ինչ անցել ենք մինչև այդ դասը։</p>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Բոլոր դասերը</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դաս</th><th>Թեմա</th><th>Մինի-նախագիծ</th><th></th></tr>
+      <tr><td>01</td><td><a href="../php-lesson-01.html">Սերվերը և միջավայրը</a></td><td><a href="lesson-01/task.html">Անիի կայքը սերվերում</a></td><td><a href="lesson-01/example/">օրինակ</a></td></tr>
+      <tr><td>02</td><td><a href="../php-lesson-02.html">Շարահյուսություն JS-ից հետո</a></td><td><a href="lesson-02/task.html">Դարակը՝ foreach-ով</a></td><td><a href="lesson-02/example/">օրինակ</a></td></tr>
+      <tr><td>03</td><td><a href="../php-lesson-03.html">Զանգվածներ և ֆունկցիաներ</a></td><td><a href="lesson-03/task.html">Գրքերի ֆունկցիաներ</a></td><td><a href="lesson-03/example/">օրինակ</a></td></tr>
+      <tr><td>04</td><td><a href="../php-lesson-04.html">AI որպես աշխատանքային գործիք</a></td><td><a href="lesson-04/task.html">AI-ն որպես վերանայող</a></td><td><a href="lesson-04/example/">օրինակ</a></td></tr>
+      <tr><td>05</td><td><a href="../php-lesson-05.html">Շաբլոններ և XSS</a></td><td><a href="lesson-05/task.html">Շաբլոններ և XSS</a></td><td><a href="lesson-05/example/">օրինակ</a></td></tr>
+      <tr><td>06</td><td><a href="../php-lesson-06.html">Ֆորմաներ և վալիդացիա</a></td><td><a href="lesson-06/task.html">«Առաջարկիր գիրք» ֆորմա</a></td><td><a href="lesson-06/example/">օրինակ</a></td></tr>
+      <tr><td>07</td><td><a href="../php-lesson-07.html">Սեսիաներ, cookie, ֆայլեր</a></td><td><a href="lesson-07/task.html">Կարդալու ցուցակ, թեմա, շապիկ</a></td><td><a href="lesson-07/example/">օրինակ</a></td></tr>
+      <tr><td>08</td><td><a href="../php-lesson-08.html">SQL I · աղյուսակներ և հարցումներ</a></td><td><a href="lesson-08/task.html">Դարակը՝ MySQL-ում</a></td><td><a href="lesson-08/example/">օրինակ</a></td></tr>
+      <tr><td>09</td><td><a href="../php-lesson-09.html">SQL II · կապեր, JOIN, GROUP BY</a></td><td><a href="lesson-09/task.html">Ժանրեր և ընթերցանության օրեր</a></td><td><a href="lesson-09/example/">օրինակ</a></td></tr>
+      <tr><td>10</td><td><a href="../php-lesson-10.html">PDO և SQL injection</a></td><td><a href="lesson-10/task.html">Կայքը՝ բազայից</a></td><td><a href="lesson-10/example/">օրինակ</a></td></tr>
+      <tr><td>11</td><td><a href="../php-lesson-11.html">CRUD և ադմին վահանակ</a></td><td><a href="lesson-11/task.html">Ադմին և «Կարդացի այսօր»</a></td><td><a href="lesson-11/example/">օրինակ</a></td></tr>
+      <tr><td>12</td><td><a href="../php-lesson-12.html">OOP · դասեր և օբյեկտներ</a></td><td><a href="lesson-12/task.html">Գիրքը՝ օբյեկտ</a></td><td><a href="lesson-12/example/">օրինակ</a></td></tr>
+      <tr><td>13</td><td><a href="../php-lesson-13.html">Ժառանգում և ինտերֆեյս</a></td><td><a href="lesson-13/task.html">Թղթային, աուդիո, էլեկտրոնային</a></td><td><a href="lesson-13/example/">օրինակ</a></td></tr>
+      <tr><td>14</td><td><a href="../php-lesson-14.html">Composer, namespace, Repository</a></td><td><a href="lesson-14/task.html">Composer, namespace, Repository</a></td><td><a href="lesson-14/example/">օրինակ</a></td></tr>
+      <tr><td>15</td><td><a href="../php-lesson-15.html">Մինի-MVC · Router, Controller, View</a></td><td><a href="lesson-15/task.html">Սեփական MVC</a></td><td><a href="lesson-15/example/">օրինակ</a></td></tr>
+      <tr><td>16</td><td><a href="../php-lesson-16.html">Նույնականացում և CSRF</a></td><td><a href="lesson-16/task.html">Մուտք, դերեր, CSRF</a></td><td><a href="lesson-16/example/">օրինակ</a></td></tr>
+      <tr><td>17</td><td><a href="../php-lesson-17.html">Սեփական REST API</a></td><td><a href="lesson-17/task.html">JSON API և fetch</a></td><td><a href="lesson-17/example/">օրինակ</a></td></tr>
+      <tr><td>18</td><td><a href="../php-lesson-18.html">Laravel · ներածություն</a></td><td><a href="lesson-18/task.html">Ակումբը Laravel-ում</a></td><td><a href="lesson-18/example/">օրինակ</a></td></tr>
+      <tr><td>19</td><td><a href="../php-lesson-19.html">Blade և Controllers</a></td><td><a href="lesson-19/task.html">Blade, կոմպոնենտներ, resource</a></td><td><a href="lesson-19/example/">օրինակ</a></td></tr>
+      <tr><td>20</td><td><a href="../php-lesson-20.html">Eloquent</a></td><td><a href="lesson-20/task.html">Eloquent և միգրացիաներ</a></td><td><a href="lesson-20/example/">օրինակ</a></td></tr>
+      <tr><td>21</td><td><a href="../php-lesson-21.html">Վալիդացիա և auth</a></td><td><a href="lesson-21/task.html">Վալիդացիա, Fortify, Gate-եր</a></td><td><a href="lesson-21/example/">օրինակ</a></td></tr>
+      <tr><td>22</td><td><a href="../php-lesson-22.html">Նախագիծ → պորտֆոլիո</a></td><td><a href="lesson-22/task.html">Ակումբը՝ պորտֆոլիոյում</a></td><td><a href="lesson-22/example/">օրինակ</a></td></tr>
+      <tr><td>23–24</td><td>CV, հարցազրույց</td><td><a href="../block-3-project/task-3.html">ՏեխնոՄարկետի պաշտպանություն</a></td><td><a href="../block-3-project/example-3-laravel/README.md">օրինակ</a></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ինչպես է ստուգված</h2>
+    <p>Դաս 01–17-ի օրինակները ստուգված են ավտոմատ թեստերով իրական MariaDB-ի վրա (185 ստուգում՝ ֆիլտրեր, էջավորում, injection, CRUD, տրանզակցիա, վերբեռնում, դերեր, CSRF, API, առանց JS-ի աշխատանք)։ Laravel-ի ֆայլերը (Դաս 18–22) գործարկված են իրական Laravel 12-ի վրա․ ամեն դասի վիճակը հավաքվել է մաքուր նախագծի վրա, և Դաս 19, 21, 22-ը ստուգվել են բրաուզերում (8 + 48 + 50 ստուգում)։</p>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · տնային աշխատանքներ</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

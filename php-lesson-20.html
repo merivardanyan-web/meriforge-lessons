@@ -189,7 +189,7 @@ php artisan make:migration create_products_table
     <span class="n">$table</span>-&gt;<span class="f">string</span>(<span class="s">'email'</span>)-&gt;<span class="f">unique</span>();
     <span class="n">$table</span>-&gt;<span class="f">timestamp</span>(<span class="s">'email_verified_at'</span>)-&gt;<span class="f">nullable</span>();
     <span class="n">$table</span>-&gt;<span class="f">string</span>(<span class="s">'password'</span>);
-    <span class="n">$table</span>-&gt;<span class="f">enum</span>(<span class="s">'role'</span>, [<span class="s">'admin'</span>, <span class="s">'manager'</span>])-&gt;<span class="f">default</span>(<span class="s">'manager'</span>);   <span class="c">// ⭐ Դաս 16-ից</span>
+    <span class="n">$table</span>-&gt;<span class="f">enum</span>(<span class="s">'role'</span>, [<span class="s">'admin'</span>, <span class="s">'manager'</span>, <span class="s">'customer'</span>])-&gt;<span class="f">default</span>(<span class="s">'customer'</span>);   <span class="c">// ⭐ Դաս 16-ից</span>
     <span class="n">$table</span>-&gt;<span class="f">rememberToken</span>();
     <span class="n">$table</span>-&gt;<span class="f">timestamps</span>();
 });</code></pre>
@@ -788,6 +788,10 @@ with('category')-ով
   <!-- ============ 12 ============ -->
   <section id="s12">
     <h2><span class="num">12</span>Տնային աշխատանք</h2>
+    <div class="tip note">
+      <span class="tag">Մինի-նախագիծ</span>
+      <p>Այս տնայինի գլխավոր մասը՝ <a href="block-3-homework/lesson-20/task.html" style="color:var(--pen);text-decoration:underline">«Eloquent և միգրացիաներ»</a>, Անիի գրքերի ակումբում՝ քայլ առ քայլ, starter ֆայլերով և պատրաստի օրինակով։ Ներքևի ցուցակի կետերը, որ նշված չեն որպես «մինի-նախագծում», կատարիր ՏեխնոՄարկետում։</p>
+    </div>
     <ol class="hw">
       <li>Ավարտիր դասարանականի 5 քայլը և հինգ փորձարկումը։ Ուղարկիր սքրինշոթներ։</li>
       <li>Փոխիր <code>&lt;x-product-card&gt;</code>-ը՝ <code>formattedPrice()</code>, <code>hasDiscount()</code>, <code>imageUrl()</code>։</li>

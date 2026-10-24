@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 07 · Կարդալու ցուցակ, թեմա, շապիկ — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · տնային</b> · Դաս 07</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../php-lesson-07.html">PHP Դաս 07</a> · մինի-նախագիծ</p>
+  <h1>Կարդալու ցուցակ, թեմա, շապիկ</h1>
+  <p class="lede">Այցելուն կազմում է իր «Կարդալու ցուցակը»․ այն պահվում է սեսիայում, ինչպես ՏեխնոՄարկետի զամբյուղը։ Մուգ թեման՝ cookie-ով, առանց JavaScript-ի։ Անին վերբեռնում է գրքի շապիկի նկարը, իսկ սերվերը ստուգում է ֆայլի ԻՐԱԿԱՆ տիպը։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Անիի կայքը</span>
+    <span>5 քայլ · 7 տնային կետ նախագծում</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–07․ <code>session_start</code> անվտանգ կարգավորումներով, <code>$_SESSION</code>, <code>setcookie</code>, <code>$_COOKIE</code>, flash, <code>$_FILES</code>, <code>finfo</code>, <code>getimagesize</code>, <code>move_uploaded_file</code>, <code>random_bytes</code>։ Բազա դեռ չկա․ շապիկի անունը՝ սեսիայում (Դաս 10-ից՝ բազայում)։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/list.jpg" alt="Կարդալու ցուցակ երկու գրքով, հաշվիչը header-ում" width="1280" height="1008" loading="lazy">
+      <figcaption>Ցուցակը սեսիայում</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/dark-cover.jpg" alt="Սամվելի էջը մուգ թեմայով և վերբեռնված շապիկով" width="1280" height="900" loading="lazy">
+      <figcaption>Մուգ թեմա և շապիկ</figcaption>
+    </figure>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Շարունակիր քո նախագիծը։ Եթե բաց ես թողել նախորդ դասը, սկսիր <a href="../lesson-06/example/">Դաս 06-ի օրինակից</a>։</p>
+    <ul class="goals">
+      <li><code>starter/css/php-07.css</code> — գրքի էջի քարտը</li>
+      <li><code>starter/images/fake-cover.jpg</code> — PHP ֆայլ՝ .jpg անունով (տնային 9)․ պիտի մերժվի</li>
+      <li><code>starter/images/test-cover.jpg</code> — իսկական նկար՝ վերբեռնման փորձի համար</li>
+    </ul>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գործարկել</th></tr>
+      <tr><td><code>php -S localhost:8000</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · bootstrap.php</h3>
+    <ul class="goals">
+      <li><code>session_start(['cookie_httponly' =&gt; true, 'cookie_samesite' =&gt; 'Lax', 'use_strict_mode' =&gt; true])</code></li>
+      <li>Ամեն էջ սկսվում է <code>require_once __DIR__ . '/bootstrap.php'</code>-ով</li>
+    </ul>
+
+    <h3>Քայլ 2 · Ցուցակը սեսիայում</h3>
+    <ul class="goals">
+      <li><code>list-functions.php</code>՝ <code>listAdd</code>, <code>listRemove</code>, <code>listCount</code>, <code>inList</code>, <code>listItems</code></li>
+      <li>Սեսիայում՝ միայն id-ները։ Վերնագիրը և էջերը՝ միշտ <code>$books</code>-ից (տնային 6)</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>list-functions.php — listAdd()</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">listAdd</span>(<span class="k">int</span> <span class="n">$id</span>): <span class="k">bool</span>
+{
+    <span class="n">$list</span> = <span class="f">readingList</span>();
+
+    <span class="k">if</span> (<span class="f">in_array</span>(<span class="n">$id</span>, <span class="n">$list</span>, <span class="k">true</span>) || <span class="f">count</span>(<span class="n">$list</span>) &gt;= <span class="t">LIST_MAX</span>) {
+        <span class="k">return</span> <span class="k">false</span>;                      <span class="c">// արդեն կա կամ ցուցակը լի է</span>
+    }</code></pre>
+    </div>
+
+    <h3>Քայլ 3 · POST → redirect</h3>
+    <ul class="goals">
+      <li>«+ Կարդալու ցուցակ»՝ <code>&lt;form method="post" action="list-add.php"&gt;</code>, ոչ հղում</li>
+      <li>Վերադարձը՝ <code>safeBack($_POST['back'])</code>․ <code>//evil.com</code>-ը չի անցնում (տնային 10)</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>functions.php — safeBack()</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/** Միայն ներքին հասցե՝ բաց վերահղման դեմ (Դաս 07-ի տնային, կետ 10) */</span>
+<span class="k">function</span> <span class="f">safeBack</span>(?<span class="k">string</span> <span class="n">$back</span>): <span class="k">string</span>
+{
+    <span class="n">$back</span> = (<span class="k">string</span>) <span class="n">$back</span>;
+
+    <span class="k">if</span> (<span class="n">$back</span> === <span class="s">''</span> || <span class="f">str_starts_with</span>(<span class="n">$back</span>, <span class="s">'//'</span>) || <span class="f">str_contains</span>(<span class="n">$back</span>, <span class="s">':'</span>)) {
+        <span class="k">return</span> <span class="s">'index.php'</span>;
+    }</code></pre>
+    </div>
+
+    <h3>Քայլ 4 · Թեմա</h3>
+    <ul class="goals">
+      <li><code>theme.php</code>՝ <code>setcookie('theme', ...)</code> մեկ տարով</li>
+      <li>Layout-ում՝ <code>&lt;body class="dark"&gt;</code>, եթե <code>isDark()</code> (տնային 7)</li>
+    </ul>
+
+    <h3>Քայլ 5 · Շապիկ</h3>
+    <ul class="goals">
+      <li><code>enctype="multipart/form-data"</code></li>
+      <li><code>uploadImage()</code>՝ չափ, <code>finfo</code>, <code>getimagesize</code>, պատահական անուն</li>
+      <li>Փորձիր <code>starter/images/fake-cover.jpg</code>-ը (PHP ֆայլ՝ .jpg անունով) (տնային 9)</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>functions.php — uploadImage()</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ԻՐԱԿԱՆ տիպը՝ բովանդակությունից, ոչ անունից ⭐</span>
+<span class="n">$mime</span> = (<span class="k">new</span> <span class="f">finfo</span>(<span class="t">FILEINFO_MIME_TYPE</span>))-&gt;<span class="f">file</span>(<span class="n">$file</span>[<span class="s">'tmp_name'</span>]);
+<span class="n">$allowed</span> = [<span class="s">'image/jpeg'</span> =&gt; <span class="s">'jpg'</span>, <span class="s">'image/png'</span> =&gt; <span class="s">'png'</span>, <span class="s">'image/webp'</span> =&gt; <span class="s">'webp'</span>];
+
+<span class="k">if</span> (!<span class="k">isset</span>(<span class="n">$allowed</span>[<span class="n">$mime</span>]) || <span class="f">getimagesize</span>(<span class="n">$file</span>[<span class="s">'tmp_name'</span>]) === <span class="k">false</span>) {
+    <span class="k">return</span> [<span class="k">null</span>, <span class="s">'Միայն JPG, PNG կամ WebP նկար'</span>];
+}
+
+<span class="n">$name</span> = <span class="f">bin2hex</span>(<span class="f">random_bytes</span>(<span class="n">8</span>)) . <span class="s">'.'</span> . <span class="n">$allowed</span>[<span class="n">$mime</span>];      <span class="c">// անունը տալիս ենք ՄԵՆՔ</span></code></pre>
+    </div>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>DevTools → Application → Cookies․ <code>PHPSESSID</code>-ը HttpOnly է (տնային 2, 3)</li>
+      <li>Ցուցակի հաշվիչը header-ում փոխվում է առանց JS-ի</li>
+      <li><code>fake-cover.jpg</code>-ը մերժվում է</li>
+      <li><code>back=//example.com</code>-ը վերադարձնում է <code>index.php</code></li>
+      <li>Մուգ թեման մնում է էջը վերաբացելուց հետո</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Ցուցակը դատարկվում է ամեն էջում</td><td><code>session_start()</code>-ը չկա այդ էջում․ ամեն էջ՝ <code>bootstrap.php</code>-ով</td></tr>
+      <tr><td><code>$_FILES</code>-ը դատարկ է</td><td>Մոռացել ես <code>enctype="multipart/form-data"</code></td></tr>
+      <tr><td>Վերբեռնված նկարը 404 է</td><td>Ուղին՝ <code>images/uploads/</code>, և թղթապանակը պետք է գոյություն ունենա</td></tr>
+      <tr><td>Cookie-ն չի պահվում</td><td><code>setcookie()</code>-ից առաջ արդեն HTML է ուղարկվել</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի տնային աշխատանքը</h2>
+    <p>Սրանք <a href="../../php-lesson-07.html#s7">Դաս 07-ի</a> տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում՝ Անիի ակումբում։ Մնացածը կատարիր ՏեխնոՄարկետում, ինչպես գրված է դասում։</p>
+    <ol class="hw">
+      <li>Կատարիր դասարանականի 10 քայլը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Բացիր DevTools → Application → Cookies և գտիր <code>PHPSESSID</code>-ը։ Ուղարկիր սքրինշոթ։</li>
+      <li>Փորձիր կարդալ <code>document.cookie</code>-ն Console-ում <code>httponly</code>-ով և առանց դրա։ Նկարագրիր տարբերությունը։</li>
+      <li>Գտիր սեսիայի ֆայլը սերվերում (Laragon → tmp) և բացիր այն։ Ի՞նչ ես տեսնում։</li>
+      <li>Ավելացրու քանակի փոփոխում զամբյուղում (+/−)։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր, ինչ կլինի, եթե սեսիայում պահես գինը և հետո փոխես այն <code>data.php</code>-ում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու թեմայի պահպանում cookie-ով (Դաս 19-ի HTML բլոկից)։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կառուցիր ֆայլի վերբեռնման ֆորմա <code>uploadImage()</code>-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Փորձիր վերբեռնել <code>.php</code> ֆայլ՝ վերանվանելով <code>.jpg</code>։ Բռնվե՞ց <code>finfo</code>-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր բաց վերահղման խնդիրը՝ ուղարկելով <code>back=https://example.com</code> ստուգումով և առանց դրա։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/">օրինակը</a>։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-06/task.html">← Դաս 06</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-08/task.html">Դաս 08 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · տնային աշխատանք · Դաս 07</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

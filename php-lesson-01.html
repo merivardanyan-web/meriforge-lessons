@@ -154,7 +154,7 @@ php -S localhost:8000
     <div class="warn note">
       <span class="tag">Ինչո՞ւ սա բավարար չէ</span>
       <p>Ներկառուցված սերվերը <strong>զարգացման խաղալիք է</strong>, ոչ իրական Apache։<br><br>
-      · Չկա <code>.htaccess</code> և <code>mod_rewrite</code> → <strong>Դաս 14-ի Router-ը չի աշխատի</strong><br>
+      · Չկա <code>.htaccess</code> և <code>mod_rewrite</code> → <strong>Դաս 15-ի Router-ը չի աշխատի</strong><br>
       · Չկա MySQL<br>
       · Չկա phpMyAdmin<br>
       · Չի աշխատում մի քանի հարցում միաժամանակ<br><br>
@@ -172,8 +172,8 @@ php -S localhost:8000
   PHP      →  կատարում է կոդը
   MySQL    →  պահում է տվյալները
 
-  + phpMyAdmin  →  բազայի ինտերֆեյս բրաուզերում
-  + Composer    →  փաթեթների կառավարիչ (Դաս 13)</div>
+  + HeidiSQL    →  բազայի ծրագիր (Դաս 8)
+  + Composer    →  փաթեթների կառավարիչ (Դաս 14)</div>
 
     <div class="scroll">
     <table class="tbl">
@@ -193,7 +193,8 @@ php -S localhost:8000
 # 3. Բացիր Laragon → Start All
 #    Երկու կանաչ ցուցիչ՝ Apache և MySQL
 
-# 4. Menu → Apache → PHP → ընտրիր 8.2 կամ ավելի նոր
+# 4. Menu → PHP → Version → ընտրիր 8.3 կամ ավելի նոր
+#    (Laravel 13-ը, Դաս 18, պահանջում է 8.3+)
 
 # 5. Նախագծերի թղթապանակը՝
 #    C:\laragon\www\
@@ -364,7 +365,7 @@ php -S localhost:8000
       <li>Ստուգիր <code>php -v</code> տերմինալում</li>
       <li>Ստեղծիր թղթապանակ մեկ <code>index.php</code>-ով և գործարկիր <code>php -S localhost:8000</code></li>
       <li>Տեղադրիր Laragon (Full) → Start All</li>
-      <li>Ընտրիր PHP 8.2+</li>
+      <li>Ընտրիր PHP 8.3+</li>
       <li>Ստեղծիր <code>C:\laragon\www\technomarket\</code></li>
       <li>Reload → ստուգիր <code>http://technomarket.test</code></li>
       <li>Տեղափոխիր այնտեղ HTML բլոկի պատրաստի նախագիծը</li>
@@ -394,6 +395,14 @@ php -S localhost:8000
   <!-- ============ 08 ============ -->
   <section id="s8">
     <h2><span class="num">08</span>Տնային աշխատանք</h2>
+    <div class="tip note">
+      <span class="tag">Մինի-նախագիծ</span>
+      <p>Այս տնայինի գլխավոր մասը՝ <a href="block-3-homework/lesson-01/task.html" style="color:var(--pen);text-decoration:underline">«Անիի կայքը սերվերում»</a>, Անիի գրքերի ակումբում՝ քայլ առ քայլ, starter ֆայլերով և պատրաստի օրինակով։ Ներքևի ցուցակի կետերը, որ նշված չեն որպես «մինի-նախագծում», կատարիր ՏեխնոՄարկետում։</p>
+    </div>
+    <div class="tip note">
+      <span class="tag">Նախագիծ · Առաջադրանք 1</span>
+      <p>Սկսվում է ՏեխնոՄարկետի առաջին փուլը՝ <a href="block-3-project/task-1.html" style="color:var(--pen);text-decoration:underline">Առաջադրանք 1</a>։ Այսօրվա մասը՝ բաժին 02-ի պլանում։</p>
+    </div>
     <ol class="hw">
       <li>Տեղադրիր Laragon։ Ուղարկիր սքրինշոթ երկու կանաչ ցուցիչով։</li>
       <li>Գործարկիր <code>php -S</code> և Laragon։ Գրիր, ի՞նչ տարբերություն նկատեցիր։</li>
@@ -436,7 +445,7 @@ Apache չի գործարկվում  →  80 պորտը զբաղված է</div>
     <h3>Ստուգաթերթ</h3>
     <ul class="goals">
       <li>Laragon-ը գործարկվում է, երկու ցուցիչն էլ կանաչ են</li>
-      <li>PHP տարբերակը 8.2+ է</li>
+      <li>PHP տարբերակը 8.3+ է</li>
       <li>Նախագիծը հասանելի է <code>.test</code> հասցեով</li>
       <li>Սխալները ցուցադրվում են</li>
       <li>Հասկանում եմ, ինչու PHP կոդը չի երևում Ctrl+U-ով</li>

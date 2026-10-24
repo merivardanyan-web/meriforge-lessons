@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 02 · Դարակը՝ foreach-ով — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · տնային</b> · Դաս 02</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../php-lesson-02.html">PHP Դաս 02</a> · մինի-նախագիծ</p>
+  <h1>Դարակը՝ foreach-ով</h1>
+  <p class="lede">Յոթ գիրք այլևս չեն գրվում յոթ անգամ HTML-ում։ Դրանք <code>data.php</code>-ի մեկ զանգվածում են, իսկ քարտը գրվում է մեկ անգամ՝ <code>foreach</code>-ի ներսում։ Կարգավիճակը որոշում է <code>if/elseif</code>-ը, պիտակը՝ <code>match</code>-ը, աստղերը՝ <code>for</code>-ը։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Անիի կայքը</span>
+    <span>5 քայլ · 8 տնային կետ նախագծում</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–02․ զանգվածներ, <code>foreach</code>, <code>for</code>, <code>if/elseif</code>, <code>match</code>, <code>??</code>, <code>==</code> և <code>===</code>, <code>isset</code>, <code>empty</code>, <code>strlen</code>, <code>mb_strlen</code>, այլընտրանքային շարահյուսություն։ Սեփական ֆունկցիաներ դեռ չկան (Դաս 03)։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/shelf.jpg" alt="Յոթ քարտ՝ կարգավիճակներով, առաջընթացով և աստղերով" width="1280" height="1272" loading="lazy">
+      <figcaption>Դարակը foreach-ով</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/lab.jpg" alt="== և === աղյուսակ, isset և empty աղյուսակ" width="1280" height="1093" loading="lazy">
+      <figcaption>lab.php՝ փորձերը</figcaption>
+    </figure>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Շարունակիր քո նախագիծը։ Եթե բաց ես թողել նախորդ դասը, սկսիր <a href="../lesson-01/example/">Դաս 01-ի օրինակից</a>։</p>
+    <ul class="goals">
+      <li><code>starter/data.php</code> — 7 գիրքը զանգվածում, որ չգրես ձեռքով</li>
+    </ul>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գործարկել</th></tr>
+      <tr><td><code>php -S localhost:8000</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Տվյալները</h3>
+    <ul class="goals">
+      <li>Պատճենիր <code>starter/data.php</code>-ը և միացրու <code>require</code>-ով</li>
+      <li>Ամեն գիրք՝ <code>id, title, author, year, pages, read, genre, rating, color</code>։ «Հոբիտը» տարի չունի դիտավորյալ</li>
+    </ul>
+
+    <h3>Քայլ 2 · Քարտերը</h3>
+    <ul class="goals">
+      <li>Մեկ <code>&lt;article class="book"&gt;</code>՝ <code>foreach ($books as $book):</code>-ի ներսում</li>
+      <li>Այլընտրանքային շարահյուսություն՝ <code>foreach: … endforeach;</code>, որ HTML-ը մնա ընթեռնելի</li>
+    </ul>
+
+    <h3>Քայլ 3 · Կարգավիճակ և պիտակ</h3>
+    <ul class="goals">
+      <li><code>if/elseif</code>՝ planned, reading, done</li>
+      <li><code>match</code>՝ պիտակը հայերեն (տնային 7․ համեմատիր switch-ի հետ)</li>
+      <li><code>?? 'տարին անհայտ'</code>՝ «Հոբիտի» համար</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.php — կարգավիճակը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">if</span> (<span class="n">$book</span>[<span class="s">'read'</span>] === <span class="n">0</span>) {
+    <span class="n">$status</span> = <span class="s">'planned'</span>;
+} <span class="k">elseif</span> (<span class="n">$book</span>[<span class="s">'read'</span>] &gt;= <span class="n">$book</span>[<span class="s">'pages'</span>]) {
+    <span class="n">$status</span> = <span class="s">'done'</span>;
+} <span class="k">else</span> {
+    <span class="n">$status</span> = <span class="s">'reading'</span>;
+}
+
+<span class="c">// match՝ կարճ, վերադարձնում է արժեք, համեմատում է === -ով</span>
+<span class="n">$label</span> = <span class="k">match</span> (<span class="n">$status</span>) {
+    <span class="s">'done'</span>    =&gt; <span class="s">'Կարդացել եմ'</span>,
+    <span class="s">'reading'</span> =&gt; <span class="s">'Կարդում եմ'</span>,
+    <span class="s">'planned'</span> =&gt; <span class="s">'Կարդալու եմ'</span>,
+};</code></pre>
+    </div>
+
+    <h3>Քայլ 4 · Առաջընթաց և աստղեր</h3>
+    <ul class="goals">
+      <li>Տոկոսը՝ <code>(int) ($book['read'] * 100 / $book['pages'])</code></li>
+      <li>Աստղերը՝ <code>for</code>-ով այնքան անգամ, ինչքան <code>rating</code> է</li>
+    </ul>
+
+    <h3>Քայլ 5 · Փորձերի էջ</h3>
+    <ul class="goals">
+      <li>Ստեղծիր <code>lab.php</code>՝ <code>==</code>/<code>===</code> աղյուսակ, <code>"0e123" == "0e456"</code>, <code>strlen</code>/<code>mb_strlen</code>, <code>isset</code>/<code>empty</code>/<code>is_null</code> աղյուսակ</li>
+      <li>Վերջում՝ <code>foreach</code>-ի հղումային թակարդը (<code>&amp;$b</code>) և բացատրություն (տնային 8)</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Էջում յոթ քարտ է, HTML-ում՝ մեկ <code>&lt;article&gt;</code></li>
+      <li>«Հոբիտը»՝ «տարին անհայտ», առանց Warning-ի</li>
+      <li>Կարդացած գրքերը կանաչ պիտակ ունեն, չսկսածները՝ մոխրագույն շապիկ</li>
+      <li>Ամեն համեմատություն՝ <code>===</code></li>
+      <li><code>lab.php</code>-ի աղյուսակները հաշվում է PHP-ն, ոչ դու</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>Undefined array key "year"</code></td><td>Օգտագործիր <code>$book['year'] ?? 'տարին անհայտ'</code></td></tr>
+      <tr><td>Ամեն քարտ «Կարդում եմ» է</td><td>Պայմանների հերթականությունը․ նախ <code>=== 0</code>, հետո <code>&gt;= pages</code>, վերջում մնացածը</td></tr>
+      <tr><td><code>UnhandledMatchError</code></td><td><code>match</code>-ին պետք է <code>default</code></td></tr>
+      <tr><td>Վերջին գիրքը կրկնվում է</td><td><code>foreach (... as &amp;$book)</code>-ից հետո չես արել <code>unset($book)</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի տնային աշխատանքը</h2>
+    <p>Սրանք <a href="../../php-lesson-02.html#s9">Դաս 02-ի</a> տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում՝ Անիի ակումբում։ Մնացածը կատարիր ՏեխնոՄարկետում, ինչպես գրված է դասում։</p>
+    <ol class="hw">
+      <li>Կատարիր դասարանականի բոլոր 8 քայլը։</li>
+      <li>Փորձարկիր 6 համեմատություն <code>==</code>-ով և <code>===</code>-ով։ Կազմիր աղյուսակ արդյունքներով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր, թե ինչու <code>"0e123" == "0e456"</code>-ը վտանգավոր է։ Բացատրիր սեփական բառերով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Փորձարկիր <code>strlen</code>-ը և <code>mb_strlen</code>-ը հայերեն բառի վրա։ Բացատրիր տարբերությունը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կազմիր աղյուսակ՝ <code>isset</code>, <code>empty</code>, <code>is_null</code> 6 տարբեր արժեքի վրա։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գտիր <code>empty</code>-ի թակարդի իրական օրինակ քո ֆորմայում և ուղղիր։</li>
+      <li>Վերաշարադրիր որևէ <code>switch</code> <code>match</code>-ով։ Հաշվիր՝ քանի՞ տող կրճատվեց։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր <code>foreach</code>-ի հղումային թակարդը կոդով և բացատրիր, ինչու է վերջին տարրը փչանում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Վերաշարադրիր մեկ բաժին <code>echo</code>-ով, ապա այլընտրանքային շարահյուսությամբ։ Ո՞րն է ընթեռնելի։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Օգտագործիր <code>??</code>-ը առնվազն երեք տեղում։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/">օրինակը</a>։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-01/task.html">← Դաս 01</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-03/task.html">Դաս 03 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · տնային աշխատանք · Դաս 02</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

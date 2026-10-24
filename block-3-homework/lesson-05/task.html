@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 05 · Շաբլոններ և XSS — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · տնային</b> · Դաս 05</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../php-lesson-05.html">PHP Դաս 05</a> · մինի-նախագիծ</p>
+  <h1>Շաբլոններ և XSS</h1>
+  <p class="lede">Ամեն էջ հիմա երկու մաս ունի․ PHP ֆայլը պատրաստում է տվյալները, շաբլոնը ցույց է տալիս։ <code>render()</code>-ը և մեկ <code>layout.php</code>-ը փոխարինում են header/footer-ին, իսկ <code>e()</code>-ն և <code>safeUrl()</code>-ը պաշտպանում են էջը, երբ գրքի վերնագրում կամ հղումում կա <code>&lt;script&gt;</code> կամ <code>javascript:</code>։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Անիի կայքը</span>
+    <span>4 քայլ · 6 տնային կետ նախագծում</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–05․ <code>htmlspecialchars</code>, <code>e()</code>, <code>render()</code>՝ <code>extract</code> և <code>ob_start</code>, layout, <code>safeUrl()</code>՝ <code>parse_url</code>-ով, հաստատուններ (<code>const</code>), <code>json_encode</code>։ Ֆորմաներ դեռ չկան (Դաս 06)։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/shelf.jpg" alt="Դարակը layout-ով" width="1280" height="900" loading="lazy">
+      <figcaption>index.php՝ render()-ով</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/book.jpg" alt="Հոբիտի էջը, հղումը դարձել է #" width="1280" height="900" loading="lazy">
+      <figcaption>book.php?id=7՝ javascript: հղումը safeUrl()-ից հետո</figcaption>
+    </figure>
+    </div>
+    <figure class="shot">
+      <img src="screenshots/about.jpg" alt="Ակումբի մասին էջ" width="1280" height="900" loading="lazy">
+      <figcaption>about.php՝ նույն layout-ով</figcaption>
+    </figure>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Շարունակիր քո նախագիծը։ Եթե բաց ես թողել նախորդ դասը, սկսիր <a href="../lesson-04/example/">Դաս 04-ի օրինակից</a>։</p>
+    <ul class="goals">
+      <li><code>starter/data.php</code> — գրքերը՝ <code>link</code>-ով, «Հոբիտի» վտանգավոր հղումով և մեկնաբանված XSS գրքով</li>
+    </ul>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գործարկել</th></tr>
+      <tr><td><code>php -S localhost:8000</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · e() և safeUrl()</h3>
+    <ul class="goals">
+      <li><code>e()</code>՝ <code>htmlspecialchars(..., ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')</code></li>
+      <li><code>safeUrl()</code>՝ միայն <code>http</code>, <code>https</code>, <code>mailto</code>, <code>tel</code> և <code>/</code>-ով սկսվող ուղիներ</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>functions.php — safeUrl()</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/** Միայն http, https, mailto, tel և ներքին ուղիներ */</span>
+<span class="k">function</span> <span class="f">safeUrl</span>(?<span class="k">string</span> <span class="n">$url</span>, <span class="k">string</span> <span class="n">$fallback</span> = <span class="s">'#'</span>): <span class="k">string</span>
+{
+    <span class="n">$url</span> = <span class="f">trim</span>(<span class="n">$url</span> ?? <span class="s">''</span>);
+
+    <span class="k">if</span> (<span class="n">$url</span> === <span class="s">''</span>) {
+        <span class="k">return</span> <span class="n">$fallback</span>;
+    }
+
+    <span class="k">if</span> (<span class="f">str_starts_with</span>(<span class="n">$url</span>, <span class="s">'/'</span>) &amp;&amp; !<span class="f">str_starts_with</span>(<span class="n">$url</span>, <span class="s">'//'</span>)) {
+        <span class="k">return</span> <span class="n">$url</span>;
+    }
+
+    <span class="n">$scheme</span> = <span class="f">strtolower</span>((<span class="k">string</span>) <span class="f">parse_url</span>(<span class="n">$url</span>, <span class="t">PHP_URL_SCHEME</span>));
+
+    <span class="k">return</span> <span class="f">in_array</span>(<span class="n">$scheme</span>, [<span class="s">'http'</span>, <span class="s">'https'</span>, <span class="s">'mailto'</span>, <span class="s">'tel'</span>], <span class="k">true</span>) ? <span class="n">$url</span> : <span class="n">$fallback</span>;
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 2 · render() և layout</h3>
+    <ul class="goals">
+      <li><code>render('pages/home', [...])</code>՝ <code>extract</code> + <code>ob_start</code></li>
+      <li><code>views/layout.php</code>՝ մեկ ֆայլ ամբողջ կայքի համար, <code>$title</code> ամեն էջի համար (տնային 6)</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>functions.php — render()</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">render</span>(<span class="k">string</span> <span class="n">$view</span>, <span class="k">array</span> <span class="n">$data</span> = []): <span class="k">string</span>
+{
+    <span class="f">extract</span>(<span class="n">$data</span>);             <span class="c">// ['title' =&gt; 'X'] → $title = 'X'</span>
+
+    <span class="f">ob_start</span>();
+    <span class="k">require</span> __DIR__ . "/views/{<span class="n">$view</span>}</code></pre>
+    </div>
+
+    <h3>Քայլ 3 · Երեք էջ</h3>
+    <ul class="goals">
+      <li><code>index.php</code>, <code>book.php?id=2</code> (404՝ եթե չկա), <code>about.php</code></li>
+      <li>Համեմատիր․ քանի՞ տող է կրկնվում Դաս 03-ի partials-ի համեմատ (տնային 5)</li>
+    </ul>
+
+    <h3>Քայլ 4 · XSS-ի փորձ</h3>
+    <ul class="goals">
+      <li><code>data.php</code>-ում բացիր մեկնաբանված գիրքը՝ <code>&lt;script&gt;</code> վերնագրով</li>
+      <li>Սքրինշոթ առանց <code>e()</code>-ի և դրանով (տնային 2)</li>
+      <li>«Հոբիտի» հղումը՝ <code>javascript:alert(...)</code>․ <code>e()</code>-ն այն չի կանգնեցնում, <code>safeUrl()</code>-ը՝ այո</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Ամեն <code>&lt;?= ?&gt;</code> տվյալով՝ <code>e()</code>-ով</li>
+      <li>Ամեն <code>href</code> տվյալից՝ <code>e(safeUrl(...))</code></li>
+      <li><code>book.php?id=99</code>-ը տալիս է 404 կոդ</li>
+      <li>HTML-ի գլուխը գրված է մեկ տեղում՝ <code>layout.php</code></li>
+      <li>Ատրիբուտների արժեքները՝ չակերտներում</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>&amp;amp;</code> էջում</td><td><code>e()</code>-ն կիրառել ես երկու անգամ (տնային 8)</td></tr>
+      <tr><td><code>javascript:</code> հղումը դեռ աշխատում է</td><td><code>e()</code>-ն փախցնում է նիշերը, ոչ սխեման․ պետք է <code>safeUrl()</code></td></tr>
+      <tr><td>Layout-ում <code>Undefined variable $content</code></td><td><code>render('layout', [...])</code>-ին չես փոխանցել <code>content</code></td></tr>
+      <tr><td><code>value=&lt;?= e($x) ?&gt;</code>-ը կոտրվում է բացատով</td><td>Ատրիբուտը միշտ չակերտներում (տնային 4)</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի տնային աշխատանքը</h2>
+    <p>Սրանք <a href="../../php-lesson-05.html#s8">Դաս 05-ի</a> տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում՝ Անիի ակումբում։ Մնացածը կատարիր ՏեխնոՄարկետում, ինչպես գրված է դասում։</p>
+    <ol class="hw">
+      <li>Կատարիր դասարանականի 8 քայլը։</li>
+      <li>Ցուցադրիր XSS-ը երկու սքրինշոթով՝ առանց <code>e()</code>-ի և դրանով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Փորձարկիր հինգ տարբեր payload՝ <code>&lt;script&gt;</code>, <code>&lt;img onerror&gt;</code>, <code>&lt;svg onload&gt;</code>, <code>javascript:</code> հղումում, <code>' onfocus='</code> ատրիբուտում։ Որո՞նք են աշխատում առանց <code>e()</code>-ի։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր ատրիբուտի խնդիրը՝ չակերտներով և առանց դրանց, <code>e()</code>-ի հետ միասին։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ստեղծիր երրորդ էջ՝ <code>about.php</code>, նույն layout-ով։ Քանի՞ տող կրկնեցիր՝ համեմատած Դաս 3-ի <code>partials/</code> մոտեցման հետ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>$title</code>-ը ամեն էջի համար։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Բացատրիր սեփական բառերով, ինչու փախցնում ենք ելքի, ոչ մուտքի ժամանակ։</li>
+      <li>Ցուցադրիր, ինչ է լինում, երբ <code>e()</code>-ն կիրառում ես երկու անգամ նույն տողի վրա։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Օգտագործիր <code>json_encode</code>-ը <code>&lt;script&gt;</code>-ի ներսում հայերեն տեքստի հետ։ Համեմատիր <code>JSON_UNESCAPED_UNICODE</code>-ով և առանց դրա։</li>
+      <li>Խնդրիր AI-ին վերանայել քո շաբլոնները և գտնել բաց թողնված <code>e()</code>-երը։ Ուղղիր ինքդ։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/">օրինակը</a>։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-04/task.html">← Դաս 04</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-06/task.html">Դաս 06 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · տնային աշխատանք · Դաս 05</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

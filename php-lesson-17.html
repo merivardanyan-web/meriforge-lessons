@@ -441,6 +441,11 @@
       Բայց <code>curl</code>-ը JS չի տեսնում։ Ստուգումը <code>inStock()</code> և <code>qty</code>-ի համար պիտի լինի <strong>այստեղ</strong>։ Երբ API-ն հասանելի է, ամեն վալիդացիա, որ կա միայն JS-ում, գոյություն չունի։</p>
     </div>
 
+    <div class="warn note">
+      <span class="tag">Mass assignment — զգուշացում ապագայի համար</span>
+      <p>Երբ ավելացնես <code>POST /api/products</code>, գայթակղիչ կլինի գրել <code>$repo-&gt;create($request-&gt;all())</code>։ Հարձակվողը կուղարկի ավելորդ դաշտեր՝ <code>{"name":"X","discount":90}</code>, և դրանք կգրվեն բազա։ Դաս 11-ում <code>$data</code>-ն կառուցում էինք <strong>դաշտ առ դաշտ</strong> հենց այս պատճառով։ Laravel-ում դրա համար կա <code>$fillable</code> (Դաս 20)։</p>
+    </div>
+
     <div class="block">
       <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>routes.php</div><button class="copy">Պատճենել</button></div>
 <pre><code><span class="c">// bootstrap.php</span>
@@ -653,8 +658,9 @@ curl -i "https://technomarket.test/api/products?per_page=2"
 <span class="c"># 2. Անհայտ ապրանք — 404 JSON-ով, ոչ HTML</span>
 curl -i https://technomarket.test/api/products/չկա
 
-<span class="c"># 3. Չգոյություն ունեցող ուղի — 404 JSON-ով (405՝ եթե Դաս 15-ի խորացված տնայինն արել ես)</span>
-curl -i -X DELETE https://technomarket.test/api/products
+<span class="c"># 3. Ուղին կա միայն POST-ով — 404 JSON-ով (405՝ եթե Դաս 15-ի խորացված տնայինն արել ես)</span>
+<span class="c">#    GET, որովհետև DELETE-ը կստանար 419․ CSRF-ը ստուգվում է ուղին փնտրելուց ԱՌԱՋ</span>
+curl -i https://technomarket.test/api/cart/items
 
 <span class="c"># 4. POST առանց token-ի — պիտի լինի 419 ⭐</span>
 curl -i -X POST https://technomarket.test/api/cart/items \
@@ -686,6 +692,14 @@ curl "https://technomarket.test/api/products?per_page=100000"</code></pre>
   <!-- ============ 10 ============ -->
   <section id="s10">
     <h2><span class="num">10</span>Տնային աշխատանք</h2>
+    <div class="tip note">
+      <span class="tag">Մինի-նախագիծ</span>
+      <p>Այս տնայինի գլխավոր մասը՝ <a href="block-3-homework/lesson-17/task.html" style="color:var(--pen);text-decoration:underline">«JSON API և fetch»</a>, Անիի գրքերի ակումբում՝ քայլ առ քայլ, starter ֆայլերով և պատրաստի օրինակով։ Ներքևի ցուցակի կետերը, որ նշված չեն որպես «մինի-նախագծում», կատարիր ՏեխնոՄարկետում։</p>
+    </div>
+    <div class="tip note">
+      <span class="tag">Նախագիծ · Առաջադրանք 2</span>
+      <p>JSON API-ը և fetch-ով «Գնել»-ը փակում են <a href="block-3-project/task-2.html" style="color:var(--pen);text-decoration:underline">Առաջադրանք 2</a>-ը։</p>
+    </div>
     <ol class="hw">
       <li>Ավարտիր դասարանականի 5 քայլը և վեց <code>curl</code> փորձարկումը։ Ուղարկիր սքրինշոթներ։</li>
       <li>Ավելացրու <code>GET /api/cart</code>՝ վերադարձնում է զամբյուղի տողերը գումարով։ Օգտագործիր <code>findMany</code>-ը (Դաս 14)։</li>

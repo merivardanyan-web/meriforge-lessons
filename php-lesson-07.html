@@ -224,7 +224,7 @@
     <h2><span class="num">04</span>Զամբյուղ</h2>
 
     <div class="block">
-      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>cart.php — տրամաբանությունը</div><button class="copy">Պատճենել</button></div>
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>cart-functions.php — տրամաբանությունը</div><button class="copy">Պատճենել</button></div>
 <pre><code><span class="p">&lt;?php</span>
 <span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
 
@@ -463,7 +463,7 @@
 ]);
 
 <span class="k">require_once</span> <span class="n">__DIR__</span> . <span class="s">'/functions.php'</span>;
-<span class="k">require_once</span> <span class="n">__DIR__</span> . <span class="s">'/cart.php'</span>;
+<span class="k">require_once</span> <span class="n">__DIR__</span> . <span class="s">'/cart-functions.php'</span>;
 <span class="k">require_once</span> <span class="n">__DIR__</span> . <span class="s">'/data.php'</span>;</code></pre>
     </div>
 
@@ -490,7 +490,7 @@
       <li>Ստեղծիր <code>bootstrap.php</code> և միացրու այն ամեն կոնտրոլերում</li>
       <li>Ավելացրու <code>flash()</code> ֆունկցիան</li>
       <li>Վերաշարադրիր <code>contact.php</code>-ը <code>flash()</code>-ով</li>
-      <li>Ստեղծիր <code>cart.php</code> տրամաբանությամբ</li>
+      <li>Ստեղծիր <code>cart-functions.php</code> տրամաբանությամբ (ոչ <code>cart.php</code>․ այդ անունը զամբյուղի <em>էջինն</em> է, իսկ <code>require_once</code>-ը նույն ֆայլը երկրորդ անգամ չի միացնի)</li>
       <li>Ստեղծիր <code>cart-add.php</code> և <code>cart-remove.php</code></li>
       <li>Դարձրու «Գնել» կոճակը ֆորմա</li>
       <li>Ավելացրու հաշվիչը header-ում (CSS-ը Դաս 15-ի հավելվածից)</li>
@@ -510,6 +510,14 @@
   <!-- ============ 07 ============ -->
   <section id="s7">
     <h2><span class="num">07</span>Տնային աշխատանք</h2>
+    <div class="tip note">
+      <span class="tag">Մինի-նախագիծ</span>
+      <p>Այս տնայինի գլխավոր մասը՝ <a href="block-3-homework/lesson-07/task.html" style="color:var(--pen);text-decoration:underline">«Կարդալու ցուցակ, թեմա, շապիկ»</a>, Անիի գրքերի ակումբում՝ քայլ առ քայլ, starter ֆայլերով և պատրաստի օրինակով։ Ներքևի ցուցակի կետերը, որ նշված չեն որպես «մինի-նախագծում», կատարիր ՏեխնոՄարկետում։</p>
+    </div>
+    <div class="tip note">
+      <span class="tag">Նախագիծ · Առաջադրանք 1</span>
+      <p>Զամբյուղը, flash-ը և նկարի վերբեռնումը ՏեխնոՄարկետում՝ <a href="block-3-project/task-1.html#s3" style="color:var(--pen);text-decoration:underline">Առաջադրանք 1, քայլեր</a>։</p>
+    </div>
     <ol class="hw">
       <li>Կատարիր դասարանականի 10 քայլը։</li>
       <li>Բացիր DevTools → Application → Cookies և գտիր <code>PHPSESSID</code>-ը։ Ուղարկիր սքրինշոթ։</li>
@@ -584,7 +592,7 @@ Cookie   →  թեմա, լեզու, նախընտրություններ
     <div class="tip note">
       <span class="tag">Հաջորդ դասին</span>
       <p>MySQL։ Զանգվածները <code>data.php</code>-ում վերջապես կփոխարինվեն իրական բազայով։<br><br>
-      Կսովորենք սխեմայի նախագծում ՏեխնոՄարկետի համար, տվյալների տիպեր, <code>SELECT</code>, <code>WHERE</code>, <code>ORDER BY</code> և <code>JOIN</code>։ Կաշխատենք phpMyAdmin-ում՝ նախքան PHP-ից դիմելը։</p>
+      Բազաներ և SQL՝ երկու դաս։ Դաս 8-ում՝ մեկ աղյուսակ և չորս հրաման (<code>INSERT</code>, <code>SELECT</code>, <code>UPDATE</code>, <code>DELETE</code>), Դաս 9-ում՝ կապեր և <code>JOIN</code>։ Կաշխատենք HeidiSQL-ում՝ նախքան PHP-ից դիմելը։</p>
     </div>
   </section>
 

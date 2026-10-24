@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <title>Շահիր նվեր 🎁</title>
+</head>
+<body>
+    <!-- ⚠️ ՓՈՐՁՆԱԿԱՆ «չար» էջ — PHP Դաս 16, տնային 2
+         Բացիր ՈՒՐԻՇ հասցեից (կրկնակի սեղմումով՝ file://, կամ php -S localhost:9000 -t lab)
+         Նախ մուտք գործիր Անիի կայք որպես admin, հետո բացիր այս էջը և սեղմիր կոճակը։
+         Բրաուզերը կուղարկի Անիի սեսիայի cookie-ն (SameSite=Lax-ը POST-ի համար չի ուղարկի,
+         ուստի փորձիր նաև բաց թողնելով Lax-ը bootstrap.php-ում)։ Առանց _token-ի սերվերը կպատասխանի 419 -->
+    <h1>Շնորհավորում ենք, դու շահել ես գիրք 🎁</h1>
+    <form method="post" action="http://localhost:8000/admin/books/archive">
+        <input type="hidden" name="ids[]" value="1">
+        <input type="hidden" name="ids[]" value="2">
+        <input type="hidden" name="ids[]" value="3">
+        <button type="submit">Ստանալ նվերը</button>
+    </form>
+</body>
+</html>

@@ -41,7 +41,7 @@
       <li>Կանոններ՝ Դաս 6, 7 և 11-ի ստուգումների փոխարեն</li>
       <li>Form Request դասեր</li>
       <li>Ադմինի <code>store</code> և <code>update</code>՝ <code>validated()</code>-ով</li>
-      <li>Fortify՝ մուտք և ելք մեր սեփական շաբլոններով</li>
+      <li>Fortify՝ մուտք, ելք և հաճախորդների գրանցում մեր սեփական շաբլոններով</li>
       <li><code>auth</code> middleware և <code>intended</code></li>
       <li>Gate-եր՝ ո՞վ ինչ կարող է անել</li>
     </ul>
@@ -64,6 +64,7 @@
       <tr><td><code>ValidationException</code> → 422 JSON</td><td>17</td><td>Ինքնաբերաբար՝ <code>expectsJson()</code>-ով</td></tr>
       <tr><td><code>Auth::attempt()</code>, <code>password_verify</code></td><td>16</td><td>Fortify</td></tr>
       <tr><td><code>LoginThrottle</code></td><td>16</td><td>Fortify-ի սահմանափակիչը</td></tr>
+      <tr><td><code>RegisterController</code>, <code>UNIQUE</code>, <code>role</code>-ը ոչ ֆորմայից</td><td>16</td><td>Fortify-ի <code>CreateNewUser</code>, <code>Rule::unique()</code></td></tr>
       <tr><td><code>/admin</code> ստուգումը + <code>intended</code></td><td>16</td><td><code>auth</code> middleware</td></tr>
       <tr><td><code>$auth-&gt;isAdmin()</code> (տնային)</td><td>16</td><td>Gate + <code>can:</code> middleware</td></tr>
     </table>
@@ -291,20 +292,29 @@ APP_FALLBACK_LOCALE=en</code></pre>
 
     <div class="block">
       <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>lang/hy/validation.php — մի քանի տող</div><button class="copy">Պատճենել</button></div>
-<pre><code><span class="k">return</span> [
-    <span class="s">'required'</span> =&gt; <span class="s">'Խնդրում ենք լրացնել :attribute դաշտը։'</span>,
-    <span class="s">'email'</span>    =&gt; <span class="s">':attribute դաշտը պիտի լինի վավեր էլ. հասցե։'</span>,
+<pre><code><span class="c">// attributes()-ում անունները հոդով են՝ «անվանումը», «գինը»
+// :Attribute (մեծատառով) = նույն անունը, առաջին տառը մեծատառ</span>
+<span class="k">return</span> [
+    <span class="s">'required'</span> =&gt; <span class="s">':Attribute պարտադիր է։'</span>,
+    <span class="s">'email'</span>    =&gt; <span class="s">':Attribute պիտի լինի վավեր էլ. հասցե։'</span>,
     <span class="s">'exists'</span>   =&gt; <span class="s">'Ընտրված :attribute գոյություն չունի։'</span>,
     <span class="s">'between'</span>  =&gt; [
-        <span class="s">'numeric'</span> =&gt; <span class="s">':attribute պիտի լինի :min-ից :max։'</span>,
+        <span class="s">'numeric'</span> =&gt; <span class="s">':Attribute պիտի լինի :min-ից :max։'</span>,
     ],
     <span class="s">'max'</span> =&gt; [
-        <span class="s">'string'</span>  =&gt; <span class="s">':attribute-ը չպիտի գերազանցի :max նիշը։'</span>,
-        <span class="s">'numeric'</span> =&gt; <span class="s">':attribute-ը չպիտի գերազանցի :max-ը։'</span>,
-        <span class="s">'file'</span>    =&gt; <span class="s">':attribute-ը չպիտի գերազանցի :max ԿԲ-ը։'</span>,
+        <span class="s">'string'</span>  =&gt; <span class="s">':Attribute չպիտի գերազանցի :max նիշը։'</span>,
+        <span class="s">'numeric'</span> =&gt; <span class="s">':Attribute չպիտի գերազանցի :max-ը։'</span>,
+        <span class="s">'file'</span>    =&gt; <span class="s">':Attribute չպիտի գերազանցի :max ԿԲ-ը։'</span>,
     ],
     <span class="c">// ...</span>
-];</code></pre>
+];
+
+<span class="c">// Արդյունք՝ «Անվանումը պարտադիր է։», «Գինը չպիտի գերազանցի 99999999-ը։»</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Հոդը մեկ անգամ</span>
+      <p>Եթե <code>attributes()</code>-ում գրել ես <code>'անվանումը'</code>, իսկ թարգմանության մեջ՝ <code>':attribute-ը'</code> կամ <code>':attribute դաշտը'</code>, կստանաս «անվանումը-ը» կամ «Լրացրու անվանումը դաշտը»։ Ընտրիր մեկ կանոն․ անունները՝ հոդով, հաղորդագրությունները՝ առանց հոդի։ Ստուգիր աչքով՝ ուղարկիր դատարկ ֆորման և կարդա ամեն սխալը բարձրաձայն։</p>
     </div>
 
       </section>
@@ -431,9 +441,12 @@ php artisan migrate
     <div class="block">
       <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>config/fortify.php — ի՞նչ ենք միացնում</div><button class="copy">Պատճենել</button></div>
 <pre><code><span class="s">'home'</span> =&gt; <span class="s">'/admin/products'</span>,       <span class="c">// ուր գնալ մուտքից հետո</span>
+<span class="s">'redirects'</span> =&gt; [
+    <span class="s">'register'</span> =&gt; <span class="s">'/'</span>,                  <span class="c">// հաճախորդը՝ գլխավոր էջ, ոչ ադմին վահանակ</span>
+],
 
 <span class="s">'features'</span> =&gt; [
-    <span class="c">// Features::registration(),   ⭐ ԱՆՋԱՏՎԱԾ — ադմիններին ոչ ոք ինքնուրույն չի գրանցվում</span>
+    <span class="t">Features</span>::<span class="f">registration</span>(),      <span class="c">// ⭐ հաճախորդների համար — Դաս 16, բաժին 07</span>
     <span class="t">Features</span>::<span class="f">resetPasswords</span>(),
     <span class="c">// Features::emailVerification(),</span>
     <span class="t">Features</span>::<span class="f">updatePasswords</span>(),
@@ -441,9 +454,9 @@ php artisan migrate
     </div>
 
     <div class="warn note">
-      <span class="tag">Գրանցումը անջատելը՝ անվտանգության որոշում</span>
-      <p>Մեր <code>users</code> աղյուսակում ադմիններ և մենեջերներ են։ Եթե թողնես <code>Features::registration()</code>, <code>/register</code> հասցեն <strong>հրապարակային կլինի</strong>, և ցանկացած ոք կկարողանա ստեղծել հաշիվ՝ <code>role = 'manager'</code> լռելյայն արժեքով։ Իսկ մենեջերը, բաժին 08-ի համաձայն, կարող է խմբագրել ապրանքներ։<br><br>
-      Դա Դաս 20-ի mass assignment-ից էլ պարզ ճանապարհ է դեպի ադմին վահանակ։ Կանոն՝ <strong>միացրու միայն այն հնարավորությունները, որոնք իսկապես պետք են</strong>։ Նոր մենեջերին ստեղծում է ադմինը՝ seeder-ով կամ ադմին էջով։</p>
+      <span class="tag">Գրանցումը՝ միայն հաճախորդի դերով</span>
+      <p>Դաս 16-ում գրանցումը կառուցեցինք ձեռքով, և երկու կանոն էր ամենակարևորը․ <strong>դերը չի գալիս ֆորմայից</strong>, իսկ <code>/admin</code>-ը ստուգում է ոչ միայն մուտքը, այլև դերը։ Fortify-ում գրանցման տրամաբանությունը <code>app/Actions/Fortify/CreateNewUser.php</code>-ում է, և այն մերն է՝ փոխելու համար։ Այնտեղ <code>User::create()</code>-ը փոխանցում է միայն <code>name</code>, <code>email</code> և <code>password</code>, իսկ էլ. հասցեի կանոնում կա <code>Rule::unique(User::class)</code>։ <code>role</code>-ը չկա ո՛չ այնտեղ, ո՛չ <code>$fillable</code>-ում (Դաս 20), ուստի գործում է միգրացիայի լռելյայնը՝ <code>'customer'</code>։<br><br>
+      Ադմին գոտին պաշտպանում է <code>can:manage-products</code>-ը (բաժին 07–08), ոչ միայն <code>auth</code>-ը։ Առանց դրա ցանկացած գրանցված հաճախորդ կմտներ ադմին վահանակ։ Կանոն՝ <strong>միացրու միայն այն հնարավորությունները, որոնք իսկապես պետք են, և ամեն մեկի համար մտածիր՝ ով կարող է այն օգտագործել</strong>։ Նոր մենեջերին ստեղծում է ադմինը՝ seeder-ով կամ tinker-ով, ոչ գրանցմամբ։</p>
     </div>
 
     <div class="block">
@@ -453,6 +466,7 @@ php artisan migrate
 <span class="k">public function</span> <span class="f">boot</span>(): <span class="k">void</span>
 {
     <span class="t">Fortify</span>::<span class="f">loginView</span>(<span class="k">fn</span> () =&gt; <span class="f">view</span>(<span class="s">'auth.login'</span>));
+    <span class="t">Fortify</span>::<span class="f">registerView</span>(<span class="k">fn</span> () =&gt; <span class="f">view</span>(<span class="s">'auth.register'</span>));   <span class="c">// նույն ձևով</span>
 
     <span class="c">// ... մնացածը, որ գեներացրել է fortify:install-ը (սահմանափակիչները և այլն)</span>
 }</code></pre>
@@ -671,7 +685,7 @@ php artisan migrate
       <li>Գործարկիր <code>php artisan lang:publish</code>, ստեղծիր <code>lang/hy/</code>, սահմանիր <code>APP_LOCALE=hy</code> և ստեղծիր <code>ProductRequest</code>-ը</li>
       <li>Ավելացրու <code>Product::uniqueSlugFor()</code>-ը, իրագործիր <code>store</code> և <code>update</code> մեթոդները <code>validated()</code>-ով</li>
       <li>Թարմացրու <code>admin/products/form</code>-ը՝ <code>old()</code>, <code>@error</code>, <code>aria-invalid</code></li>
-      <li>Տեղադրիր Fortify-ը, անջատիր գրանցումը, սահմանիր <code>home</code>, ստեղծիր <code>auth/login.blade.php</code>-ը և ելքի ֆորման header-ում</li>
+      <li>Տեղադրիր Fortify-ը, սահմանիր <code>home</code> և <code>redirects.register</code>, ստեղծիր <code>auth/login.blade.php</code>-ը, <code>auth/register.blade.php</code>-ը (Դաս 16-ի ֆորման Blade-ով) և ելքի ֆորման header-ում</li>
       <li>Ավելացրու երկու Gate-ը, փաթեթավորիր ադմին ուղիները <code>['auth', 'can:manage-products']</code>-ով և <code>destroy</code>-ում ավելացրու <code>Gate::authorize</code></li>
     </ol>
 
@@ -681,7 +695,7 @@ php artisan migrate
       <strong>2.</strong> <code>curl</code>-ով ուղարկիր <code>category_id=99999</code>՝ Դաս 11-ի նույն փորձարկումը։ <code>Rule::exists</code>-ը բռնե՞ց։<br>
       <strong>3.</strong> Ելք կատարիր և բացիր <code>/admin/products/1/edit</code>։ Մուտքից հետո վերադարձա՞ր հենց այդ էջը։<br>
       <strong>4.</strong> Սխալ գաղտնաբառ վեց անգամ։ Ապա ջնջիր cookie-ները և կրկնիր։ Արգելափակումը մնա՞ց։ ⭐<br>
-      <strong>5.</strong> Բացիր <code>/register</code>։ Պիտի լինի 404։<br>
+      <strong>5.</strong> Գրանցվիր նոր հասցեով՝ ֆորմային DevTools-ով ավելացնելով <code>role=admin</code>։ Հայտնվեցի՞ր գլխավոր էջում, <code>role</code>-ը <code>customer</code> է, իսկ <code>/admin/products</code>-ը տալի՞ս է 403։ ⭐<br>
       <strong>6.</strong> Ստեղծիր մենեջեր tinker-ում (<code>role</code>-ը ուղիղ վերագրմամբ), մուտք գործիր որպես նա։ «Ջնջել» կոճակը չկա։ Ապա ուղարկիր <code>DELETE</code> հարցումը DevTools-ով կամ <code>curl</code>-ով՝ ճիշտ token-ով։ Պիտի լինի 403։ ⭐</p>
     </div>
 
@@ -690,6 +704,10 @@ php artisan migrate
   <!-- ============ 10 ============ -->
   <section id="s10">
     <h2><span class="num">10</span>Տնային աշխատանք</h2>
+    <div class="tip note">
+      <span class="tag">Մինի-նախագիծ</span>
+      <p>Այս տնայինի գլխավոր մասը՝ <a href="block-3-homework/lesson-21/task.html" style="color:var(--pen);text-decoration:underline">«Վալիդացիա, Fortify, Gate-եր»</a>, Անիի գրքերի ակումբում՝ քայլ առ քայլ, starter ֆայլերով և պատրաստի օրինակով։ Ներքևի ցուցակի կետերը, որ նշված չեն որպես «մինի-նախագծում», կատարիր ՏեխնոՄարկետում։</p>
+    </div>
     <ol class="hw">
       <li>Ավարտիր դասարանականի 5 քայլը և վեց փորձարկումը։ Ուղարկիր սքրինշոթներ։</li>
       <li>Վերաշարադրիր Դաս 6-ի կոնտակտների ֆորման Laravel-ում՝ Form Request-ով, <code>old()</code>-ով և <code>@error</code>-ով։ Համեմատիր տողերի քանակը։</li>

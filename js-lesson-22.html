@@ -263,7 +263,7 @@ btn.<span class="f">addEventListener</span>(<span class="s">"click"</span>, coun
   }
 
   <span class="k">get</span> <span class="f">formatted</span>() {
-    <span class="k">return</span> <span class="k">this</span>.subtotal.<span class="f">toLocaleString</span>(<span class="s">"hy-AM"</span>) + <span class="s">" ֏"</span>;
+    <span class="k">return</span> <span class="k">this</span>.subtotal.<span class="f">toLocaleString</span>(<span class="s">"ru-RU"</span>) + <span class="s">" ֏"</span>;
   }
 }
 
@@ -331,7 +331,7 @@ p.price = -<span class="n">100</span>;   <span class="c">// սխալ կգցի</s
 
   <span class="c">// Օգնական ֆունկցիա, որին օբյեկտ պետք չէ</span>
   <span class="k">static</span> <span class="f">format</span>(n) {
-    <span class="k">return</span> n.<span class="f">toLocaleString</span>(<span class="s">"hy-AM"</span>) + <span class="s">" "</span> + <span class="f">Product</span>.currency;
+    <span class="k">return</span> n.<span class="f">toLocaleString</span>(<span class="s">"ru-RU"</span>) + <span class="s">" "</span> + <span class="f">Product</span>.currency;
   }
 
   <span class="c">// Այլընտրանքային ձև՝ օբյեկտ ստեղծելու</span>
@@ -625,7 +625,7 @@ wishlist.<span class="f">add</span>(<span class="n">4</span>).<span class="f">ad
   }
 
   get subtotal() { return this.price * this.qty; }
-  get formatted() { return this.subtotal.toLocaleString("hy-AM") + " " + Product.currency; }
+  get formatted() { return this.subtotal.toLocaleString("ru-RU") + " " + Product.currency; }
 
   describe() { return `${this.name} ×${this.qty} = ${this.formatted}`; }
 }
@@ -684,6 +684,14 @@ console.log("Դրսից երևո՞ւմ է #value:", Object.keys(c));</textarea>
   <!-- ============ 09 ============ -->
   <section id="s9">
     <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <div class="tip note">
+      <span class="tag">Մինի-նախագիծ</span>
+      <p>Այս տնայինի գլխավոր մասը՝ <a href="block-2-homework/lesson-22/task.html" style="color:var(--pen);text-decoration:underline">«Գրքերը որպես դասեր»</a>, քայլ առ քայլ, starter ֆայլերով և պատրաստի օրինակով։ Ներքևի ցուցակի մնացած կետերը առանձին վարժություններ են։</p>
+    </div>
+    <div class="tip note">
+      <span class="tag">Նախագիծ · Առաջադրանք 3</span>
+      <p>ՏեխնոՄարկետի զամբյուղը որպես դաս՝ <a href="block-2-project/task-3.html" style="color:var(--pen);text-decoration:underline">Առաջադրանք 3</a>, քայլ 4։</p>
+    </div>
     <ol class="hw">
       <li>Ստեղծիր <code>User</code> դաս՝ <code>name</code>, <code>email</code>, <code>age</code> և <code>greet()</code> մեթոդով։ Ստեղծիր 3 օրինակ։</li>
       <li>Ավելացրու <code>get isAdult()</code>, որը վերադարձնում է <code>true</code>, եթե տարիքը 18-ից մեծ է։</li>

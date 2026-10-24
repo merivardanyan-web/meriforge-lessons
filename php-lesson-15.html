@@ -374,7 +374,24 @@ Options -Indexes</code></pre>
 
     <div class="block">
       <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/helpers.php — Դաս 5-ի render()-ի կողքին</div><button class="copy">Պատճենել</button></div>
-<pre><code><span class="c">/** Էջ՝ layout-ի մեջ դրված — Դաս 5-ի երկու render()-ը մեկ կանչով */</span>
+<pre><code><span class="c">/** Դաս 5-ի render()-ը՝ երկու ուղղմամբ, որ խոստացել էինք */</span>
+<span class="k">function</span> <span class="f">render</span>(<span class="k">string</span> <span class="n">$view</span>, <span class="k">array</span> <span class="n">$data</span> = []): <span class="k">string</span>
+{
+    <span class="f">extract</span>(<span class="n">$data</span>, <span class="k">EXTR_SKIP</span>);          <span class="c">// ⭐ 1. չի վերագրում $view-ը</span>
+
+    <span class="f">ob_start</span>();
+
+    <span class="k">try</span> {
+        <span class="k">require</span> <span class="n">__DIR__</span> . <span class="s">"/../views/{<span class="n">$view</span>}.php"</span>;
+    } <span class="k">catch</span> (<span class="t">\Throwable</span> <span class="n">$e</span>) {
+        <span class="f">ob_end_clean</span>();                   <span class="c">// ⭐ 2. չթողնել կիսատ HTML</span>
+        <span class="k">throw</span> <span class="n">$e</span>;
+    }
+
+    <span class="k">return</span> <span class="f">ob_get_clean</span>();
+}
+
+<span class="c">/** Էջ՝ layout-ի մեջ դրված — Դաս 5-ի երկու render()-ը մեկ կանչով */</span>
 <span class="k">function</span> <span class="f">page</span>(<span class="k">string</span> <span class="n">$view</span>, <span class="k">array</span> <span class="n">$data</span> = [], <span class="k">string</span> <span class="n">$title</span> = <span class="s">'ՏեխնոՄարկետ'</span>): <span class="k">string</span>
 {
     <span class="k">return</span> <span class="f">render</span>(<span class="s">'layout'</span>, [
@@ -398,6 +415,12 @@ Options -Indexes</code></pre>
 
     <span class="k">return</span> <span class="s">'/'</span> . <span class="f">trim</span>(<span class="n">$current</span>, <span class="s">'/'</span>) === <span class="s">'/'</span> . <span class="f">trim</span>(<span class="n">$path</span>, <span class="s">'/'</span>);
 }</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Դաս 5-ի երկու թույլ տեղը՝ ուղղված</span>
+      <p><strong><code>EXTR_SKIP</code></strong>. եթե <code>$data</code>-ում լինի <code>'view'</code> բանալի, առանց այս դրոշի այն կվերագրեր ֆունկցիայի <code>$view</code>-ը, և կբեռնվեր այլ ֆայլ։<br><br>
+      <strong><code>ob_end_clean()</code> <code>catch</code>-ում</strong>. եթե շաբլոնում սխալ լինի, բուֆերում արդեն կա կիսատ HTML։ Առանց մաքրման՝ բաժին 06-ի 500 էջը կհայտնվի կիսատ <code>&lt;div&gt;</code>-ների մեջ։ Հիմա, երբ սխալները մշակվում են մեկ տեղում, այս ուղղումը դառնում է անհրաժեշտ։</p>
     </div>
 
     <div class="block">
@@ -598,6 +621,10 @@ Options -Indexes</code></pre>
   <!-- ============ 08 ============ -->
   <section id="s8">
     <h2><span class="num">08</span>Տնային աշխատանք</h2>
+    <div class="tip note">
+      <span class="tag">Մինի-նախագիծ</span>
+      <p>Այս տնայինի գլխավոր մասը՝ <a href="block-3-homework/lesson-15/task.html" style="color:var(--pen);text-decoration:underline">«Սեփական MVC»</a>, Անիի գրքերի ակումբում՝ քայլ առ քայլ, starter ֆայլերով և պատրաստի օրինակով։ Ներքևի ցուցակի կետերը, որ նշված չեն որպես «մինի-նախագծում», կատարիր ՏեխնոՄարկետում։</p>
+    </div>
     <ol class="hw">
       <li>Ավարտիր դասարանականը և հինգ փորձարկումը։ Ուղարկիր <code>/.env</code>-ի պատասխանի սքրինշոթը։</li>
       <li>Ավելացրու <code>/category/{slug}</code> ուղին և <code>ProductController::category()</code> մեթոդը։</li>

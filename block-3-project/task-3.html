@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Առաջադրանք 3 — Laravel և հրապարակում</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lesson.css">
+<script src="../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · նախագիծ</b> · առաջադրանք 3</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Առաջադրանք 3 / 3 · PHP Դաս 18–24 · պաշտպանություն</p>
+  <h1>Laravel, հրապարակում, պաշտպանություն</h1>
+  <p class="lede">Նույն խանութը երրորդ անգամ, բայց հիմա ֆրեյմվորքով։ Ամեն Laravel գործիք փոխարինում է մի բան, որ արդեն գրել ես ձեռքով, և դու գիտես, թե ինչ է այն անում ներսում։ Դաս 22-ում նախագիծը հրապարակվում է, Դաս 24-ում՝ պաշտպանվում։ Օրինակը՝ <a href="example-3-laravel/README.md">example-3-laravel</a>։</p>
+
+  <div class="facts">
+    <span>Արդյունք՝ Laravel նախագիծ + demo</span>
+    <span>Սկսիր նոր նախագծից, Առաջադրանք 2-ի կողքին</span>
+    <span>Պաշտպանություն՝ բաժին 06</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Արտաքինից՝ Առաջադրանք 2-ի նույն խանութը, նույն CSS-ով և նույն հասցեներով։ Ներսում՝ Laravel․ միգրացիաներ, Eloquent մոդելներ, Blade կոմպոնենտներ, Form Request-ներ, Fortify և Gate-եր։ Վերջում նախագիծը հրապարակված է HTTPS-ով, ունի README և demo հաշիվ, և դու կարող ես այն պաշտպանել 10 րոպեում։</p>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/ex2-dark.jpg" alt="Նոութբուքերի կատեգորիան մուգ թեմայով" width="900" height="633" loading="lazy">
+      <figcaption>Տեսքը չի փոխվում․ նույն main.css-ը</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/ex2-admin-orders.jpg" alt="Ադմինի պատվերների աղյուսակ կարգավիճակի ընտրությամբ" width="900" height="633" loading="lazy">
+      <figcaption>Ադմինը՝ նույն ֆունկցիաներով, Gate-երով</figcaption>
+    </figure>
+    </div>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Առաջադրանք 2-ում ձեռքով</th><th>Laravel-ում</th><th>Դաս</th></tr>
+      <tr><td><code>routes.php</code> + <code>Router</code></td><td><code>routes/web.php</code>, անուններով ուղիներ, <code>Route::resource</code></td><td>18, 19</td></tr>
+      <tr><td><code>views/*.php</code> + <code>e()</code></td><td>Blade, <code>{{ }}</code>, <code>&lt;x-product-card&gt;</code></td><td>19</td></tr>
+      <tr><td><code>bootstrap.php</code>-ի <code>new ...Controller(...)</code></td><td>autowiring կոնստրուկտորով</td><td>19</td></tr>
+      <tr><td><code>sql/schema.sql</code>, <code>seed.sql</code></td><td>միգրացիաներ, <code>DatabaseSeeder</code>, factory</td><td>20</td></tr>
+      <tr><td><code>ProductRepository</code></td><td>Eloquent՝ <code>scopeActive()</code>, <code>scopeFilter()</code>, կապեր</td><td>20</td></tr>
+      <tr><td><code>archive()</code></td><td><code>SoftDeletes</code>, «Ջնջվածներ» և <code>restore()</code></td><td>20</td></tr>
+      <tr><td><code>Validator::product()</code></td><td><code>ProductRequest</code></td><td>21</td></tr>
+      <tr><td><code>Auth</code>, <code>LoginThrottle</code>, <code>RegisterController</code></td><td>Fortify</td><td>21</td></tr>
+      <tr><td><code>isAdmin()</code> կոնտրոլերում</td><td><code>Gate::authorize('delete-products')</code></td><td>21</td></tr>
+    </table>
+    </div>
+    <div class="note">
+      <span class="tag">Ինչու օրինակում vendor չկա</span>
+      <p><code>example-3-laravel/</code>-ում միայն <strong>մեր</strong> ֆայլերն են՝ մոտ 70։ Laravel-ը և Fortify-ը տեղադրում է Composer-ը (Դաս 18), և դրանք պահոցում չեն լինում (<code>.gitignore</code>)։ README-ում՝ թե ինչպես պատճենել ֆայլերը նոր նախագծի վրա։</p>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Նոր նախագիծ՝ <code>technomarket-laravel</code>, Առաջադրանք 2-ի <em>կողքին</em>, ոչ նրա փոխարեն (Դաս 18)։ Առաջադրանք 2-ից պատճենում ես միայն <code>public/css</code>, <code>public/images</code> և շաբլոնների HTML-ը։</p>
+    <div class="tree">starter/task-3/
+├── products.php          ← 12 ապրանքի զանգվածը DatabaseSeeder-ի համար
+├── lang-hy-sample.php    ← validation.php-ի մի քանի տող՝ ձևաչափի համար
+└── README-template.md    ← PHP Դաս 22-ի կաղապարը՝ ՏեխնոՄարկետի համար</div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Շաբաթվա պլան</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դաս</th><th>Ինչ ես անում</th><th>Քայլ</th></tr>
+      <tr><td>18</td><td><code>create-project</code>, <code>.env</code>, կատալոգ և ապրանքի էջ <code>DB::table</code>-ով, սպիտակ ցուցակ</td><td>1</td></tr>
+      <tr><td>19</td><td>Layout, կոմպոնենտներ, View composer, <code>Cart</code> ծառայություն, ադմինի resource controller</td><td>2</td></tr>
+      <tr><td>20</td><td>Միգրացիաներ, մոդելներ, seeder, <code>with()</code>, route model binding, soft delete, <code>ProductResource</code></td><td>3</td></tr>
+      <tr><td>21</td><td>Form Request-ներ, հայերեն սխալներ, Fortify, Gate-եր</td><td>4</td></tr>
+      <tr><td>22</td><td>Deploy, smoke test, README, demo հաշիվ, GitHub և LinkedIn</td><td>5</td></tr>
+      <tr><td>23–24</td><td>CV-ում՝ նախագծի bullet-ներ, պաշտպանություն և փորձնական հարցազրույց</td><td>6</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Նոր նախագիծ և առաջին էջերը · Դաս 18</h3>
+    <ul class="goals">
+      <li><code>composer create-project laravel/laravel technomarket-laravel</code>, <code>.env</code>-ում՝ MySQL, <code>APP_LOCALE=hy</code></li>
+      <li>Առաջին երկու էջը՝ <code>DB::table('products')</code>-ով, Առաջադրանք 2-ի բազայի վրա։ Դաս 20-ում այն կփոխարինվի Eloquent-ով</li>
+      <li>Դասավորումը՝ <strong>նույն սպիտակ ցուցակով</strong>։ Laravel-ը քեզ չի ազատում դրանից (Դաս 18-ի տնային)</li>
+      <li><code>php artisan route:list</code>՝ համեմատիր Առաջադրանք 2-ի <code>routes.php</code>-ի հետ</li>
+    </ul>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>routes/web.php — հանրային մաս</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ---------- Հանրային ----------</span>
+<span class="t">Route</span>::<span class="f">get</span>(<span class="s">'/'</span>, [<span class="t">ProductController</span>::<span class="k">class</span>, <span class="s">'home'</span>])-&gt;<span class="f">name</span>(<span class="s">'home'</span>);
+<span class="t">Route</span>::<span class="f">get</span>(<span class="s">'/catalog'</span>, [<span class="t">ProductController</span>::<span class="k">class</span>, <span class="s">'index'</span>])-&gt;<span class="f">name</span>(<span class="s">'catalog'</span>);
+<span class="t">Route</span>::<span class="f">get</span>(<span class="s">'/category/{category:slug}'</span>, [<span class="t">ProductController</span>::<span class="k">class</span>, <span class="s">'category'</span>])-&gt;<span class="f">name</span>(<span class="s">'category'</span>);
+<span class="t">Route</span>::<span class="f">get</span>(<span class="s">'/product/{product:slug}'</span>, [<span class="t">ProductController</span>::<span class="k">class</span>, <span class="s">'show'</span>])-&gt;<span class="f">name</span>(<span class="s">'product.show'</span>);     <span class="c">// Դաս 20</span>
+
+<span class="t">Route</span>::<span class="f">get</span>(<span class="s">'/contact'</span>, [<span class="t">ContactController</span>::<span class="k">class</span>, <span class="s">'form'</span>])-&gt;<span class="f">name</span>(<span class="s">'contact'</span>);
+<span class="t">Route</span>::<span class="f">post</span>(<span class="s">'/contact'</span>, [<span class="t">ContactController</span>::<span class="k">class</span>, <span class="s">'submit'</span>])-&gt;<span class="f">name</span>(<span class="s">'contact.submit'</span>);
+<span class="t">Route</span>::<span class="f">post</span>(<span class="s">'/theme'</span>, [<span class="t">ContactController</span>::<span class="k">class</span>, <span class="s">'theme'</span>])-&gt;<span class="f">name</span>(<span class="s">'theme'</span>);
+
+<span class="c">// ---------- Զամբյուղ</span></code></pre>
+    </div>
+
+    <h3>Քայլ 2 · Blade և կոնտրոլերներ · Դաս 19</h3>
+    <ul class="goals">
+      <li><code>layouts/app.blade.php</code>, <code>partials/header</code>, <code>partials/footer</code>՝ Առաջադրանք 2-ի layout-ից։ <code>&lt;?= e($x) ?&gt;</code> → <code>{{ $x }}</code></li>
+      <li>Կոմպոնենտներ՝ <code>&lt;x-product-card&gt;</code> (slot-ով կոճակի համար), <code>&lt;x-alert&gt;</code>, <code>&lt;x-field&gt;</code></li>
+      <li><code>App\Services\Cart</code>՝ <code>session()</code>-ով, առանց <code>&amp;$storage</code>-ի։ Header-ի թիվը՝ <code>View::composer</code>-ով, ոչ <code>View::share</code>-ով (Դաս 19-ի փորձ 2)</li>
+      <li><code>CartController::store()</code>՝ մեկ մեթոդ երկու ձևաչափի համար․ <code>expectsJson()</code> → JSON, այլապես՝ <code>back()</code></li>
+      <li>Ադմին՝ <code>make:controller Admin/ProductController --resource</code>, ֆորման՝ մեկ շաբլոն ստեղծման և խմբագրման համար (<code>@method('PUT')</code>)</li>
+    </ul>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>resources/views/components/product-card.blade.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">@props</span>([<span class="s">'product'</span>])
+
+<span class="p">&lt;</span><span class="t">article</span> <span class="k">{{</span> <span class="n">$attributes</span>-&gt;<span class="k">class</span>([<span class="s">'card'</span>, <span class="s">'is-out'</span> =&gt; ! <span class="n">$product</span>-&gt;<span class="f">inStock</span>()]) <span class="k">}}</span><span class="p">&gt;</span>
+    <span class="k">@if</span> ($product-&gt;hasDiscount())
+        <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"card__badge"</span><span class="p">&gt;</span>-<span class="k">{{</span> <span class="n">$product</span>-&gt;discount <span class="k">}}</span>%<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+    <span class="k">@elseif</span> ($product-&gt;isNew())
+        <span class="p">&lt;</span><span class="t">span</span> <span class="f">class</span>=<span class="s">"card__badge card__badge--new"</span><span class="p">&gt;</span>Նոր<span class="p">&lt;/</span><span class="t">span</span><span class="p">&gt;</span>
+    <span class="k">@endif</span>
+
+    <span class="p">&lt;</span><span class="t">picture</span> <span class="f">class</span>=<span class="s">"card__media ratio-3-2"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">img</span> <span class="f">class</span>=<span class="s">"img-cover"</span> <span class="f">src</span>=<span class="s">"<span class="k">{{</span> <span class="n">$product</span>-&gt;<span class="f">imageUrl</span>() <span class="k">}}</span>"</span> <span class="f">alt</span>=<span class="s">"<span class="k">{{</span> <span class="n">$product</span>-&gt;name <span class="k">}}</span>"</span> <span class="f">width</span>=<span class="s">"600"</span> <span class="f">height</span>=<span class="s">"400"</span> <span class="f">loading</span>=<span class="s">"lazy"</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">picture</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__body"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">h3</span> <span class="f">class</span>=<span class="s">"card__title"</span><span class="p">&gt;</span><span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"<span class="k">{{</span> <span class="f">route</span>(<span class="s">'product.show'</span>, <span class="n">$product</span>) <span class="k">}}</span>"</span><span class="p">&gt;</span><span class="k">{{</span> <span class="n">$product</span>-&gt;name <span class="k">}}</span><span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__meta"</span><span class="p">&gt;</span><span class="k">{{</span> <span class="n">$product</span>-&gt;specs <span class="k">}}</span><span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+        <span class="k">@if</span> ($product-&gt;isDigital())
+            <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__note"</span><span class="p">&gt;</span>Ակնթարթային առաքում էլ. փոստով<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+        <span class="k">@elseif</span> ($product-&gt;isLowStock())
+            <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__warning"</span><span class="p">&gt;</span>Մնացել է <span class="k">{{</span> <span class="n">$product</span>-&gt;stock <span class="k">}}</span> հատ<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+        <span class="k">@endif</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"card__footer"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"card__price"</span><span class="p">&gt;</span>
+                <span class="k">{{</span> <span class="n">$product</span>-&gt;<span class="f">formattedPrice</span>() <span class="k">}}</span>
+                <span class="k">@if</span> ($product-&gt;hasDiscount())<span class="p">&lt;</span><span class="t">del</span><span class="p">&gt;</span><span class="k">{{</span> <span class="n">$product</span>-&gt;<span class="f">formattedOldPrice</span>() <span class="k">}}</span><span class="p">&lt;/</span><span class="t">del</span><span class="p">&gt;</span><span class="k">@endif</span>
+            <span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+            <span class="k">{{</span> <span class="n">$slot</span> <span class="k">}}</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">article</span><span class="p">&gt;</span></code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Providers/AppServiceProvider.php — View composer</div><button class="copy">Պատճենել</button></div>
+<pre><code>        <span class="t">View</span>::<span class="f">composer</span>(<span class="s">'partials.header'</span>, <span class="k">function</span> (\<span class="t">Illuminate</span>\<span class="t">View</span>\<span class="t">View</span> <span class="n">$view</span>) {
+            <span class="n">$view</span>-&gt;<span class="f">with</span>([
+                <span class="s">'cartCount'</span>     =&gt; <span class="f">app</span>(<span class="t">Cart</span>::<span class="k">class</span>)-&gt;<span class="f">count</span>(),
+                <span class="s">'navCategories'</span> =&gt; <span class="t">Category</span>::<span class="f">orderBy</span>(<span class="s">'id'</span>)-&gt;<span class="f">get</span>([<span class="s">'id'</span>, <span class="s">'name'</span>, <span class="s">'slug'</span>]),
+            ]);
+        });</code></pre>
+    </div>
+
+    <h3>Քայլ 3 · Eloquent · Դաս 20</h3>
+    <ul class="goals">
+      <li>Նոր բազա <code>technomarket_laravel</code>, միգրացիաներ՝ <code>categories</code>, <code>products</code>, <code>orders</code>, <code>order_items</code>, <code>users.role</code></li>
+      <li>Մոդելներ՝ կապերով, <code>$fillable</code>-ով (<code>role</code>-ը՝ ոչ), <code>casts()</code>-ով, Առաջադրանք 2-ի մեթոդներով (<code>finalPrice()</code>, <code>inStock()</code>...)</li>
+      <li><code>Model::shouldBeStrict()</code>։ Ամեն ցուցակ՝ <code>with('category')</code>-ով, պատվերի էջը՝ <code>load('items.product')</code></li>
+      <li>Առաջադրանք 1-ի <code>buildWhere()</code>-ը՝ <code>scopeFilter()</code>, <code>when()</code>-ով</li>
+      <li>Պատվերը՝ <code>DB::transaction()</code>, պահեստը՝ <code>where('stock', '&gt;=', $qty)-&gt;decrement()</code></li>
+      <li>Soft delete, «Ջնջվածներ» էջ <code>onlyTrashed()</code>-ով և <code>restore()</code> (Դաս 20-ի տնային), <code>ProductResource</code>՝ <code>/api/products</code>-ի համար</li>
+    </ul>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Models/Product.php — scopeFilter()</div><button class="copy">Պատճենել</button></div>
+<pre><code>    <span class="c">/** Առաջադրանք 1-ի buildWhere()-ը՝ Eloquent-ով։ Ամեն պայման՝ միայն եթե ֆիլտրը կա */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="f">scopeFilter</span>(<span class="t">Builder</span> <span class="n">$query</span>, <span class="k">array</span> <span class="n">$filters</span>): <span class="k">void</span>
+    {
+        <span class="n">$query</span>
+            -&gt;<span class="f">when</span>(<span class="n">$filters</span>[<span class="s">'category_id'</span>] ?? <span class="k">null</span>, <span class="k">fn</span> (<span class="t">Builder</span> <span class="n">$q</span>, <span class="k">int</span> <span class="n">$id</span>) =&gt; <span class="n">$q</span>-&gt;<span class="f">where</span>(<span class="s">'category_id'</span>, <span class="n">$id</span>))
+            -&gt;<span class="f">when</span>(<span class="n">$filters</span>[<span class="s">'q'</span>] ?? <span class="k">null</span>, <span class="k">fn</span> (<span class="t">Builder</span> <span class="n">$q</span>, <span class="k">string</span> <span class="n">$text</span>) =&gt; <span class="n">$q</span>-&gt;<span class="f">where</span>(<span class="k">fn</span> (<span class="t">Builder</span> <span class="n">$w</span>) =&gt; <span class="n">$w</span>
+                -&gt;<span class="f">where</span>(<span class="s">'name'</span>, <span class="s">'like'</span>, <span class="s">'%'</span> . <span class="f">addcslashes</span>(<span class="n">$text</span>, <span class="s">'%_\\'</span>) . <span class="s">'%'</span>)
+                -&gt;<span class="f">orWhere</span>(<span class="s">'specs'</span>, <span class="s">'like'</span>, <span class="s">'%'</span> . <span class="f">addcslashes</span>(<span class="n">$text</span>, <span class="s">'%_\\'</span>) . <span class="s">'%'</span>)))
+            -&gt;<span class="f">when</span>(<span class="k">isset</span>(<span class="n">$filters</span>[<span class="s">'min'</span>]), <span class="k">fn</span> (<span class="t">Builder</span> <span class="n">$q</span>) =&gt; <span class="n">$q</span>-&gt;<span class="f">whereRaw</span>(<span class="s">'ROUND(price * (100 - discount) / 100) &gt;= ?'</span>, [<span class="n">$filters</span>[<span class="s">'min'</span>]]))
+            -&gt;<span class="f">when</span>(<span class="k">isset</span>(<span class="n">$filters</span>[<span class="s">'max'</span>]), <span class="k">fn</span> (<span class="t">Builder</span> <span class="n">$q</span>) =&gt; <span class="n">$q</span>-&gt;<span class="f">whereRaw</span>(<span class="s">'ROUND(price * (100 - discount) / 100) &lt;= ?'</span>, [<span class="n">$filters</span>[<span class="s">'max'</span>]]))
+            -&gt;<span class="f">when</span>((<span class="n">$filters</span>[<span class="s">'stock'</span>] ?? <span class="s">'all'</span>) === <span class="s">'in'</span>, <span class="k">fn</span> (<span class="t">Builder</span> <span class="n">$q</span>) =&gt; <span class="n">$q</span>-&gt;<span class="f">where</span>(<span class="k">fn</span> (<span class="t">Builder</span> <span class="n">$w</span>) =&gt; <span class="n">$w</span>-&gt;<span class="f">where</span>(<span class="s">'stock'</span>, <span class="s">'&gt;'</span>, <span class="n">0</span>)-&gt;<span class="f">orWhere</span>(<span class="s">'type'</span>, <span class="s">'digital'</span>)))
+            -&gt;<span class="f">when</span>((<span class="n">$filters</span>[<span class="s">'stock'</span>] ?? <span class="s">'all'</span>) === <span class="s">'sale'</span>, <span class="k">fn</span> (<span class="t">Builder</span> <span class="n">$q</span>) =&gt; <span class="n">$q</span>-&gt;<span class="f">where</span>(<span class="s">'discount'</span>, <span class="s">'&gt;'</span>, <span class="n">0</span>));
+    }</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Http/Controllers/CheckoutController.php — տրանզակցիա</div><button class="copy">Պատճենել</button></div>
+<pre><code>        <span class="n">$order</span> = <span class="t">DB</span>::<span class="f">transaction</span>(<span class="k">function</span> () <span class="k">use</span> (<span class="n">$data</span>, <span class="n">$items</span>, <span class="n">$summary</span>, <span class="n">$request</span>) {
+            <span class="n">$order</span> = <span class="k">new</span> <span class="f">Order</span>(<span class="f">collect</span>(<span class="n">$data</span>)-&gt;<span class="f">except</span>(<span class="s">'agree'</span>)-&gt;<span class="f">all</span>() + [
+                <span class="s">'shipping'</span> =&gt; <span class="n">$summary</span>[<span class="s">'shipping'</span>],
+                <span class="s">'total'</span>    =&gt; <span class="n">$summary</span>[<span class="s">'total'</span>],
+            ]);
+            <span class="n">$order</span>-&gt;user_id = <span class="n">$request</span>-&gt;<span class="f">user</span>()?-&gt;id;      <span class="c">// ⭐ ոչ ֆորմայից</span>
+            <span class="n">$order</span>-&gt;<span class="f">save</span>();
+
+            <span class="k">foreach</span> (<span class="n">$items</span> <span class="k">as</span> <span class="n">$item</span>) {
+                <span class="n">$product</span> = <span class="n">$item</span>[<span class="s">'product'</span>];
+
+                <span class="n">$order</span>-&gt;<span class="f">items</span>()-&gt;<span class="f">create</span>([
+                    <span class="s">'product_id'</span> =&gt; <span class="n">$product</span>-&gt;id,
+                    <span class="s">'quantity'</span>   =&gt; <span class="n">$item</span>[<span class="s">'qty'</span>],
+                    <span class="s">'price'</span>      =&gt; <span class="n">$product</span>-&gt;<span class="f">finalPrice</span>(),
+                ]);
+
+                <span class="k">if</span> (<span class="n">$product</span>-&gt;<span class="f">isDigital</span>()) {
+                    <span class="k">continue</span>;
+                }
+
+                <span class="c">// UPDATE ... WHERE stock &gt;= qty — վերջին ապրանքը երկու հոգու չի վաճառվի</span>
+                <span class="n">$updated</span> = <span class="t">Product</span>::<span class="f">whereKey</span>(<span class="n">$product</span>-&gt;id)-&gt;<span class="f">where</span>(<span class="s">'stock'</span>, <span class="s">'&gt;='</span>, <span class="n">$item</span>[<span class="s">'qty'</span>])-&gt;<span class="f">decrement</span>(<span class="s">'stock'</span>, <span class="n">$item</span>[<span class="s">'qty'</span>]);
+
+                <span class="k">if</span> (<span class="n">$updated</span> === <span class="n">0</span>) {
+                    <span class="c">// Բացառությունը → rollBack, իսկ ValidationException-ը → վերադարձ ֆորմա՝ սխալով</span>
+                    <span class="k">throw</span> <span class="t">ValidationException</span>::<span class="f">withMessages</span>([<span class="s">'cart'</span> =&gt; <span class="s">'Պահեստում բավարար չէ՝ '</span> . <span class="n">$product</span>-&gt;name]);
+                }
+            }
+
+            <span class="k">return</span> <span class="n">$order</span>;
+        });</code></pre>
+    </div>
+    <div class="warn note">
+      <span class="tag">Seeder-ում role-ը՝ ուղիղ</span>
+      <p><code>User::create([..., 'role' =&gt; 'admin'])</code>-ը խիստ ռեժիմում կգցի սխալ, առանց դրա՝ կանտեսի <code>role</code>-ը (Դաս 20-ի փորձ 3)։ Ճիշտ ձևը՝ <code>$user-&gt;role = 'admin'; $user-&gt;save();</code>։ Նույնը <code>Order</code>-ի <code>user_id</code>-ի և <code>status</code>-ի համար․ դրանք դնում է կոդը, ոչ ֆորման։</p>
+    </div>
+
+    <h3>Քայլ 4 · Վալիդացիա և մուտք · Դաս 21</h3>
+    <ul class="goals">
+      <li><code>ProductRequest</code>, <code>CheckoutRequest</code>, <code>ContactRequest</code>՝ <code>attributes()</code>-ով հայերեն անունների համար</li>
+      <li><code>lang/hy/validation.php</code> և <code>auth.php</code>։ Թարգմանիր AI-ով և ստուգիր, որ տեղապահները (<code>:attribute</code>, <code>:max</code>) անփոփոխ են</li>
+      <li>Fortify՝ <code>loginView</code>, <code>registerView</code>, <code>CreateNewUser</code>՝ հայերեն անուններով, առանց <code>role</code>-ի</li>
+      <li>Gate-եր՝ <code>manage-products</code> (ադմին, մենեջեր) և <code>delete-products</code> (միայն ադմին)։ Ադմինի ուղիները՝ <code>['auth', 'can:manage-products']</code>, <code>destroy()</code>-ում՝ <code>Gate::authorize</code></li>
+      <li>Նկար՝ <code>'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'</code> և <code>-&gt;store('products', 'public')</code>, <code>php artisan storage:link</code></li>
+    </ul>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Providers/FortifyServiceProvider.php — մուտքից հետո</div><button class="copy">Պատճենել</button></div>
+<pre><code>        <span class="c">// ⭐ 1. Մուտքից հետո՝ աշխատակիցը ադմին, գնորդը գլխավոր էջ (Դաս 16-ի AuthController-ի նույն կանոնը)</span>
+        <span class="c">//       config('fortify.home')-ը բոլորի համար նույնն է, ուստի գնորդը կստանար 403</span>
+        <span class="n">$this</span>-&gt;app-&gt;<span class="f">instance</span>(<span class="t">LoginResponse</span>::<span class="k">class</span>, <span class="k">new</span> <span class="k">class</span> <span class="k">implements</span> <span class="t">LoginResponse</span> {
+            <span class="k">public</span> <span class="k">function</span> <span class="f">toResponse</span>(<span class="n">$request</span>)
+            {
+                <span class="n">$home</span> = <span class="n">$request</span>-&gt;<span class="f">user</span>()-&gt;<span class="f">isStaff</span>() ? <span class="f">route</span>(<span class="s">'admin.products.index'</span>) : <span class="f">route</span>(<span class="s">'home'</span>);
+
+                <span class="k">return</span> <span class="f">redirect</span>()-&gt;<span class="f">intended</span>(<span class="n">$home</span>);
+            }
+        });</code></pre>
+    </div>
+    <div class="warn note">
+      <span class="tag">Ուշադրություն՝ fortify.home</span>
+      <p>Դաս 21-ում <code>'home' =&gt; '/admin/products'</code>։ Ադմին վահանակի համար դա ճիշտ է, բայց գնորդը նույնպես կուղարկվի այնտեղ և կստանա 403։ Առաջադրանք 2-ում <code>AuthController</code>-ը որոշում էր ըստ դերի․ նույն կանոնը Laravel-ում՝ սեփական <code>LoginResponse</code>-ով։ <code>config/fortify.php</code>-ում թող <code>'home' =&gt; '/'</code>։</p>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Http/Controllers/Admin/ProductController.php — destroy()</div><button class="copy">Պատճենել</button></div>
+<pre><code>    <span class="k">public</span> <span class="k">function</span> <span class="f">destroy</span>(<span class="t">Product</span> <span class="n">$product</span>)
+    {
+        <span class="c">// ⭐ Ուղու can:manage-products-ը թույլ է տալիս մենեջերին։ Ջնջելը՝ միայն ադմինին</span>
+        <span class="t">Gate</span>::<span class="f">authorize</span>(<span class="s">'delete-products'</span>);
+
+        <span class="n">$product</span>-&gt;<span class="f">delete</span>();                                          <span class="c">// փափուկ — Դաս 20</span>
+
+        <span class="k">return</span> <span class="f">redirect</span>()-&gt;<span class="f">route</span>(<span class="s">'admin.products.index'</span>)-&gt;<span class="f">with</span>(<span class="s">'success'</span>, <span class="s">'Ապրանքը հեռացվեց՝ '</span> . <span class="n">$product</span>-&gt;name);
+    }</code></pre>
+    </div>
+
+    <h3>Քայլ 5 · Հրապարակում · Դաս 22</h3>
+    <ul class="goals">
+      <li><code>git log --all --oneline -- .env</code>՝ դատարկ։ <code>.env.example</code>-ում՝ միայն բանալիներ, ոչ գաղտնիքներ</li>
+      <li>Hosting (A, B կամ C՝ Դաս 22, բաժին 05), document root՝ <code>public/</code>, HTTPS</li>
+      <li>Production <code>.env</code>՝ <code>APP_ENV=production</code>, <code>APP_DEBUG=false</code>, <code>SESSION_SECURE_COOKIE=true</code>, առանձին DB օգտագործող</li>
+      <li><code>DemoSeeder</code>՝ <code>manager</code> դերով հաշիվ, որ չի կարող ջնջել (README-ում՝ մուտքի տվյալները)</li>
+      <li>Smoke test-ի 10 կետը (Դաս 22, բաժին 07), ապա README՝ կաղապարով, GIF-ով, «Security decisions» և «How I used AI» բաժիններով</li>
+    </ul>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>սերվերում — Դաս 22</div><button class="copy">Պատճենել</button></div>
+<pre><code>composer install --no-dev --optimize-autoloader
+php artisan key:generate
+php artisan migrate --force
+php artisan db:seed --force               # կատեգորիաներ և ապրանքներ (users՝ միայն local-ում)
+php artisan db:seed --class=DemoSeeder --force
+php artisan storage:link
+php artisan optimize
+
+curl -I https://technomarket.example.am/.env               # 404
+curl -I https://technomarket.example.am/composer.json      # 404
+curl -I https://technomarket.example.am/storage/logs/laravel.log   # 404</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>database/seeders/DemoSeeder.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="t">DemoSeeder</span> <span class="k">extends</span> <span class="t">Seeder</span>
+{
+    <span class="k">public</span> <span class="k">function</span> <span class="f">run</span>(): <span class="k">void</span>
+    {
+        <span class="n">$password</span> = <span class="f">env</span>(<span class="s">'DEMO_PASSWORD'</span>);
+
+        <span class="k">if</span> (! <span class="n">$password</span>) {
+            <span class="n">$this</span>-&gt;command-&gt;<span class="f">error</span>(<span class="s">'Լրացրու DEMO_PASSWORD-ը .env-ում'</span>);
+            <span class="k">return</span>;
+        }
+
+        <span class="n">$user</span> = <span class="t">User</span>::<span class="f">firstOrNew</span>([<span class="s">'email'</span> =&gt; <span class="s">'demo@technomarket.example.am'</span>]);
+        <span class="n">$user</span>-&gt;name = <span class="s">'Demo'</span>;
+        <span class="n">$user</span>-&gt;password = <span class="n">$password</span>;
+        <span class="n">$user</span>-&gt;role = <span class="s">'manager'</span>;               <span class="c">// ոչ admin ⭐</span>
+        <span class="n">$user</span>-&gt;<span class="f">save</span>();
+
+        <span class="n">$this</span>-&gt;command-&gt;<span class="f">info</span>(<span class="s">'Demo հաշիվը պատրաստ է՝ manager դերով'</span>);
+    }
+}</code></pre>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Հաճախ հանդիպող սխալներ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>LazyLoadingViolationException</code></td><td>Ցուցակում օգտագործում ես կապ առանց <code>with()</code>-ի։ Սա խիստ ռեժիմի նպատակն է (Դաս 20)</td></tr>
+      <tr><td><code>MassAssignmentException</code> կամ «Add [role] to fillable»</td><td>Մի՛ ավելացրու <code>role</code>-ը <code>$fillable</code>-ում։ Վերագրիր ուղիղ</td></tr>
+      <tr><td>Header-ի թիվը միշտ 0 է</td><td><code>View::share</code>-ը հաշվում է <code>boot()</code>-ում, նախքան սեսիան։ <code>View::composer</code> (Դաս 19)</td></tr>
+      <tr><td><code>/login</code>-ը 404 է</td><td>Fortify-ի provider-ը գրանցված չէ <code>bootstrap/providers.php</code>-ում, կամ <code>Features</code>-ում բացակայում է</td></tr>
+      <tr><td>Գրանցումից հետո՝ 403</td><td><code>redirects.register</code> → <code>/</code>, մուտքից հետո՝ <code>LoginResponse</code> (Քայլ 4)</td></tr>
+      <tr><td>Վերբեռնված նկարը 404 է</td><td><code>php artisan storage:link</code>, և <code>imageUrl()</code>-ը պետք է տարբերի <code>storage/</code>-ը <code>images/</code>-ից</td></tr>
+      <tr><td>Սխալները անգլերեն են</td><td><code>APP_LOCALE=hy</code> և <code>lang/hy/validation.php</code>, իսկ <code>php artisan config:clear</code>, եթե config-ը քեշված է</td></tr>
+      <tr><td>fetch-ը ստանում է HTML redirect, ոչ JSON</td><td>Պակասում է <code>Accept: application/json</code> վերնագիրը, ուստի <code>expectsJson()</code>-ը <code>false</code> է</td></tr>
+      <tr><td>Production-ում՝ stack trace</td><td><code>APP_DEBUG=true</code>, կամ <code>.env</code>-ը փոխելուց հետո չես կանչել <code>php artisan optimize</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Ընդունման ստուգաթերթ</h2>
+    <h3>Դաս 18–21-ի պարտադիր փորձարկումները՝ քո նախագծում</h3>
+    <ul class="goals">
+      <li><code>/product/գոյություն-չունի</code>՝ 404, <code>/?sort=price;DROP TABLE products</code>՝ սովորական ցուցակ</li>
+      <li>Ապրանք <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> անունով՝ տեքստ, ոչ alert։ <code>{!! !!}</code>-ը նախագծում՝ միայն <code>nl2br(e(...))</code>-ի հետ</li>
+      <li>Հանիր <code>with('category')</code>-ը ադմինի ցուցակից․ <code>LazyLoadingViolationException</code>։ Վերադարձրու</li>
+      <li>Անջատված ապրանքի հանրային հասցեն՝ 404, ջնջվածը՝ «Ջնջվածներ»-ում, վերականգնվում է</li>
+      <li>Ադմինի ֆորմայում դատարկ անուն և <code>discount=150</code>՝ հայերեն սխալներ, մյուս դաշտերը մնացել են</li>
+      <li><code>category_id=99999</code> curl-ով՝ <code>Rule::exists</code>-ը բռնում է</li>
+      <li>Ելքից հետո <code>/admin/products/1/edit</code> → մուտք → վերադարձ նույն էջ</li>
+      <li>Վեց սխալ գաղտնաբառ, ապա cookie-ների ջնջում՝ արգելափակումը մնում է (RateLimiter-ը՝ ըստ հասցեի և IP-ի)</li>
+      <li>Գրանցում DevTools-ով ավելացված <code>role=admin</code>-ով՝ <code>customer</code>, գլխավոր էջ, <code>/admin/products</code>՝ 403</li>
+      <li>Մենեջերը չի տեսնում «Ջնջել»-ը, իսկ ճիշտ token-ով DELETE-ը տալիս է 403</li>
+      <li>Անջատված JS-ով «Գնել»՝ էջը վերբեռնվում է, flash-ը երևում է, հաշվիչը աճել է</li>
+    </ul>
+
+    <h3>Հրապարակում</h3>
+    <ul class="goals">
+      <li>HTTPS, <code>APP_DEBUG=false</code>, <code>/.env</code> և <code>/composer.json</code>՝ 404</li>
+      <li>Demo հաշիվը (մենեջեր) մուտք է գործում, խմբագրում է, բայց չի կարող ջնջել</li>
+      <li>README՝ կենդանի հղում, demo հաշիվ, սքրինշոթ կամ GIF, «Security decisions», «How I used AI»</li>
+      <li>Պահոցում՝ առնվազն 15 իմաստալից commit մի քանի օրվա ընթացքում, ոչ մեկ երեկոյում</li>
+      <li>Lighthouse Accessibility՝ առնվազն 90 գլխավոր էջում և կատալոգում</li>
+    </ul>
+  </section>
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Պաշտպանություն · Դաս 22–24</h2>
+    <p>Ամեն ուսանողին՝ 10 րոպե։ Սա նաև Դաս 24-ի փորձնական հարցազրույցի նախապատրաստություն է․ նույն հարցերը կտան աշխատանքի հարցազրույցում, երբ բացես քո GitHub-ը։</p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Ինչ ցույց տալ</th><th>Րոպե</th></tr>
+      <tr><td>Ցուցադրություն՝ հրապարակված կայքում․ կատալոգ → ապրանք → զամբյուղ → պատվեր, ապա demo հաշվով ադմին</td><td>3</td></tr>
+      <tr><td>Մեկ հարցում՝ սկզբից մինչև վերջ․ <code>POST /cart/items</code>-ը՝ ուղի → middleware → կոնտրոլեր → Cart → JSON</td><td>2</td></tr>
+      <tr><td>Անվտանգության երեք որոշում և թե ինչ կլիներ առանց դրանց</td><td>2</td></tr>
+      <tr><td>Մեկ բան, որ դասընթացում չկար (Դաս 22-ի տնային․ վարկանիշ, wishlist, email...)</td><td>2</td></tr>
+      <tr><td>Հարցեր</td><td>1</td></tr>
+    </table>
+    </div>
+
+    <h3>Հնարավոր հարցեր</h3>
+    <ul class="goals">
+      <li>Ինչու՞ է դասավորման սյունակը սպիտակ ցուցակով, եթե Eloquent-ը պաշտպանում է SQL injection-ից (Դաս 10, 18)</li>
+      <li>Ինչու՞ <code>role</code>-ը <code>$fillable</code>-ում չէ։ Ինչ կլիներ, եթե լիներ (Դաս 20)</li>
+      <li>Որտեղ է ստուգվում, որ մենեջերը չի կարող ջնջել։ Ինչու՞ <code>@can</code>-ը բավական չէ (Դաս 21)</li>
+      <li>Ինչ է N+1-ը, և ինչպես ես համոզվել, որ քո ցուցակներում այն չկա (Դաս 20)</li>
+      <li>Ինչու՞ է պատվերի տողում պահվում գինը, եթե այն կա <code>products</code>-ում (Դաս 9)</li>
+      <li>Ինչ կլինի, եթե երկու գնորդ միաժամանակ գնեն վերջին ապրանքը (Դաս 11)</li>
+      <li>Ինչպես է CSRF token-ը հասնում fetch հարցմանը, և ինչու՞ GET-ը դրա կարիքը չունի (Դաս 16, 17)</li>
+      <li>Ինչու՞ է «Գնել»-ը ֆորմա, ոչ հղում, նույնիսկ JS-ով (Դաս 7, 17)</li>
+      <li>Ինչ ես փոխել Laravel-ի լռելյայն կարգավորումներից և ինչու (<code>fortify.home</code>, <code>shouldBeStrict</code>, <code>APP_LOCALE</code>)</li>
+      <li>Ինչ կանեիր այլ կերպ, եթե սկսեիր նորից</li>
+    </ul>
+
+    <h3>Գնահատում</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Չափանիշ</th><th>Միավոր</th></tr>
+      <tr><td>Ֆունկցիոնալություն․ բոլոր սցենարները աշխատում են demo-ում</td><td>20</td></tr>
+      <tr><td>Անվտանգություն․ բաժին 05-ի փորձարկումները, դերերի ստուգումը սերվերում</td><td>20</td></tr>
+      <tr><td>Բազա և Eloquent․ միգրացիաներ, կապեր, N+1-ի բացակայություն, տրանզակցիա</td><td>15</td></tr>
+      <tr><td>Կոդի կառուցվածք․ բարակ կոնտրոլերներ, Form Request-ներ, կոմպոնենտներ</td><td>15</td></tr>
+      <tr><td>HTML/CSS, հասանելիություն, JS-ը՝ progressive enhancement</td><td>10</td></tr>
+      <tr><td>Հրապարակում, README, Git</td><td>15</td></tr>
+      <tr><td>Ներկայացում և պատասխաններ</td><td>5</td></tr>
+      <tr><td><strong>Ընդամենը</strong></td><td><strong>100</strong></td></tr>
+    </table>
+    </div>
+    <div class="tip note">
+      <span class="tag">Ինչ է լինելու հետո</span>
+      <p>ՏեխնոՄարկետը սովորելու համար էր։ Դասընթացից հետո՝ <a href="../final-project.html">վերջնական նախագիծը</a>․ նույն տեխնոլոգիաները, բայց քո թեման, քո սխեման և մեկ «դժվար ֆունկցիա», որ ոչ մի ուղեցույցում չկա։ Պորտֆոլիոյում կլինեն երկուսը՝ մեկը, որտեղ սովորեցիր, մյուսը՝ որտեղ ինքնուրույն որոշեցիր։</p>
+    </div>
+    <div class="pager"><a href="task-2.html">← Առաջադրանք 2</a><a href="index.html">Նախագծի էջ</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · նախագիծ · առաջադրանք 3</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

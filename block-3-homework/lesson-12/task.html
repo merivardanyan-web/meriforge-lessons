@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 12 · Գիրքը՝ օբյեկտ — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · տնային</b> · Դաս 12</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../php-lesson-12.html">PHP Դաս 12</a> · մինի-նախագիծ</p>
+  <h1>Գիրքը՝ օբյեկտ</h1>
+  <p class="lede">Զանգվածը, որի մեջ կարելի է գրել ամեն ինչ (<code>$book['prise']</code>), դառնում է <code>Book</code> դաս՝ <code>readonly</code> դաշտերով և մեթոդներով։ Կարդալու ցուցակը՝ <code>ReadingList</code> դաս, իսկ ցուցակի ամեն տող՝ <code>ListItem</code>՝ օրական էջերի նպատակով։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Անիի կայքը</span>
+    <span>6 քայլ · 8 տնային կետ նախագծում</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–12․ <code>class</code>, <code>__construct</code> promotion-ով, <code>public</code>/<code>private</code>, <code>readonly</code>, <code>static</code> ֆաբրիկա (<code>fromRow</code>), <code>const</code> դասում, <code>self::</code>, <code>&amp;$storage</code>, named arguments։ Ժառանգում և ինտերֆեյս՝ Դաս 13։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/shelf.jpg" alt="Քարտեր Նոր պիտակով և աստղերով" width="1280" height="900" loading="lazy">
+      <figcaption>isNew(), stars(), shortTitle()</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/list.jpg" alt="Ցուցակ՝ օրական էջերի դաշտով և «Կավարտես 7 օրում»" width="1280" height="1106" loading="lazy">
+      <figcaption>ReadingList և ListItem</figcaption>
+    </figure>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>lab-oop.php</div><button class="copy">Պատճենել</button></div>
+<pre><code>== $row['titel'] — զանգված
+Արդյունք՝ NULL — Warning, և կոդը շարունակում է null-ով
+
+== $book-&gt;titel — օբյեկտ
+
+Warning:  Undefined property: Book::$titel in /ani-club/lab-oop.php on line 29
+Արդյունք՝ NULL
+
+== $book-&gt;titel = ... — նոր դաշտ օբյեկտում
+
+Deprecated:  Creation of dynamic property Book::$titel is deprecated in /ani-club/lab-oop.php on line 34
+Գրվեց, բայց PHP 8.2-ը զգուշացնում է․ PHP 9-ում կլինի Error
+
+== $book-&gt;pages = 1 — readonly
+Error: Cannot modify readonly property Book::$pages
+
+== ReadingList առանց &amp;-ի
+Առանց &amp;․ $session = []  ← ոչինչ չպահվեց
+&amp;-ով․    $session = {"5":20}</code></pre>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Շարունակիր քո նախագիծը։ Եթե բաց ես թողել նախորդ դասը, սկսիր <a href="../lesson-11/example/">Դաս 11-ի օրինակից</a>։</p>
+    <ul class="goals">
+      <li><code>starter/css/php-12.css</code> — «Նոր» պիտակ, աստղեր, նպատակի ֆորմա</li>
+    </ul>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գործարկել</th></tr>
+      <tr><td><code>php -S localhost:8000</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Book</h3>
+    <ul class="goals">
+      <li><code>classes/Book.php</code>՝ 13 <code>readonly</code> դաշտ կոնստրուկտորում</li>
+      <li><code>Book::fromRow($row)</code>՝ բոլոր <code>(int)</code>-երը մեկ տեղում</li>
+      <li>Մեթոդներ՝ <code>status()</code>, <code>statusLabel()</code>, <code>progress()</code>, <code>pagesLeft()</code>, <code>yearLabel()</code></li>
+    </ul>
+
+    <h3>Քայլ 2 · Երեք նոր մեթոդ</h3>
+    <ul class="goals">
+      <li><code>isNew()</code>՝ վերջին 30 օրում, <code>shortTitle(40)</code>, <code>stars()</code> (տնային 2)</li>
+      <li>Քարտում՝ «Նոր» պիտակ և աստղեր</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>classes/Book.php — isNew() և shortTitle()</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/** Ավելացվել է վերջին 30 օրում */</span>
+<span class="k">public</span> <span class="k">function</span> <span class="f">isNew</span>(): <span class="k">bool</span>
+{
+    <span class="c">// strtotime()՝ «2026-10-14 10:00:00» → վայրկյաններ 1970-ից, ինչպես time()-ը</span>
+    <span class="k">return</span> <span class="f">strtotime</span>(<span class="n">$this</span>-&gt;createdAt) &gt; <span class="f">time</span>() - <span class="n">30</span> * <span class="n">24</span> * <span class="n">60</span> * <span class="n">60</span>;
+}
+
+<span class="c">/** Երկար վերնագիրը՝ 40 նիշից կտրած, քարտի համար */</span>
+<span class="k">public</span> <span class="k">function</span> <span class="f">shortTitle</span>(<span class="k">int</span> <span class="n">$max</span> = <span class="n">40</span>): <span class="k">string</span>
+{
+    <span class="c">// mb_substr()՝ substr()-ի հայերեն-անվտանգ տարբերակը, ինչպես mb_strlen()-ը (Դաս 02)</span>
+    <span class="k">return</span> <span class="f">mb_strlen</span>(<span class="n">$this</span>-&gt;title) &gt; <span class="n">$max</span> ? <span class="f">mb_substr</span>(<span class="n">$this</span>-&gt;title, <span class="n">0</span>, <span class="n">$max</span> - <span class="n">1</span>) . <span class="s">'…'</span> : <span class="n">$this</span>-&gt;title;
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 3 · Genre</h3>
+    <ul class="goals">
+      <li><code>Genre::fromRow()</code>, <code>getGenres()</code>-ը վերադարձնում է <code>Genre[]</code> (տնային 3)</li>
+    </ul>
+
+    <h3>Քայլ 4 · ReadingList</h3>
+    <ul class="goals">
+      <li><code>new ReadingList($_SESSION['list'])</code>՝ <code>private array &amp;$storage</code></li>
+      <li>Պահում է <code>[id =&gt; օրական էջ]</code></li>
+      <li><code>setPerDay()</code>՝ 1–200, միայն ցուցակում եղած գրքի համար (տնային 7)</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>classes/ReadingList.php — setPerDay()</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/** Տնային 7 (Cart::setQty-ի նման)․ օրական 1–200 էջ, միայն ցուցակում եղած գրքի համար */</span>
+<span class="k">public</span> <span class="k">function</span> <span class="f">setPerDay</span>(<span class="k">int</span> <span class="n">$id</span>, <span class="k">int</span> <span class="n">$pages</span>): <span class="k">bool</span>
+{
+    <span class="k">if</span> (!<span class="n">$this</span>-&gt;<span class="f">has</span>(<span class="n">$id</span>) || <span class="n">$pages</span> &lt; <span class="n">1</span> || <span class="n">$pages</span> &gt; <span class="n">200</span>) {
+        <span class="k">return</span> <span class="k">false</span>;
+    }
+
+    <span class="n">$this</span>-&gt;storage[<span class="n">$id</span>] = <span class="n">$pages</span>;
+
+    <span class="k">return</span> <span class="k">true</span>;
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 5 · ListItem</h3>
+    <ul class="goals">
+      <li><code>new ListItem($book, $perDay)</code>, <code>daysLeft()</code>՝ կլորացված վերև (տնային 9)</li>
+      <li>Ցուցակի էջում՝ «Կավարտես 7 օրում»</li>
+    </ul>
+
+    <h3>Քայլ 6 · Փորձնական ֆայլ</h3>
+    <ul class="goals">
+      <li><code>lab-oop.php</code>՝ <code>$row['titel']</code> և <code>$book-&gt;titel</code> (տնային 4), <code>readonly</code> (տնային 5), <code>&amp;</code>-ի բացակայությունը (տնային 6)</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Շաբլոններում՝ <code>$book-&gt;title</code>, ոչ <code>$book['title']</code></li>
+      <li><code>$book-&gt;pages = 1</code>-ը տալիս է <code>Error</code></li>
+      <li>Օրական 500 էջը մերժվում է</li>
+      <li>Header-ի հաշվիչը՝ <code>readingList()-&gt;count()</code></li>
+      <li><code>list-functions.php</code>-ը ջնջված է</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Ցուցակը չի պահվում</td><td>Կոնստրուկտորում <code>&amp;</code> չկա․ դասը փոխում է պատճենը</td></tr>
+      <tr><td><code>Cannot modify readonly property</code></td><td>Ճիշտ է․ readonly-ն փոխվում է միայն կոնստրուկտորում</td></tr>
+      <tr><td><code>Cannot use object of type Book as array</code></td><td>Մի շաբլոն դեռ գրում է <code>$book['...']</code></td></tr>
+      <tr><td><code>daysLeft()</code>-ը 2 է, պետք է 3</td><td><code>(int) ($left / $perDay)</code>-ը կլորացնում է ներքև․ <code>($left + $perDay - 1) / $perDay</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի տնային աշխատանքը</h2>
+    <p>Սրանք <a href="../../php-lesson-12.html#s8">Դաս 12-ի</a> տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում՝ Անիի ակումբում։ Մնացածը կատարիր ՏեխնոՄարկետում, ինչպես գրված է դասում։</p>
+    <ol class="hw">
+      <li>Կատարիր դասարանականի 10 քայլը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>Product</code>-ին երեք նոր մեթոդ՝ <code>discountLabel()</code>, <code>isNew()</code> (30 օրից պակաս), <code>shortName()</code> (40 նիշից կտրած)։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ստեղծիր <code>Category</code> դասը <code>fromRow()</code>-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր տարբերությունը՝ <code>$p['prise']</code> և <code>$p-&gt;prise</code>։ Ի՞նչ է տալիս ամեն մեկը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ջնջիր <code>readonly</code>-ն և ցուցադրիր, ինչու է այն օգտակար՝ փոխելով գինը շաբլոնում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր, ինչ կլինի, եթե <code>Cart</code>-ի կոնստրուկտորից հանես <code>&amp;</code>-ը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>Cart::setQty()</code> մեթոդ վալիդացիայով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Համեմատիր հին <code>cart-functions.php</code>-ը և նոր <code>Cart</code> դասը։ Քանի՞ տող, քանի՞ գլոբալ ֆունկցիա։</li>
+      <li>Գրիր <code>CartItem</code> դաս, որը պահում է <code>Product</code>-ը և քանակը, և ունի <code>sum()</code> մեթոդ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Խնդրիր AI-ին վերանայել <code>Product</code>-ը։ Ի՞նչ մեթոդ առաջարկեց, որ չէիր մտածել։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/">օրինակը</a>։ Օրինակում <code>lab-…</code> ֆայլերը փորձնական են․ դրանք հաջորդ դասի օրինակում այլևս չկան։ Գործարկելուց առաջ ստեղծիր բազան <code>example/sql/</code>-ի ֆայլերով և <code>config.php</code>-ը։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-11/task.html">← Դաս 11</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-13/task.html">Դաս 13 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · տնային աշխատանք · Դաս 12</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

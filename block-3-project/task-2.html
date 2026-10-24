@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Առաջադրանք 2 — սեփական MVC, մուտք, API</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lesson.css">
+<script src="../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · նախագիծ</b> · առաջադրանք 2</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Առաջադրանք 2 / 3 · PHP Դաս 12–17 · ընթացքում + 1 շաբաթ</p>
+  <h1>Սեփական ֆրեյմվորք</h1>
+  <p class="lede">Առաջադրանք 1-ի խանութը աշխատում է, բայց ամեն էջ առանձին ֆայլ է, իսկ ադմինը բաց է բոլորի համար։ Այս վեց դասում նույն կայքը ստանում է այն կառուցվածքը, որ ունի Laravel-ը․ մոդելներ, Repository-ներ, Router, կոնտրոլերներ, մուտք դերերով և JSON API։ Համեմատիր քեզ <a href="example-2-mvc/README.md">օրինակ 2</a>-ի հետ, բայց միայն ավարտելուց հետո։</p>
+
+  <div class="facts">
+    <span>Արդյունք՝ public/ + src/ + views/</span>
+    <span>Սկսիր Առաջադրանք 1-ից</span>
+    <span>Ստուգում՝ բաժին 06</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Կայքը գրեթե նույնն է, ինչ Առաջադրանք 1-ում, բայց կոդը ամբողջովին վերակառուցված է՝ դասեր, Composer, մեկ մուտք, կոնտրոլերներ։ Հասցեները դառնում են մաքուր (<code>/product/noutbuq-pro-14</code>), ադմինը փակվում է մուտքով և դերերով, իսկ «Գնել»-ը և որոնումը աշխատում են առանց էջի վերբեռնման՝ սեփական JSON API-ով։ Անջատված JavaScript-ով ամեն ինչ աշխատում է ինչպես նախկինում։</p>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/ex2-fetch-toast.jpg" alt="Կատալոգ, ներքևում ծանուցում «Ավելացվեց՝ Բարձրախոս Mini», header-ում՝ 1" width="900" height="633" loading="lazy">
+      <figcaption>«Գնել»՝ fetch-ով, էջը չի վերբեռնվում</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/ex2-live-search.jpg" alt="Որոնման դաշտում «նոութ», չորս նոութբուք և «Ցուցադրված է 1–4՝ 4 ապրանքից»" width="900" height="773" loading="lazy">
+      <figcaption>Որոնում՝ գրելու ընթացքում, /api/products-ով</figcaption>
+    </figure>
+    </div>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/ex2-register-errors.jpg" alt="Գրանցման ֆորմա երեք սխալով․ անունը կարճ է, հասցեն զբաղված է, գաղտնաբառը կարճ է" width="900" height="703" loading="lazy">
+      <figcaption>Գրանցում՝ customer դերով</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/ex2-login-error.jpg" alt="Մուտքի ֆորմա «Սխալ էլ. հասցե կամ գաղտնաբառ» հաղորդագրությամբ" width="900" height="633" loading="lazy">
+      <figcaption>Նույն հաղորդագրությունը երկու դեպքում</figcaption>
+    </figure>
+    </div>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/ex2-admin-manager.jpg" alt="Ադմինի ցուցակ՝ մենեջերի համար, առանց checkbox-ների, «Դու մենեջեր ես» հաղորդագրությամբ" width="900" height="703" loading="lazy">
+      <figcaption>Մենեջեր․ խմբագրում է, չի արխիվացնում</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/ex2-403.jpg" alt="403 էջ «Մուտքն արգելված է»" width="900" height="633" loading="lazy">
+      <figcaption>Գնորդը /admin-ում</figcaption>
+    </figure>
+    </div>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/ex2-account.jpg" alt="Իմ հաշիվը՝ մեկ պատվեր, համար, ամսաթիվ, գումար, կարգավիճակ" width="900" height="633" loading="lazy">
+      <figcaption>/account՝ միայն իր պատվերները</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/ex2-api.jpg" alt="Բրաուզերում /api/products JSON պատասխանը" width="900" height="633" loading="lazy">
+      <figcaption>GET /api/products?per_page=2</figcaption>
+    </figure>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատում ես Առաջադրանք 1-ի նախագծի վրա (կամ <a href="example-1-php-mysql/README.md">օրինակ 1</a>-ի պատճենի)։ Նախքան սկսելը՝ <code>git commit</code>․ Դաս 15-ում շատ ֆայլեր կտեղափոխվեն, և պետք է կարողանաս վերադառնալ։</p>
+    <div class="tree">starter/task-2/
+├── sql/upgrade.sql          ← type, weight, users, orders.user_id, թվային ապրանք
+├── images/antivirus.jpg     ← թվային ապրանքի նկարը
+├── php-task-2.css           ← .card__note թվային ապրանքի համար
+├── .env.example             ← Դաս 14
+└── content.md               ← նոր հաղորդագրություններ (մուտք, դերեր, API)</div>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Նոր սյունակ/աղյուսակ</th><th>Ինչի համար</th><th>Դաս</th></tr>
+      <tr><td><code>products.type</code></td><td><code>physical</code> կամ <code>digital</code>․ <code>Product::fromRow()</code>-ը ընտրում է դասը</td><td>13</td></tr>
+      <tr><td><code>products.weight</code></td><td>Գրամ․ <code>shippingCost()</code>-ը՝ 1000 կամ 3000 ֏</td><td>13</td></tr>
+      <tr><td><code>users</code></td><td><code>role ENUM('admin','manager','customer') DEFAULT 'customer'</code></td><td>16</td></tr>
+      <tr><td><code>orders.user_id</code></td><td>Մուտք գործածի պատվերը՝ «Իմ հաշիվը» էջի համար, հյուրինը՝ <code>NULL</code></td><td>16</td></tr>
+    </table>
+    </div>
+    <div class="tip note">
+      <span class="tag">Առաջին ադմինը</span>
+      <p>Ինչպես Դաս 16-ում․ <code>php -r "echo password_hash('...', PASSWORD_DEFAULT);"</code> և <code>INSERT</code> HeidiSQL-ում։ Ստեղծիր երեքը՝ <code>admin</code>, <code>manager</code> և մեկ <code>customer</code>, որ ստուգես բոլոր դերերը։</p>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Շաբաթվա պլան</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դաս</th><th>Ինչ է փոխվում</th><th>Քայլ</th></tr>
+      <tr><td>12</td><td>Ապրանքը՝ <code>Product</code> օբյեկտ, զամբյուղը՝ <code>Cart</code> դաս</td><td>1</td></tr>
+      <tr><td>13</td><td><code>abstract Product</code>, <code>PhysicalProduct</code>, <code>DigitalProduct</code>, <code>Shippable</code></td><td>2</td></tr>
+      <tr><td>14</td><td>Composer, <code>App\</code> namespace, Repository-ներ, <code>.env</code></td><td>3</td></tr>
+      <tr><td>15</td><td><code>public/</code>, Router, կոնտրոլերներ, մաքուր հասցեներ, 404/405</td><td>4</td></tr>
+      <tr><td>16</td><td>Մուտք, գրանցում, CSRF, դերեր, <code>/admin</code>-ի պաշտպանություն</td><td>5</td></tr>
+      <tr><td>17</td><td>JSON API, fetch-ով «Գնել» և որոնում, progressive enhancement</td><td>6</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Քայլեր</h2>
+    <div class="tree">technomarket/
+├── composer.json · .env · .env.example · .gitignore
+├── bootstrap.php            ← .env, սեսիա, PDO, Repository-ներ, կոնտրոլերներ
+├── routes.php               ← կայքի քարտեզը
+├── public/                  ← միակ թղթապանակը, որ տեսնում է բրաուզերը (Դաս 15)
+│   ├── index.php · .htaccess
+│   ├── css/ · images/ · js/
+├── src/
+│   ├── helpers.php          ← e(), render(), page(), csrf_*(), slugify()
+│   ├── Http/                ← Request, Response, Router
+│   ├── Exceptions/          ← HttpException, NotFoundException, ValidationException
+│   ├── Models/              ← Product, PhysicalProduct, DigitalProduct, Shippable, Category, User, CartItem
+│   ├── Repositories/        ← Product, Category, Order, User
+│   ├── Services/            ← Cart, CartSummary, Auth, LoginThrottle, Validator, ImageUploader
+│   ├── Support/             ← Database, MoneyFormatter
+│   └── Controllers/         ← Home, Product, Cart, Checkout, Contact, Auth, Register, Account
+│       ├── Admin/           ← ProductController, OrderController
+│       └── Api/             ← ProductApiController, CartApiController
+├── views/                   ← նույն շաբլոնները, բայց $p->name, ոչ $p['name']
+└── sql/</div>
+
+    <h3>Քայլ 1 · Ապրանքը՝ օբյեկտ, զամբյուղը՝ դաս · Դաս 12</h3>
+    <ul class="goals">
+      <li><code>Product</code>՝ <code>readonly</code> հատկություններով և <code>fromRow()</code>-ով։ <code>normalizeProduct()</code>-ի (int)-երը տեղափոխվում են այստեղ</li>
+      <li>Շաբլոններում՝ <code>$p->name</code>, <code>$p->formattedPrice()</code>, <code>$p->hasDiscount()</code>։ <code>$p->prise</code>-ը հիմա սխալ է, ոչ լուռ <code>null</code></li>
+      <li><code>Cart</code>՝ <code>&amp;$storage</code>-ով, <code>setQty()</code>-ով (Դաս 12-ի տնային) և <code>items()</code>-ով, որ վերադարձնում է <code>CartItem</code>-ներ</li>
+    </ul>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Services/Cart.php — կառուցում և add()</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="t">Cart</span>
+{
+    <span class="k">private</span> <span class="k">const</span> <span class="t">MAX_QTY</span> = <span class="n">10</span>;
+
+    <span class="k">public</span> <span class="k">function</span> <span class="f">__construct</span>(<span class="k">private</span> <span class="k">array</span> &amp;<span class="n">$storage</span>) {}
+
+    <span class="k">public</span> <span class="k">function</span> <span class="f">add</span>(<span class="k">int</span> <span class="n">$id</span>, <span class="k">int</span> <span class="n">$qty</span> = <span class="n">1</span>, <span class="k">int</span> <span class="n">$limit</span> = <span class="k">self</span>::<span class="t">MAX_QTY</span>): <span class="k">void</span>
+    {
+        <span class="k">if</span> (<span class="n">$qty</span> &lt; <span class="n">1</span>) {
+            <span class="k">return</span>;
+        }
+
+        <span class="n">$current</span> = <span class="n">$this</span>-&gt;storage[<span class="n">$id</span>] ?? <span class="n">0</span>;
+        <span class="n">$this</span>-&gt;storage[<span class="n">$id</span>] = <span class="f">min</span>(<span class="n">$current</span> + <span class="n">$qty</span>, <span class="k">self</span>::<span class="t">MAX_QTY</span>, <span class="n">$limit</span>);
+    }}</code></pre>
+    </div>
+
+    <h3>Քայլ 2 · Ժառանգում և ինտերֆեյս · Դաս 13</h3>
+    <p>Կատալոգին ավելանում է թվային ապրանք՝ հակավիրուսի լիցենզիա։ Այն միշտ առկա է, պահեստ չունի և չի առաքվում։ Շաբլոնը և զամբյուղը չգիտեն, թե որ դասն է․ նրանք կանչում են <code>inStock()</code>, <code>maxQty()</code>, <code>typeLabel()</code>։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Models/Product.php — պարտադիր մեթոդներ</div><button class="copy">Պատճենել</button></div>
+<pre><code>    <span class="c">// ---------- Պարտադիր ժառանգներում ----------</span>
+
+    <span class="k">abstract</span> <span class="k">public</span> <span class="k">function</span> <span class="f">inStock</span>(): <span class="k">bool</span>;
+
+    <span class="c">/** Քանի՞ հատ կարելի է ավելացնել զամբյուղ */</span>
+    <span class="k">abstract</span> <span class="k">public</span> <span class="k">function</span> <span class="f">maxQty</span>(): <span class="k">int</span>;
+
+    <span class="k">abstract</span> <span class="k">public</span> <span class="k">function</span> <span class="f">typeLabel</span>(): <span class="k">string</span>;
+}</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Models/DigitalProduct.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/** Լիցենզիա, որ ուղարկվում է էլ. փոստով։ Shippable ՉԷ — PHP Դաս 13 */</span>
+<span class="k">class</span> <span class="t">DigitalProduct</span> <span class="k">extends</span> <span class="t">Product</span>
+{
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="f">fromRow</span>(<span class="k">array</span> <span class="n">$row</span>): <span class="k">static</span>
+    {
+        <span class="k">return</span> <span class="k">new</span> <span class="k">static</span>(...<span class="k">parent</span>::<span class="f">baseFields</span>(<span class="n">$row</span>));
+    }
+
+    <span class="k">public</span> <span class="k">function</span> <span class="f">inStock</span>(): <span class="k">bool</span>
+    {
+        <span class="k">return</span> <span class="k">true</span>;          <span class="c">// միշտ առկա է</span>
+    }
+
+    <span class="k">public</span> <span class="k">function</span> <span class="f">maxQty</span>(): <span class="k">int</span>
+    {
+        <span class="k">return</span> <span class="n">5</span>;             <span class="c">// մեկ պատվերում՝ առավելագույնը 5 լիցենզիա</span>
+    }
+
+    <span class="k">public</span> <span class="k">function</span> <span class="f">typeLabel</span>(): <span class="k">string</span>
+    {
+        <span class="k">return</span> <span class="s">'Թվային լիցենզիա'</span>;
+    }
+}</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Services/CartSummary.php — Դաս 13-ի calculateShipping()-ը</div><button class="copy">Պատճենել</button></div>
+<pre><code>    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="f">calculateShipping</span>(<span class="k">array</span> <span class="n">$items</span>): <span class="k">int</span>
+    {
+        <span class="n">$total</span> = <span class="n">0</span>;
+
+        <span class="k">foreach</span> (<span class="n">$items</span> <span class="k">as</span> <span class="n">$item</span>) {
+            <span class="k">if</span> (<span class="n">$item</span>-&gt;product <span class="k">instanceof</span> <span class="t">Shippable</span>) {
+                <span class="n">$total</span> += <span class="n">$item</span>-&gt;product-&gt;<span class="f">shippingCost</span>();
+            }
+        }
+
+        <span class="k">return</span> <span class="n">$total</span>;
+    }</code></pre>
+    </div>
+    <div class="tip note">
+      <span class="tag">Ինչու PhysicalProduct-ի կոնստրուկտորը երկար է</span>
+      <p>Ժառանգը կրկնում է ծնողի բոլոր պարամետրերը և փոխանցում դրանք <code>parent::__construct()</code>-ին (Դաս 13)։ Դա կրկնություն է, բայց բացահայտ․ կարդալով մեկ ֆայլը, տեսնում ես ամեն դաշտը։ <code>fromRow()</code>-ում <code>...$array</code>-ը բացում է զանգվածը անվանված արգումենտների՝ բանալիները պետք է համընկնեն պարամետրերի անուններին։</p>
+    </div>
+
+    <h3>Քայլ 3 · Composer, namespace, Repository · Դաս 14</h3>
+    <ul class="goals">
+      <li><code>composer init</code>, PSR-4՝ <code>"App\\": "src/"</code>, <code>"files": ["src/helpers.php"]</code>, <code>composer require vlucas/phpdotenv</code></li>
+      <li>Ամբողջ SQL-ը՝ <code>ProductRepository</code>, <code>CategoryRepository</code>, <code>OrderRepository</code>։ <code>PDO</code>-ն ստանում են կոնստրուկտորով</li>
+      <li><code>validate.php</code>-ի ֆունկցիաները՝ <code>Validator</code> դասի ստատիկ մեթոդներ (Դաս 14-ի տնային)</li>
+      <li><code>config.php</code>-ի փոխարեն՝ <code>.env</code>։ <code>$dotenv-&gt;required([...])</code>-ը կասի, եթե ինչ-որ բան մոռացել ես</li>
+    </ul>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>composer.json</div><button class="copy">Պատճենել</button></div>
+<pre><code>{
+    "name": "meri/technomarket",
+    "description": "ՏեխնոՄարկետ — սեփական MVC, PHP Դաս 12–17",
+    "type": "project",
+    "require": {
+        "php": "&gt;=8.2",
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    }
+}</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Repositories/ProductRepository.php — SELECT_FIELDS</div><button class="copy">Պատճենել</button></div>
+<pre><code>    <span class="c">/** Նոր դաշտ՝ մեկ տեղում, և բոլոր հարցումները այն ստանում են — PHP Դաս 14-ի տնային */</span>
+    <span class="k">private</span> <span class="k">const</span> <span class="t">SELECT_FIELDS</span> = <span class="s">'
+        p.id, p.category_id, p.name, p.slug, p.specs, p.description, p.image,
+        p.price, p.discount, p.stock, p.weight, p.type, p.is_active, p.created_at,
+        c.name AS category_name, c.slug AS category_slug,
+        ROUND(p.price * (100 - p.discount) / 100) AS final_price
+    '</span>;
+
+    <span class="k">private</span> <span class="k">const</span> <span class="t">FROM</span></code></pre>
+    </div>
+
+    <h3>Քայլ 4 · Մեկ մուտք · Դաս 15</h3>
+    <ul class="goals">
+      <li><code>public/</code>՝ <code>index.php</code>, <code>.htaccess</code>, <code>css/</code>, <code>images/</code>, <code>js/</code>։ Laragon-ի DocumentRoot-ը՝ <code>public/</code></li>
+      <li>Router՝ <code>get()</code>, <code>post()</code>, <code>delete()</code>, և 405՝ եթե ուղին կա այլ մեթոդով (Դաս 15-ի խորացված տնային)</li>
+      <li>Ամեն էջ-ֆայլ դառնում է կոնտրոլերի մեթոդ, որ վերադարձնում է <code>Response</code>։ Ջնջիր հին <code>catalog.php</code>, <code>cart-add.php</code>... ֆայլերը</li>
+      <li>Նոր ուղիներ՝ <code>/category/{slug}</code> և <code>/search?q=</code> (Դաս 15-ի տնային)</li>
+      <li>Layout-ին ամեն էջում պետք են զամբյուղը և օգտագործողը․ <code>share()</code>-ը տալիս է դրանք <code>page()</code>-ին</li>
+    </ul>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>routes.php — մի մասը</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ---------- Հանրային ----------</span>
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/'</span>,                 [<span class="n">$homeController</span>, <span class="s">'index'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/catalog'</span>,          [<span class="n">$productController</span>, <span class="s">'index'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/category/{slug}'</span>,  [<span class="n">$productController</span>, <span class="s">'category'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/search'</span>,           [<span class="n">$productController</span>, <span class="s">'search'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/product/{slug}'</span>,   [<span class="n">$productController</span>, <span class="s">'show'</span>]);
+
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/contact'</span>,          [<span class="n">$contactController</span>, <span class="s">'form'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/contact'</span>,         [<span class="n">$contactController</span>, <span class="s">'submit'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/theme'</span>,           [<span class="n">$contactController</span>, <span class="s">'theme'</span>]);
+
+<span class="c">// ---------- Զամբյուղ և պատվեր ----------</span>
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/cart'</span>,             [<span class="n">$cartController</span>, <span class="s">'index'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/cart/add'</span>,        [<span class="n">$cartController</span>, <span class="s">'add'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/cart/update'</span>,     [<span class="n">$cartController</span>, <span class="s">'update'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/cart/remove'</span>,     [<span class="n">$cartController</span>, <span class="s">'remove'</span>]);
+
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/checkout'</span>,         [<span class="n">$checkoutController</span>, <span class="s">'form'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/checkout'</span>,        [<span class="n">$checkoutController</span>, <span class="s">'store'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/thanks/{id}'</span>,      [<span class="n">$checkoutController</span>, <span class="s">'thanks'</span>]);
+
+<span class="c">// ---------- Մուտք</span></code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Controllers/ProductController.php — show()</div><button class="copy">Պատճենել</button></div>
+<pre><code>    <span class="k">public</span> <span class="k">function</span> <span class="f">show</span>(<span class="t">Request</span> <span class="n">$request</span>, <span class="k">string</span> <span class="n">$slug</span>): <span class="t">Response</span>
+    {
+        <span class="n">$product</span> = <span class="n">$this</span>-&gt;products-&gt;<span class="f">findBySlug</span>(<span class="n">$slug</span>)
+            ?? <span class="k">throw</span> <span class="k">new</span> <span class="f">NotFoundException</span>(<span class="s">'Ապրանքը չի գտնվել կամ այլևս չի վաճառվում'</span>);
+
+        <span class="k">return</span> <span class="t">Response</span>::<span class="f">html</span>(<span class="f">page</span>(<span class="s">'pages/product'</span>, [
+            <span class="s">'product'</span> =&gt; <span class="n">$product</span>,
+            <span class="s">'related'</span> =&gt; <span class="n">$this</span>-&gt;products-&gt;<span class="f">related</span>(<span class="n">$product</span>),
+        ], <span class="n">$product</span>-&gt;name . <span class="s">' — '</span> . <span class="t">SITE_NAME</span>));
+    }</code></pre>
+    </div>
+    <div class="warn note">
+      <span class="tag">Ուղիների հերթականությունը</span>
+      <p><code>POST /admin/products/archive</code>-ը պետք է գրանցված լինի <code>POST /admin/products/{id}</code>-ից <strong>առաջ</strong>․ Router-ը վերցնում է առաջին համընկնողը, և «archive»-ը կդառնար <code>$id</code>։ Laravel-ում նույն կանոնն է։</p>
+    </div>
+    <div class="tip note">
+      <span class="tag">php -S և ստատիկ ֆայլերը</span>
+      <p>Laragon-ում <code>.htaccess</code>-ը CSS-ը տալիս է ուղիղ։ <code>php -S localhost:8000 -t public public/index.php</code>-ի դեպքում նույնը անում է <code>public/index.php</code>-ի առաջին <code>if</code>-ը՝ <code>return false</code>։</p>
+    </div>
+
+    <h3>Քայլ 5 · Մուտք, գրանցում, դերեր · Դաս 16</h3>
+    <ul class="goals">
+      <li><code>User</code>, <code>UserRepository</code>, <code>Auth</code>, <code>LoginThrottle</code>, <code>AuthController</code>, <code>RegisterController</code>՝ Դաս 16-ի կոդով</li>
+      <li><code>csrf_field()</code>՝ <strong>ամեն</strong> POST ֆորմայում, ներառյալ ելքը, թեման և −/+ կոճակները։ Ստուգումը՝ մեկ տեղում՝ <code>public/index.php</code></li>
+      <li><code>/admin…</code>․ մուտք չկա → <code>/login</code> (և վերադարձ նույն էջ), մուտք կա, բայց գնորդ է → 403</li>
+      <li>Մենեջերը ավելացնում և խմբագրում է, արխիվացնում է միայն ադմինը (Դաս 16-ի տնային)։ Ստուգումը կոնտրոլերում է, ոչ միայն շաբլոնում</li>
+      <li>Header-ում՝ «Բարև, անուն», «Ելք» (POST), աշխատակցի համար՝ «Ադմին»։ Նոր էջ՝ <code>/account</code>, իր պատվերներով</li>
+    </ul>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>public/index.php — երեք ստուգում Router-ից առաջ</div><button class="copy">Պատճենել</button></div>
+<pre><code>    <span class="c">// 1. CSRF — ամեն վիճակ փոխող հարցում։ Ֆորմայից՝ _token, JS-ից՝ X-CSRF-Token — Դաս 16, 17</span>
+    <span class="k">if</span> (!<span class="f">in_array</span>(<span class="n">$request</span>-&gt;method, [<span class="s">'GET'</span>, <span class="s">'HEAD'</span>, <span class="s">'OPTIONS'</span>], <span class="k">true</span>)) {
+        <span class="n">$token</span> = <span class="n">$request</span>-&gt;<span class="f">input</span>(<span class="s">'_token'</span>) ?: <span class="n">$request</span>-&gt;<span class="f">header</span>(<span class="s">'X-CSRF-Token'</span>);
+
+        <span class="k">if</span> (!<span class="f">csrf_verify</span>(<span class="n">$token</span>)) {
+            <span class="k">throw</span> <span class="k">new</span> <span class="f">HttpException</span>(<span class="s">'Ձևաթուղթը ժամկետանց է։ Թարմացրեք էջը և փորձեք կրկին։'</span>, <span class="n">419</span>);
+        }
+    }
+
+    <span class="c">// 2. Ադմին գոտի — մուտք գործա՞ծ է</span>
+    <span class="n">$isAdminArea</span> = <span class="n">$request</span>-&gt;path === <span class="s">'/admin'</span> || <span class="f">str_starts_with</span>(<span class="n">$request</span>-&gt;path, <span class="s">'/admin/'</span>);
+
+    <span class="k">if</span> (<span class="n">$isAdminArea</span> &amp;&amp; !<span class="n">$auth</span>-&gt;<span class="f">check</span>()) {
+        <span class="k">if</span> (<span class="n">$request</span>-&gt;method === <span class="s">'GET'</span>) {
+            <span class="n">$_SESSION</span>[<span class="s">'intended'</span>] = <span class="n">$request</span>-&gt;path;     <span class="c">// մուտքից հետո՝ հենց այստեղ</span>
+        }
+        <span class="n">$response</span> = <span class="t">Response</span>::<span class="f">redirect</span>(<span class="s">'/login'</span>);
+
+    <span class="c">// 3. Մուտք գործած է, բայց աշխատակի՞ց է ⭐</span>
+    } <span class="k">elseif</span> (<span class="n">$isAdminArea</span> &amp;&amp; !<span class="n">$auth</span>-&gt;<span class="f">isStaff</span>()) {
+        <span class="k">throw</span> <span class="k">new</span> <span class="f">HttpException</span>(<span class="s">'Այս էջը հասանելի է միայն աշխատակիցներին'</span>, <span class="n">403</span>);
+
+    } <span class="k">else</span> {
+        <span class="n">$response</span> = <span class="n">$router</span>-&gt;<span class="f">dispatch</span>(<span class="n">$request</span>);
+    }</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Controllers/Admin/ProductController.php — archive()</div><button class="copy">Պատճենել</button></div>
+<pre><code>    <span class="c">/** Միայն ադմինը — մենեջերը ստեղծում և խմբագրում է, բայց չի հեռացնում — PHP Դաս 16-ի տնային ⭐ */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="f">archive</span>(<span class="t">Request</span> <span class="n">$request</span>): <span class="t">Response</span>
+    {
+        <span class="k">if</span> (!<span class="n">$this</span>-&gt;auth-&gt;<span class="f">isAdmin</span>()) {
+            <span class="k">throw</span> <span class="k">new</span> <span class="f">HttpException</span>(<span class="s">'Արխիվացնել կարող է միայն ադմինը'</span>, <span class="n">403</span>);
+        }
+
+        <span class="n">$count</span> = <span class="n">$this</span>-&gt;products-&gt;<span class="f">archive</span>(<span class="n">$request</span>-&gt;<span class="k">array</span>(<span class="s">'ids'</span>));
+        <span class="f">flash</span>(<span class="n">$count</span> &gt; <span class="n">0</span> ? <span class="s">'success'</span> : <span class="s">'error'</span>, <span class="n">$count</span> &gt; <span class="n">0</span> ? <span class="s">"Արխիվացվեց՝ {$count} ապրանք"</span> : <span class="s">'Ոչինչ չնշվեց'</span>);
+
+        <span class="k">return</span> <span class="t">Response</span>::<span class="f">redirect</span>(<span class="s">'/admin'</span>);
+    }</code></pre>
+    </div>
+
+    <h3>Քայլ 6 · API և JavaScript · Դաս 17</h3>
+    <ul class="goals">
+      <li><code>Response::json()</code>, <code>Product::toArray()</code>՝ բացահայտ ցանկով (պահեստի քանակը դրսից չի երևում)</li>
+      <li><code>GET /api/products</code>՝ <code>q</code>, <code>category</code>, <code>sort</code>, <code>page</code>, <code>per_page</code> (առավելագույնը 50), <code>GET /api/cart</code>, <code>POST</code> և <code>DELETE /api/cart/items</code></li>
+      <li>Սխալները՝ JSON-ով, եթե հասցեն <code>/api/</code> է կամ <code>Accept: application/json</code>, այլապես՝ HTML էջ</li>
+      <li>JS-ը՝ ES մոդուլներ (Բլոկ 2, Դաս 18)․ <code>api.js</code>, <code>cart.js</code>, <code>search.js</code>։ Ֆորմաները մնում են ֆորմաներ՝ <code>data-cart-add</code>, <code>data-live-search</code></li>
+    </ul>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>public/js/api.js — request()</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">async</span> <span class="k">function</span> <span class="f">request</span>(url, options = {}) {
+    <span class="k">const</span> response = <span class="k">await</span> <span class="f">fetch</span>(url, {
+        ...options,
+        headers: {
+            <span class="s">"Accept"</span>: <span class="s">"application/json"</span>,
+            <span class="s">"X-CSRF-Token"</span>: csrf,          <span class="c">// ⭐ առանց սրա POST-ը կստանա 419</span>
+            ...(options.body ? { <span class="s">"Content-Type"</span>: <span class="s">"application/json"</span> } : {}),
+        },
+    });
+
+    <span class="k">const</span> payload = <span class="k">await</span> response.<span class="f">json</span>();
+
+    <span class="c">// fetch-ը 4xx/5xx-ի դեպքում ՉԻ գցում սխալ — պիտի ստուգել ok-ը ⭐</span>
+    <span class="k">if</span> (!response.ok) {
+        <span class="k">throw</span> <span class="k">new</span> <span class="f">ApiError</span>(payload.error?.message ?? <span class="s">"Սխալ"</span>, response.status, payload.error?.errors);
+    }
+
+    <span class="k">return</span> payload;
+}</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>public/js/cart.js — ձախողման դեպքում՝ սովորական ֆորմա</div><button class="copy">Պատճենել</button></div>
+<pre><code>        <span class="k">try</span> {
+            <span class="k">const</span> qty = <span class="f">Number</span>(form.elements.qty?.value ?? <span class="n">1</span>);
+            <span class="k">const</span> data = <span class="k">await</span> api.<span class="f">addToCart</span>(<span class="f">Number</span>(form.elements.id.value), qty);
+            <span class="f">updateCount</span>(data.data.count);
+            <span class="f">showToast</span>(data.data.message);
+            <span class="f">announce</span>(data.data.message);
+        } <span class="k">catch</span> (error) {
+            <span class="k">if</span> (error <span class="k">instanceof</span> ApiError &amp;&amp; error.status === <span class="n">422</span>) {
+                <span class="c">// Սերվերի սխալը՝ օգտագործողին, ոչ Console-ին</span>
+                <span class="k">const</span> message = Object.<span class="f">values</span>(error.errors).<span class="f">join</span>(<span class="s">" "</span>) || error.message;
+                <span class="f">showToast</span>(message);
+                <span class="f">announce</span>(message);
+            } <span class="k">else</span> {
+                form.<span class="f">submit</span>();        <span class="c">// ⭐ ամեն այլ դեպքում՝ սովորական ֆորման (419, ցանց...)</span>
+            }</code></pre>
+    </div>
+    <div class="note">
+      <span class="tag">Իսկ Բլոկ 2-ի api.js-ը</span>
+      <p>Բլոկ 2-ում JS-ը կառուցում էր ամբողջ էջը <code>products.json</code>-ից։ Այստեղ HTML-ը կառուցում է սերվերը, իսկ JS-ը միայն ավելացնում է գործողություններ առանց վերբեռնման։ Այդպես էջը աշխատում է առանց JS-ի, որոնողական համակարգերը տեսնում են ապրանքները, իսկ սխալ JS-ը չի «կոտրում» խանութը։ Բլոկ 2-ի գաղափարը մնում է․ մնացած կոդը չգիտի, թե ինչպես է <code>fetch</code>-ը աշխատում, այն գիտի միայն <code>api.addToCart()</code>։</p>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Հաճախ հանդիպող սխալներ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>Class "App\Models\Product" not found</code></td><td>namespace-ը համընկնո՞ւմ է թղթապանակին, ֆայլի անունը՝ դասի անվանը, կանչե՞լ ես <code>composer dump-autoload</code> (Դաս 14-ի չորս կետը)</td></tr>
+      <tr><td><code>Class "App\Repositories\PDO" not found</code></td><td><code>use PDO;</code> ֆայլի սկզբում</td></tr>
+      <tr><td>CSS-ը չի բեռնվում <code>/product/...</code> էջում</td><td>Հարաբերական ուղի․ <code>css/main.css</code> → <code>/css/main.css</code></td></tr>
+      <tr><td>Ամեն POST-ը տալիս է 419</td><td>Ֆորմայում չկա <code>&lt;?= csrf_field() ?&gt;</code>, կամ <code>session_start()</code>-ը կանչվում է <code>csrf_token()</code>-ից հետո</td></tr>
+      <tr><td>fetch-ը տալիս է 419, ֆորման՝ ոչ</td><td>Վերնագիրը՝ <code>X-CSRF-Token</code>, արժեքը՝ <code>&lt;meta name="csrf-token"&gt;</code>-ից։ Ադմինի layout-ում նույնպես պետք է meta-ն</td></tr>
+      <tr><td><code>$_POST</code>-ը դատարկ է fetch-ից</td><td>JSON մարմինը կարդում է <code>Request::fromGlobals()</code>-ը <code>php://input</code>-ից (Դաս 17)</td></tr>
+      <tr><td>Մուտքից հետո դեռ «Մուտք» է երևում</td><td><code>Auth::user()</code>-ը քեշավորել է <code>null</code>-ը նախքան <code>login()</code>-ը։ <code>login()</code>-ում թարմացրու <code>$this->cached</code>-ը</td></tr>
+      <tr><td><code>Undefined variable $cart</code> էջի շաբլոնում</td><td><code>share()</code>-ի տվյալները պետք է հասնեն նաև էջի շաբլոնին, ոչ միայն layout-ին</td></tr>
+      <tr><td>Մենեջերը կարողանում է արխիվացնել DevTools-ով</td><td>Ստուգումը միայն շաբլոնում է։ Ավելացրու <code>isAdmin()</code> կոնտրոլերում և նետիր 403</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="warn note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Գործարկիր <a href="example-2-mvc/README.md">example-2-mvc</a>-ը README-ի հրամաններով։ Համեմատիր․<br><br><strong>1. Կոնտրոլերի երկարությունը։</strong> Քո ամենաերկար կոնտրոլերը քանի՞ տող է։ Կա՞ դրանում SQL կամ HTML (Դաս 15-ի տնային)։<br><strong>2. Որտեղ է ստուգվում դերը։</strong> Փնտրիր <code>isAdmin</code> և <code>isStaff</code>։ Եթե որևէ մեկը միայն <code>views/</code>-ում է, դա պաշտպանություն չէ։<br><strong>3. Ինչ է վերադարձնում API-ն։</strong> <code>curl /api/products/noutbuq-pro-14</code>։ Կա՞ այնտեղ <code>stock</code>, <code>is_active</code> կամ <code>created_at</code>։</p>
+    </div>
+  </section>
+  <!-- ============ 06 ============ -->
+  <section id="s6">
+    <h2><span class="num">06</span>Ընդունման ստուգաթերթ</h2>
+    <h3>Կառուցվածք</h3>
+    <ul class="goals">
+      <li><code>public/</code>-ից դուրս ոչինչ չի բացվում․ <code>/.env</code>, <code>/composer.json</code>, <code>/src/helpers.php</code>՝ 404</li>
+      <li>Մեկ <code>require_once __DIR__ . '/vendor/autoload.php'</code>, ոչ մի այլ <code>require</code> դասերի համար</li>
+      <li>Ոչ մի SQL կոնտրոլերներում և շաբլոններում, ոչ մի <code>$_GET</code>/<code>$_POST</code>՝ <code>Request</code>-ից դուրս</li>
+      <li>Անհայտ ուղին՝ 404 էջ, ուղին կա, բայց սխալ մեթոդով՝ 405</li>
+    </ul>
+
+    <h3>Մուտք և դերեր</h3>
+    <ul class="goals">
+      <li><code>/admin/orders</code> առանց մուտքի → <code>/login</code> → մուտքից հետո՝ հենց <code>/admin/orders</code></li>
+      <li>Վեց սխալ գաղտնաբառ՝ արգելափակում, նույնիսկ ճիշտ գաղտնաբառով</li>
+      <li>Մուտքից առաջ և հետո <code>PHPSESSID</code>-ը տարբեր է (<code>session_regenerate_id</code>)</li>
+      <li>Գրանցում՝ DevTools-ով ավելացված <code>role=admin</code>-ով → բազայում <code>customer</code>, <code>/admin</code>՝ 403</li>
+      <li>Նույն հասցեով երկրորդ գրանցում՝ «արդեն կա հաշիվ», գաղտնաբառի դաշտերը դատարկ</li>
+      <li>Մենեջերը չի տեսնում checkbox-ները, իսկ ճիշտ token-ով ուղիղ POST-ը ստանում է 403</li>
+      <li>Սեփական համակարգչում բացված <code>attack.html</code>-ը, որ ուղարկում է արխիվացման ֆորմա, մերժվում է (419)</li>
+      <li>Գնորդը <code>/account</code>-ում տեսնում է միայն իր պատվերները, ուրիշինը <code>/thanks/{id}</code>-ով՝ 404</li>
+    </ul>
+
+    <h3>API և JavaScript</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>terminal — Դաս 17-ի փորձարկումները</div><button class="copy">Պատճենել</button></div>
+<pre><code>curl -i "http://technomarket.test/api/products?per_page=2"     # 200, data + meta
+curl -i http://technomarket.test/api/products/չկա              # 404, JSON
+curl -i http://technomarket.test/api/cart/items                 # 405, JSON
+curl -i -X POST http://technomarket.test/api/cart/items \
+     -H "Content-Type: application/json" -d '{"id":1,"qty":2}'  # 419
+curl -i -X POST http://technomarket.test/api/cart/items \
+     -H "Content-Type: application/json" -d '{id:1'              # 400
+curl "http://technomarket.test/api/products?per_page=100000"    # per_page: 50
+curl "http://technomarket.test/api/products?per_page=-5&amp;page=abc"  # per_page: 1, page: 1</code></pre>
+    </div>    <ul class="goals">
+      <li>«Գնել»-ը չի վերբեռնում էջը, header-ի թիվը թարմանում է, էկրանընթերցիչը կարդում է հաղորդագրությունը (<code>role="status"</code>)</li>
+      <li>Որոնումը թարմացնում է արդյունքները 300 մվ հետո, URL-ը թարմանում է, F5-ից հետո՝ նույն որոնումը</li>
+      <li>DevTools → Settings → Disable JavaScript․ «Գնել»-ը և որոնումը աշխատում են ֆորմաներով</li>
+      <li>Թվային ապրանքը՝ «∞» ադմինում, առանց «Պահեստում» տողի, միայն թվային ապրանքներով պատվերում առաքումը 0 է</li>
+    </ul>
+    <div class="pager"><a href="task-1.html">← Առաջադրանք 1</a><a href="task-3.html">Առաջադրանք 3 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · նախագիծ · առաջադրանք 2</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

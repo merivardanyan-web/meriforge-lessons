@@ -1,0 +1,6 @@
+# Գաղտնիքներ — PHP Դաս 10
+config.php
+
+# Վերբեռնված նկարներ — PHP Դաս 7, 11
+images/uploads/*
+!images/uploads/.gitkeep

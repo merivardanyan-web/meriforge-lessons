@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 18 · Ակումբը Laravel-ում — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · տնային</b> · Դաս 18</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../php-lesson-18.html">PHP Դաս 18</a> · մինի-նախագիծ</p>
+  <h1>Ակումբը Laravel-ում</h1>
+  <p class="lede">Նոր Laravel նախագիծ, նույն <code>ani_books</code> բազան։ Դարակը, ժանրի էջը և գրքի էջը տեղափոխվում են <code>routes/web.php</code> և <code>BookController</code>՝ Query Builder-ով (<code>DB::table</code>)։ Շաբլոնները դեռ առանց layout-ի․ Blade-ը մանրամասն՝ Դաս 19-ում, Eloquent-ը՝ Դաս 20-ում։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Laravel նախագիծ</span>
+    <span>5 քայլ · 4 տնային կետ նախագծում</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–18․ <code>composer create-project</code>, <code>php artisan serve</code>, <code>route:list</code>, <code>Route::get</code> անուններով, <code>route()</code>, <code>DB::table</code>, <code>paginate</code>, <code>withQueryString</code>, <code>abort_if</code>, Blade-ի <code>{{ }}</code>, <code>@foreach</code>, <code>@forelse</code>, <code>@selected</code>։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Laravel-ը ինքը չի մտնում օրինակի մեջ (vendor-ը 70+ ՄԲ է)․ <code>example/</code>-ում են միայն այն ֆայլերը, որ դու ստեղծում կամ փոխում ես նոր նախագծում։ Պատճենիր դրանք նույն ուղիներով։</p>
+    <div class="tree">SETUP.md
+app/Http/Controllers/BookController.php
+public/images/favicon.svg
+resources/views/books/index.blade.php
+resources/views/books/show.blade.php
+resources/views/lab/escape.blade.php
+routes/web.php</div>
+    <div class="tip note">
+      <span class="tag">Ինչպես ստուգված է</span>
+      <p>Այս ֆայլերը պատճենվել են մաքուր Laravel 12 նախագծի վրա (Fortify-ով, MariaDB-ով), կատարվել են <code>migrate:fresh --seed</code> և <code>view:cache</code>, և կայքը ստուգվել է բրաուզերում ավտոմատ թեստերով (Դաս 22-ի վերջնական վիճակը՝ 50 ստուգում՝ ֆիլտրեր, ցուցակ, ադմին, վալիդացիա, դերեր, 403/404/419, API, գնահատական)։ Նկարները վերցված են հենց այդ գործարկումից։ Քո մեքենայում միևնույն է անցիր ստուգաթերթով (բաժին 03)։</p>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Նոր Laravel նախագիծ (<code>SETUP.md</code>)։ PHP-ի նախագիծը մնում է որպես կա․ Laravel-ը կարդում է նույն <code>ani_books</code> բազան։</p>
+    <ul class="goals">
+      <li><code>starter/SETUP.md</code> — նախագծի ստեղծում և .env</li>
+      <li><code>starter/public/css/global.css</code> — Անիի կայքի ոճերը</li>
+      <li><code>starter/public/css/main.css</code> — Անիի կայքի ոճերը</li>
+      <li><code>starter/public/images/favicon.svg</code> — favicon</li>
+    </ul>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գործարկել</th></tr>
+      <tr><td><code>php artisan serve</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Նախագիծ</h3>
+    <ul class="goals">
+      <li><code>composer create-project laravel/laravel ani-club</code></li>
+      <li><code>.env</code>՝ <code>DB_DATABASE=ani_books</code> (Դաս 09–17-ի բազան)</li>
+      <li>Պատճենիր <code>public/css/</code>-ը և <code>public/images/</code>-ը</li>
+    </ul>
+
+    <h3>Քայլ 2 · routes/web.php</h3>
+    <ul class="goals">
+      <li>Երեք ուղի անուններով՝ <code>home</code>, <code>genre</code>, <code>book.show</code> (տնային 3)</li>
+      <li>Համեմատիր Դաս 15-ի <code>routes.php</code>-ի հետ</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>routes/web.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="t">Route</span>::<span class="f">get</span>(<span class="s">'/'</span>, [<span class="t">BookController</span>::<span class="k">class</span>, <span class="s">'index'</span>])-&gt;<span class="f">name</span>(<span class="s">'home'</span>);
+<span class="t">Route</span>::<span class="f">get</span>(<span class="s">'/genre/{slug}'</span>, [<span class="t">BookController</span>::<span class="k">class</span>, <span class="s">'genre'</span>])-&gt;<span class="f">name</span>(<span class="s">'genre'</span>);          <span class="c">// տնային 3</span>
+<span class="t">Route</span>::<span class="f">get</span>(<span class="s">'/book/{slug}'</span>, [<span class="t">BookController</span>::<span class="k">class</span>, <span class="s">'show'</span>])-&gt;<span class="f">name</span>(<span class="s">'book.show'</span>);</code></pre>
+    </div>
+
+    <h3>Քայլ 3 · BookController</h3>
+    <ul class="goals">
+      <li><code>php artisan make:controller BookController</code></li>
+      <li>Դաս 14-ի <code>SELECT_FIELDS</code>-ը՝ <code>DB::table('books')-&gt;leftJoin(...)</code></li>
+      <li>Դասավորումը՝ <code>SORTS</code> սպիտակ ցուցակից (տնային 5)</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Http/Controllers/BookController.php — shelf()</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">private</span> <span class="k">function</span> <span class="f">shelf</span>(<span class="t">Request</span> <span class="n">$request</span>, ?object <span class="n">$genre</span>)
+{
+    <span class="n">$sort</span> = <span class="n">$request</span>-&gt;<span class="f">query</span>(<span class="s">'sort'</span>);
+    <span class="n">$sort</span> = <span class="f">is_string</span>(<span class="n">$sort</span>) &amp;&amp; <span class="k">isset</span>(<span class="k">self</span>::<span class="t">SORTS</span>[<span class="n">$sort</span>]) ? <span class="n">$sort</span> : <span class="s">'progress'</span>;
+    [, <span class="n">$column</span>, <span class="n">$direction</span>] = <span class="k">self</span>::<span class="t">SORTS</span>[<span class="n">$sort</span>];
+
+    <span class="n">$books</span> = <span class="n">$this</span>-&gt;<span class="f">query</span>()
+        -&gt;<span class="f">when</span>(<span class="n">$genre</span>, <span class="k">fn</span> (<span class="n">$q</span>) =&gt; <span class="n">$q</span>-&gt;<span class="f">where</span>(<span class="s">'books.genre_id'</span>, <span class="n">$genre</span>-&gt;id))
+        -&gt;<span class="f">orderBy</span>(<span class="n">$column</span>, <span class="n">$direction</span>)
+        -&gt;<span class="f">orderBy</span>(<span class="s">'books.id'</span>)
+        -&gt;<span class="f">paginate</span>(<span class="n">6</span>)
+        -&gt;<span class="f">withQueryString</span>();                         <span class="c">// ?sort=-ը մնում է երկրորդ էջում</span>
+
+    <span class="k">return</span> <span class="f">view</span>(<span class="s">'books.index'</span>, [
+        <span class="s">'books'</span>  =&gt; <span class="n">$books</span>,
+        <span class="s">'genre'</span>  =&gt; <span class="n">$genre</span>,
+        <span class="s">'genres'</span> =&gt; <span class="t">DB</span>::<span class="f">table</span>(<span class="s">'genres'</span>)-&gt;<span class="f">orderBy</span>(<span class="s">'name'</span>)-&gt;<span class="f">get</span>(),
+        <span class="s">'sort'</span>   =&gt; <span class="n">$sort</span>,
+        <span class="s">'sorts'</span>  =&gt; <span class="k">self</span>::<span class="t">SORTS</span>,
+    ]);
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 4 · Շաբլոններ</h3>
+    <ul class="goals">
+      <li><code>books/index.blade.php</code>՝ <code>@forelse</code>, <code>{{ $books-&gt;links() }}</code></li>
+      <li><code>books/show.blade.php</code>՝ ժանրի հղումով</li>
+      <li>Ամեն հասցե՝ <code>route('book.show', $book-&gt;slug)</code>, ոչ ձեռքով</li>
+    </ul>
+
+    <h3>Քայլ 5 · {{ }} և {!! !!}</h3>
+    <ul class="goals">
+      <li><code>/lab/escape</code>՝ վտանգավոր վերնագիր երկու ձևով (տնային 6)</li>
+      <li>Փորձից հետո ջնջիր ուղին և շաբլոնը</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li><code>php artisan route:list --except-vendor</code>՝ 3 ուղի</li>
+      <li><code>?sort=xyz</code>-ը դառնում է <code>progress</code>, ոչ SQL սխալ</li>
+      <li><code>/genre/nope</code> և <code>/book/nope</code> → 404</li>
+      <li>Երկրորդ էջում <code>?sort=</code>-ը մնում է</li>
+      <li>Ոչ մի <code>{!! !!}</code> տվյալի համար</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>Target class [BookController] does not exist</code></td><td>Մոռացել ես <code>use App\Http\Controllers\BookController;</code></td></tr>
+      <tr><td><code>Route [book.show] not defined</code></td><td>Անունը տարբեր է <code>web.php</code>-ում, կամ չկա <code>-&gt;name()</code></td></tr>
+      <tr><td>Էջավորումը հսկայական սլաքներով</td><td>Laravel-ի լռելյայն շաբլոնը Tailwind է․ մերը՝ Դաս 19-ի տնային 4</td></tr>
+      <tr><td><code>SQLSTATE[HY000] [1049] Unknown database</code></td><td><code>.env</code>-ի <code>DB_DATABASE</code>-ը և <code>php artisan config:clear</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի տնային աշխատանքը</h2>
+    <p>Սրանք <a href="../../php-lesson-18.html#s9">Դաս 18-ի</a> տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում՝ Անիի ակումբում։ Մնացածը կատարիր ՏեխնոՄարկետում, ինչպես գրված է դասում։</p>
+    <ol class="hw">
+      <li>Ավարտիր դասարանականի 5 քայլը և չորս փորձարկումը։ Ուղարկիր սքրինշոթներ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Բացիր <code>public/index.php</code>-ը և գրիր, թե ամեն տողը քո Դաս 15-ի front controller-ի որ տողին է համապատասխանում։</li>
+      <li>Ավելացրու <code>/category/{slug}</code> ուղին անունով և կոնտրոլերի մեթոդով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Փոխիր <code>product.show</code>-ի ուղին <code>/products/{slug}</code>-ի։ Քանի՞ ֆայլ պիտի փոխեիր։ Համեմատիր Դաս 15-ի հետ։</li>
+      <li>Հանիր <code>SORTS</code> սպիտակ ցուցակը և օգտագործիր <code>orderBy($request-&gt;query('sort'))</code>։ Ի՞նչ է լինում <code>?sort=xyz</code>-ով։ Վերադարձրու ցուցակը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր <code>{{ }}</code>-ի և <code>{!! !!}</code>-ի տարբերությունը վտանգավոր անվանով ապրանքի վրա։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Խնդրիր AI-ին գրել Laravel-ի կոնտրոլեր։ Ստուգիր՝ օգտագործո՞ւմ է հին կառուցվածքը (<code>Kernel.php</code>)։ Կա՞ <code>orderBy</code> առանց սպիտակ ցուցակի։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/">օրինակը</a>։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-17/task.html">← Դաս 17</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-19/task.html">Դաս 19 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · տնային աշխատանք · Դաս 18</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

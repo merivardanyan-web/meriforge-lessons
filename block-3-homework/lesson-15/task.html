@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 15 · Սեփական MVC — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · տնային</b> · Դաս 15</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../php-lesson-15.html">PHP Դաս 15</a> · մինի-նախագիծ</p>
+  <h1>Սեփական MVC</h1>
+  <p class="lede">Տասներկու <code>.php</code> էջը դառնում են մեկ մուտք՝ <code>public/index.php</code>։ Router-ը կարդում է հասցեն (<code>/book/samvel</code>, <code>/genre/patmavep</code>) և կանչում կոնտրոլերի մեթոդ, կոնտրոլերը վերադարձնում է <code>Response</code>։ Document root-ը <code>public/</code> է, ուստի <code>.env</code>-ը և <code>src/</code>-ը այլևս հասանելի չեն բրաուզերից։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Անիի կայքը</span>
+    <span>5 քայլ · 7 տնային կետ նախագծում</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–15․ front controller, <code>.htaccess</code>, <code>Router</code> (<code>preg_match</code>, <code>{slug}</code>), <code>Request</code>, <code>Response</code>, կոնտրոլերներ կոնստրուկտորով, <code>HttpException</code>, <code>http_build_query</code>, <code>urldecode</code>։ Մուտք և CSRF՝ Դաս 16։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/genre.jpg" alt="Պատմավեպ ժանրի էջը, ակտիվ կոճակը" width="1280" height="900" loading="lazy">
+      <figcaption>/genre/patmavep</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/404.jpg" alt="Գիրքը չի գտնվել էջ" width="1280" height="900" loading="lazy">
+      <figcaption>/book/նոութբուք → 404</figcaption>
+    </figure>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Տերմինալ</div><button class="copy">Պատճենել</button></div>
+<pre><code>$ curl -i http://localhost:8000/.env
+HTTP/1.1 404 Not Found
+Content-Type: text/html; charset=utf-8
+
+$ curl -i -X POST http://localhost:8000/book/samvel
+HTTP/1.1 405 Method Not Allowed
+
+$ curl -i http://localhost:8000/book/%D5%B6%D5%B8%D6%82%D5%A9%D5%A2%D5%B8%D6%82%D6%84
+HTTP/1.1 404 Not Found</code></pre>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Շարունակիր քո նախագիծը։ Եթե բաց ես թողել նախորդ դասը, սկսիր <a href="../lesson-14/example/">Դաս 14-ի օրինակից</a>։</p>
+    <ul class="goals">
+      <li><code>starter/css/php-15.css</code> — ժանրերի ակտիվ կոճակ</li>
+      <li><code>starter/public/.htaccess</code> — Apache-ի (Laragon) վերաուղղում դեպի index.php</li>
+    </ul>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գործարկել</th></tr>
+      <tr><td><code>composer install &amp;&amp; php -S localhost:8000 -t public public/index.php</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · public/</h3>
+    <ul class="goals">
+      <li><code>css/</code> և <code>images/</code>՝ <code>public/</code>-ի մեջ</li>
+      <li><code>public/index.php</code>՝ միակ PHP ֆայլը, որ բացվում է բրաուզերից</li>
+      <li>Laragon-ում Document Root-ը՝ <code>public</code></li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>public/index.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="n">$router</span> = <span class="k">new</span> <span class="f">Router</span>();
+<span class="k">require</span> __DIR__ . <span class="s">'/../routes.php'</span>;
+
+<span class="k">try</span> {
+    <span class="n">$response</span> = <span class="n">$router</span>-&gt;<span class="f">dispatch</span>(<span class="t">Request</span>::<span class="f">fromGlobals</span>());
+} <span class="k">catch</span> (<span class="t">HttpException</span> <span class="n">$e</span>) {
+    <span class="n">$response</span> = <span class="t">Response</span>::<span class="f">html</span>(<span class="f">page</span>(<span class="s">'pages/error'</span>, [<span class="s">'code'</span> =&gt; <span class="n">$e</span>-&gt;status, <span class="s">'message'</span> =&gt; <span class="n">$e</span>-&gt;<span class="f">getMessage</span>()], (<span class="k">string</span>) <span class="n">$e</span>-&gt;status), <span class="n">$e</span>-&gt;status);
+} <span class="k">catch</span> (<span class="t">Throwable</span> <span class="n">$e</span>) {
+    <span class="f">error_log</span>((<span class="k">string</span>) <span class="n">$e</span>);                       <span class="c">// ⭐ մանրամասները՝ լոգում, ոչ էկրանին</span>
+    <span class="n">$message</span> = <span class="n">$debug</span> ? <span class="n">$e</span>-&gt;<span class="f">getMessage</span>() : <span class="s">'Տեխնիկական խնդիր։ Փորձիր ավելի ուշ։'</span>;
+    <span class="n">$response</span> = <span class="t">Response</span>::<span class="f">html</span>(<span class="f">page</span>(<span class="s">'pages/error'</span>, [<span class="s">'code'</span> =&gt; <span class="n">500</span>, <span class="s">'message'</span> =&gt; <span class="n">$message</span>], <span class="s">'500'</span>), <span class="n">500</span>);
+}
+
+<span class="n">$response</span>-&gt;<span class="f">send</span>();</code></pre>
+    </div>
+
+    <h3>Քայլ 2 · Router</h3>
+    <ul class="goals">
+      <li><code>get()</code>, <code>post()</code>, <code>dispatch()</code></li>
+      <li><code>/book/{slug}</code> → <code>#^/book/([^/]+)$#u</code>, <code>urldecode</code>՝ հայերեն slug-ի համար (տնային 5)</li>
+      <li>Ուղին կա, մեթոդը՝ ոչ → 405 (տնային 7)</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Http/Router.php — match()</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">private</span> <span class="k">function</span> <span class="k">match</span>(<span class="k">string</span> <span class="n">$route</span>, <span class="k">string</span> <span class="n">$path</span>): ?<span class="k">array</span>
+{
+    <span class="c">// {slug}-ը՝ «ցանկացած նիշ, բացի /»։ #-ը՝ սահմանազատիչ, որ /-ը չփախցնենք</span>
+    <span class="n">$pattern</span> = <span class="s">'#^'</span> . <span class="f">preg_replace</span>(<span class="s">'#\{[a-z_]+\}#'</span>, <span class="s">'([^/]+)'</span>, <span class="n">$route</span>) . <span class="s">'$#u'</span>;
+
+    <span class="k">if</span> (!<span class="f">preg_match</span>(<span class="n">$pattern</span>, <span class="n">$path</span>, <span class="n">$matches</span>)) {
+        <span class="k">return</span> <span class="k">null</span>;
+    }
+
+    <span class="f">array_shift</span>(<span class="n">$matches</span>);                         <span class="c">// [0]-ն ամբողջ համընկնումն է</span>
+
+    <span class="k">return</span> <span class="f">array_map</span>(<span class="s">'urldecode'</span>, <span class="n">$matches</span>);       <span class="c">// հայերեն slug՝ %D5%BD... → ս (տնային 5)</span>
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 3 · routes.php</h3>
+    <ul class="goals">
+      <li>Ամբողջ կայքը մեկ ֆայլում</li>
+      <li><code>/genre/{slug}</code> (տնային 2), <code>/search</code> (տնային 3)</li>
+      <li>⚠️ <code>/admin/books/archive</code>-ը՝ <code>{id}</code>-ից ԱՌԱՋ</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>routes.php — գրքեր</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/'</span>,                      [<span class="n">$bookController</span>, <span class="s">'index'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/genre/{slug}'</span>,          [<span class="n">$bookController</span>, <span class="s">'genre'</span>]);      <span class="c">// տնային 2</span>
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/search'</span>,                [<span class="n">$bookController</span>, <span class="s">'search'</span>]);     <span class="c">// տնային 3</span>
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/book/{slug}'</span>,           [<span class="n">$bookController</span>, <span class="s">'show'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/book/{slug}/cover'</span>,    [<span class="n">$bookController</span>, <span class="s">'cover'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/book/{slug}/read'</span>,     [<span class="n">$bookController</span>, <span class="s">'read'</span>]);</code></pre>
+    </div>
+
+    <h3>Քայլ 4 · Կոնտրոլերներ</h3>
+    <ul class="goals">
+      <li><code>BookController</code>, <code>ListController</code>, <code>PageController</code>, <code>Admin\BookController</code></li>
+      <li>Ոչ SQL, ոչ HTML․ միայն «ինչ վերցնել» և «որ շաբլոնը» (տնային 6)</li>
+      <li><code>page($view, $data, $title)</code>՝ layout-ի մեջ</li>
+    </ul>
+
+    <h3>Քայլ 5 · Հասցեներ</h3>
+    <ul class="goals">
+      <li><code>$book-&gt;url()</code>, <code>$genre-&gt;url()</code>՝ հասցեն մեկ տեղում</li>
+      <li><code>url('/', [...])</code>՝ <code>http_build_query</code>, դատարկները դուրս</li>
+      <li>Մենյուում՝ <code>ariaCurrent('/about')</code> (տնային 4)</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li><code>/.env</code> → 404 (Դաս 14-ում՝ 200)</li>
+      <li><code>/book/նոութբուք</code> → 404 էջ, ոչ սխալ</li>
+      <li><code>POST /book/samvel</code> → 405</li>
+      <li>Էջավորման հասցեն մաքուր է՝ <code>/?sort=title&amp;page=2</code></li>
+      <li>Մենյուի ընթացիկ կետը ունի <code>aria-current="page"</code></li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>CSS-ը 404 է</td><td>Ուղիները՝ <code>/css/main.css</code>, ոչ <code>css/main.css</code>․ <code>/book/samvel</code>-ից հարաբերականը կփնտրի <code>/book/css/</code></td></tr>
+      <tr><td>Ամեն էջ՝ 404</td><td>Laragon-ում Document Root-ը չես փոխել, կամ <code>.htaccess</code>-ը չկա</td></tr>
+      <tr><td><code>/admin/books/archive</code>-ը բացում է «archive» id-ով գիրքը</td><td>Հերթականությունը routes.php-ում</td></tr>
+      <tr><td>php -S-ով CSS-ը ստանում է HTML</td><td>Router-ի սկզբում՝ <code>if (PHP_SAPI === 'cli-server' &amp;&amp; is_file(...)) return false;</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի տնային աշխատանքը</h2>
+    <p>Սրանք <a href="../../php-lesson-15.html#s8">Դաս 15-ի</a> տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում՝ Անիի ակումբում։ Մնացածը կատարիր ՏեխնոՄարկետում, ինչպես գրված է դասում։</p>
+    <ol class="hw">
+      <li>Ավարտիր դասարանականը և հինգ փորձարկումը։ Ուղարկիր <code>/.env</code>-ի պատասխանի սքրինշոթը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>/category/{slug}</code> ուղին և <code>ProductController::category()</code> մեթոդը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>/search</code> ուղին <code>?q=</code> պարամետրով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>aria-current="page"</code> մենյուում <code>isCurrent()</code>-ով (HTML Դաս 18)։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Փորձարկիր հայերեն slug՝ <code>/product/նոութբուք</code>։ Աշխատո՞ւմ է <code>urldecode</code>-ը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Հաշվիր՝ քանի տող է <code>ProductController</code>-ը։ Կա՞ դրանում SQL կամ HTML։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li><em>Խորացված․</em> ավելացրու 405-ի ստուգումը Router-ում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Խնդրիր AI-ին վերանայել Router-ը անվտանգության տեսանկյունից։ Ի՞նչ գտավ։ Համաձա՞յն ես։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/">օրինակը</a>։ Օրինակում <code>lab-…</code> ֆայլերը փորձնական են․ դրանք հաջորդ դասի օրինակում այլևս չկան։ Գործարկելուց առաջ ստեղծիր բազան <code>example/sql/</code>-ի ֆայլերով և <code>.env</code>-ը (<code>composer install</code>)։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-14/task.html">← Դաս 14</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-16/task.html">Դաս 16 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · տնային աշխատանք · Դաս 15</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

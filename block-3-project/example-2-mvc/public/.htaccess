@@ -1,0 +1,14 @@
+# Մեկ մուտք — PHP Դաս 15
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Եթե ֆայլը իսկապես կա (css, js, նկար) — տուր այն
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Մնացած ամեն ինչը → index.php
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+Options -Indexes

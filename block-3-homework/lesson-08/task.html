@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 08 · Դարակը՝ MySQL-ում — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · տնային</b> · Դաս 08</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../php-lesson-08.html">PHP Դաս 08</a> · մինի-նախագիծ</p>
+  <h1>Դարակը՝ MySQL-ում</h1>
+  <p class="lede"><code>data.php</code>-ի զանգվածը տեղափոխվում է բազա։ Ստեղծում ես <code>ani_books</code> բազան և <code>books</code> աղյուսակը, լցնում Անիի յոթ գիրքը, ավելացնում ևս հինգը և գրում հարցումներ, որոնք հետո կդառնան կայքի ֆիլտրեր։ Կայքը դեռ կարդում է <code>data.php</code>-ը․ PHP-ն բազային կմիանա Դաս 10-ում։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>HeidiSQL</span>
+    <span>5 քայլ · 6 տնային կետ նախագծում</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–08․ <code>CREATE DATABASE</code>, <code>CREATE TABLE</code>, տիպեր (<code>INT</code>, <code>VARCHAR</code>, <code>SMALLINT</code>, <code>TINYINT</code>, <code>CHAR</code>, <code>DATETIME</code>), <code>NULL</code>/<code>NOT NULL</code>, <code>DEFAULT</code>, <code>UNIQUE</code>, <code>INSERT</code>, <code>SELECT … WHERE … ORDER BY … LIMIT … OFFSET</code>, <code>LIKE</code>, <code>BETWEEN</code>, <code>IS NULL</code>, <code>COUNT</code>, <code>ROUND</code>, <code>UPDATE</code>, <code>DELETE</code>։ Կապեր և <code>JOIN</code>՝ Դաս 09։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Ահա ինչ պետք է տեսնես HeidiSQL-ում, երբ կատարես <code>queries.sql</code>-ի հարցումները հերթականությամբ։ Սյունակների կարգը կարող է տարբերվել, տողերը՝ ոչ։</p>
+    <p><b>1. Ամբողջ դարակը՝ այբբենական կարգով</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>id</th><th>title</th><th>author</th><th>pages</th></tr>
+      <tr><td>4</td><td>1984</td><td>Ջորջ Օրուել</td><td>328</td></tr>
+      <tr><td>5</td><td>Ալքիմիկոսը</td><td>Պաուլո Կոելյո</td><td>208</td></tr>
+      <tr><td>9</td><td>Անուշ</td><td>Հովհաննես Թումանյան</td><td>64</td></tr>
+      <tr><td>3</td><td>Գիքորը</td><td>Հովհաննես Թումանյան</td><td>40</td></tr>
+      <tr><td>8</td><td>Խենթը</td><td>Րաֆֆի</td><td>300</td></tr>
+      <tr><td>11</td><td>Կարմիր գլխարկ 🐺</td><td>Շառլ Պերո</td><td>24</td></tr>
+      <tr><td>12</td><td>Հարրի Փոթերը և փիլիսոփայական քարը</td><td>Ջ. Ք. Ռոուլինգ</td><td>332</td></tr>
+      <tr><td>7</td><td>Հոբիտը</td><td>Ջ. Ռ. Ռ. Թոլքին</td><td>310</td></tr>
+      <tr><td>10</td><td>Մեծ սպասումներ</td><td>Չարլզ Դիքենս</td><td>544</td></tr>
+      <tr><td>2</td><td>Սամվել</td><td>Րաֆֆի</td><td>560</td></tr>
+      <tr><td>6</td><td>Վերք Հայաստանի</td><td>Խաչատուր Աբովյան</td><td>320</td></tr>
+      <tr><td>1</td><td>Փոքրիկ իշխանը</td><td>Անտուան դը Սենտ-Էքզյուպերի</td><td>96</td></tr>
+    </table>
+    </div>
+    <p><b>2. Դեռ չսկսված գրքերը</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>title</th><th>pages</th></tr>
+      <tr><td>1984</td><td>328</td></tr>
+      <tr><td>Մեծ սպասումներ</td><td>544</td></tr>
+    </table>
+    </div>
+    <p><b>3. Կարդում եմ՝ սկսել եմ, բայց չեմ ավարտել</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>title</th><th>read_pages</th><th>pages</th></tr>
+      <tr><td>Սամվել</td><td>140</td><td>560</td></tr>
+      <tr><td>Վերք Հայաստանի</td><td>90</td><td>320</td></tr>
+      <tr><td>Հոբիտը</td><td>120</td><td>310</td></tr>
+      <tr><td>Հարրի Փոթերը և փիլիսոփայական քարը</td><td>50</td><td>332</td></tr>
+    </table>
+    </div>
+    <p><b>4. Րաֆֆիի բոլոր գրքերը</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>title</th><th>year</th></tr>
+      <tr><td>Խենթը</td><td>1881</td></tr>
+      <tr><td>Սամվել</td><td>1886</td></tr>
+    </table>
+    </div>
+    <p><b>5. Ամենահաստ 3 գիրքը</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>title</th><th>pages</th></tr>
+      <tr><td>Սամվել</td><td>560</td></tr>
+      <tr><td>Մեծ սպասումներ</td><td>544</td></tr>
+      <tr><td>Հարրի Փոթերը և փիլիսոփայական քարը</td><td>332</td></tr>
+    </table>
+    </div>
+    <p><b>6. 5 աստղ ստացած գրքերը՝ նորից հին</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>title</th><th>rating</th><th>created_at</th></tr>
+      <tr><td>Անուշ</td><td>5</td><td>2026-10-01 10:00:00</td></tr>
+      <tr><td>Գիքորը</td><td>5</td><td>2026-09-05 10:00:00</td></tr>
+      <tr><td>Փոքրիկ իշխանը</td><td>5</td><td>2026-09-01 10:00:00</td></tr>
+    </table>
+    </div>
+    <p><b>7. Էջ 2՝ ամեն էջում 5 գիրք (Դաս 10-ի էջավորման համար)</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>id</th><th>title</th></tr>
+      <tr><td>6</td><td>Վերք Հայաստանի</td></tr>
+      <tr><td>7</td><td>Հոբիտը</td></tr>
+      <tr><td>8</td><td>Խենթը</td></tr>
+      <tr><td>9</td><td>Անուշ</td></tr>
+      <tr><td>10</td><td>Մեծ սպասումներ</td></tr>
+    </table>
+    </div>
+    <p><b>8. Քանի՞ գիրք կա դարակում</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>total</th></tr>
+      <tr><td>12</td></tr>
+    </table>
+    </div>
+    <p><b>9. Կարդացի ևս 20 էջ «Սամվել»-ից․ նախ SELECT, որ համոզվես՝ ճիշտ տողն է</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>id</th><th>title</th><th>read_pages</th></tr>
+      <tr><td>2</td><td>Սամվել</td><td>140</td></tr>
+    </table>
+    </div>
+    <p><b>0 տող․ NULL-ը ոչնչի «հավասար» չէ, նույնիսկ NULL-ի</b></p>
+    <pre class="out"><span class="r">SELECT title FROM books WHERE year = NULL
+Empty set (0 rows)</span></pre>
+    <p><b>1 տող․ ճիշտ ձևը</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>title</th></tr>
+      <tr><td>Հին աստվածներ</td></tr>
+    </table>
+    </div>
+    <p><b>============ Տնային 4 · միջակայք՝ հաստից բարակ ============</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>title</th><th>pages</th></tr>
+      <tr><td>Հարրի Փոթերը և փիլիսոփայական քարը</td><td>332</td></tr>
+      <tr><td>1984</td><td>328</td></tr>
+      <tr><td>Վերք Հայաստանի</td><td>320</td></tr>
+      <tr><td>Հոբիտը</td><td>310</td></tr>
+      <tr><td>Խենթը</td><td>300</td></tr>
+      <tr><td>Ալքիմիկոսը</td><td>208</td></tr>
+      <tr><td>Հին աստվածներ</td><td>120</td></tr>
+    </table>
+    </div>
+    <p><b>============ Տնային 5 · թաքցնել չսկսված գրքերը, որ ավելացվել են մինչև հոկտեմբեր ============ Նախ՝ SELECT նույն WHERE-ով։ Եթե ցուցակը ճիշտ է՝ նոր UPDATE</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>id</th><th>title</th><th>created_at</th></tr>
+      <tr><td>4</td><td>1984</td><td>2026-09-10 10:00:00</td></tr>
+    </table>
+    </div>
+    <p><b>============ Տնային 6 · առաջընթացը տոկոսով, միայն կեսից քիչ կարդացածները ============ WHERE-ում percent-ը դեռ չկա (SELECT-ը կատարվում է WHERE-ից հետո), ուստի բանաձևը կրկնում ենք</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>title</th><th>read_pages</th><th>pages</th><th>percent</th></tr>
+      <tr><td>Հարրի Փոթերը և փիլիսոփայական քարը</td><td>50</td><td>332</td><td>15</td></tr>
+      <tr><td>Վերք Հայաստանի</td><td>90</td><td>320</td><td>28</td></tr>
+      <tr><td>Սամվել</td><td>160</td><td>560</td><td>29</td></tr>
+      <tr><td>Հոբիտը</td><td>120</td><td>310</td><td>39</td></tr>
+    </table>
+    </div>
+    <p><b>============ Մաքրում ============ Ջնջում ենք փորձնական գիրքը։ DELETE-ը՝ միշտ WHERE-ով, նախ նույն SELECT-ը</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>id</th><th>title</th></tr>
+      <tr><td>13</td><td>Հին աստվածներ</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Շարունակիր քո նախագիծը։ Եթե բաց ես թողել նախորդ դասը, սկսիր <a href="../lesson-07/example/">Դաս 07-ի օրինակից</a>։</p>
+    <ul class="goals">
+      <li><code>starter/sql/seed.sql</code> — Անիի 7 գիրքը INSERT-ով․ կատարիր քո schema.sql-ից հետո</li>
+    </ul>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գործարկել</th></tr>
+      <tr><td><code>HeidiSQL → File → Run SQL file</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Բազա և աղյուսակ</h3>
+    <ul class="goals">
+      <li><code>sql/schema.sql</code>՝ <code>SET NAMES utf8mb4</code>, <code>DROP DATABASE IF EXISTS</code>, <code>CREATE DATABASE … utf8mb4_unicode_ci</code></li>
+      <li>Սյունակները՝ ստորև։ <code>year</code>-ը <code>NULL</code> է, ոչ 0․ «Հոբիտի» տարին անհայտ է</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>sql/schema.sql — books</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">CREATE</span> <span class="k">TABLE</span> books (
+    id          <span class="k">INT</span> <span class="k">UNSIGNED</span> <span class="k">AUTO_INCREMENT</span> <span class="k">PRIMARY</span> <span class="k">KEY</span>,
+    title       <span class="k">VARCHAR</span>(<span class="n">200</span>) <span class="k">NOT</span> <span class="k">NULL</span>,
+    slug        <span class="k">VARCHAR</span>(<span class="n">200</span>) <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">UNIQUE</span>,          <span class="c">-- հասցեի համար՝ book/samvel (Դաս 15)</span>
+    author      <span class="k">VARCHAR</span>(<span class="n">100</span>) <span class="k">NOT</span> <span class="k">NULL</span>,
+    year        <span class="k">SMALLINT</span>     <span class="k">NULL</span>,                      <span class="c">-- հայտնի չէ՝ NULL, ոչ 0</span>
+    pages       <span class="k">SMALLINT</span> <span class="k">UNSIGNED</span> <span class="k">NOT</span> <span class="k">NULL</span>,
+    read_pages  <span class="k">SMALLINT</span> <span class="k">UNSIGNED</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="n">0</span>,
+    genre       <span class="k">VARCHAR</span>(<span class="n">40</span>)  <span class="k">NOT</span> <span class="k">NULL</span>,                  <span class="c">-- Դաս 09-ում՝ առանձին աղյուսակ</span>
+    rating      <span class="k">TINYINT</span> <span class="k">UNSIGNED</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="n">0</span>,    <span class="c">-- 0 = դեռ չեմ գնահատել</span>
+    color       CHAR(<span class="n">7</span>)      <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="s">'#003459'</span>,
+    link        <span class="k">VARCHAR</span>(<span class="n">255</span>) <span class="k">NULL</span>,
+    cover       <span class="k">VARCHAR</span>(<span class="n">255</span>) <span class="k">NULL</span>,                      <span class="c">-- Դաս 07-ի վերբեռնումը՝ Դաս 11-ից</span>
+    is_active   <span class="k">TINYINT</span>(<span class="n">1</span>)   <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="n">1</span>,        <span class="c">-- թաքցնել, ոչ ջնջել</span>
+    created_at  <span class="k">DATETIME</span>     <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="k">CURRENT_TIMESTAMP</span>
+);</code></pre>
+    </div>
+
+    <h3>Քայլ 2 · Տվյալները</h3>
+    <ul class="goals">
+      <li>Կատարիր <code>starter/sql/seed.sql</code>-ը․ յոթ գիրքը <code>data.php</code>-ից</li>
+      <li>Ստուգիր HeidiSQL-ում, որ հայերենը ճիշտ է (ոչ «Õ†...»)</li>
+    </ul>
+
+    <h3>Քայլ 3 · ԵՒս հինգ գիրք</h3>
+    <ul class="goals">
+      <li><code>sql/queries.sql</code>-ի սկզբում՝ <code>INSERT</code> հինգ գրքով, մեկը՝ էմոջիով վերնագրում (տնային 2)</li>
+      <li><code>slug</code>-ը՝ լատինատառ և եզակի․ <code>karmir-glkhark</code></li>
+    </ul>
+
+    <h3>Քայլ 4 · Տասը հարցում</h3>
+    <ul class="goals">
+      <li>Դարակը այբբենական, չսկսածները, «կարդում եմ», Րաֆֆիի գրքերը, ամենահաստ երեքը, 5 աստղանոցները, էջ 2՝ <code>LIMIT 5 OFFSET 5</code>, քանակը</li>
+      <li><code>UPDATE</code>՝ +20 էջ «Սամվել»-ից․ <b>նախ SELECT նույն WHERE-ով</b></li>
+    </ul>
+
+    <h3>Քայլ 5 · Տնայինի փորձերը</h3>
+    <ul class="goals">
+      <li><code>= NULL</code> և <code>IS NULL</code> (տնային 3)</li>
+      <li>100–350 էջ՝ հաստից բարակ (տնային 4)</li>
+      <li>Թաքցրու (<code>is_active = 0</code>) չսկսած հին գրքերը՝ նախ SELECT (տնային 5)</li>
+      <li>Առաջընթացը տոկոսով, միայն 50%-ից քիչ․ բանաձևը կրկնվում է WHERE-ում (տնային 6)</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>sql/queries.sql — տնային 6</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">SELECT</span> title, read_pages, pages,
+       <span class="k">ROUND</span>(read_pages * <span class="n">100</span> / pages) <span class="k">AS</span> percent
+<span class="k">FROM</span> books
+<span class="k">WHERE</span> read_pages &gt; <span class="n">0</span> <span class="k">AND</span> <span class="k">ROUND</span>(read_pages * <span class="n">100</span> / pages) &lt; <span class="n">50</span>
+<span class="k">ORDER</span> <span class="k">BY</span> percent;</code></pre>
+    </div>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li><code>schema.sql</code>-ը կրկին կատարելիս բազան վերստեղծվում է առանց սխալի</li>
+      <li>12 գիրք, հայերենը և էմոջին ճիշտ են</li>
+      <li>Ամեն <code>UPDATE</code> և <code>DELETE</code> ունի <code>WHERE</code>, և դրանից առաջ՝ նույն <code>SELECT</code>-ը</li>
+      <li><code>= NULL</code>-ը տալիս է 0 տող, <code>IS NULL</code>-ը՝ 1</li>
+      <li>Հարցումների արդյունքները համընկնում են բաժին 00-ի աղյուսակների հետ</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Հայերենը «Õ†...» է</td><td>Ֆայլի սկզբում՝ <code>SET NAMES utf8mb4;</code>, բազան՝ <code>utf8mb4</code></td></tr>
+      <tr><td><code>Duplicate entry for key slug</code></td><td>Երկու գիրք նույն slug-ով․ <code>UNIQUE</code>-ը աշխատում է, ինչպես պետք է</td></tr>
+      <tr><td><code>WHERE percent &lt; 50</code>՝ <code>Unknown column</code></td><td>WHERE-ը կատարվում է SELECT-ից առաջ․ կրկնիր բանաձևը</td></tr>
+      <tr><td>Էմոջին դարձավ «????»</td><td><code>utf8</code>-ը MySQL-ում 3 բայթ է․ պետք է <code>utf8mb4</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի տնային աշխատանքը</h2>
+    <p>Սրանք <a href="../../php-lesson-08.html#s9">Դաս 08-ի</a> տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում՝ Անիի ակումբում։ Մնացածը կատարիր ՏեխնոՄարկետում, ինչպես գրված է դասում։</p>
+    <ol class="hw">
+      <li>Ավարտիր դասարանականի 10 հարցումը։ Ուղարկիր SQL-ը և արդյունքների սքրինշոթները։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու ևս 5 ապրանք քո ընտրությամբ, որոնցից մեկը՝ էմոջիով անվան մեջ։ Ստուգիր, որ այն ճիշտ է ցուցադրվում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցույց տուր <code>WHERE specs = NULL</code>-ի և <code>WHERE specs IS NULL</code>-ի տարբերությունը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գրիր հարցում, որը գտնում է 50 000 – 150 000 դրամ արժեցող ակտիվ ապրանքները՝ թանկից էժան։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Թաքցրու (<code>is_active = 0</code>) բոլոր ապրանքները, որոնք պահեստում չկան։ Նախ՝ <code>SELECT</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Հաշվարկիր զեղչված գինը և ցույց տուր միայն այն ապրանքները, որոնց զեղչված գինը 100 000-ից փոքր է։ <em>Հուշում․ <code>WHERE</code>-ում <code>final_price</code>-ը դեռ չկա, կրկնիր բանաձևը։</em> <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Խնդրիր AI-ին գրել 5 հարցում քո աղյուսակի համար, ապա կատարիր դրանք։ Բոլորը աշխատեցի՞ն։ Եթե ոչ՝ ինչու։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/">օրինակը</a>։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-07/task.html">← Դաս 07</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-09/task.html">Դաս 09 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · տնային աշխատանք · Դաս 08</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

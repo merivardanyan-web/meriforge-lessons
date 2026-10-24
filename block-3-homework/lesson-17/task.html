@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 17 · JSON API և fetch — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · տնային</b> · Դաս 17</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../php-lesson-17.html">PHP Դաս 17</a> · մինի-նախագիծ</p>
+  <h1>JSON API և fetch</h1>
+  <p class="lede">Կայքը ստանում է API՝ <code>/api/books</code>, <code>/api/list</code>։ «+ Կարդալու ցուցակ»-ը աշխատում է առանց էջի վերբեռնման, իսկ որոնումը թարմացնում է դարակը գրելու ընթացքում։ Առանց JavaScript-ի նույն կոճակները և ֆորմաները շարունակում են աշխատել․ JS-ը միայն լավացնում է։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Անիի կայքը</span>
+    <span>6 քայլ · 9 տնային կետ նախագծում</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–17 և JS բլոկը․ <code>Response::json</code>, <code>json_encode</code> (<code>JSON_UNESCAPED_UNICODE</code>), <code>php://input</code>, <code>X-CSRF-Token</code> header, 201/404/419/422, <code>toArray()</code>, <code>fetch</code>, <code>AbortController</code>, debounce, ES մոդուլներ։ Laravel՝ Դաս 18։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/toast.jpg" alt="Toast հաղորդագրություն և ✓ Ցուցակում է կոճակ" width="1280" height="900" loading="lazy">
+      <figcaption>fetch-ով, առանց վերբեռնման</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/live-search.jpg" alt="Որոնում Րաֆ՝ երկու քարտ" width="1280" height="900" loading="lazy">
+      <figcaption>Որոնում գրելու ընթացքում</figcaption>
+    </figure>
+    </div>
+    <figure class="shot">
+      <img src="screenshots/api-json.jpg" alt="JSON պատասխան բրաուզերում" width="1280" height="900" loading="lazy">
+      <figcaption>/api/books?q=Րաֆֆի&per_page=2</figcaption>
+    </figure>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Տերմինալ</div><button class="copy">Պատճենել</button></div>
+<pre><code>$ curl "http://localhost:8000/api/books?q=Րաֆֆի&amp;per_page=1"
+{
+    "data": [
+        {
+            "id": 8,
+            "title": "Խենթը",
+            "slug": "khenty",
+            "author": "Րաֆֆի",
+            "year": 1881,
+            "genre": "պատմավեպ",
+            "pages": 300,
+            "read": 300,
+            "progress": 100,
+            "status": "done",
+            "format": "📖 Թղթային",
+            "time_left": "0 ր",
+            "color": "#7a2f2f",
+            "cover": null,
+            "url": "/book/khenty"
+        }
+    ],
+    "meta": {
+        "page": 1,
+        "per_page": 1,
+        "total": 2,
+        "last_page": 2
+    }
+}
+
+$ curl -i -X DELETE http://localhost:8000/api/list/items/2
+HTTP/1.1 419 Unknown Status Code
+{"error":{"message":"Ձևաթուղթը ժամկետանց է։ Թարմացրու էջը և փորձիր կրկին։"}}
+
+$ curl "http://localhost:8000/api/books?per_page=-5&amp;page=abc"   # meta
+{"page": 1, "per_page": 1, "total": 11, "last_page": 11}
+
+$ curl -X POST http://localhost:8000/lab-json.php -H "Content-Type: application/json" -d '{"id": 2}'
+Content-Type: application/json
+$_POST = array(0) {
+}
+php://input = {"id": 2}</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>lab-json.php</div><button class="copy">Պատճենել</button></div>
+<pre><code>== json_encode($user)՝ ամեն public դաշտ, ՆԱԵՎ հեշը ❌
+{"id":1,"email":"ani@example.com","name":"Անի","role":"admin","passwordHash":"$2y$10$CxxIjyzVQ5vj6wPgcrUDhe090rCqrbz917n24TaUdoNh4NGnQcVvG"}
+
+== json_encode($book) և $book-&gt;toArray()
+{"id":2,"title":"Սամվել","slug":"samvel","author":"Րաֆֆի","year":1886,"pages":560,"read":140,"genre":"պատմավեպ","rating":0,"color":"#8a3b2f","link":"https:\/\/hy.wikipedia.org\/w\/index.php?search=Սամվել+Րաֆֆի","cover":null,"createdAt":"2026-09-03 10:00:00","lentToName":null}
+{"id":2,"title":"Սամվել","slug":"samvel","author":"Րաֆֆի","year":1886,"genre":"պատմավեպ","pages":560,"read":140,"progress":25,"status":"reading","format":"📖 Թղթային","time_left":"14 ժ","color":"#8a3b2f","cover":null,"url":"\/book\/samvel"}
+
+== array_filter → բանալիները՝ 0
+["1984"]…  ← օբյեկտ {}
+["1984"]…  ← զանգված [] (array_values)</code></pre>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Շարունակիր քո նախագիծը։ Եթե բաց ես թողել նախորդ դասը, սկսիր <a href="../lesson-16/example/">Դաս 16-ի օրինակից</a>։</p>
+    <ul class="goals">
+      <li><code>starter/public/js/ui.js</code> — <code>escapeHtml</code>, <code>debounce</code>, <code>showToast</code>՝ JS բլոկից</li>
+    </ul>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գործարկել</th></tr>
+      <tr><td><code>composer install &amp;&amp; php -S localhost:8000 -t public public/index.php</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Request և Response</h3>
+    <ul class="goals">
+      <li><code>Request::fromGlobals()</code>՝ JSON մարմին <code>php://input</code>-ից․ <code>$_POST</code>-ը դատարկ է (տնային 4)</li>
+      <li><code>header('X-CSRF-Token')</code>, <code>expectsJson()</code></li>
+      <li><code>Response::json()</code>, <code>Router::delete()</code></li>
+    </ul>
+
+    <h3>Քայլ 2 · BookApiController</h3>
+    <ul class="goals">
+      <li><code>GET /api/books?q=&amp;page=&amp;per_page=</code>՝ <code>data</code> + <code>meta</code></li>
+      <li><code>per_page</code>՝ 1–50, <code>page=abc</code> → 1 (տնային 9)</li>
+      <li><code>Book::toArray()</code>՝ ՄԵՆՔ ենք որոշում, ինչ ցույց տալ (տնային 5)</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Controllers/Api/BookApiController.php — index()</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">public</span> <span class="k">function</span> <span class="f">index</span>(<span class="t">Request</span> <span class="n">$request</span>): <span class="t">Response</span>
+{
+    <span class="n">$filters</span> = <span class="t">BookRepository</span>::<span class="f">filtersFrom</span>(<span class="n">$request</span>-&gt;<span class="f">allQuery</span>());
+    <span class="n">$sort</span>    = <span class="n">$request</span>-&gt;<span class="f">query</span>(<span class="s">'sort'</span>);
+    <span class="n">$sort</span>    = <span class="k">isset</span>(<span class="t">BookRepository</span>::<span class="t">SORTS</span>[<span class="n">$sort</span>]) ? <span class="n">$sort</span> : <span class="s">'progress'</span>;
+    <span class="n">$page</span>    = <span class="f">max</span>(<span class="n">1</span>, <span class="n">$request</span>-&gt;<span class="k">int</span>(<span class="s">'page'</span>, <span class="n">1</span>));                                   <span class="c">// ?page=abc → 1 (տնային 9)</span>
+    <span class="n">$perPage</span> = <span class="f">min</span>(<span class="k">self</span>::<span class="t">MAX_PER_PAGE</span>, <span class="f">max</span>(<span class="n">1</span>, <span class="n">$request</span>-&gt;<span class="k">int</span>(<span class="s">'per_page'</span>, <span class="n">6</span>)));      <span class="c">// ?per_page=-5 → 1, 1000 → 50</span>
+
+    <span class="n">$total</span> = <span class="n">$this</span>-&gt;books-&gt;<span class="f">count</span>(<span class="n">$filters</span>);
+    <span class="n">$found</span> = <span class="n">$this</span>-&gt;books-&gt;<span class="f">search</span>(<span class="n">$filters</span>, <span class="n">$sort</span>, <span class="n">$perPage</span>, (<span class="n">$page</span> - <span class="n">1</span>) * <span class="n">$perPage</span>);
+
+    <span class="k">return</span> <span class="t">Response</span>::<span class="f">json</span>([
+        <span class="c">// array_map-ը պահում է 0, 1, 2 բանալիները → JSON զանգված [...]։</span>
+        <span class="c">// array_filter-ից հետո բանալիները կարող են լինել 0, 2 → JSON օբյեկտ {"0":..,"2":..} (տնային 6)</span>
+        <span class="s">'data'</span> =&gt; <span class="f">array_map</span>(<span class="k">fn</span>(<span class="t">Book</span> <span class="n">$b</span>): <span class="k">array</span> =&gt; <span class="n">$b</span>-&gt;<span class="f">toArray</span>(), <span class="n">$found</span>),
+        <span class="s">'meta'</span> =&gt; [
+            <span class="s">'page'</span>      =&gt; <span class="n">$page</span>,
+            <span class="s">'per_page'</span>  =&gt; <span class="n">$perPage</span>,
+            <span class="s">'total'</span>     =&gt; <span class="n">$total</span>,
+            <span class="s">'last_page'</span> =&gt; <span class="f">max</span>(<span class="n">1</span>, (<span class="k">int</span>) ((<span class="n">$total</span> + <span class="n">$perPage</span> - <span class="n">1</span>) / <span class="n">$perPage</span>)),
+        ],
+    ]);
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 3 · ListApiController</h3>
+    <ul class="goals">
+      <li><code>GET /api/list</code>՝ գրքեր, նպատակ, մնացած էջեր (տնային 2)</li>
+      <li><code>POST /api/list/items</code> → 201 կամ 422</li>
+      <li><code>DELETE /api/list/items/{id}</code>՝ առանց token-ի 419 (տնային 3)</li>
+    </ul>
+
+    <h3>Քայլ 4 · list.js</h3>
+    <ul class="goals">
+      <li><code>&lt;form data-list-add&gt;</code>՝ դելեգացիա <code>document</code>-ի վրա</li>
+      <li>422՝ toast, ամեն այլ սխալ՝ <code>form.submit()</code></li>
+      <li>Անջատիր JS-ը DevTools-ում և ստուգիր (տնային 8)</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>public/js/api.js — request()</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">async</span> <span class="k">function</span> <span class="f">request</span>(url, options = {}) {
+    <span class="k">const</span> response = <span class="k">await</span> <span class="f">fetch</span>(url, {
+        ...options,
+        headers: {
+            <span class="s">"Accept"</span>: <span class="s">"application/json"</span>,
+            <span class="s">"X-CSRF-Token"</span>: csrf,                 <span class="c">// ⭐ առանց սրա POST-ը և DELETE-ը կստանան 419</span>
+            ...(options.body ? { <span class="s">"Content-Type"</span>: <span class="s">"application/json"</span> } : {}),
+        },
+    });
+
+    <span class="k">const</span> payload = <span class="k">await</span> response.<span class="f">json</span>();
+
+    <span class="c">// fetch-ը 4xx/5xx-ի դեպքում ՉԻ գցում սխալ․ ok-ը ստուգում ենք ինքներս</span>
+    <span class="k">if</span> (!response.ok) {
+        <span class="k">throw</span> <span class="k">new</span> <span class="f">ApiError</span>(payload.error?.message ?? <span class="s">"Սխալ"</span>, response.status);
+    }
+
+    <span class="k">return</span> payload;
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 5 · search.js</h3>
+    <ul class="goals">
+      <li><code>input</code> + debounce 300 մվ, <code>AbortController</code></li>
+      <li>Քարտի markup-ը՝ նույնը, ինչ PHP-ում, <code>escapeHtml()</code>-ով</li>
+      <li><code>history.replaceState</code>՝ հասցեն համընկնում է արդյունքի հետ (տնային 7)</li>
+    </ul>
+
+    <h3>Քայլ 6 · Փորձնական ֆայլ</h3>
+    <ul class="goals">
+      <li><code>public/lab-json.php</code>՝ <code>json_encode($user)</code>-ը ցույց է տալիս հեշը (տնային 5), <code>array_filter</code>-ից հետո օբյեկտ (տնային 6), <code>$_POST</code>-ը JSON-ի դեպքում (տնային 4)</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>«+ Կարդալու ցուցակ»-ից հետո էջը չի վերբեռնվում, հաշվիչը փոխվում է</li>
+      <li>Առանց JS-ի նույն կոճակը աշխատում է</li>
+      <li><code>DELETE</code> առանց token-ի՝ 419 JSON</li>
+      <li><code>/api/books/nope</code>՝ 404 JSON, ոչ HTML</li>
+      <li>API-ում ոչ մի <code>password_hash</code> կամ <code>is_active</code></li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>Unexpected token &lt;</code> JS-ում</td><td>Սխալը վերադարձավ HTML-ով․ <code>/api/</code>-ի համար պետք է JSON (<code>expectsJson()</code>)</td></tr>
+      <tr><td>POST-ը միշտ 419</td><td>fetch-ը չի ուղարկում <code>X-CSRF-Token</code>, կամ <code>&lt;meta name="csrf-token"&gt;</code>-ը չկա</td></tr>
+      <tr><td><code>$_POST['id']</code>-ը null է</td><td>JSON-ի դեպքում կարդա <code>php://input</code></td></tr>
+      <tr><td>Հին որոնման պատասխանը գալիս է նորից հետո</td><td><code>controller?.abort()</code> նոր հարցումից առաջ</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի տնային աշխատանքը</h2>
+    <p>Սրանք <a href="../../php-lesson-17.html#s10">Դաս 17-ի</a> տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում՝ Անիի ակումբում։ Մնացածը կատարիր ՏեխնոՄարկետում, ինչպես գրված է դասում։</p>
+    <ol class="hw">
+      <li>Ավարտիր դասարանականի 5 քայլը և վեց <code>curl</code> փորձարկումը։ Ուղարկիր սքրինշոթներ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>GET /api/cart</code>՝ վերադարձնում է զամբյուղի տողերը գումարով։ Օգտագործիր <code>findMany</code>-ը (Դաս 14)։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>DELETE /api/cart/items/{id}</code> և ստուգիր, որ առանց token-ի 419 է։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր <code>$_POST</code>-ի դատարկության թակարդը՝ <code>var_dump($_POST)</code> JSON հարցումի ժամանակ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր, ինչ կլինի, եթե <code>toArray()</code>-ի փոխարեն օգտագործես <code>json_encode($product)</code>։ Ավելացրու <code>public $costPrice</code> և տես։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Փոխիր <code>array_map</code>-ը <code>array_filter</code>-ով և ցուցադրիր, ինչպես է <code>data</code>-ն դառնում օբյեկտ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li><em>Խորացված․</em> գրիր <code>/api/products?q=...</code> որոնում և JS ֆայլ՝ debounce-ով, որը թարմացնում է ցուցակը ինչպես JS բլոկի որոնման դասում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Անջատիր JS-ը DevTools-ում և ստուգիր, որ «Գնել» կոճակը դեռ աշխատում է։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Փորձիր <code>?per_page=-5</code> և <code>?page=abc</code>։ Ի՞նչ է վերադարձնում API-ն։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Խնդրիր AI-ին վերանայել API-ը անվտանգության տեսանկյունից (Դաս 4-ի «վերանայման» ռեժիմով, առանց վերաշարադրելու)։ Ի՞նչ գտավ։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/">օրինակը</a>։ Օրինակում <code>lab-…</code> ֆայլերը փորձնական են․ դրանք հաջորդ դասի օրինակում այլևս չկան։ Գործարկելուց առաջ ստեղծիր բազան <code>example/sql/</code>-ի ֆայլերով և <code>.env</code>-ը (<code>composer install</code>)։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-16/task.html">← Դաս 16</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-18/task.html">Դաս 18 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · տնային աշխատանք · Դաս 17</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

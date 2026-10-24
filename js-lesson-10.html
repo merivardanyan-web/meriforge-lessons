@@ -349,7 +349,7 @@ row.innerHTML = products.<span class="f">map</span>(p =&gt; <span class="s">`
   &lt;div class="col"&gt;
     &lt;div class="wrapper"&gt;
       &lt;h3 class="title"&gt;</span>${p.name}<span class="s">&lt;/h3&gt;
-      &lt;span class="price"&gt;</span>${p.price.<span class="f">toLocaleString</span>(<span class="s">"hy-AM"</span>)}<span class="s"> ֏&lt;/span&gt;
+      &lt;span class="price"&gt;</span>${p.price.<span class="f">toLocaleString</span>(<span class="s">"ru-RU"</span>)}<span class="s"> ֏&lt;/span&gt;
       &lt;button class="btn" data-id="</span>${p.id}<span class="s">"&gt;Գնել&lt;/button&gt;
     &lt;/div&gt;
   &lt;/div&gt;
@@ -440,7 +440,7 @@ products.<span class="f">forEach</span>(p =&gt; {
     &lt;div class="col"&gt;
       &lt;div class="wrapper </span>${inStock ? <span class="s">""</span> : <span class="s">"is-disabled"</span>}<span class="s">"&gt;
         &lt;h3 class="title"&gt;</span>${name}<span class="s">&lt;/h3&gt;
-        &lt;span class="price"&gt;</span>${price.<span class="f">toLocaleString</span>(<span class="s">"hy-AM"</span>)}<span class="s"> ֏&lt;/span&gt;
+        &lt;span class="price"&gt;</span>${price.<span class="f">toLocaleString</span>(<span class="s">"ru-RU"</span>)}<span class="s"> ֏&lt;/span&gt;
         &lt;span class="badge"&gt;</span>${inStock ? <span class="s">"Առկա է"</span> : <span class="s">"Սպառված"</span>}<span class="s">&lt;/span&gt;
         &lt;button class="btn" data-id="</span>${id}<span class="s">" </span>${inStock ? <span class="s">""</span> : <span class="s">"disabled"</span>}<span class="s">&gt;
           Գնել
@@ -467,7 +467,7 @@ products.<span class="f">forEach</span>(p =&gt; {
   <span class="k">const</span> total = available.<span class="f">reduce</span>((sum, p) =&gt; sum + p.price, <span class="n">0</span>);
 
   stats.textContent =
-    <span class="s">`</span>${list.length}<span class="s"> ապրանք · </span>${available.length}<span class="s"> առկա · </span>${total.<span class="f">toLocaleString</span>(<span class="s">"hy-AM"</span>)}<span class="s"> ֏`</span>;
+    <span class="s">`</span>${list.length}<span class="s"> ապրանք · </span>${available.length}<span class="s"> առկա · </span>${total.<span class="f">toLocaleString</span>(<span class="s">"ru-RU"</span>)}<span class="s"> ֏`</span>;
 }
 
 <span class="c">// Գործարկում</span>
@@ -531,6 +531,10 @@ console.log("innerHTML:", box.outerHTML);</textarea>
   <!-- ============ 09 ============ -->
   <section id="s9">
     <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <div class="tip note">
+      <span class="tag">Մինի-նախագիծ</span>
+      <p>Այս տնայինի գլխավոր մասը՝ <a href="block-2-homework/lesson-10/task.html" style="color:var(--pen);text-decoration:underline">«Դարակը JS-ով»</a>, քայլ առ քայլ, starter ֆայլերով և պատրաստի օրինակով։ Ներքևի ցուցակի մնացած կետերը առանձին վարժություններ են։</p>
+    </div>
     <ol class="hw">
       <li>Ստեղծիր էջ մեկ <code>h1</code>-ով և JS-ով փոխիր դրա տեքստը։ Ապա փորձիր նույնը <code>innerHTML</code>-ով՝ <code>&lt;em&gt;</code> թեգով ներսում։</li>
       <li>Ստեղծիր <code>.box</code> դիվ։ JS-ով ավելացրու <code>.active</code> դասը, հետո հանիր, հետո <code>toggle</code> արա երկու անգամ։ Ամեն քայլից հետո տպիր <code>className</code>-ը։</li>

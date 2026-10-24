@@ -53,7 +53,7 @@ body{
 
 /* ============ LAYOUT ============ */
 .sheet{
-  max-width: 1280px;
+  max-width:860px;
   margin:0 auto;
   background:var(--sheet);
   border-left:1px solid var(--rule);
@@ -223,10 +223,8 @@ pre.out{
 .note{
   border-left:3px solid var(--pen);
   background:color-mix(in srgb, var(--pen) 8%, transparent);
-  padding:14px 18px;
-  border-radius:0 8px 8px 0;
-  margin:22px 0;
-  max-width: 100%;
+  padding:14px 18px; border-radius:0 8px 8px 0;
+  margin:22px 0; max-width:66ch;
 }
 .note p:last-child{margin-bottom:0}
 .note .tag{

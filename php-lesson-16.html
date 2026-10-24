@@ -24,12 +24,12 @@
 
   <p class="eyebrow">PHP Դաս 16 · 2 ժամ · Անվտանգություն 4 / 4 · Սեփական MVC 2 / 3</p>
   <h1>Նույնականացում և CSRF</h1>
-  <p class="lede">Վեց դաս ասում էինք «ադմինը պաշտպանված չէ»։ Այսօր փակում ենք այդ պարտքը — և սովորում ենք հարձակում, որի մասին շատերը չգիտեն։</p>
+  <p class="lede">Վեց դաս ասում էինք «ադմինը պաշտպանված չէ»։ Այսօր փակում ենք այդ պարտքը, ավելացնում ենք հաճախորդների գրանցումը և սովորում ենք հարձակում, որի մասին շատերը չգիտեն։</p>
 
   <div class="facts">
     <span>Բլոկ 3 · Դաս 16 / 24</span>
     <span>Անվտանգության վերջին դասը</span>
-    <span>password_hash · մուտք · CSRF</span>
+    <span>password_hash · մուտք · գրանցում · CSRF</span>
   </div>
 
   <!-- ============ 00 ============ -->
@@ -43,6 +43,7 @@
       <li>CSRF — ի՞նչ է և ինչո՞ւ վտանգավոր</li>
       <li>Token ամեն ֆորմայում</li>
       <li>Փորձերի սահմանափակում</li>
+      <li>Գրանցում՝ վալիդացիա, <code>UNIQUE</code> և ամենացածր դերը</li>
     </ul>
   </section>
 
@@ -99,7 +100,7 @@
     email         <span class="t">VARCHAR</span>(<span class="n">190</span>) <span class="k">NOT NULL UNIQUE</span>,
     password_hash <span class="t">VARCHAR</span>(<span class="n">255</span>) <span class="k">NOT NULL</span>,
     name          <span class="t">VARCHAR</span>(<span class="n">100</span>) <span class="k">NOT NULL</span>,
-    role          <span class="t">ENUM</span>(<span class="s">'admin'</span>,<span class="s">'manager'</span>) <span class="k">NOT NULL DEFAULT</span> <span class="s">'manager'</span>,
+    role          <span class="t">ENUM</span>(<span class="s">'admin'</span>,<span class="s">'manager'</span>,<span class="s">'customer'</span>) <span class="k">NOT NULL DEFAULT</span> <span class="s">'customer'</span>,   <span class="c">-- ⭐ բաժին 07</span>
     created_at    <span class="t">DATETIME</span> <span class="k">NOT NULL DEFAULT CURRENT_TIMESTAMP</span>
 ) <span class="k">ENGINE</span>=InnoDB;</code></pre>
     </div>
@@ -459,7 +460,7 @@
     <span class="k">public function</span> <span class="f">form</span>(<span class="t">Request</span> <span class="n">$request</span>): <span class="t">Response</span>
     {
         <span class="k">if</span> (<span class="n">$this</span>-&gt;<span class="n">auth</span>-&gt;<span class="f">check</span>()) {
-            <span class="k">return</span> <span class="t">Response</span>::<span class="f">redirect</span>(<span class="s">'/admin'</span>);
+            <span class="k">return</span> <span class="t">Response</span>::<span class="f">redirect</span>(<span class="n">$this</span>-&gt;<span class="n">auth</span>-&gt;<span class="f">isStaff</span>() ? <span class="s">'/admin'</span> : <span class="s">'/'</span>);
         }
 
         <span class="k">return</span> <span class="t">Response</span>::<span class="f">html</span>(
@@ -488,7 +489,8 @@
 
         <span class="n">$this</span>-&gt;<span class="n">throttle</span>-&gt;<span class="f">clear</span>();
 
-        <span class="n">$to</span> = <span class="n">$_SESSION</span>[<span class="s">'intended'</span>] ?? <span class="s">'/admin'</span>;
+        <span class="c">// Աշխատակիցը՝ ադմին վահանակ, հաճախորդը՝ գլխավոր էջ (բաժին 07)</span>
+        <span class="n">$to</span> = <span class="n">$_SESSION</span>[<span class="s">'intended'</span>] ?? (<span class="n">$this</span>-&gt;<span class="n">auth</span>-&gt;<span class="f">isStaff</span>() ? <span class="s">'/admin'</span> : <span class="s">'/'</span>);
         <span class="k">unset</span>(<span class="n">$_SESSION</span>[<span class="s">'intended'</span>]);
 
         <span class="k">return</span> <span class="t">Response</span>::<span class="f">redirect</span>(<span class="n">$to</span>);
@@ -520,7 +522,259 @@
 
   <!-- ============ 07 ============ -->
   <section id="s7">
-    <h2><span class="num">07</span>Դասարանական</h2>
+    <h2><span class="num">07</span>Գրանցում</h2>
+    <p>Մինչ այժմ <code>users</code>-ում միայն աշխատակիցներ էին, և առաջին ադմինին ստեղծում ենք ձեռքով (բաժին 08)։ Բայց խանութի հաճախորդները նույնպես պետք է կարողանան ստեղծել հաշիվ, օրինակ՝ պատվերների պատմությունը տեսնելու համար։ Գրանցումը բացում է նոր դուռ դեպի համակարգ, ուստի այս բաժնի կեսը անվտանգության մասին է։</p>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Քայլ</th><th>Ինչ ենք անում</th><th>Ինչու</th></tr>
+      <tr><td>1</td><td>Վալիդացիա սերվերում</td><td>Դաս 6․ client-ին չենք վստահում</td></tr>
+      <tr><td>2</td><td>Էլ. հասցեն արդեն կա՞</td><td>Հասկանալի հաղորդագրություն օգտագործողին</td></tr>
+      <tr><td>3</td><td><code>password_hash</code> և <code>INSERT</code></td><td>Բաժին 01, Դաս 10-ի prepared statements</td></tr>
+      <tr><td>4</td><td><code>UNIQUE</code>-ի սխալի մշակում</td><td>Երկու միաժամանակյա գրանցում</td></tr>
+      <tr><td>5</td><td>Մուտք <code>session_regenerate_id</code>-ով</td><td>Նույնը, ինչ բաժին 02-ում</td></tr>
+    </table>
+    </div>
+
+    <h3>Դերը չի գալիս ֆորմայից</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Repositories/UserRepository.php — նոր մեթոդ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">public</span> <span class="k">function</span> <span class="f">create</span>(string <span class="n">$email</span>, string <span class="n">$passwordHash</span>, string <span class="n">$name</span>): int
+{
+    <span class="n">$stmt</span> = <span class="n">$this</span>-&gt;pdo-&gt;<span class="f">prepare</span>(
+        <span class="s">'INSERT INTO users (email, password_hash, name)
+         VALUES (:email, :hash, :name)'</span>
+    );
+
+    <span class="n">$stmt</span>-&gt;<span class="f">execute</span>([
+        <span class="s">'email'</span> =&gt; <span class="n">$email</span>,
+        <span class="s">'hash'</span>  =&gt; <span class="n">$passwordHash</span>,
+        <span class="s">'name'</span>  =&gt; <span class="n">$name</span>,
+    ]);
+
+    <span class="k">return</span> (int) <span class="n">$this</span>-&gt;pdo-&gt;<span class="f">lastInsertId</span>();
+}</code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ամենացածր դերը՝ լռելյայն</span>
+      <p><code>INSERT</code>-ում <code>role</code> սյունը <strong>չկա</strong>։ Այն վերցնում է լռելյայն արժեքը բազայից՝ <code>'customer'</code> (բաժին 01-ի աղյուսակը)։ Եթե լռելյայնը լիներ <code>'manager'</code>, ցանկացած ոք գրանցվելով կստանար ադմին վահանակ։<br><br>
+      Նույն պատճառով մեթոդը չի ընդունում <code>$_POST</code>-ի ամբողջ զանգվածը․ եթե հարձակվողը ավելացնի <code>&lt;input name="role" value="admin"&gt;</code>, այն պարզապես կանտեսվի։ Այս սխալը կոչվում է mass assignment, և Laravel-ում կհանդիպենք նրան Դաս 20-ում։</p>
+    </div>
+
+    <h3>Auth-ին՝ երկու նոր մեթոդ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Services/Auth.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// attempt()-ի վերջին տողերը տեղափոխում ենք այստեղ,</span>
+<span class="c">// որ գրանցումից հետո մուտքը լինի ճիշտ նույնը</span>
+<span class="k">public</span> <span class="k">function</span> <span class="f">login</span>(<span class="t">User</span> <span class="n">$user</span>): void
+{
+    <span class="f">session_regenerate_id</span>(<span class="k">true</span>);           <span class="c">// ⭐ բաժին 02</span>
+
+    <span class="n">$_SESSION</span>[<span class="s">'user_id'</span>]    = <span class="n">$user</span>-&gt;id;
+    <span class="n">$_SESSION</span>[<span class="s">'login_time'</span>] = <span class="f">time</span>();
+
+    <span class="n">$this</span>-&gt;cached = <span class="n">$user</span>;
+}
+
+<span class="c">// Աշխատակի՞ց է՝ ադմին կամ մենեջեր</span>
+<span class="k">public</span> <span class="k">function</span> <span class="f">isStaff</span>(): bool
+{
+    <span class="k">return</span> <span class="f">in_array</span>(<span class="n">$this</span>-&gt;<span class="f">user</span>()?-&gt;role, [<span class="s">'admin'</span>, <span class="s">'manager'</span>], <span class="k">true</span>);
+}</code></pre>
+    </div>
+    <p><code>attempt()</code>-ի վերջում հիմա մնում է <code>$this-&gt;login($user); return true;</code>։</p>
+
+    <h3>RegisterController</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Controllers/RegisterController.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">class</span> <span class="t">RegisterController</span>
+{
+    <span class="k">public</span> <span class="k">function</span> <span class="f">__construct</span>(
+        <span class="k">private</span> <span class="k">readonly</span> <span class="t">UserRepository</span> <span class="n">$users</span>,
+        <span class="k">private</span> <span class="k">readonly</span> <span class="t">Auth</span> <span class="n">$auth</span>,
+    ) {}
+
+    <span class="k">public</span> <span class="k">function</span> <span class="f">form</span>(<span class="t">Request</span> <span class="n">$request</span>): <span class="t">Response</span>
+    {
+        <span class="k">if</span> (<span class="n">$this</span>-&gt;auth-&gt;<span class="f">check</span>()) {
+            <span class="k">return</span> <span class="t">Response</span>::<span class="f">redirect</span>(<span class="s">'/'</span>);
+        }
+
+        <span class="k">return</span> <span class="t">Response</span>::<span class="f">html</span>(<span class="f">page</span>(<span class="s">'pages/register'</span>, [<span class="s">'errors'</span> =&gt; [], <span class="s">'old'</span> =&gt; []], <span class="s">'Գրանցում'</span>));
+    }
+
+    <span class="k">public</span> <span class="k">function</span> <span class="f">store</span>(<span class="t">Request</span> <span class="n">$request</span>): <span class="t">Response</span>
+    {
+        <span class="n">$data</span> = [
+            <span class="s">'name'</span>  =&gt; <span class="n">$request</span>-&gt;<span class="f">input</span>(<span class="s">'name'</span>),
+            <span class="s">'email'</span> =&gt; <span class="f">mb_strtolower</span>(<span class="n">$request</span>-&gt;<span class="f">input</span>(<span class="s">'email'</span>)),
+        ];
+        <span class="n">$password</span> = <span class="n">$request</span>-&gt;<span class="f">input</span>(<span class="s">'password'</span>);
+
+        <span class="c">// 1. Վալիդացիա</span>
+        <span class="n">$errors</span> = <span class="n">$this</span>-&gt;<span class="f">validate</span>(<span class="n">$data</span>, <span class="n">$password</span>, <span class="n">$request</span>-&gt;<span class="f">input</span>(<span class="s">'password_confirmation'</span>));
+
+        <span class="c">// 2. Հասցեն արդեն կա՞</span>
+        <span class="k">if</span> (<span class="n">$errors</span> === [] &amp;&amp; <span class="n">$this</span>-&gt;users-&gt;<span class="f">findByEmail</span>(<span class="n">$data</span>[<span class="s">'email'</span>]) !== <span class="k">null</span>) {
+            <span class="n">$errors</span>[<span class="s">'email'</span>] = <span class="s">'Այս էլ. հասցեով արդեն կա հաշիվ'</span>;
+        }
+
+        <span class="c">// 3–4. Պահպանում</span>
+        <span class="k">if</span> (<span class="n">$errors</span> === []) {
+            <span class="k">try</span> {
+                <span class="n">$id</span> = <span class="n">$this</span>-&gt;users-&gt;<span class="f">create</span>(
+                    <span class="n">$data</span>[<span class="s">'email'</span>],
+                    <span class="f">password_hash</span>(<span class="n">$password</span>, <span class="t">PASSWORD_DEFAULT</span>),
+                    <span class="n">$data</span>[<span class="s">'name'</span>],
+                );
+            } <span class="k">catch</span> (\<span class="t">PDOException</span> <span class="n">$e</span>) {
+                <span class="k">if</span> (<span class="n">$e</span>-&gt;<span class="f">getCode</span>() !== <span class="s">'23000'</span>) {   <span class="c">// 23000 = UNIQUE-ի խախտում</span>
+                    <span class="k">throw</span> <span class="n">$e</span>;
+                }
+                <span class="n">$errors</span>[<span class="s">'email'</span>] = <span class="s">'Այս էլ. հասցեով արդեն կա հաշիվ'</span>;
+            }
+        }
+
+        <span class="k">if</span> (<span class="n">$errors</span> !== []) {
+            <span class="c">// ⭐ Գաղտնաբառը երբեք չի վերադառնում ֆորմա</span>
+            <span class="k">return</span> <span class="t">Response</span>::<span class="f">html</span>(<span class="f">page</span>(<span class="s">'pages/register'</span>, [<span class="s">'errors'</span> =&gt; <span class="n">$errors</span>, <span class="s">'old'</span> =&gt; <span class="n">$data</span>], <span class="s">'Գրանցում'</span>));
+        }
+
+        <span class="c">// 5. Մուտք</span>
+        <span class="n">$this</span>-&gt;auth-&gt;<span class="f">login</span>(<span class="n">$this</span>-&gt;users-&gt;<span class="f">find</span>(<span class="n">$id</span>));
+        <span class="f">flash</span>(<span class="s">'success'</span>, <span class="s">'Բարի գալուստ, '</span> . <span class="n">$data</span>[<span class="s">'name'</span>]);
+
+        <span class="k">return</span> <span class="t">Response</span>::<span class="f">redirect</span>(<span class="s">'/'</span>);
+    }
+
+    <span class="k">private</span> <span class="k">function</span> <span class="f">validate</span>(array <span class="n">$data</span>, string <span class="n">$password</span>, string <span class="n">$confirm</span>): array
+    {
+        <span class="n">$errors</span> = [];
+
+        <span class="n">$len</span> = <span class="f">mb_strlen</span>(<span class="n">$data</span>[<span class="s">'name'</span>]);
+        <span class="k">if</span> (<span class="n">$len</span> &lt; <span class="n">2</span> || <span class="n">$len</span> &gt; <span class="n">100</span>) {
+            <span class="n">$errors</span>[<span class="s">'name'</span>] = <span class="s">'Անունը՝ 2-ից 100 նիշ'</span>;
+        }
+
+        <span class="k">if</span> (!<span class="f">filter_var</span>(<span class="n">$data</span>[<span class="s">'email'</span>], <span class="t">FILTER_VALIDATE_EMAIL</span>) || <span class="f">mb_strlen</span>(<span class="n">$data</span>[<span class="s">'email'</span>]) &gt; <span class="n">190</span>) {
+            <span class="n">$errors</span>[<span class="s">'email'</span>] = <span class="s">'Ստուգիր էլ. հասցեն'</span>;
+        }
+
+        <span class="k">if</span> (<span class="f">mb_strlen</span>(<span class="n">$password</span>) &lt; <span class="n">8</span>) {
+            <span class="n">$errors</span>[<span class="s">'password'</span>] = <span class="s">'Գաղտնաբառը՝ առնվազն 8 նիշ'</span>;
+        } <span class="k">elseif</span> (<span class="n">$password</span> !== <span class="n">$confirm</span>) {
+            <span class="n">$errors</span>[<span class="s">'password_confirmation'</span>] = <span class="s">'Գաղտնաբառերը չեն համընկնում'</span>;
+        }
+
+        <span class="k">return</span> <span class="n">$errors</span>;
+    }
+}</code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչու ստուգում ենք երկու անգամ</span>
+      <p><code>findByEmail()</code>-ը տալիս է հասկանալի հաղորդագրություն, բայց <strong>չի երաշխավորում</strong> ոչինչ։ Եթե երկու հարցում գան նույն միլիվայրկյանին, երկուսն էլ կտեսնեն, որ հասցեն ազատ է։ Իսկական երաշխիքը բազայի <code>UNIQUE</code>-ն է․ երկրորդ <code>INSERT</code>-ը կմերժվի <code>23000</code> կոդով, և մենք այն վերածում ենք նույն հաղորդագրության։ Կանոն՝ <strong>եզակիությունը ապահովում է բազան, ոչ PHP-ն</strong>։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Ազնիվ սահմանափակում</span>
+      <p>Մուտքի ժամանակ ասում ենք «Սխալ էլ. հասցե կամ գաղտնաբառ», որ չբացահայտենք գրանցված հասցեները (բաժին 02)։ Գրանցման ժամանակ դա անհնար է․ «արդեն կա հաշիվ» հաղորդագրությունը նույն բանն է ասում։ Իրական կայքերը լուծում են սա էլ. հասցեի հաստատմամբ․ միշտ ասում են «Ստուգիր փոստդ», և նամակն է ասում՝ նոր հաշիվ է, թե հին։ Մեզ համար բավական է սահմանափակել փորձերը (տնային)։</p>
+    </div>
+
+    <h3>Գրանցման էջը</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>views/pages/register.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">section</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-33 w-md-100"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">h1</span> <span class="f">class</span>=<span class="s">"mb-30"</span><span class="p">&gt;</span>Գրանցում<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="t">form</span> <span class="f">method</span>=<span class="s">"post"</span> <span class="f">action</span>=<span class="s">"/register"</span> <span class="f">novalidate</span><span class="p">&gt;</span>
+        <span class="k">&lt;?=</span> <span class="f">csrf_field</span>() <span class="k">?&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"name"</span><span class="p">&gt;</span>Անուն<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">input</span> <span class="f">id</span>=<span class="s">"name"</span> <span class="f">name</span>=<span class="s">"name"</span> <span class="f">class</span>=<span class="s">"input"</span> <span class="f">autocomplete</span>=<span class="s">"name"</span> <span class="f">required</span>
+                   <span class="f">value</span>=<span class="s">"<span class="k">&lt;?=</span> <span class="f">e</span>(<span class="n">$old</span>[<span class="s">'name'</span>] ?? <span class="s">''</span>) <span class="k">?&gt;</span>"</span><span class="p">&gt;</span>
+            <span class="k">&lt;?php</span> <span class="k">if</span> (<span class="k">isset</span>(<span class="n">$errors</span>[<span class="s">'name'</span>])): <span class="k">?&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"field__error"</span><span class="p">&gt;</span><span class="k">&lt;?=</span> <span class="f">e</span>(<span class="n">$errors</span>[<span class="s">'name'</span>]) <span class="k">?&gt;</span><span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+            <span class="k">&lt;?php</span> <span class="k">endif</span> <span class="k">?&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"email"</span><span class="p">&gt;</span>Էլ. հասցե<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">input</span> <span class="f">id</span>=<span class="s">"email"</span> <span class="f">name</span>=<span class="s">"email"</span> <span class="f">type</span>=<span class="s">"email"</span> <span class="f">class</span>=<span class="s">"input"</span> <span class="f">autocomplete</span>=<span class="s">"email"</span> <span class="f">required</span>
+                   <span class="f">value</span>=<span class="s">"<span class="k">&lt;?=</span> <span class="f">e</span>(<span class="n">$old</span>[<span class="s">'email'</span>] ?? <span class="s">''</span>) <span class="k">?&gt;</span>"</span><span class="p">&gt;</span>
+            <span class="k">&lt;?php</span> <span class="k">if</span> (<span class="k">isset</span>(<span class="n">$errors</span>[<span class="s">'email'</span>])): <span class="k">?&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"field__error"</span><span class="p">&gt;</span><span class="k">&lt;?=</span> <span class="f">e</span>(<span class="n">$errors</span>[<span class="s">'email'</span>]) <span class="k">?&gt;</span><span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+            <span class="k">&lt;?php</span> <span class="k">endif</span> <span class="k">?&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"password"</span><span class="p">&gt;</span>Գաղտնաբառ (առնվազն 8 նիշ)<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+            <span class="c">&lt;!-- value չկա՝ գաղտնաբառը երբեք չի վերադառնում --&gt;</span>
+            <span class="p">&lt;</span><span class="t">input</span> <span class="f">id</span>=<span class="s">"password"</span> <span class="f">name</span>=<span class="s">"password"</span> <span class="f">type</span>=<span class="s">"password"</span> <span class="f">class</span>=<span class="s">"input"</span>
+                   <span class="f">autocomplete</span>=<span class="s">"new-password"</span> <span class="f">minlength</span>=<span class="s">"8"</span> <span class="f">required</span><span class="p">&gt;</span>
+            <span class="k">&lt;?php</span> <span class="k">if</span> (<span class="k">isset</span>(<span class="n">$errors</span>[<span class="s">'password'</span>])): <span class="k">?&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"field__error"</span><span class="p">&gt;</span><span class="k">&lt;?=</span> <span class="f">e</span>(<span class="n">$errors</span>[<span class="s">'password'</span>]) <span class="k">?&gt;</span><span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+            <span class="k">&lt;?php</span> <span class="k">endif</span> <span class="k">?&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"field"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">label</span> <span class="f">for</span>=<span class="s">"password_confirmation"</span><span class="p">&gt;</span>Կրկնիր գաղտնաբառը<span class="p">&lt;/</span><span class="t">label</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">input</span> <span class="f">id</span>=<span class="s">"password_confirmation"</span> <span class="f">name</span>=<span class="s">"password_confirmation"</span> <span class="f">type</span>=<span class="s">"password"</span> <span class="f">class</span>=<span class="s">"input"</span>
+                   <span class="f">autocomplete</span>=<span class="s">"new-password"</span> <span class="f">required</span><span class="p">&gt;</span>
+            <span class="k">&lt;?php</span> <span class="k">if</span> (<span class="k">isset</span>(<span class="n">$errors</span>[<span class="s">'password_confirmation'</span>])): <span class="k">?&gt;</span>
+                <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"field__error"</span><span class="p">&gt;</span><span class="k">&lt;?=</span> <span class="f">e</span>(<span class="n">$errors</span>[<span class="s">'password_confirmation'</span>]) <span class="k">?&gt;</span><span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+            <span class="k">&lt;?php</span> <span class="k">endif</span> <span class="k">?&gt;</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="t">button</span> <span class="f">class</span>=<span class="s">"btn btn--primary btn--block"</span><span class="p">&gt;</span>Ստեղծել հաշիվ<span class="p">&lt;/</span><span class="t">button</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"mb-10"</span><span class="p">&gt;</span>Արդեն ունե՞ս հաշիվ՝ <span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"/login"</span><span class="p">&gt;</span>Մուտք<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span><span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">form</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <h3>Ուղիներ և bootstrap</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>routes.php և bootstrap.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// routes.php</span>
+<span class="n">$router</span>-&gt;<span class="f">get</span>(<span class="s">'/register'</span>,  [<span class="n">$registerController</span>, <span class="s">'form'</span>]);
+<span class="n">$router</span>-&gt;<span class="f">post</span>(<span class="s">'/register'</span>, [<span class="n">$registerController</span>, <span class="s">'store'</span>]);
+
+<span class="c">// bootstrap.php</span>
+<span class="n">$registerController</span> = <span class="k">new</span> <span class="f">RegisterController</span>(<span class="n">$users</span>, <span class="n">$auth</span>);</code></pre>
+    </div>
+
+    <h3>Գրանցումը փոխում է /admin-ի ստուգումը</h3>
+    <p>Մինչ այժմ բավական էր հարցնել «մուտք գործա՞ծ է»․ <code>users</code>-ում միայն աշխատակիցներ էին։ Հիմա մուտք գործած կարող է լինել ցանկացած հաճախորդ։ Եթե բաժին 03-ի ստուգումը թողնենք նույնը, <strong>գրանցվելով ցանկացած ոք կմտնի ադմին վահանակ</strong>։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>public/index.php — երրորդ ստուգում</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// 2. Ադմին գոտի՝ մուտք գործա՞ծ է</span>
+<span class="k">if</span> (<span class="f">str_starts_with</span>(<span class="n">$request</span>-&gt;path, <span class="s">'/admin'</span>) &amp;&amp; !<span class="n">$auth</span>-&gt;<span class="f">check</span>()) {
+    <span class="n">$_SESSION</span>[<span class="s">'intended'</span>] = <span class="n">$request</span>-&gt;path;
+    <span class="n">$response</span> = <span class="t">Response</span>::<span class="f">redirect</span>(<span class="s">'/login'</span>);
+
+<span class="c">// 3. Մուտք գործած է, բայց աշխատակի՞ց է ⭐</span>
+} <span class="k">elseif</span> (<span class="f">str_starts_with</span>(<span class="n">$request</span>-&gt;path, <span class="s">'/admin'</span>) &amp;&amp; !<span class="n">$auth</span>-&gt;<span class="f">isStaff</span>()) {
+    <span class="k">throw</span> <span class="k">new</span> <span class="f">HttpException</span>(<span class="s">'Այս էջը հասանելի է միայն աշխատակիցներին'</span>, <span class="n">403</span>);
+
+} <span class="k">else</span> {
+    <span class="n">$response</span> = <span class="n">$router</span>-&gt;<span class="f">dispatch</span>(<span class="n">$request</span>);
+}</code></pre>
+    </div>
+    <div class="tip note">
+      <span class="tag">Նույն կանոնը, ինչ բաժին 03-ում</span>
+      <p>«Մուտք գործած է» և «իրավունք ունի» երկու տարբեր հարց են․ առաջինը նույնականացումն է (authentication), երկրորդը՝ թույլտվությունը (authorization)։ Երկուսն էլ ստուգվում են մեկ տեղում՝ Router-ից առաջ։ Laravel-ում դրանք <code>auth</code> և <code>can:</code> middleware-ներն են (Դաս 21)։</p>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="s8">
+    <h2><span class="num">08</span>Դասարանական</h2>
 
     <div class="block">
       <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>առաջին ադմինի ստեղծում</div><button class="copy">Պատճենել</button></div>
@@ -547,15 +801,18 @@ php -r "echo password_hash('ձեր_գաղտնաբառը', PASSWORD_DEFAULT);"
       <li>Ավելացրու <code>csrf_token()</code>, <code>csrf_field()</code>, <code>csrf_verify()</code> և <code>csrf_field()</code>-ը <strong>բոլոր</strong> POST ֆորմաներում</li>
       <li>Ավելացրու երկու ստուգումը <code>public/index.php</code>-ում</li>
       <li>Ստեղծիր <code>AuthController</code>-ը, մուտքի էջը և ելքի ֆորման header-ում</li>
+      <li>Ավելացրու գրանցումը՝ <code>UserRepository::create()</code>, <code>Auth::login()</code> և <code>isStaff()</code>, <code>RegisterController</code>-ը, գրանցման էջը և երրորդ ստուգումը <code>public/index.php</code>-ում</li>
     </ol>
 
     <div class="warn note">
-      <span class="tag">Հինգ պարտադիր փորձարկում</span>
+      <span class="tag">Յոթ պարտադիր փորձարկում</span>
       <p><strong>1.</strong> Բացիր <code>/admin</code> առանց մուտքի → վերահղում <code>/login</code><br>
       <strong>2.</strong> Մուտք գործիր → վերադառնո՞ւմ է <code>/admin</code> (<code>intended</code>)<br>
       <strong>3.</strong> Ջնջիր <code>_token</code>-ը DevTools-ով և ուղարկիր → 419 ⭐<br>
       <strong>4.</strong> Ստեղծիր <code>attack.html</code> սեփական համակարգչում ջնջման ֆորմայով և բացիր → մերժվե՞ց<br>
-      <strong>5.</strong> Սխալ գաղտնաբառ 6 անգամ → արգելափակո՞ւմ</p>
+      <strong>5.</strong> Սխալ գաղտնաբառ 6 անգամ → արգելափակո՞ւմ<br>
+      <strong>6.</strong> Գրանցվիր նոր հասցեով → մուտք գործա՞ծ ես, իսկ <code>/admin</code>-ը տալի՞ս է 403 ⭐<br>
+      <strong>7.</strong> Գրանցվիր նույն հասցեով երկրորդ անգամ → «արդեն կա հաշիվ», իսկ գաղտնաբառի դաշտերը դատարկ են</p>
     </div>
 
     <div class="tip note">
@@ -566,11 +823,15 @@ php -r "echo password_hash('ձեր_գաղտնաբառը', PASSWORD_DEFAULT);"
     </div>
   </section>
 
-  <!-- ============ 08 ============ -->
-  <section id="s8">
-    <h2><span class="num">08</span>Տնային աշխատանք</h2>
+  <!-- ============ 09 ============ -->
+  <section id="s9">
+    <h2><span class="num">09</span>Տնային աշխատանք</h2>
+    <div class="tip note">
+      <span class="tag">Մինի-նախագիծ</span>
+      <p>Այս տնայինի գլխավոր մասը՝ <a href="block-3-homework/lesson-16/task.html" style="color:var(--pen);text-decoration:underline">«Մուտք, դերեր, CSRF»</a>, Անիի գրքերի ակումբում՝ քայլ առ քայլ, starter ֆայլերով և պատրաստի օրինակով։ Ներքևի ցուցակի կետերը, որ նշված չեն որպես «մինի-նախագծում», կատարիր ՏեխնոՄարկետում։</p>
+    </div>
     <ol class="hw">
-      <li>Ավարտիր դասարանականի 5 քայլը և հինգ փորձարկումը։</li>
+      <li>Ավարտիր դասարանականի 6 քայլը և յոթ փորձարկումը։</li>
       <li>Ուղարկիր սքրինշոթներ CSRF հարձակման՝ պաշտպանությամբ և առանց դրա։</li>
       <li>Ցուցադրիր, որ նույն գաղտնաբառը տալիս է տարբեր հեշեր։ Բացատրիր, ինչու <code>===</code>-ը այստեղ չի աշխատի։</li>
       <li>Չափիր <code>password_hash()</code>-ի ժամանակը <code>microtime()</code>-ով։ Համեմատիր <code>md5()</code>-ի հետ։</li>
@@ -579,13 +840,15 @@ php -r "echo password_hash('ձեր_գաղտնաբառը', PASSWORD_DEFAULT);"
       <li>Ավելացրու երրորդ ստուգում․ <code>/admin/delete</code>-ը թույլատրված է միայն <code>role = 'admin'</code>-ին (<code>$auth-&gt;isAdmin()</code>), մյուսներին՝ 403։</li>
       <li>Ավելացրու ադմին էջ <code>/manage/orders</code> հասցեով (առանց <code>/admin</code>-ի)։ Պաշտպանվա՞ծ է։ Ինչ կանոն պետք է պահել, որ սա չպատահի։</li>
       <li>Ավելացրու «Բարև, [անուն]» և ելքի կոճակ header-ում։</li>
+      <li>DevTools-ով ավելացրու գրանցման ֆորմային <code>&lt;input name="role" value="admin"&gt;</code> և ուղարկիր։ HeidiSQL-ում ստուգիր նոր օգտագործողի դերը։ Բացատրիր, ինչու այն չփոխվեց։</li>
+      <li>Ավելացրու գրանցմանը փորձերի սահմանափակում <code>LoginThrottle</code>-ի օրինակով՝ առավելագույնը 3 նոր հաշիվ մեկ սեսիայից ժամում։ Ինչու՞ է սա ուսումնական, ոչ իրական պաշտպանություն (բաժին 05)։</li>
       <li>Խնդրիր AI-ին վերանայել <code>Auth</code>-ը։ Ի՞նչ գտավ։ Համաձա՞յն ես։</li>
     </ol>
   </section>
 
-  <!-- ============ 09 ============ -->
-  <section id="s9">
-    <h2><span class="num">09</span>Հիշելու թերթիկ</h2>
+  <!-- ============ 10 ============ -->
+  <section id="s10">
+    <h2><span class="num">10</span>Հիշելու թերթիկ</h2>
     <div class="scroll">
     <table class="tbl">
       <tr><th>Գրառում</th><th>Ինչ է</th></tr>
@@ -595,6 +858,8 @@ php -r "echo password_hash('ձեր_գաղտնաբառը', PASSWORD_DEFAULT);"
       <tr><td><code>session_regenerate_id(true)</code></td><td>Fixation-ի դեմ ⭐</td></tr>
       <tr><td><code>hash_equals($a, $b)</code></td><td>Timing-ի դեմ ⭐</td></tr>
       <tr><td><code>random_bytes(32)</code></td><td>Կրիպտո-պատահական</td></tr>
+      <tr><td><code>$pdo-&gt;lastInsertId()</code></td><td>Նոր տողի id-ն</td></tr>
+      <tr><td><code>PDOException</code>, կոդ <code>23000</code></td><td><code>UNIQUE</code>-ի խախտում</td></tr>
     </table>
     </div>
 
@@ -614,7 +879,10 @@ php -r "echo password_hash('ձեր_գաղտնաբառը', PASSWORD_DEFAULT);"
       <li>Սխալի հաղորդագրությունը ընդհանուր է</li>
       <li>Ժամանակը հավասար է գոյություն ունեցող և չունեցող հասցեների համար</li>
       <li>Մուտքի պահին սեսիայի ID-ն թարմացվում է</li>
-      <li>Ամեն <code>/admin…</code> հասցե ստուգվում է <code>public/index.php</code>-ում</li>
+      <li>Ամեն <code>/admin…</code> հասցե ստուգվում է <code>public/index.php</code>-ում՝ և՛ մուտքը, և՛ դերը</li>
+      <li>Գրանցվածը ստանում է ամենացածր դերը, իսկ <code>role</code>-ը չի գալիս ֆորմայից</li>
+      <li>Էլ. հասցեի եզակիությունը ապահովում է <code>UNIQUE</code>-ը, ոչ միայն PHP-ի ստուգումը</li>
+      <li>Գաղտնաբառը երբեք չի վերադառնում ֆորմա</li>
       <li>Ամեն POST ֆորմա ունի <code>_token</code></li>
       <li><code>hash_equals</code> է օգտագործվում, ոչ <code>===</code></li>
       <li>Ելքը POST է</li>

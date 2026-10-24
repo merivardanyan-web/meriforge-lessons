@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ստուգակետ 3 — Մուտք, դերեր, դժվար ֆունկցիա, JS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lesson.css">
+<script src="../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+  .check{list-style:none; padding-left:0}
+  .check li{position:relative; padding-left:30px; margin-bottom:8px}
+  .check li::before{content:""; position:absolute; left:0; top:4px; width:16px; height:16px; border:2px solid var(--pen); border-radius:4px}
+  .week{display:inline-block; padding:2px 10px; border-radius:99px; background:var(--pen); color:#fff; font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Վերջնական նախագիծ</b> · ստուգակետ 3</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Վերջնական նախագիծ · շաբաթ 3 / 4 · ստուգակետ 3</p>
+  <h1>Մուտք, դերեր, դժվար ֆունկցիա, JS</h1>
+  <p class="lede">Այս շաբաթ կայքը դառնում է անվտանգ և «խելացի»։ Ամենաշատ միավորները (ֆունկցիոնալություն և անվտանգություն՝ 40) հավաքվում են հենց այստեղ, և պաշտպանության հարցերի կեսը կլինի այս շաբաթվա կոդի մասին։</p>
+
+  <div class="facts">
+    <span>Շաբաթ 3</span>
+    <span>Արդյունք՝ դերեր, դժվար ֆունկցիա, fetch, առաջին deploy</span>
+    <span>Ստուգում՝ curl-ով, ոչ միայն աչքով</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Ամենածանր շաբաթը։ Կայքը գիտի, թե ով է այցելուն, և ամեն դեր տեսնում և անում է միայն իրենը։ «Դժվար ֆունկցիան» աշխատում է և փորձարկված է եզրային դեպքերով։ Երկու գործողություն աշխատում է առանց վերբեռնման։ Եվ կայքը <strong>առաջին անգամ հրապարակված է</strong>, թեկուզ անավարտ։</p>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/staff-day.jpg" alt="Վարսավիրի օրը՝ իր այցերով, նշումը՝ որպես տեքստ" width="1280" height="918" loading="lazy">
+      <figcaption>Վարսավիրը տեսնում է միայն իրենը</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/my-bookings.jpg" alt="Իմ ամրագրումները, մեկը չեղարկված առանց վերբեռնման, toast" width="1280" height="1034" loading="lazy">
+      <figcaption>Չեղարկում fetch-ով</figcaption>
+    </figure>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Առաջադրանք</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>#</th><th>Ինչ ես անում</th><th>Դաս</th></tr>
+      <tr><td>1</td><td>Fortify․ մուտք, (գրանցում՝ ամենացածր դերով), քո Blade շաբլոնները, <code>LoginResponse</code>՝ ըստ դերի</td><td>PHP 16, 21</td></tr>
+      <tr><td>2</td><td>Gate-եր կամ Policy․ ուղիների խմբեր <code>middleware('can:…')</code>-ով, գրառման մակարդակում՝ <code>Gate::authorize</code> կոնտրոլերում</td><td>PHP 21</td></tr>
+      <tr><td>3</td><td>«Դժվար ֆունկցիան» ⭐․ կանոնը՝ բազայում, եթե հնարավոր է (UNIQUE, տրանզակցիա, <code>lockForUpdate</code>)</td><td>PHP 8, 11</td></tr>
+      <tr><td>4</td><td>JSON endpoint API Resource-ով․ միայն այն դաշտերը, որ պետք են JS-ին</td><td>PHP 17, 20</td></tr>
+      <tr><td>5</td><td>Երկու JS ֆունկցիա fetch-ով․ <code>response.ok</code>, 403/422/419, <code>role="status"</code>, <code>textContent</code></td><td>JS 14, 20 · PHP 17</td></tr>
+      <tr><td>6</td><td>Ստուգիր առանց JS-ի․ նույն գործողությունները՝ ֆորմաներով</td><td>PHP 17</td></tr>
+      <tr><td>7</td><td>Ամեն դերի սահմանը՝ curl-ով կամ DevTools-ով, ոչ միայն «կոճակը չի երևում»</td><td>PHP 16, 21</td></tr>
+      <tr><td>8</td><td>Առաջին deploy-ը</td><td>PHP 22</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Օրինակ՝ Սևան Բարբեր</h2>
+    <h3>«Դժվար ֆունկցիան»</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Services/BookingService.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">public</span> <span class="k">function</span> <span class="f">book</span>(<span class="t">User</span> <span class="n">$client</span>, <span class="t">TimeSlot</span> <span class="n">$slot</span>, <span class="t">Service</span> <span class="n">$service</span>, ?<span class="k">string</span> <span class="n">$note</span> = <span class="k">null</span>): <span class="t">Booking</span>
+{
+    <span class="k">if</span> (<span class="n">$slot</span>-&gt;starts_at-&gt;<span class="f">isPast</span>()) {
+        <span class="k">throw</span> <span class="t">ValidationException</span>::<span class="f">withMessages</span>([<span class="s">'slot_id'</span> =&gt; <span class="s">'Այս ժամն արդեն անցել է։ Ընտրիր ուրիշը։'</span>]);
+    }
+
+    <span class="k">return</span> <span class="t">DB</span>::<span class="f">transaction</span>(<span class="k">function</span> () <span class="k">use</span> (<span class="n">$client</span>, <span class="n">$slot</span>, <span class="n">$service</span>, <span class="n">$note</span>) {
+        <span class="c">// Հաճախորդի տողի կողպում․ նույն հաճախորդի երկու միաժամանակյա հարցումները հերթով են հաշվում</span>
+        <span class="c">// ակտիվ ամրագրումները, ուստի 3-ի սահմանը չի շրջանցվի երկու ներդիրով — PHP Դաս 11</span>
+        <span class="t">User</span>::<span class="f">whereKey</span>(<span class="n">$client</span>-&gt;id)-&gt;<span class="f">lockForUpdate</span>()-&gt;<span class="f">first</span>();
+
+        <span class="k">if</span> (<span class="n">$client</span>-&gt;<span class="f">bookings</span>()-&gt;<span class="f">upcoming</span>()-&gt;<span class="f">count</span>() &gt;= <span class="k">self</span>::<span class="t">MAX_ACTIVE</span>) {
+            <span class="k">throw</span> <span class="t">ValidationException</span>::<span class="f">withMessages</span>([
+                <span class="s">'slot_id'</span> =&gt; <span class="s">'Կարող ես ունենալ առավելագույնը '</span> . <span class="k">self</span>::<span class="t">MAX_ACTIVE</span> . <span class="s">' ակտիվ ամրագրում։ Չեղարկիր մեկը կամ սպասիր այցին։'</span>,
+            ]);
+        }
+
+        <span class="n">$booking</span> = <span class="k">new</span> <span class="f">Booking</span>();
+        <span class="n">$booking</span>-&gt;user_id = <span class="n">$client</span>-&gt;id;
+        <span class="n">$booking</span>-&gt;time_slot_id = <span class="n">$slot</span>-&gt;id;
+        <span class="n">$booking</span>-&gt;active_slot_id = <span class="n">$slot</span>-&gt;id;          <span class="c">// ⭐ UNIQUE</span>
+        <span class="n">$booking</span>-&gt;service_id = <span class="n">$service</span>-&gt;id;
+        <span class="n">$booking</span>-&gt;price = <span class="n">$service</span>-&gt;price;             <span class="c">// գինը այս պահին․ հետո փոխվելը չի ազդի</span>
+        <span class="n">$booking</span>-&gt;note = <span class="n">$note</span>;
+        <span class="n">$booking</span>-&gt;status = <span class="s">'booked'</span>;
+
+        <span class="k">try</span> {
+            <span class="n">$booking</span>-&gt;<span class="f">save</span>();
+        } <span class="k">catch</span> (<span class="t">UniqueConstraintViolationException</span>) {
+            <span class="c">// Ինչ-որ մեկը մեզնից մի քանի միլիվայրկյան առաջ ամրագրեց նույն ժամը</span>
+            <span class="k">throw</span> <span class="t">ValidationException</span>::<span class="f">withMessages</span>([<span class="s">'slot_id'</span> =&gt; <span class="s">'Այս ժամը հենց նոր զբաղեցրեցին։ Ընտրիր ուրիշը։'</span>]);
+        }
+
+        <span class="k">return</span> <span class="n">$booking</span>;
+    });
+}</code></pre>
+    </div>
+    <div class="tip note">
+      <span class="tag">Ինչու երկու տարբեր մեխանիզմ</span>
+      <p>Կրկնակի ամրագրումը արգելում է <strong>UNIQUE</strong>-ը․ դա կանոն է մեկ տողի մասին, և բազան այն պահում է ավելի հուսալի, քան ցանկացած PHP ստուգում։ «Առավելագույնը 3»-ը կանոն է <em>մի քանի տողի</em> մասին, UNIQUE-ը այստեղ չի օգնի, ուստի տրանզակցիայում կողպվում է հաճախորդի տողը, և նույն հաճախորդի հարցումները հաշվում են հերթով։</p>
+    </div>
+    <h3>Ով կարող է չեղարկել</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Policies/BookingPolicy.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">public</span> <span class="k">function</span> <span class="f">cancel</span>(<span class="t">User</span> <span class="n">$user</span>, <span class="t">Booking</span> <span class="n">$booking</span>): <span class="t">Response</span>
+{
+    <span class="k">if</span> (! <span class="n">$booking</span>-&gt;<span class="f">isBooked</span>()) {
+        <span class="k">return</span> <span class="t">Response</span>::<span class="f">deny</span>(<span class="s">'Այս ամրագրումն արդեն փակված է։'</span>);
+    }
+
+    <span class="k">if</span> (<span class="n">$user</span>-&gt;<span class="f">isAdmin</span>()) {
+        <span class="k">return</span> <span class="t">Response</span>::<span class="f">allow</span>();
+    }
+
+    <span class="k">if</span> (<span class="n">$user</span>-&gt;<span class="f">isStaff</span>()) {
+        <span class="k">return</span> <span class="n">$booking</span>-&gt;slot-&gt;staff_id === <span class="n">$user</span>-&gt;id
+            ? <span class="t">Response</span>::<span class="f">allow</span>()
+            : <span class="t">Response</span>::<span class="f">deny</span>(<span class="s">'Սա ուրիշ վարսավիրի ամրագրումն է։'</span>);
+    }
+
+    <span class="k">if</span> (<span class="n">$booking</span>-&gt;user_id !== <span class="n">$user</span>-&gt;id) {
+        <span class="k">return</span> <span class="t">Response</span>::<span class="f">deny</span>(<span class="s">'Սա քո ամրագրումը չէ։'</span>);
+    }
+
+    <span class="k">return</span> <span class="n">$booking</span>-&gt;slot-&gt;starts_at-&gt;<span class="f">gt</span>(<span class="f">now</span>()-&gt;<span class="f">addHours</span>(<span class="t">BookingService</span>::<span class="t">CANCEL_HOURS</span>))
+        ? <span class="t">Response</span>::<span class="f">allow</span>()
+        : <span class="t">Response</span>::<span class="f">deny</span>(<span class="s">'Չեղարկել կարելի է մինչև այցից '</span> . <span class="t">BookingService</span>::<span class="t">CANCEL_HOURS</span> . <span class="s">' ժամ առաջ։ Զանգիր մեզ։'</span>);
+}
+
+/**</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Http/Controllers/BookingController.php — նույն պատճառը JSON-ով և flash-ով</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">public</span> <span class="k">function</span> <span class="f">cancel</span>(<span class="t">Request</span> <span class="n">$request</span>, <span class="t">Booking</span> <span class="n">$booking</span>)
+{
+    <span class="n">$booking</span>-&gt;<span class="f">load</span>(<span class="s">'slot'</span>);
+    <span class="n">$check</span> = <span class="t">Gate</span>::<span class="f">inspect</span>(<span class="s">'cancel'</span>, <span class="n">$booking</span>);
+
+    <span class="k">if</span> (<span class="n">$check</span>-&gt;<span class="f">denied</span>()) {
+        <span class="k">return</span> <span class="n">$request</span>-&gt;<span class="f">expectsJson</span>()
+            ? <span class="f">response</span>()-&gt;<span class="f">json</span>([<span class="s">'message'</span> =&gt; <span class="n">$check</span>-&gt;<span class="f">message</span>()], <span class="n">403</span>)
+            : <span class="f">back</span>()-&gt;<span class="f">with</span>(<span class="s">'error'</span>, <span class="n">$check</span>-&gt;<span class="f">message</span>());
+    }
+
+    <span class="n">$this</span>-&gt;bookings-&gt;<span class="f">cancel</span>(<span class="n">$booking</span>);</code></pre>
+    </div>
+    <h3>Ուղիների խմբեր</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>routes/web.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ---------- Հաճախորդ ----------</span>
+<span class="c">// Մուտք չգործածը կուղարկվի /login, իսկ հետո՝ հետ (redirect()-&gt;intended)</span>
+<span class="t">Route</span>::<span class="f">middleware</span>(<span class="s">'auth'</span>)-&gt;<span class="f">group</span>(<span class="k">function</span> () {
+    <span class="t">Route</span>::<span class="f">get</span>(<span class="s">'/my/bookings'</span>, [<span class="t">BookingController</span>::<span class="k">class</span>, <span class="s">'index'</span>])-&gt;<span class="f">name</span>(<span class="s">'bookings.mine'</span>);
+    <span class="t">Route</span>::<span class="f">post</span>(<span class="s">'/bookings'</span>, [<span class="t">BookingController</span>::<span class="k">class</span>, <span class="s">'store'</span>])-&gt;<span class="f">name</span>(<span class="s">'bookings.store'</span>);     <span class="c">// can:book՝ BookingRequest-ում</span>
+    <span class="t">Route</span>::<span class="f">patch</span>(<span class="s">'/bookings/{booking}/cancel'</span>, [<span class="t">BookingController</span>::<span class="k">class</span>, <span class="s">'cancel'</span>])-&gt;<span class="f">name</span>(<span class="s">'bookings.cancel'</span>);   <span class="c">// BookingPolicy::cancel</span>
+});
+
+<span class="c">// ---------- Վարսավիր և ադմին ----------</span>
+<span class="t">Route</span>::<span class="f">middleware</span>([<span class="s">'auth'</span>, <span class="s">'can:staff-area'</span>])-&gt;<span class="f">prefix</span>(<span class="s">'staff'</span>)-&gt;<span class="f">name</span>(<span class="s">'staff.'</span>)-&gt;<span class="f">group</span>(<span class="k">function</span> () {
+    <span class="t">Route</span>::<span class="f">get</span>(<span class="s">'/'</span>, [<span class="t">StaffController</span>::<span class="k">class</span>, <span class="s">'index'</span>])-&gt;<span class="f">name</span>(<span class="s">'index'</span>);
+    <span class="t">Route</span>::<span class="f">patch</span>(<span class="s">'/bookings/{booking}/done'</span>, [<span class="t">StaffController</span>::<span class="k">class</span>, <span class="s">'complete'</span>])-&gt;<span class="f">name</span>(<span class="s">'complete'</span>);
+    <span class="t">Route</span>::<span class="f">get</span>(<span class="s">'/slots'</span>, [<span class="t">SlotController</span>::<span class="k">class</span>, <span class="s">'index'</span>])-&gt;<span class="f">name</span>(<span class="s">'slots'</span>);
+    <span class="t">Route</span>::<span class="f">post</span>(<span class="s">'/slots'</span>, [<span class="t">SlotController</span>::<span class="k">class</span>, <span class="s">'store'</span>])-&gt;<span class="f">name</span>(<span class="s">'slots.store'</span>);
+    <span class="t">Route</span>::<span class="f">delete</span>(<span class="s">'/slots/{slot}'</span>, [<span class="t">SlotController</span>::<span class="k">class</span>, <span class="s">'destroy'</span>])-&gt;<span class="f">name</span>(<span class="s">'slots.destroy'</span>);
+});
+
+<span class="c">// ---------- Միայն ադմին ----------</span>
+<span class="t">Route</span>::<span class="f">middleware</span>([<span class="s">'auth'</span>, <span class="s">'can:manage-services'</span>])-&gt;<span class="f">prefix</span>(<span class="s">'admin'</span>)-&gt;<span class="f">name</span>(<span class="s">'admin.'</span>)-&gt;<span class="f">group</span>(<span class="k">function</span> () {
+    <span class="t">Route</span>::<span class="f">get</span>(<span class="s">'/bookings'</span>, [<span class="t">AdminBookingController</span>::<span class="k">class</span>, <span class="s">'index'</span>])-&gt;<span class="f">name</span>(<span class="s">'bookings.index'</span>);
+    <span class="t">Route</span>::<span class="f">get</span>(<span class="s">'/services/trashed'</span>, [<span class="t">AdminServiceController</span>::<span class="k">class</span>, <span class="s">'trashed'</span>])-&gt;<span class="f">name</span>(<span class="s">'services.trashed'</span>);
+    <span class="t">Route</span>::<span class="f">patch</span>(<span class="s">'/services/{id}/restore'</span>, [<span class="t">AdminServiceController</span>::<span class="k">class</span>, <span class="s">'restore'</span>])-&gt;<span class="f">name</span>(<span class="s">'services.restore'</span>);
+    <span class="t">Route</span>::<span class="f">resource</span>(<span class="s">'services'</span>, <span class="t">AdminServiceController</span>::<span class="k">class</span>)-&gt;<span class="f">except</span>(<span class="s">'show'</span>);
+});</code></pre>
+    </div>
+    <h3>API՝ առանց անձնական տվյալների</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Http/Resources/SlotResource.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">public</span> <span class="k">function</span> <span class="f">toArray</span>(<span class="t">Request</span> <span class="n">$request</span>): <span class="k">array</span>
+{
+    <span class="k">return</span> [
+        <span class="s">'id'</span>        =&gt; <span class="n">$this</span>-&gt;id,
+        <span class="s">'time'</span>      =&gt; <span class="n">$this</span>-&gt;starts_at-&gt;<span class="f">format</span>(<span class="s">'H:i'</span>),
+        <span class="s">'starts_at'</span> =&gt; <span class="n">$this</span>-&gt;starts_at-&gt;<span class="f">toIso8601String</span>(),
+        <span class="s">'staff'</span>     =&gt; [<span class="s">'id'</span> =&gt; <span class="n">$this</span>-&gt;staff-&gt;id, <span class="s">'name'</span> =&gt; <span class="n">$this</span>-&gt;staff-&gt;name],
+    ];
+}</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>GET /api/slots?date=2026-10-23&amp;staff=2</div><button class="copy">Պատճենել</button></div>
+<pre><code>{
+  "data": [
+    {
+      "id": 38,
+      "time": "11:00",
+      "starts_at": "2026-10-23T11:00:00+04:00",
+      "staff": {
+        "id": 2,
+        "name": "Արամ Հակոբյան"
+      }
+    },
+    {
+      "id": 39,
+      "time": "12:00",
+      "starts_at": "2026-10-23T12:00:00+04:00",
+      "staff": {
+        "id": 2,
+        "name": "Արամ Հակոբյան"
+      }
+    }
+  ],
+  "meta": {
+    "date": "2026-10-23",
+    "label": "ուրբաթ, 23 հոկտեմբերի",
+    "count": 7
+  }
+}</code></pre>
+    </div>
+    <h3>JS՝ առանց innerHTML</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>public/js/slot-picker.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/** Ռադիո կոճակներ՝ նույն markup-ով, ինչ Blade-ում։ textContent՝ ոչ innerHTML (անուններն օգտագործողից են) */</span>
+<span class="k">function</span> <span class="f">render</span>(slots) {
+    <span class="k">const</span> legend = list.<span class="f">querySelector</span>(<span class="s">'legend'</span>);
+    list.<span class="f">replaceChildren</span>(legend);
+
+    <span class="k">for</span> (<span class="k">const</span> slot <span class="k">of</span> slots) {
+        <span class="k">const</span> wrap = document.<span class="f">createElement</span>(<span class="s">'div'</span>);
+        wrap.className = <span class="s">'slot'</span>;
+
+        <span class="k">const</span> input = document.<span class="f">createElement</span>(<span class="s">'input'</span>);
+        input.type = <span class="s">'radio'</span>;
+        input.name = <span class="s">'slot_id'</span>;
+        input.id = <span class="s">`slot-</span>${slot.id}<span class="s">`</span>;
+        input.value = slot.id;
+
+        <span class="k">const</span> label = document.<span class="f">createElement</span>(<span class="s">'label'</span>);
+        label.htmlFor = input.id;
+        label.<span class="f">append</span>(slot.time);
+        <span class="k">const</span> small = document.<span class="f">createElement</span>(<span class="s">'small'</span>);
+        small.textContent = slot.staff.name;
+        label.<span class="f">append</span>(small);
+
+        wrap.<span class="f">append</span>(input, label);
+        list.<span class="f">append</span>(wrap);
+    }
+}</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>public/js/bookings.js</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">const</span> response = <span class="k">await</span> <span class="f">fetch</span>(form.action, {
+    method: <span class="s">'PATCH'</span>,
+    headers: { Accept: <span class="s">'application/json'</span>, <span class="s">'X-CSRF-TOKEN'</span>: token },
+});
+
+<span class="k">if</span> (response.status === <span class="n">419</span>) {
+    location.<span class="f">reload</span>();                       <span class="c">// token-ը հնացել է․ նոր էջ՝ նոր token</span>
+    <span class="k">return</span>;
+}
+
+<span class="k">const</span> body = <span class="k">await</span> response.<span class="f">json</span>();</code></pre>
+    </div>
+    <h3>Ապացույց՝ զուգահեռ հարցումներով</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>docs/smoke-test.md</div><button class="copy">Պատճենել</button></div>
+<pre><code>POST /bookings  →  /my/bookings                       ← 1 հաջողություն
+POST /bookings  →  /services/sanrvatsq-moruq  × 5    ← «Այս ժամը հենց նոր զբաղեցրեցին։ Ընտրիր ուրիշը։»
+
+SELECT COUNT(*) FROM bookings WHERE active_slot_id = 171;   → 1</code></pre>
+    </div>
+    <p>Ամբողջ ստուգումը՝ <a href="example-sevan-barber/docs/smoke-test.md"><code>docs/smoke-test.md</code></a>։ Օրինակը աշխատեցված է իրական Laravel 12-ի վրա՝ 83 ավտոմատ ստուգումով (բոլոր դերերը, 403/419/422/429, JS, առանց JS-ի, 360px, 6 զուգահեռ հաճախորդ նույն ժամի համար)։</p>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ինչ ցույց տալ դասախոսին · 10 րոպե</h2>
+    <ul class="check">
+      <li>Երեք ներդիր՝ երեք դեր (Chrome-ի պրոֆիլներ կամ incognito)․ ամեն մեկը՝ իր մենյուով</li>
+      <li>Ցածր դերով ուղիղ հասցե՝ <code>/admin/…</code> → 403, առանց մուտքի → <code>/login</code></li>
+      <li>DevTools-ի Console-ից կամ curl-ով ուրիշի գրառման PATCH/DELETE → 403, գրառումը չի փոխվել</li>
+      <li>«Դժվար ֆունկցիայի» եզրային դեպքերը՝ մեկ առ մեկ</li>
+      <li>Network ներդիրում՝ fetch հարցումը և JSON պատասխանը, ձախողման դեպքում՝ հաղորդագրություն</li>
+      <li>JS-ն անջատած՝ նույն գործողությունը աշխատում է</li>
+      <li>Հրապարակված հասցեն</li>
+    </ul>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Տարածված սխալներ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչ է լինում</th><th>Ինչպես ճիշտ</th></tr>
+      <tr><td>«Ստուգիր, ապա ավելացրու» PHP-ում</td><td>Երկու միաժամանակյա հարցում երկուսն էլ անցնում են ստուգումը</td><td>UNIQUE բազայում + <code>catch (UniqueConstraintViolationException)</code></td></tr>
+      <tr><td>Միայն <code>@can</code> Blade-ում</td><td>Կոճակը չկա, բայց curl-ով գործողությունը աշխատում է</td><td>Policy/Gate կոնտրոլերում, <code>@can</code>-ը՝ միայն հարմարության համար</td></tr>
+      <tr><td><code>Gate::authorize</code>-ը fetch-ի համար</td><td>JS-ը ստանում է HTML 403 էջ և <code>response.json()</code>-ը ընկնում է</td><td><code>Gate::inspect()</code> + <code>expectsJson()</code>՝ JSON հաղորդագրություն</td></tr>
+      <tr><td>«Իմ գրառումները»՝ <code>?user=5</code>-ով</td><td>Փոխում ես թիվը և տեսնում ուրիշինը</td><td>Ֆիլտրը սերվերում՝ <code>$request-&gt;user()</code>-ից</td></tr>
+      <tr><td><code>innerHTML</code> API-ի տվյալով</td><td>Օգտագործողի անունը <code>&lt;img onerror&gt;</code>-ով դառնում է XSS</td><td><code>textContent</code>, <code>createElement</code></td></tr>
+      <tr><td>API Resource առանց սահմանափակման</td><td><code>toArray()</code>-ը տալիս է email, հեռախոս, <code>password</code>-ի hash</td><td>Միայն պետք դաշտերը՝ ձեռքով</td></tr>
+      <tr><td>Blade-ի <code>{{ }}</code> JS տողում (<code>confirm('{{ $name }}')</code>)</td><td><code>'</code>-ով անունը կոտրում է JS-ը</td><td>JS-ում օգտագործողի տվյալ չդնել կամ <code>@js($name)</code></td></tr>
+      <tr><td>Առաջին deploy-ը չորրորդ շաբաթում</td><td>Hosting-ի խնդիրները համընկնում են պաշտպանության հետ</td><td>Deploy հիմա, թեկուզ անավարտ</td></tr>
+    </table>
+    </div>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Եթե խրվել ես</th><th>Նայիր</th></tr>
+      <tr><td>Fortify, Gate-եր, դերեր</td><td><a href="../php-lesson-21.html">PHP Դաս 21</a>, <a href="../block-3-homework/lesson-21/task.html">Տնային 21</a></td></tr>
+      <tr><td>Տրանզակցիա, UNIQUE</td><td><a href="../php-lesson-11.html">PHP Դաս 11</a>, <a href="../block-3-homework/lesson-22/task.html">Տնային 22</a>՝ գնահատականը UNIQUE-ով</td></tr>
+      <tr><td>fetch, CSRF header, progressive enhancement</td><td><a href="../php-lesson-17.html">PHP Դաս 17</a>, <a href="../block-3-project/example-3-laravel/README.md">ՏեխնոՄարկետ · Laravel</a>՝ <code>public/js/cart.js</code></td></tr>
+    </table>
+    </div>
+    <div class="pager"><a href="checkpoint-2.html">← Ստուգակետ 2</a><a href="../final-project.html">Վերջնական նախագիծ</a><a href="checkpoint-4.html">Ստուգակետ 4 →</a></div>
+  </section>
+
+  <footer>
+    <span>Վերջնական նախագիծ · ստուգակետ 3</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

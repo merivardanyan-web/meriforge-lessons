@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 09 · Ժանրեր և ընթերցանության օրեր — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · տնային</b> · Դաս 09</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../php-lesson-09.html">PHP Դաս 09</a> · մինի-նախագիծ</p>
+  <h1>Ժանրեր և ընթերցանության օրեր</h1>
+  <p class="lede">Ժանրը դառնում է առանձին աղյուսակ, իսկ ամեն ընթերցանության օր՝ տող <code>reading_sessions</code>-ում։ Արտաքին բանալիները պաշտպանում են տվյալները․ պատմությամբ գիրքը չի ջնջվում, իսկ ջնջված ժանրի գրքերը մնում են առանց ժանրի։ <code>JOIN</code>-ով և <code>GROUP BY</code>-ով հաշվում ես վիճակագրություն։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>HeidiSQL</span>
+    <span>5 քայլ · 7 տնային կետ նախագծում</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–09․ <code>FOREIGN KEY</code>, <code>ON DELETE RESTRICT / SET NULL / CASCADE</code>, <code>INNER JOIN</code>, <code>LEFT JOIN</code>, <code>GROUP BY</code>, <code>HAVING</code>, <code>COUNT</code>, <code>SUM</code>, <code>INDEX</code>։ PHP-ն բազային՝ Դաս 10-ում։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Ահա ինչ պետք է տեսնես HeidiSQL-ում, երբ կատարես <code>queries.sql</code>-ի հարցումները հերթականությամբ։ Սյունակների կարգը կարող է տարբերվել, տողերը՝ ոչ։</p>
+    <p><b>1. Գրքերը՝ ժանրի անունով (INNER JOIN․ առանց ժանրի գիրքը դուրս կմնար)</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>title</th><th>genre</th></tr>
+      <tr><td>Կարմիր գլխարկ 🐺</td><td>հեքիաթ</td></tr>
+      <tr><td>Փոքրիկ իշխանը</td><td>հեքիաթ</td></tr>
+      <tr><td>Խենթը</td><td>պատմավեպ</td></tr>
+      <tr><td>Սամվել</td><td>պատմավեպ</td></tr>
+      <tr><td>Վերք Հայաստանի</td><td>պատմավեպ</td></tr>
+      <tr><td>Գիքորը</td><td>պատմվածք</td></tr>
+      <tr><td>Անուշ</td><td>պոեզիա</td></tr>
+      <tr><td>1984</td><td>վեպ</td></tr>
+      <tr><td>Ալքիմիկոսը</td><td>վեպ</td></tr>
+      <tr><td>Մեծ սպասումներ</td><td>վեպ</td></tr>
+      <tr><td>Հարրի Փոթերը և փիլիսոփայական քարը</td><td>ֆանտաստիկա</td></tr>
+      <tr><td>Հոբիտը</td><td>ֆանտաստիկա</td></tr>
+    </table>
+    </div>
+    <p><b>2. Բոլոր ժանրերը և գրքերի քանակը (LEFT JOIN․ «դետեկտիվ»-ը՝ 0-ով)</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>name</th><th>books</th></tr>
+      <tr><td>պատմավեպ</td><td>3</td></tr>
+      <tr><td>վեպ</td><td>3</td></tr>
+      <tr><td>հեքիաթ</td><td>2</td></tr>
+      <tr><td>ֆանտաստիկա</td><td>2</td></tr>
+      <tr><td>պատմվածք</td><td>1</td></tr>
+      <tr><td>պոեզիա</td><td>1</td></tr>
+      <tr><td>դետեկտիվ</td><td>0</td></tr>
+    </table>
+    </div>
+    <p><b>3. Էջերը ժանրերով՝ ընդամենը և կարդացած</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>name</th><th>pages</th><th>read_pages</th></tr>
+      <tr><td>պատմավեպ</td><td>1180</td><td>530</td></tr>
+      <tr><td>վեպ</td><td>1080</td><td>208</td></tr>
+      <tr><td>ֆանտաստիկա</td><td>642</td><td>170</td></tr>
+      <tr><td>հեքիաթ</td><td>120</td><td>120</td></tr>
+      <tr><td>պոեզիա</td><td>64</td><td>64</td></tr>
+      <tr><td>պատմվածք</td><td>40</td><td>40</td></tr>
+    </table>
+    </div>
+    <p><b>4. Ժանրեր, որոնցում 2-ից ավելի գիրք կա (HAVING՝ GROUP BY-ից հետո)</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>name</th><th>books</th></tr>
+      <tr><td>վեպ</td><td>3</td></tr>
+      <tr><td>պատմավեպ</td><td>3</td></tr>
+    </table>
+    </div>
+    <p><b>5. Վերջին 5 ընթերցանության օրը՝ գրքի վերնագրով</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>read_on</th><th>title</th><th>pages</th></tr>
+      <tr><td>2026-10-16</td><td>Հարրի Փոթերը և փիլիսոփայական քարը</td><td>20</td></tr>
+      <tr><td>2026-10-14</td><td>Հարրի Փոթերը և փիլիսոփայական քարը</td><td>30</td></tr>
+      <tr><td>2026-10-11</td><td>Կարմիր գլխարկ 🐺</td><td>24</td></tr>
+      <tr><td>2026-10-02</td><td>Անուշ</td><td>64</td></tr>
+      <tr><td>2026-09-29</td><td>Խենթը</td><td>80</td></tr>
+    </table>
+    </div>
+    <p><b>6. Ամեն գիրքը՝ քանի օր եմ կարդացել և քանի էջ (LEFT JOIN․ չսկսածները՝ 0 օր և NULL էջ) COUNT(rs.id)-ը NULL-երը չի հաշվում, իսկ ոչնչի SUM-ը NULL է, ոչ 0</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>title</th><th>days</th><th>pages</th></tr>
+      <tr><td>Խենթը</td><td>3</td><td>300</td></tr>
+      <tr><td>Ալքիմիկոսը</td><td>3</td><td>208</td></tr>
+      <tr><td>Սամվել</td><td>3</td><td>140</td></tr>
+      <tr><td>Հոբիտը</td><td>3</td><td>120</td></tr>
+      <tr><td>Փոքրիկ իշխանը</td><td>3</td><td>96</td></tr>
+      <tr><td>Վերք Հայաստանի</td><td>2</td><td>90</td></tr>
+      <tr><td>Անուշ</td><td>1</td><td>64</td></tr>
+      <tr><td>Հարրի Փոթերը և փիլիսոփայական քարը</td><td>2</td><td>50</td></tr>
+      <tr><td>Գիքորը</td><td>1</td><td>40</td></tr>
+      <tr><td>Կարմիր գլխարկ 🐺</td><td>1</td><td>24</td></tr>
+      <tr><td>1984</td><td>0</td><td>NULL</td></tr>
+      <tr><td>Մեծ սպասումներ</td><td>0</td><td>NULL</td></tr>
+    </table>
+    </div>
+    <p><b>7. Հոկտեմբերի ընթերցանությունը</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>days</th><th>pages</th></tr>
+      <tr><td>4</td><td>138</td></tr>
+    </table>
+    </div>
+    <p><b>8. Ստուգում․ read_pages-ը համընկնո՞ւմ է սեսիաների գումարի հետ (0 տող = ամեն ինչ կարգին է)</b></p>
+    <pre class="out"><span class="r">SELECT b.title, b.read_pages, SUM(rs.pages) AS sessions_sum …
+Empty set (0 rows)</span></pre>
+    <p><b>Ամեն օրը՝ քանի գիրք և քանի էջ</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>read_on</th><th>books</th><th>pages</th></tr>
+      <tr><td>2026-10-18</td><td>3</td><td>95</td></tr>
+      <tr><td>2026-10-16</td><td>1</td><td>20</td></tr>
+      <tr><td>2026-10-14</td><td>1</td><td>30</td></tr>
+      <tr><td>2026-10-11</td><td>1</td><td>24</td></tr>
+      <tr><td>2026-10-02</td><td>1</td><td>64</td></tr>
+    </table>
+    </div>
+    <p><b>============ Տնային 3 · ջնջել գիրք, որը սեսիաներ ունի ============ Սխալ 1451․ Cannot delete or update a parent row․ RESTRICT-ը պաշտպանում է պատմությունը</b></p>
+    <pre class="out"><span class="e">ERROR 1451: Cannot delete or update a parent row: a foreign key constraint fails (`ani_books`.`reading_sessions`, CONSTRAINT `fk_sessions_book` FOREIGN KEY (`book_id`) REFERENCES `books` (`id`))</span></pre>
+    <p><b>Գիրքը մնաց, genre_id-ն դարձավ NULL (ON DELETE SET NULL)</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>title</th><th>genre_id</th></tr>
+      <tr><td>Գիքորը</td><td>NULL</td></tr>
+    </table>
+    </div>
+    
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>id</th><th>name</th></tr>
+      <tr><td>8</td><td>պատմվածք</td></tr>
+    </table>
+    </div>
+    <p><b>============ Տնային 5 · ON ... AND և WHERE ============ ON-ում․ ֆիլտրում է միայն կցվող գրքերը, ժանրերը բոլորը մնում են («դետեկտիվ»՝ 0)</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>name</th><th>active_books</th></tr>
+      <tr><td>դետեկտիվ</td><td>0</td></tr>
+      <tr><td>հեքիաթ</td><td>2</td></tr>
+      <tr><td>պատմավեպ</td><td>3</td></tr>
+      <tr><td>պատմվածք</td><td>1</td></tr>
+      <tr><td>պոեզիա</td><td>1</td></tr>
+      <tr><td>վեպ</td><td>2</td></tr>
+      <tr><td>ֆանտաստիկա</td><td>2</td></tr>
+    </table>
+    </div>
+    <p><b>WHERE-ում․ ֆիլտրում է ամբողջ արդյունքը, «դետեկտիվ»-ը անհետանում է (NULL = 1 → ոչ)</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>name</th><th>active_books</th></tr>
+      <tr><td>հեքիաթ</td><td>2</td></tr>
+      <tr><td>պատմավեպ</td><td>3</td></tr>
+      <tr><td>պատմվածք</td><td>1</td></tr>
+      <tr><td>պոեզիա</td><td>1</td></tr>
+      <tr><td>վեպ</td><td>2</td></tr>
+      <tr><td>ֆանտաստիկա</td><td>2</td></tr>
+    </table>
+    </div>
+    <p><b>============ Տնային 6 · ամենաշատ կարդացած 3 գիրքը ============</b></p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>title</th><th>pages</th></tr>
+      <tr><td>Խենթը</td><td>300</td></tr>
+      <tr><td>Ալքիմիկոսը</td><td>208</td></tr>
+      <tr><td>Սամվել</td><td>170</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Շարունակիր քո նախագիծը։ Եթե բաց ես թողել նախորդ դասը, սկսիր <a href="../lesson-08/example/">Դաս 08-ի օրինակից</a>։</p>
+    <ul class="goals">
+      <li><code>starter/sql/seed.sql</code> — 7 ժանր, 12 գիրք, 22 ընթերցանության օր․ books-ը՝ Դաս 08-ի սյունակները, բայց genre-ի փոխարեն genre_id</li>
+    </ul>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գործարկել</th></tr>
+      <tr><td><code>HeidiSQL → File → Run SQL file</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Ամբողջ սխեման մեկ ֆայլում</h3>
+    <ul class="goals">
+      <li><code>sql/schema.sql</code>՝ <code>genres</code>, <code>books</code> (<code>genre_id</code>), <code>reading_sessions</code> (տնային 7)</li>
+      <li><code>books.genre_id</code>՝ <code>ON DELETE SET NULL</code>, <code>reading_sessions.book_id</code>՝ <code>ON DELETE RESTRICT</code></li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>sql/schema.sql — reading_sessions</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">CREATE</span> <span class="k">TABLE</span> reading_sessions (
+    id          <span class="k">INT</span> <span class="k">UNSIGNED</span> <span class="k">AUTO_INCREMENT</span> <span class="k">PRIMARY</span> <span class="k">KEY</span>,
+    book_id     <span class="k">INT</span> <span class="k">UNSIGNED</span> <span class="k">NOT</span> <span class="k">NULL</span>,
+    pages       <span class="k">SMALLINT</span> <span class="k">UNSIGNED</span> <span class="k">NOT</span> <span class="k">NULL</span>,
+    read_on     <span class="k">DATE</span>         <span class="k">NOT</span> <span class="k">NULL</span>,
+    note        <span class="k">VARCHAR</span>(<span class="n">255</span>) <span class="k">NULL</span>,
+    created_at  <span class="k">DATETIME</span>     <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="k">CURRENT_TIMESTAMP</span>,
+
+    <span class="k">CONSTRAINT</span> fk_sessions_book
+        <span class="k">FOREIGN</span> <span class="k">KEY</span> (book_id) <span class="k">REFERENCES</span> books(id)
+        <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">RESTRICT</span>,                             <span class="c">-- պատմությամբ գիրքը չի ջնջվում, միայն թաքցվում է</span>
+
+    <span class="k">INDEX</span> idx_sessions_date (read_on)
+) <span class="k">ENGINE</span>=InnoDB;</code></pre>
+    </div>
+
+    <h3>Քայլ 2 · Տվյալներ</h3>
+    <ul class="goals">
+      <li><code>starter/sql/seed.sql</code>՝ 7 ժանր (մեկը՝ առանց գրքի), 12 գիրք, 22 ընթերցանության օր</li>
+      <li>Ամեն գրքի սեսիաների գումարը = <code>read_pages</code>․ հարցում 8-ը ստուգում է դա</li>
+    </ul>
+
+    <h3>Քայլ 3 · Ութ հարցում</h3>
+    <ul class="goals">
+      <li>Գրքեր՝ ժանրի անունով (<code>JOIN</code>), բոլոր ժանրերը քանակով (<code>LEFT JOIN</code>), էջերը ժանրերով (<code>SUM</code>), <code>HAVING COUNT(*) &gt; 2</code></li>
+      <li>Վերջին 5 օրը, ամեն գիրքը՝ օրեր և էջեր, հոկտեմբերը, ստուգում</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>sql/queries.sql — LEFT JOIN</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">SELECT</span> g.name, <span class="k">COUNT</span>(b.id) <span class="k">AS</span> books
+<span class="k">FROM</span> genres g
+<span class="k">LEFT</span> <span class="k">JOIN</span> books b <span class="k">ON</span> b.genre_id = g.id
+<span class="k">GROUP</span> <span class="k">BY</span> g.id, g.name
+<span class="k">ORDER</span> <span class="k">BY</span> books <span class="k">DESC</span>, g.name;</code></pre>
+    </div>
+
+    <h3>Քայլ 4 · Նոր օր՝ երեք գրքով</h3>
+    <ul class="goals">
+      <li>Երեք <code>INSERT</code> նույն օրով և երեք <code>UPDATE … read_pages</code> (տնային 2)</li>
+      <li>Հարցում՝ ամեն օրը քանի գիրք և քանի էջ</li>
+    </ul>
+
+    <h3>Քայլ 5 · Արտաքին բանալիների փորձեր</h3>
+    <ul class="goals">
+      <li><code>DELETE FROM books WHERE id = 2</code> → սխալ 1451 (տնային 3)</li>
+      <li>Ջնջիր «պատմվածք»-ը, տես <code>genre_id = NULL</code>, վերադարձրու (տնային 4)</li>
+      <li><code>ON … AND</code> և <code>WHERE</code>․ «դետեկտիվ»-ը անհետանում է (տնային 5)</li>
+      <li>Ամենաշատ կարդացած 3-ը (տնային 6)</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li><code>schema.sql</code> + <code>seed.sql</code>-ը զրոյից վերստեղծում են բազան</li>
+      <li>Հարցում 2-ում «դետեկտիվ»-ը կա՝ 0-ով</li>
+      <li>Հարցում 8-ը տալիս է 0 տող</li>
+      <li>Գիրքը սեսիաներով չի ջնջվում</li>
+      <li>Կարող ես բացատրել <code>ON … AND</code>-ի և <code>WHERE</code>-ի տարբերությունը մեկ նախադասությամբ</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>Cannot add foreign key constraint</code></td><td>Տիպերը պետք է համընկնեն․ <code>INT UNSIGNED</code> երկու կողմում, և <code>genres</code>-ը ստեղծված լինի առաջ</td></tr>
+      <tr><td><code>LEFT JOIN</code>-ը կորցնում է «դետեկտիվ»-ը</td><td>Պայմանը <code>WHERE</code>-ում է, ոչ <code>ON</code>-ում</td></tr>
+      <tr><td><code>COUNT(*)</code>-ը «դետեկտիվ»-ի համար 1 է</td><td><code>COUNT(b.id)</code>․ NULL-երը չի հաշվում</td></tr>
+      <tr><td><code>isn't in GROUP BY</code></td><td>SELECT-ի ամեն ոչ-հաշվարկային սյունակ պետք է լինի GROUP BY-ում</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի տնային աշխատանքը</h2>
+    <p>Սրանք <a href="../../php-lesson-09.html#s8">Դաս 09-ի</a> տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում՝ Անիի ակումբում։ Մնացածը կատարիր ՏեխնոՄարկետում, ինչպես գրված է դասում։</p>
+    <ol class="hw">
+      <li>Ավարտիր 8 հարցումը։ Ուղարկիր SQL-ը և արդյունքների սքրինշոթները։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու երկրորդ պատվեր երեք ապրանքով և գրիր հարցում, որը ցույց է տալիս բոլոր պատվերները՝ ամեն մեկի տողերի քանակով և գումարով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Փորձիր ջնջել ապրանք, որը կա պատվերում։ Ի՞նչ սխալ ստացար։ Ինչու է դա լավ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ջնջիր կատեգորիա և ստուգիր, թե ինչ եղավ նրա ապրանքների հետ։ Վերադարձրու կատեգորիան։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Համեմատիր <code>ON ... AND p.is_active = 1</code> և <code>WHERE p.is_active = 1</code> տարբերակները բաժին 05-ի խորացված նշումից։ Բացատրիր տարբերությունը քո բառերով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գրիր հարցում․ «ամենավաճառված 3 ապրանքը»՝ <code>SUM(oi.quantity)</code>-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Պահիր բոլոր <code>CREATE TABLE</code> հրամանները մեկ <code>schema.sql</code> ֆայլում։ Ջնջիր բազան, կատարիր ֆայլը և ստուգիր, որ ամեն ինչ վերականգնվեց։ Այս ֆայլը պետք կլինի հաջորդ դասին։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Տուր AI-ին քո <code>schema.sql</code>-ը և խնդրիր վերանայել այն։ Ի՞նչ առաջարկեց։ Համաձա՞յն ես։ Ինչու։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/">օրինակը</a>։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-08/task.html">← Դաս 08</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-10/task.html">Դաս 10 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · տնային աշխատանք · Դաս 09</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

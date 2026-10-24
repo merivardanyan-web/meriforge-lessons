@@ -1,0 +1,3 @@
+/* Ավելացրու public/css/main.css-ի վերջում — PHP Դաս 15 */
+/* ============ 18. PHP — ժանրերի հղումներ (PHP Դաս 15) ============ */
+.genres a[aria-current="page"] { --btn-bg: var(--accent); --btn-color: var(--on-accent); }

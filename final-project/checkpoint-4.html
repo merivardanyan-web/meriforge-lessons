@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ստուգակետ 4 — Հրապարակում, README, պաշտպանություն</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lesson.css">
+<script src="../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+  .check{list-style:none; padding-left:0}
+  .check li{position:relative; padding-left:30px; margin-bottom:8px}
+  .check li::before{content:""; position:absolute; left:0; top:4px; width:16px; height:16px; border:2px solid var(--pen); border-radius:4px}
+  .week{display:inline-block; padding:2px 10px; border-radius:99px; background:var(--pen); color:#fff; font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Վերջնական նախագիծ</b> · ստուգակետ 4</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Վերջնական նախագիծ · շաբաթ 4 / 4 · ստուգակետ 4</p>
+  <h1>Հրապարակում, README, պաշտպանություն</h1>
+  <p class="lede">Վերջին շաբաթը կոդի մասին չէ․ այն մասին է, որ ուրիշը կարողանա բացել, հասկանալ և վստահել քո նախագծին։ Հրապարակված, ստուգված, նկարագրված և պաշտպանված։</p>
+
+  <div class="facts">
+    <span>Շաբաթ 4</span>
+    <span>Արդյունք՝ demo + README + պաշտպանություն</span>
+    <span>Ընդամենը՝ 100 միավոր</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Նախագիծը հրապարակված է, ստուգված է hosting-ում, ունի README, որ կարդում է ռեկրուտերը, և դու կարող ես այն պաշտպանել 10–12 րոպեում։ Դիզայնը հղկվում է հիմա՝ երբ գիտես, թե ինչ էջեր ունես։</p>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/mobile-home.jpg" alt="Գլխավոր էջը հեռախոսում, մենյուն բաց" width="360" height="780" loading="lazy">
+      <figcaption>360px, բուրգեր-մենյու</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/mobile-service.jpg" alt="Ժամերի ընտրությունը հեռախոսում" width="360" height="1441" loading="lazy">
+      <figcaption>360px, ժամերը երկու սյունով</figcaption>
+    </figure>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Առաջադրանք</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>#</th><th>Ինչ ես անում</th><th>Դաս</th></tr>
+      <tr><td>1</td><td>Production՝ <code>APP_DEBUG=false</code>, <code>APP_ENV=production</code>, document root՝ <code>public/</code>, cache-եր</td><td>PHP 18, 22</td></tr>
+      <tr><td>2</td><td>Smoke test hosting-ում՝ <code>docs/smoke-test.md</code>, գրիր ինչ ստացար</td><td>PHP 22</td></tr>
+      <tr><td>3</td><td>Demo հաշիվ՝ սահմանափակ դերով, գաղտնաբառը՝ <code>.env</code>-ից, ոչ seeder-ի կոդից</td><td>PHP 22</td></tr>
+      <tr><td>4</td><td>README՝ demo, GIF, «The hard part», «Security decisions», «How I used AI»</td><td>PHP 4, 22</td></tr>
+      <tr><td>5</td><td>Հասանելիություն․ Lighthouse ≥ 90, ամեն էջ 360px լայնությամբ, ստեղնաշարով</td><td>HTML 4, 14, 23</td></tr>
+      <tr><td>6</td><td>Դիզայն․ քո գույները և տառատեսակը (եթե kit-ից ես սկսել)</td><td>HTML 19</td></tr>
+      <tr><td>7</td><td>Պաշտպանության պլան՝ <code>docs/defense-plan.md</code>, փորձ ժամացույցով</td><td>PHP 24</td></tr>
+      <tr><td>8</td><td>Պահոցը՝ GitHub պրոֆիլում ամրացված, LinkedIn-ի Featured-ում</td><td>PHP 22, 23</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Օրինակ՝ Սևան Բարբեր</h2>
+    <h3>README-ի ամենակարևոր բաժինը</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>README.md — The hard part</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">## The hard part ⭐ — կրկնակի ամրագրման արգելք</span>
+
+Միամիտ լուծումը՝ «ստուգիր, որ ժամն ազատ է, ապա ավելացրու ամրագրում», ունի պահ երկու քայլի միջև,
+երբ երկրորդ հարցումը նույնպես տեսնում է ժամը ազատ։ PHP-ում այդ պահը փակելը դժվար է, բազայում՝ մեկ տող․
+
+```php
+// bookings միգրացիա
+$table-&gt;unsignedBigInteger('active_slot_id')-&gt;nullable()-&gt;unique();
+```
+
+Ակտիվ ամրագրման դեպքում `active_slot_id = time_slot_id`, չեղարկելիս՝ `NULL`։ UNIQUE ինդեքսը թույլ է տալիս
+շատ `NULL`, ուստի չեղարկված ժամը կարելի է նորից ամրագրել, իսկ երկու ակտիվ ամրագրում նույն ժամին բազան չի ընդունի։
+`BookingService::book()`-ը բռնում է `UniqueConstraintViolationException`-ը և վերադարձնում
+«Այս ժամը հենց նոր զբաղեցրեցին»։
+
+Ինչու ոչ պարզապես `UNIQUE(time_slot_id)`․ այդ դեպքում չեղարկված ամրագրման տողը ընդմիշտ կզբաղեցներ ժամը,
+և կամ պետք կլիներ ջնջել այն (կորչում է պատմությունը), կամ ժամը այլևս չէր ազատվի։
+
+Երկրորդ սահմանը՝ մեկ հաճախորդին առավելագույնը 3 ակտիվ ամրագրում։ Այստեղ UNIQUE չի օգնի, ուստի
+տրանզակցիայում կողպում եմ հաճախորդի տողը (`lockForUpdate`)․ նույն հաճախորդի երկու ներդիրի հարցումները
+հաշվում են ամրագրումները հերթով, ոչ միաժամանակ։
+
+**Ինչպես եմ ստուգել։** 6 տարբեր հաճախորդ ուղարկում են `POST /bookings` նույն ժամի համար զուգահեռ (4 PHP worker)․
+միշտ 1 հաջողություն և 5 «զբաղեցրեցին»։ HeidiSQL-ում նույն `active_slot_id`-ով ձեռքով `INSERT`-ը
+ստանում է `Duplicate entry`։ Մանրամասները՝ [docs/smoke-test.md](docs/smoke-test.md)։</code></pre>
+    </div>
+    <p>Ամբողջ README-ն՝ <a href="example-sevan-barber/README.md"><code>README.md</code></a>։ Ուշադրություն դարձրու «Security decisions»-ին․ ամեն կետ կոդում է, և պաշտպանության ժամանակ կարող ես բացել այդ տողը։</p>
+    <h3>How I used AI</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>README.md — How I used AI</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">## How I used AI</span>
+
+- Asked to explain why my first version (`exists()` check, then `create()`) still allowed double bookings in a test with two tabs. The explanation (race between check and insert) led me to the UNIQUE `active_slot_id` idea, which I designed and wrote myself
+- Generated the first draft of Armenian validation messages; I rewrote them so that attribute names with the article («անվանումը») don't get a second «-ը»
+- Asked for a review of `BookingController`: it pointed out that `cancel()` returned 500 instead of 403 for JSON requests. I switched to `Gate::inspect()` with a message
+- Asked how to make the seeder work on hosting without Faker (`composer install --no-dev`)
+- Did NOT use AI for `BookingService`, `BookingPolicy` or the migrations</code></pre>
+    </div>
+    <h3>500 էջ, որ չի կախված բազայից</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>resources/views/errors/500.blade.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">{{-- Առանց layout-ի․ եթե սխալը բազայում է, header-ը (auth(), route()) նույնպես կընկնի --}}</span>
+&lt;!DOCTYPE html&gt;
+<span class="p">&lt;</span><span class="t">html</span> <span class="f">lang</span>=<span class="s">"hy"</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">charset</span>=<span class="s">"UTF-8"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">meta</span> <span class="f">name</span>=<span class="s">"viewport"</span> <span class="f">content</span>=<span class="s">"width=device-width, initial-scale=1"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">title</span><span class="p">&gt;</span>500 — Սևան Բարբեր<span class="p">&lt;/</span><span class="t">title</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"stylesheet"</span> <span class="f">href</span>=<span class="s">"/css/global.css"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">link</span> <span class="f">rel</span>=<span class="s">"stylesheet"</span> <span class="f">href</span>=<span class="s">"/css/main.css"</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="t">body</span><span class="p">&gt;</span></code></pre>
+    </div>
+    <p>Եթե բազան անհասանելի է, layout-ի <code>auth()</code>-ը նույնպես կընկնի, և Laravel-ը կցուցադրի իր լռելյայն էջը։ Օրինակում ստուգված է՝ սխալ <code>DB_PASSWORD</code>-ով և <code>APP_DEBUG=false</code>-ով բացվում է «Ինչ-որ բան սխալ գնաց», առանց stack trace-ի։</p>
+    <h3>Smoke test՝ ինչ ստացա</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>docs/smoke-test.md</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c"># CSRF․ POST առանց token-ի</span>
+$ curl -si -X POST https://…/bookings -d "slot_id=1" | head -1
+HTTP/1.1 419 unknown status
+<span class="c">
+# API-ն չի բացահայտում անձնական տվյալներ</span>
+$ curl -s "https://…/api/slots?date=2026-10-23&amp;staff=2"
+{"data":[{"id":38,"time":"11:00","starts_at":"2026-10-23T11:00:00+04:00","staff":{"id":2,"name":"Արամ Հակոբյան"}}, …],
+ "meta":{"date":"2026-10-23","label":"ուրբաթ, 23 հոկտեմբերի","count":7}}
+<span class="c">
+# Սխալ պարամետր → 422, ոչ 500</span>
+$ curl -s -H "Accept: application/json" "https://…/api/slots?date=2020-01-01"
+{"message":"Ընտրված օրը վավեր չէ։","errors":{"date":["Ընտրված օրը վավեր չէ։"]}}</code></pre>
+    </div>
+    <h3>Պաշտպանության պլան</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>docs/defense-plan.md</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">## 3. Դժվար ֆունկցիա ⭐ · 3 րոպե</span>
+
+1. Միգրացիա․ `active_slot_id ... -&gt;nullable()-&gt;unique()`։ Ինչու `nullable`
+2. `BookingService::book()`․ `try { save() } catch (UniqueConstraintViolationException)`
+3. Ապացույց․ HeidiSQL-ում `INSERT` նույն `active_slot_id`-ով → `Duplicate entry`
+4. 3-ի սահմանը և `lockForUpdate()`․ ինչու այստեղ UNIQUE չի օգնի</code></pre>
+    </div>
+    <p>Ամբողջ պլանը՝ պատրաստված պատասխաններով՝ <a href="example-sevan-barber/docs/defense-plan.md"><code>docs/defense-plan.md</code></a>։</p>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Հանձնում</h2>
+    <ul class="check">
+      <li>Hosting-ի հասցեն բացվում է HTTPS-ով, <code>/.env</code> → 404</li>
+      <li><code>docs/smoke-test.md</code>-ի ամեն կետ՝ արդյունքով</li>
+      <li>README-ում՝ demo հղում, GIF, demo հաշիվ, «The hard part», «Security decisions», «How I used AI»</li>
+      <li><code>git log --all --oneline -- .env</code> → դատարկ</li>
+      <li>Առնվազն 25 commit՝ բաշխված 4 շաբաթի վրա, առնվազն 3 ճյուղ</li>
+      <li><a href="../final-project.html#s8">final-project.html, բաժին 08</a>-ի ստուգաթերթը</li>
+      <li>Ներկայացումը փորձված է ժամացույցով (ձայնագրիր մեկ անգամ)</li>
+    </ul>
+    <div class="warn note">
+      <span class="tag">Երկու դեպք, երբ նախագիծը չի ընդունվում</span>
+      <p>Չես կարողանում բացատրել քո կոդի տողը, կամ իրական գաղտնիք կա պահոցում կամ նրա պատմության մեջ։ Մանրամասները՝ <a href="../final-project.html#s4">բաժին 04</a>։</p>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Տարածված սխալներ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչ է լինում</th><th>Ինչպես ճիշտ</th></tr>
+      <tr><td><code>APP_DEBUG=true</code> hosting-ում</td><td>Սխալի էջը ցույց է տալիս <code>.env</code>-ի արժեքները</td><td><code>APP_DEBUG=false</code>, ապա <code>config:cache</code></td></tr>
+      <tr><td>Document root՝ նախագծի արմատը</td><td><code>/.env</code>-ը ներբեռնվում է</td><td>Document root՝ <code>public/</code> (PHP Դաս 15, 22)</td></tr>
+      <tr><td>Demo-ի գաղտնաբառը seeder-ի կոդում</td><td>Պահոցը կարդացողը մուտք է գործում որպես demo (կամ ադմին)</td><td><code>env('DEMO_PASSWORD')</code>, hosting-ի <code>.env</code>-ում</td></tr>
+      <tr><td>Factory-ներ production seeder-ում</td><td><code>composer install --no-dev</code> → «Class Faker not found»</td><td>Demo տվյալները զանգվածներից</td></tr>
+      <tr><td>README-ում պնդում, որ կոդում չկա</td><td>Պաշտպանության ժամանակ բացում են ֆայլը</td><td>Գրիր միայն այն, ինչ կարող ես ցույց տալ</td></tr>
+      <tr><td>Kit-ի կապույտ գույնը</td><td>«Ձևանմուշից» տեսք</td><td>Փոխիր <code>main.css</code>-ի «Շերտ 1»-ը</td></tr>
+      <tr><td>Ներկայացումը առանց փորձի</td><td>15 րոպե ցուցադրություն, 0 րոպե դժվար ֆունկցիա</td><td>Ժամացույց, պլանը՝ <code>defense-plan.md</code></td></tr>
+    </table>
+    </div>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Եթե խրվել ես</th><th>Նայիր</th></tr>
+      <tr><td>Deploy, smoke test, README</td><td><a href="../php-lesson-22.html">PHP Դաս 22</a>, <a href="../block-3-homework/lesson-22/task.html">Տնային 22</a></td></tr>
+      <tr><td>Հարցազրույց և նախագծի ներկայացում</td><td><a href="../php-lesson-24.html">PHP Դաս 24</a></td></tr>
+      <tr><td>Lighthouse, հասանելիություն</td><td><a href="../html-lesson-23.html">HTML Դաս 23</a></td></tr>
+    </table>
+    </div>
+    <div class="pager"><a href="checkpoint-3.html">← Ստուգակետ 3</a><a href="../final-project.html">Վերջնական նախագիծ</a><span></span></div>
+  </section>
+
+  <footer>
+    <span>Վերջնական նախագիծ · ստուգակետ 4</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+/* Ավելացրու main.css-ի վերջում — PHP Դաս 06 */
+/* ============ 13. PHP — սերվերի հաղորդագրություններ (PHP Դաս 06) ============ */
+.mt-10 { margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
+
+.alert {
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius-sm);
+    background-color: var(--surface);
+    box-shadow: var(--shadow-sm);
+}
+.alert--success { border-color: var(--success); }
+.alert--danger  { border-color: var(--danger); }
+
+.field.has-error select { border-color: var(--danger); }
+.form-grid .check { grid-column: 2; }
+@media (max-width: 576px) { .form-grid .check { grid-column: 1; } }

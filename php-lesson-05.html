@@ -38,7 +38,7 @@
     <ul class="goals">
       <li>Ի՞նչ է XSS-ը և ինչպե՞ս է աշխատում</li>
       <li><code>htmlspecialchars</code> և <code>e()</code> օգնականը</li>
-      <li>Ելքի չորս համատեքստ</li>
+      <li>Ելքի հինգ համատեքստ՝ ներառյալ <code>href</code>-ը</li>
       <li>Շաբլոնների համակարգ՝ layout և views</li>
       <li>Փոփոխականների փոխանցում շաբլոնին</li>
       <li>Բազմաթիվ էջեր՝ առանց կրկնության</li>
@@ -65,11 +65,11 @@
   PHP-ն դուրս է գրում q-ի արժեքը ուղիղ HTML-ի մեջ
         │
   Բրաուզերը ստանում է՝
-        <p>Որոնում՝ &lt;script>alert('XSS') &lt;/script&gt;</p>
+        &lt;p&gt;Որոնում՝ &lt;script&gt;alert('XSS')&lt;/script&gt;&lt;/p&gt;
         │
   Բրաուզերը չգիտի, որ սա օգտագործողի տեքստ էր
         │
-  Այն տեսնում է &lt;script> թեգ  →  ԿԱՏԱՐՈՒՄ Է ԱՅՆ</div>
+  Այն տեսնում է &lt;script&gt; թեգ  →  ԿԱՏԱՐՈՒՄ Է ԱՅՆ</div>
 
     <div class="warn note">
       <span class="tag">Ինչո՞ւ <code>alert</code>-ը լուրջ խնդիր է</span>
@@ -94,7 +94,7 @@
       <span class="tag">Stored XSS-ը ամենավտանգավորն է</span>
       <p>Հարձակվողը գրանցվում է <code>&lt;script&gt;...&lt;/script&gt;</code> անունով։ Այդ անունը պահվում է բազայում։<br><br>
       Հիմա <strong>ամեն ոք</strong>, ով բացում է օգտագործողների ցուցակը — ներառյալ ադմինը — կատարում է այդ սկրիպտը։ Հարձակվողին ոչինչ չի պետք անել, զոհերն իրենք են գալիս։<br><br>
-      Դաս 10-ում, երբ ապրանքները գան բազայից, հենց այս սցենարը հնարավոր կդառնա։</p>
+      Դաս 11-ում, երբ ապրանքները գան բազայից, հենց այս սցենարը հնարավոր կդառնա։</p>
     </div>
   </section>
 
@@ -170,7 +170,7 @@
 
   <!-- ============ 03 ============ -->
   <section id="s3">
-    <h2><span class="num">03</span>Ելքի չորս համատեքստ</h2>
+    <h2><span class="num">03</span>Ելքի հինգ համատեքստ</h2>
     <p><code>e()</code>-ն ամենակարևորն է, բայց ոչ միակը։ Փախցնելու ձևը կախված է նրանից, <em>որտեղ</em> է դրվում տվյալը։</p>
 
     <div class="scroll">
@@ -180,11 +180,12 @@
       <tr><td>HTML ատրիբուտ</td><td><code>e($x)</code> + <strong>չակերտներ պարտադիր</strong></td></tr>
       <tr><td>URL-ի պարամետր</td><td><code>urlencode($x)</code></td></tr>
       <tr><td>JavaScript-ի ներսում</td><td><code>json_encode($x)</code></td></tr>
+      <tr><td>Ամբողջ հասցե՝ <code>href</code>, <code>src</code></td><td><code>safeUrl($x)</code> + <code>e()</code> ⭐</td></tr>
     </table>
     </div>
 
     <div class="block">
-      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>չորսն էլ գործնականում</div><button class="copy">Պատճենել</button></div>
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>առաջին չորսը գործնականում</div><button class="copy">Պատճենել</button></div>
 <pre><code><span class="c">&lt;!-- 1. Տեքստ --&gt;</span>
 <span class="p">&lt;</span><span class="t">h3</span><span class="p">&gt;</span>&lt;?= <span class="f">e</span>(<span class="n">$p</span>[<span class="s">'name'</span>]) ?&gt;<span class="p">&lt;/</span><span class="t">h3</span><span class="p">&gt;</span>
 
@@ -215,6 +216,61 @@
       <p><code>&lt;script&gt;</code>-ի ներսում HTML-ի կանոնները չեն գործում։ <code>e()</code>-ն այնտեղ և՛ չի պաշտպանում, և՛ փչացնում է տվյալները՝ <code>&amp;quot;</code>-ը կմնա տեքստում։<br><br>
       <code>json_encode</code>-ը ճիշտ գործիքն է․ այն արտադրում է վավեր JS արժեք և փախցնում է ամեն վտանգավոր նիշ։<br><br>
       <code>JSON_UNESCAPED_UNICODE</code>-ը պետք է, որ հայերենը մնա ընթեռնելի, ոչ <code>\u0531</code> ձևով։</p>
+    </div>
+  
+    <h3>Հինգերորդ դեպքը՝ href և src</h3>
+    <p>Առաջին չորս դեպքերում հարձակումը պահանջում էր հատուկ նիշեր՝ <code>&lt;</code>, <code>"</code>, <code>'</code>։ Այստեղ այն ոչ մի հատուկ նիշ չի պահանջում։</p>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>❌ e()-ով, բայց էլի խոցելի</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">&lt;!-- Արտադրողի կայքի հղումը գալիս է բազայից --&gt;</span>
+<span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"&lt;?= e($brand['site']) ?&gt;"</span><span class="p">&gt;</span>Արտադրողի կայքը<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span>
+
+<span class="c">// Հարձակվողը ադմին վահանակում գրում է՝
+//   javascript:alert(document.cookie)
+// e()-ից հետո՝ ՆՈՒՅՆԸ։ Մեկ հատուկ նիշ էլ չկա։</span>
+
+<span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"javascript:alert(document.cookie)"</span><span class="p">&gt;</span>Արտադրողի կայքը<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Սեղմելիս սկրիպտը կատարվում է քո կայքի անունից</span>
+      <p><code>e()</code>-ը փախցնում է նիշեր, իսկ <code>javascript:</code>-ը սովորական տառեր են՝ երկու կետն ու փակագծերը չեն փոխարինվում։<br><br>
+      Արդյունքը՝ նույն Stored XSS-ը, ինչ <code>&lt;script&gt;</code>-ով․ ուղղակի օգտագործողը պետք է սեղմի հղումը։ Նույն վտանգը կա <code>data:</code> և <code>vbscript:</code> սխեմաների հետ։<br><br>
+      Սա հիմնական պատճառն է, որ «միշտ <code>e()</code>» կանոնը անբավարար է։ <strong>Ամբողջ հասցեի համար պետք է ստուգել սխեման։</strong></p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>✅ functions.php — սպիտակ ցուցակ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">safeUrl</span>(?<span class="k">string</span> <span class="n">$url</span>, <span class="k">string</span> <span class="n">$fallback</span> = <span class="s">'#'</span>): <span class="k">string</span>
+{
+    <span class="n">$url</span> = <span class="f">trim</span>(<span class="n">$url</span> ?? <span class="s">''</span>);
+
+    <span class="k">if</span> (<span class="n">$url</span> === <span class="s">''</span>) {
+        <span class="k">return</span> <span class="n">$fallback</span>;
+    }
+
+    <span class="c">// Ներքին հասցե՝ /contact, բայց ոչ //evil.com ⭐</span>
+    <span class="k">if</span> (<span class="f">str_starts_with</span>(<span class="n">$url</span>, <span class="s">'/'</span>) &amp;&amp; !<span class="f">str_starts_with</span>(<span class="n">$url</span>, <span class="s">'//'</span>)) {
+        <span class="k">return</span> <span class="n">$url</span>;
+    }
+
+    <span class="n">$scheme</span> = <span class="f">strtolower</span>((<span class="k">string</span>) <span class="f">parse_url</span>(<span class="n">$url</span>, <span class="k">PHP_URL_SCHEME</span>));
+
+    <span class="k">return</span> <span class="f">in_array</span>(<span class="n">$scheme</span>, [<span class="s">'http'</span>, <span class="s">'https'</span>, <span class="s">'mailto'</span>, <span class="s">'tel'</span>], <span class="k">true</span>)
+        ? <span class="n">$url</span>
+        : <span class="n">$fallback</span>;
+}
+
+<span class="c">// Օգտագործում՝ երկուսը միասին</span>
+<span class="p">&lt;</span><span class="t">a</span> <span class="f">href</span>=<span class="s">"&lt;?= e(safeUrl($brand['site'])) ?&gt;"</span><span class="p">&gt;</span>Արտադրողի կայքը<span class="p">&lt;/</span><span class="t">a</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Սպիտակ ցուցակ, ոչ արգելքների ցուցակ</span>
+      <p>Գայթակղիչ է գրել <code>str_contains($url, 'javascript:')</code> և արգելել։ Դա շրջանցվում է․ բրաուզերները URL-ի ներսից անտեսում են tab-ը և նոր տողը, ուստի <code>java&amp;#9;script:alert(1)</code> նույնպես աշխատում է։<br><br>
+      Հակառակ մոտեցումը չի շրջանցվում․ <strong>թույլատրիր միայն հայտնի սխեմաները</strong>, մնացած ամեն ինչ վերածվում է <code>#</code>-ի։ Անծանոթ ձևը պարզապես չի անցնում։<br><br>
+      <code>//</code>-ի ստուգումը նույնն է, ինչ Դաս 7-ի բաց վերահղման դեպքում․ <code>//evil.com</code>-ը սկսվում է շեղագծով, բայց արտաքին հասցե է։ Նույն տվյալը, երկու տարբեր վտանգ։</p>
     </div>
   </section>
 
@@ -325,6 +381,28 @@
       <span class="tag">Ուշադրություն՝ layout-ը ամբողջական HTML է</span>
       <p>Բոլոր թեգերը բացվում և փակվում են մեկ ֆայլում։ Խմբագրիչը երջանիկ է, վալիդատորը՝ նույնպես։<br><br>
       Իսկ <code>&lt;?= $content ?&gt;</code>-ը այն մեկ տեղն է, որտեղ ներդրվում է էջի բովանդակությունը։</p>
+    </div>
+  
+    <div class="warn note">
+      <span class="tag">Layout-ը ունի կախվածություն, որ դեռ չենք սահմանել</span>
+      <p>Վերևում <code>SITE_NAME</code>-ը օգտագործվում է երեք տեղ։ Եթե այն սահմանված չէ, PHP-ն կգցի <em>«Undefined constant "SITE_NAME"»</em>։<br><br>
+      Սահմանիր <code>functions.php</code>-ի սկզբում՝ <code>declare</code>-ից անմիջապես հետո։</p>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>functions.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">const</span> <span class="n">SITE_NAME</span> = <span class="s">'ՏեխնոՄարկետ'</span>;
+
+<span class="c">// ... e(), safeUrl(), render() ...</span></code></pre>
+    </div>
+
+    <div class="note">
+      <span class="tag">Ինչո՞ւ հաստատուն, ոչ փոփոխական</span>
+      <p>Դաս 3-ում սովորեցինք՝ ֆունկցիաները չեն տեսնում արտաքին փոփոխականները, իսկ <code>include</code>-ով միացված շաբլոնը աշխատում է <code>render()</code>-ի <strong>ներսում</strong>։ Փոփոխականը կհասանելի չլիներ, հաստատունը՝ ամենուր է։<br><br>
+      Դաս 14-ում այն կտեղափոխվի <code>.env</code>-ի և կոնֆիգուրացիայի մեջ։</p>
     </div>
   </section>
 
@@ -440,7 +518,15 @@
       <strong>2.</strong> Էջերի ֆայլերը պարունակում են միայն բովանդակություն<br>
       <strong>3.</strong> Տվյալները փոխանցվում են բացահայտ՝ <code>render()</code>-ի երկրորդ արգումենտով<br>
       <strong>4.</strong> Նոր էջ ավելացնելը՝ մեկ ֆայլ <code>views/pages/</code>-ում<br><br>
-      Սա արդեն MVC-ի սաղմն է․ <code>index.php</code>-ը կոնտրոլերն է, <code>views/</code>-ը՝ V-ն, <code>data.php</code>-ը՝ M-ի տեղը։ Դաս 14–17-ում այն կդառնա լիարժեք։</p>
+      Սա արդեն MVC-ի սաղմն է․ <code>index.php</code>-ը կոնտրոլերն է, <code>views/</code>-ը՝ V-ն, <code>data.php</code>-ը՝ M-ի տեղը։ Դաս 15–17-ում այն կդառնա լիարժեք։</p>
+    </div>
+  
+    <div class="warn note">
+      <span class="tag">Այս <code>render()</code>-ի երկու թույլ տեղը</span>
+      <p>Սա դիտավորյալ պարզ տարբերակ է։ Այն երկու խնդիր ունի, որ հիմա չենք լուծում, բայց պետք է իմանալ․<br><br>
+      <strong>1. <code>extract($data)</code>-ը վերագրում է ցանկացած փոփոխական։</strong> Եթե <code>$data</code>-ում լինի բանալի <code>'view'</code>, այն կվերագրի <code>render()</code>-ի սեփական պարամետրը, և <code>require</code>-ը կփնտրի սխալ ֆայլ։<br><br>
+      <strong>2. Շաբլոնում սխալ լինելու դեպքում բուֆերը մնում է բաց։</strong> Եվ սխալի էջը կհայտնվի կիսատ <code>&lt;div&gt;</code>-ների մեջ։<br><br>
+      Երկուսն էլ կուղղվեն Դաս 15-ում՝ <code>EXTR_SKIP</code> և <code>ob_end_clean()</code> <code>catch</code>-ում։ Այդ ժամանակ կհասկանաս, թե ինչու են դրանք այնտեղ։</p>
     </div>
   </section>
 
@@ -452,11 +538,14 @@
       <li>Ավելացրու <code>e()</code> ֆունկցիան <code>functions.php</code>-ում</li>
       <li>Ստեղծիր <code>views/layout.php</code> ամբողջական HTML-ով</li>
       <li>Տեղափոխիր բովանդակությունը <code>views/pages/home.php</code></li>
+      <li>Սահմանիր <code>SITE_NAME</code> հաստատունը <code>functions.php</code>-ում</li>
       <li>Ավելացրու <code>render()</code> ֆունկցիան</li>
       <li>Վերաշարադրիր <code>index.php</code>-ը կոնտրոլերի ձևով</li>
       <li>Ջնջիր հին <code>partials/</code> թղթապանակը</li>
       <li>Անցիր ամբողջ շաբլոնով և փաթեթավորիր ամեն արժեք <code>e()</code>-ով</li>
       <li>Ավելացրու <code>data.php</code>-ում ապրանք վտանգավոր անունով և ստուգիր</li>
+      <li>Ստեղծիր երկրորդ էջը՝ <code>contact.php</code>, նույն layout-ով (տես ներքևում)</li>
+      <li>Ավելացրու <code>safeUrl()</code> և փորձարկիր <code>javascript:</code> հասցեով</li>
     </ol>
 
     <div class="block">
@@ -476,17 +565,67 @@
       <strong>Երկրորդ անգամ՝ <code>e()</code>-ով։</strong> Քարտի վրա կերևա տեքստը <code>&lt;script&gt;alert("XSS")&lt;/script&gt;</code>՝ որպես սովորական բառեր։<br><br>
       Երկրորդ ապրանքը՝ <code>&lt;img src=x onerror=...&gt;</code>, ցույց է տալիս, որ <code>&lt;script&gt;</code>-ը միակ ճանապարհը չէ։ Ամեն HTML թեգ, որն ունի իրադարձության ատրիբուտ, պոտենցիալ վեկտոր է։</p>
     </div>
+  
+    <h3>Երկրորդ էջը՝ առանց կրկնության</h3>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>contact.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;?php</span>
+<span class="k">declare</span>(<span class="n">strict_types</span>=<span class="n">1</span>);
+
+<span class="k">require_once</span> <span class="n">__DIR__</span> . <span class="s">'/functions.php'</span>;
+
+<span class="k">echo</span> <span class="f">render</span>(<span class="s">'layout'</span>, [
+    <span class="s">'title'</span>   =&gt; <span class="s">'Կապ — '</span> . <span class="n">SITE_NAME</span>,
+    <span class="s">'content'</span> =&gt; <span class="f">render</span>(<span class="s">'pages/contact'</span>),
+]);</code></pre>
+    </div>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>views/pages/contact.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="p">&lt;</span><span class="t">section</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-50 w-md-100"</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">h1</span> <span class="f">class</span>=<span class="s">"section-title mb-30"</span><span class="p">&gt;</span>Կապ մեզ հետ<span class="p">&lt;/</span><span class="t">h1</span><span class="p">&gt;</span>
+
+            <span class="p">&lt;</span><span class="t">p</span><span class="p">&gt;</span>Գրեք մեզ՝ &lt;?= <span class="f">e</span>(<span class="n">SITE_NAME</span>) ?&gt;-ի թիմին։<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="t">p</span> <span class="f">class</span>=<span class="s">"text-muted"</span><span class="p">&gt;</span>Ֆորման կավելանա Դաս 6-ում։<span class="p">&lt;/</span><span class="t">p</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">section</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Համեմատիր Դաս 3-ի հետ</span>
+      <p>Երկրորդ էջը՝ <strong>7 տող PHP</strong> (առանց դատարկների) և մեկ ֆայլ բովանդակությամբ։ Header-ը, footer-ը, մենյուն և <code>&lt;head&gt;</code>-ը չկրկնվեցին։<br><br>
+      Դաս 3-ի <code>partials/</code> մոտեցմամբ յուրաքանչյուր էջ պիտի կրկներ երկու <code>require</code> և նույն չփակված թեգերի զույգը։ Երբ վաղը փոխես մենյուն՝ կփոխես մեկ ֆայլում, ոչ երկուսում։ Դա նույն սկզբունքն է, ինչ <code>global.css</code>-ի դեպքում՝ <em>մեկ աղբյուր ճշմարտության</em>։<br><br>
+      Այս էջում <code>$title</code>-ը կարևոր է․ ամեն էջ տարբեր վերնագիր է պահանջում, և <code>layout.php</code>-ը այն ստանում է <code>render()</code>-ի երկրորդ արգումենտով։</p>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Փորձիր <code>javascript:</code> հղումը երկու անգամ</span>
+      <p>Ավելացրու <code>data.php</code>-ում <code>'site' =&gt; 'javascript:alert(document.cookie)'</code> և ցուցադրիր այն հղմամբ։<br><br>
+      <strong>Առաջին անգամ՝ միայն <code>e()</code>-ով։</strong> Սեղմիր հղումը։ <code>alert</code>-ը կերևա, թեև <code>e()</code>-ը կիրառված է։<br>
+      <strong>Երկրորդ անգամ՝ <code>e(safeUrl(...))</code>-ով։</strong> Հղումը կդառնա <code>#</code>։<br><br>
+      Եվ երրորդը՝ փորձիր <code>'//evil.com'</code>-ը և <code>'https://example.com'</code>-ը։ Երկրորդը պիտի անցնի, առաջինը՝ ոչ։</p>
+    </div>
   </section>
 
   <!-- ============ 08 ============ -->
   <section id="s8">
     <h2><span class="num">08</span>Տնային աշխատանք</h2>
+    <div class="tip note">
+      <span class="tag">Մինի-նախագիծ</span>
+      <p>Այս տնայինի գլխավոր մասը՝ <a href="block-3-homework/lesson-05/task.html" style="color:var(--pen);text-decoration:underline">«Շաբլոններ և XSS»</a>, Անիի գրքերի ակումբում՝ քայլ առ քայլ, starter ֆայլերով և պատրաստի օրինակով։ Ներքևի ցուցակի կետերը, որ նշված չեն որպես «մինի-նախագծում», կատարիր ՏեխնոՄարկետում։</p>
+    </div>
     <ol class="hw">
       <li>Կատարիր դասարանականի 8 քայլը։</li>
       <li>Ցուցադրիր XSS-ը երկու սքրինշոթով՝ առանց <code>e()</code>-ի և դրանով։</li>
       <li>Փորձարկիր հինգ տարբեր payload՝ <code>&lt;script&gt;</code>, <code>&lt;img onerror&gt;</code>, <code>&lt;svg onload&gt;</code>, <code>javascript:</code> հղումում, <code>' onfocus='</code> ատրիբուտում։ Որո՞նք են աշխատում առանց <code>e()</code>-ի։</li>
       <li>Ցուցադրիր ատրիբուտի խնդիրը՝ չակերտներով և առանց դրանց, <code>e()</code>-ի հետ միասին։</li>
-      <li>Ստեղծիր երկրորդ էջ՝ <code>contact.php</code>, նույն layout-ով։ Քանի՞ տող կրկնեցիր։</li>
+      <li>Ստեղծիր երրորդ էջ՝ <code>about.php</code>, նույն layout-ով։ Քանի՞ տող կրկնեցիր՝ համեմատած Դաս 3-ի <code>partials/</code> մոտեցման հետ։</li>
       <li>Ավելացրու <code>$title</code>-ը ամեն էջի համար։</li>
       <li>Բացատրիր սեփական բառերով, ինչու փախցնում ենք ելքի, ոչ մուտքի ժամանակ։</li>
       <li>Ցուցադրիր, ինչ է լինում, երբ <code>e()</code>-ն կիրառում ես երկու անգամ նույն տողի վրա։</li>
@@ -505,6 +644,7 @@
       <tr><td>HTML ատրիբուտ</td><td><code>e($x)</code> + չակերտներ</td></tr>
       <tr><td>URL պարամետր</td><td><code>urlencode($x)</code></td></tr>
       <tr><td>JavaScript</td><td><code>json_encode($x)</code></td></tr>
+      <tr><td>Ամբողջ հասցե (<code>href</code>, <code>src</code>)</td><td><code>e(safeUrl($x))</code> ⭐</td></tr>
       <tr><td>Արդեն պատրաստ HTML</td><td>Առանց փախցնելու — գիտակցաբար</td></tr>
     </table>
     </div>
@@ -525,7 +665,8 @@ render($view, $data)
 · Փախցնում՝ ելքի ժամանակ
 · e() ամեն դրսից եկած արժեքի վրա
 · Ատրիբուտները միշտ չակերտների մեջ
-· JS-ի ներսում՝ json_encode, ոչ e()</div>
+· JS-ի ներսում՝ json_encode, ոչ e()
+· Հասցեների համար՝ սխեմայի սպիտակ ցուցակ</div>
 
     <h3>Ստուգաթերթ</h3>
     <ul class="goals">
@@ -535,6 +676,8 @@ render($view, $data)
       <li>Layout-ը ամբողջական վավեր HTML է</li>
       <li>Էջերի ֆայլերում չկա <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code></li>
       <li>Փորձարկել եմ վտանգավոր payload-ով</li>
+      <li>Ամեն <code>href</code> և <code>src</code>, որ գալիս է տվյալներից, անցնում է <code>safeUrl()</code>-ով</li>
+      <li><code>SITE_NAME</code>-ը սահմանված է</li>
       <li>Բազայում պահվում են մաքուր տվյալները</li>
     </ul>
 
@@ -545,6 +688,8 @@ render($view, $data)
       <li>Հասկանո՞ւմ եմ, ինչու <code>ENT_QUOTES</code></li>
       <li>Գիտե՞մ, ինչու JS-ի ներսում <code>e()</code>-ն սխալ է</li>
       <li>Կարո՞ղ եմ բացատրել <code>ob_start()</code>-ի աշխատանքը</li>
+      <li>Գիտե՞մ, ինչու <code>e()</code>-ը չի պաշտպանում <code>href="javascript:..."</code>-ից</li>
+      <li>Կարո՞ղ եմ բացատրել, ինչու սպիտակ ցուցակը ավելի ապահով է, քան արգելքների ցուցակը</li>
     </ul>
 
     <div class="tip note">

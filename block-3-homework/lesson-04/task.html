@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 04 · AI-ն որպես վերանայող — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · տնային</b> · Դաս 04</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../php-lesson-04.html">PHP Դաս 04</a> · մինի-նախագիծ</p>
+  <h1>AI-ն որպես վերանայող</h1>
+  <p class="lede">Այս դասին նոր կոդ չենք գրում․ վերանայում ենք եղածը։ Ստեղծում ես <code>context.txt</code>՝ նախագծի նկարագրություն AI-ի համար, երեք պրոմպտ հինգ բաղադրիչով, և <code>functions.php</code>-ը անցնում ես «վերանայման ռեժիմով»։ Ամեն ուղղում անում ես ԻՆՔԴ և ստուգում <code>data.php</code>-ում։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Անիի կայքը</span>
+    <span>4 քայլ · 6 տնային կետ նախագծում</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–04․ Դաս 03-ի կոդը և AI գործիքները։ AI-ին թույլ չենք տալիս վերաշարադրել ֆայլը կամ առաջարկել Laravel, PDO և այլ դեռ չանցած թեմաներ (դա գրված է <code>context.txt</code>-ի «ԱՐԳԵԼՔՆԵՐ»-ում)։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <figure class="shot">
+      <img src="screenshots/shelf.jpg" alt="Նույն էջը ուղղված progress()-ով" width="1280" height="2070" loading="lazy">
+      <figcaption>Վերանայումից հետո էջը նույնն է, բայց եզրային դեպքերը այլևս չեն կոտրում այն</figcaption>
+    </figure>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Շարունակիր քո նախագիծը։ Եթե բաց ես թողել նախորդ դասը, սկսիր <a href="../lesson-03/example/">Դաս 03-ի օրինակից</a>։</p>
+    <p>Այս դասին starter չկա․ աշխատում ես քո կոդի վրա։</p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գործարկել</th></tr>
+      <tr><td><code>php -S localhost:8000</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · context.txt</h3>
+    <ul class="goals">
+      <li>Հինգ բաժին՝ ՆԱԽԱԳԻԾ, ՍՏԵԿ, ԿԱՆՈՆՆԵՐ, CSS ԴԱՍԵՐ, ԱՐԳԵԼՔՆԵՐ</li>
+      <li>Գրքի զանգվածի կառուցվածքը՝ բանալիներով</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>context.txt — սկիզբը</div><button class="copy">Պատճենել</button></div>
+<pre><code>ՆԱԽԱԳԻԾ
+«Անիի գրքերը»՝ ընթերցանության օրագիր Անի Սարգսյանի անձնական կայքում։
+Ցույց է տալիս գրքերի դարակը, կարգավիճակները (կարդալու եմ / կարդում եմ / կարդացել եմ),
+առաջընթացը էջերով և վիճակագրությունը։ Ուսումնական նախագիծ, PHP բլոկ, Դաս 04։
+
+ՍՏԵԿ</code></pre>
+    </div>
+
+    <h3>Քայլ 2 · Երեք պրոմպտ</h3>
+    <ul class="goals">
+      <li><code>prompts.md</code>՝ նոր ֆունկցիա, բացատրություն, վերանայում</li>
+      <li>Ամեն մեկը՝ Դեր, Առաջադրանք, Համատեքստ, Սահմանափակումներ, Ձևաչափ</li>
+    </ul>
+
+    <h3>Քայլ 3 · Վերանայում</h3>
+    <ul class="goals">
+      <li>Տուր AI-ին <code>functions.php</code>-ը և խնդրիր գտնել եզրային դեպքեր, ՈՉ վերաշարադրել</li>
+      <li>Ամեն գտածը ստուգիր՝ <code>data.php</code>-ում ավելացրու «վատ» գիրք (<code>pages = 0</code>, <code>read = 120</code>)</li>
+    </ul>
+
+    <h3>Քայլ 4 · Ուղղումներ</h3>
+    <ul class="goals">
+      <li>Ուղղիր ինքդ և գրանցիր <code>review.md</code>-ում՝ աղյուսակով</li>
+      <li>Գտիր մեկ տեղ, որտեղ AI-ն սխալվեց, և ինչպես ստուգեցիր (տնային 9)</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>functions.php — progress()-ը ուղղումից հետո</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/**
+ * Դաս 04-ի վերանայումից հետո․
+ *  - pages = 0 → DivisionByZeroError → վերադարձնում ենք 0
+ *  - read &gt; pages (տառասխալ ադմինում) → 120% → սահմանափակում ենք 100-ով
+ *  - read &lt; 0 → -10% → 0
+ */</span>
+<span class="k">function</span> <span class="f">progress</span>(<span class="k">array</span> <span class="n">$book</span>): <span class="k">int</span>
+{
+    <span class="k">if</span> (<span class="n">$book</span>[<span class="s">'pages'</span>] &lt;= <span class="n">0</span>) {
+        <span class="k">return</span> <span class="n">0</span>;
+    }
+
+    <span class="n">$percent</span> = (<span class="k">int</span>) (<span class="n">$book</span>[<span class="s">'read'</span>] * <span class="n">100</span> / <span class="n">$book</span>[<span class="s">'pages'</span>]);
+
+    <span class="k">return</span> <span class="f">max</span>(<span class="n">0</span>, <span class="f">min</span>(<span class="n">100</span>, <span class="n">$percent</span>));
+}</code></pre>
+    </div>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li><code>context.txt</code>-ում թվարկված են միայն իրական CSS դասերը</li>
+      <li><code>pages = 0</code>-ով էջը չի ընկնում</li>
+      <li>Առաջընթացի գիծը 100%-ից դուրս չի գալիս</li>
+      <li><code>review.md</code>-ում ամեն տող ունի «Ստուգեցի» սյունակ</li>
+      <li>Ոչ մի տող AI-ից առանց հասկանալու</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>AI-ն վերաշարադրեց ամբողջ ֆայլը</td><td>Պրոմպտում՝ «Մի վերաշարադրիր․ ցույց տուր խնդիրը և տողը»</td></tr>
+      <tr><td>AI-ն առաջարկեց PDO կամ Laravel</td><td><code>context.txt</code>-ի ԱՐԳԵԼՔՆԵՐ բաժինը պրոմպտի սկզբում չէ</td></tr>
+      <tr><td>Ուղղումը ստուգված չէ</td><td>Ամեն ուղղման համար ավելացրու «վատ» գիրք և տես արդյունքը էջում</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի տնային աշխատանքը</h2>
+    <p>Սրանք <a href="../../php-lesson-04.html#s9">Դաս 04-ի</a> տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում՝ Անիի ակումբում։ Մնացածը կատարիր ՏեխնոՄարկետում, ինչպես գրված է դասում։</p>
+    <ol class="hw">
+      <li>Ստեղծիր քո <code>context.txt</code>-ը՝ նախագծի նկարագրություն, ստեկ, կանոններ, CSS դասեր, արգելքներ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Փորձարկիր այն երեք տարբեր առաջադրանքի վրա։ Բարելավիր ըստ արդյունքների։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կատարիր երեք դասարանական վարժանքը և գրիր արդյունքները։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Խնդրիր բացատրել PDO-ն։ Ապա ստուգիր բացատրությունը php.net-ում։ Կա՞ր անճշտություն։</li>
+      <li>Խնդրիր գեներացնել կոդ, որը կապվում է բազային։ <strong>Մի՛ օգտագործիր այն։</strong> Փոխարենը՝ գտիր 3 խնդիր դրանում։</li>
+      <li>Վերցրու քո <code>functions.php</code>-ը և անցիր վերանայման ռեժիմով։ Ուղղիր ամեն խնդիր ինքդ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Կատարիր ինքնաստուգումը՝ փակիր ամեն ինչ և գրիր <code>sortProducts()</code>-ը զրոյից։</li>
+      <li>Գրիր ցուցակ՝ ի՞նչ 5 բան երբեք չես դնի չաթում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գտիր օրինակ, երբ AI-ն քեզ սխալ պատասխան տվեց։ Նկարագրիր, ինչպես նկատեցիր։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գրիր կարճ տեքստ՝ «Ինչպե՞ս եմ օգտագործելու AI-ն մնացած 20 դասում»։ Դա քո աշխատանքային պայմանագիրն է ինքդ քեզ հետ։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/">օրինակը</a>։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-03/task.html">← Դաս 03</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-05/task.html">Դաս 05 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · տնային աշխատանք · Դաս 04</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

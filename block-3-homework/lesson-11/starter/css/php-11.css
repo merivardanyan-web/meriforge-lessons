@@ -1,0 +1,10 @@
+/* Ավելացրու main.css-ի վերջում — PHP Դաս 11 */
+/* ============ 15. PHP — ադմին և ընթերցանության օրեր (PHP Դաս 11) ============ */
+.admin-table td, .admin-table th { padding: 8px 12px; text-align: left; vertical-align: middle; }
+.admin-table .btn { white-space: nowrap; }
+.row-inactive td { color: var(--text-muted); }
+.row-inactive td:nth-child(2) { text-decoration: line-through; }
+.btn--danger { --btn-bg: var(--danger); --btn-color: var(--white); --btn-border: var(--danger); }
+.read-form fieldset { padding: 0; border: 0; }
+.read-form legend { font-weight: 700; margin-bottom: 8px; }
+input[type="color"] { width: 64px; height: 40px; padding: 2px; }

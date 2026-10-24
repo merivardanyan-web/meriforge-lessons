@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ստուգակետ 1 — Հիմք․ թեմա, սխեմա, բազա</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lesson.css">
+<script src="../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+  .check{list-style:none; padding-left:0}
+  .check li{position:relative; padding-left:30px; margin-bottom:8px}
+  .check li::before{content:""; position:absolute; left:0; top:4px; width:16px; height:16px; border:2px solid var(--pen); border-radius:4px}
+  .week{display:inline-block; padding:2px 10px; border-radius:99px; background:var(--pen); color:#fff; font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Վերջնական նախագիծ</b> · ստուգակետ 1</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Վերջնական նախագիծ · շաբաթ 1 / 4 · ստուգակետ 1</p>
+  <h1>Հիմք․ թեմա, սխեմա, բազա</h1>
+  <p class="lede">Առաջին շաբաթը ամենաքիչ տեսանելին է և ամենակարևորը։ Արդյունքը մեկ էջ առաջարկ է, մեկ գծապատկեր և բազա, որը լցվում է մեկ հրամանով։ Ամեն հաջորդ շաբաթ կանգնած է այս մեկի վրա։</p>
+
+  <div class="facts">
+    <span>Շաբաթ 1</span>
+    <span>Արդյունք՝ proposal + schema + migrate:fresh --seed</span>
+    <span>Ստուգում՝ 10 րոպե դասախոսի հետ</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Շաբաթվա վերջում ունես <strong>համաձայնեցված թեմա</strong>, <strong>սխեմա, որ աշխատում է</strong> և դատարկ, բայց կոկիկ կայք։ Էջեր դեռ չկան․ կա բազա, որը լցվում է մեկ հրամանով, և layout, որի վրա կկառուցես մնացածը։</p>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/kit.jpg" alt="Դատարկ կայք՝ header, վերնագիր, երկու կոճակ, ֆորմայի դաշտ" width="1280" height="700" loading="lazy">
+      <figcaption>Kit-ը նոր Laravel նախագծի վրա․ layout, CSS, x-field</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/home.jpg" alt="Սևան Բարբերի գլխավոր էջը" width="1280" height="1667" loading="lazy">
+      <figcaption>Օրինակը չորս շաբաթ հետո՝ նույն հիմքից</figcaption>
+    </figure>
+    </div>
+    <div class="warn note">
+      <span class="tag">Ամենաթանկ սխալը հենց այս շաբաթում է</span>
+      <p>Սխալ սխեման առաջին շաբաթում ուղղվում է մեկ ժամում, երրորդում՝ մեկ շաբաթում, որովհետև դրա վրա արդեն կանգնած են կոնտրոլերները, շաբլոնները և seeder-ը։ Այդ պատճառով ստուգակետ 1-ում դասախոսը նայում է ոչ թե էջերին, այլ <code>schema.md</code>-ին և <code>migrate:fresh --seed</code>-ին։</p>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Առաջադրանք</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>#</th><th>Ինչ ես անում</th><th>Ֆայլ</th><th>Դաս</th></tr>
+      <tr><td>1</td><td>Ընտրիր թեման և գրիր «դժվար ֆունկցիան» 5 նախադասությամբ․ <em>ինչ</em> կանոն, ոչ <em>ինչպես</em></td><td><code>docs/proposal.md</code></td><td>—</td></tr>
+      <tr><td>2</td><td>Ուղարկիր առաջարկը դասախոսին <strong>մինչև առաջին ծրագրավորումը</strong></td><td>—</td><td>—</td></tr>
+      <tr><td>3</td><td>Սխեմա՝ աղյուսակներ, սյունակներ, FK, UNIQUE, ամեն FK-ի համար ON DELETE և ինչու</td><td><code>docs/schema.md</code></td><td>PHP 8, 9</td></tr>
+      <tr><td>4</td><td>Նոր Laravel նախագիծ, Fortify, <code>.env</code>՝ MySQL, <code>APP_LOCALE=hy</code>, timezone</td><td><code>.env</code>, <code>config/app.php</code></td><td>PHP 18, 21</td></tr>
+      <tr><td>5</td><td>Միգրացիաներ՝ առնվազն 4 աղյուսակ</td><td><code>database/migrations/</code></td><td>PHP 20</td></tr>
+      <tr><td>6</td><td>Մոդելներ՝ կապեր, casts, scope-ներ, <code>$fillable</code>՝ առանց <code>role</code>-ի</td><td><code>app/Models/</code></td><td>PHP 20</td></tr>
+      <tr><td>7</td><td>Seeder՝ իրատեսական տվյալներ, բոլոր դերերի հաշիվներ</td><td><code>DatabaseSeeder.php</code></td><td>PHP 20, 22</td></tr>
+      <tr><td>8</td><td>Layout և CSS-ի հիմքը (կամ <code>starter/kit</code>)</td><td><code>resources/views/layouts/</code></td><td>PHP 19</td></tr>
+      <tr><td>9</td><td>Git՝ առնվազն 6 commit, <code>.env</code>-ը չկա պահոցում</td><td>—</td><td>JS 17</td></tr>
+    </table>
+    </div>
+    <div class="tip note">
+      <span class="tag">Starter</span>
+      <p><a href="starter/README.md">starter/</a>-ում կան <code>proposal.md</code>-ի և <code>schema.md</code>-ի ձևանմուշները և ոչ պարտադիր <code>kit/</code>՝ layout, CSS, կոմպոնենտներ, հայերեն սխալներ։ Kit-ը նույնն է ամեն թեմայի համար․ այն ամենը, ինչ արդեն գրել ես ՏեխնոՄարկետում, որ այս շաբաթը ծախսես սխեմայի վրա։</p>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Օրինակ՝ Սևան Բարբեր</h2>
+    <p>Ամբողջական օրինակը՝ <a href="example-sevan-barber/README.md">example-sevan-barber/</a>։ Այն աշխատեցված է իրական Laravel 12-ի վրա (տես բաժին 03)։ Նայիր դրան <strong>քո</strong> առաջարկը գրելուց հետո․ նպատակը ձևն է, ոչ թեման։</p>
+    <h3>Առաջարկի ամենակարևոր մասը</h3>
+    <div class="note">
+      <span class="tag">docs/proposal.md — Դժվար ֆունկցիա ⭐</span>
+      <p>Հաճախորդը տեսնում է միայն ազատ ժամերը և ամրագրում մեկը։ Երկու հաճախորդ չպետք է կարողանան ամրագրել նույն ժամը, նույնիսկ եթե սեղմում են միաժամանակ։ Չեղարկված ժամը պետք է նորից ազատվի, բայց չեղարկման պատմությունը պետք է մնա։ Մեկ հաճախորդին՝ առավելագույնը 3 ակտիվ ամրագրում, որ մեկը չզբաղեցնի ամբողջ շաբաթը։ Հաճախորդը չեղարկում է մինչև այցից 2 ժամ առաջ, հետո՝ միայն զանգով։</p>
+    </div>
+    <p>Ուշադրություն դարձրու․ ոչ մի բառ «UNIQUE»-ի կամ «տրանզակցիայի» մասին։ Առաջարկը նկարագրում է <em>կանոնները</em>, իսկ լուծումը գալիս է սխեմայում։</p>
+    <h3>Սխեման</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>docs/schema.md</div><button class="copy">Պատճենել</button></div>
+<pre><code>users                       services                    time_slots
+┌────────────────────┐      ┌────────────────────┐      ┌──────────────────────────┐
+│ id                 │      │ id                 │      │ id                       │
+│ name, email ⓤ      │      │ name, slug ⓤ       │      │ staff_id FK → users      │──┐
+│ phone              │      │ description        │      │ starts_at                │  │
+│ role (client)      │      │ duration_min ≤ 60  │      │ ⓤ (staff_id, starts_at)  │  │
+│ password           │      │ price              │      └──────────────────────────┘  │
+└────────────────────┘      │ is_active          │                   ▲                │
+     ▲         ▲            │ deleted_at (soft)  │                   │                │
+     │         └────────────┴────────────────────┴──── staff ────────┼────────────────┘
+     │                               ▲                               │
+     │      bookings                 │                               │
+     │      ┌────────────────────────┴───────────┐                   │
+     └──────│ user_id FK → users       restrict  │                   │
+            │ service_id FK → services restrict  │                   │
+            │ time_slot_id FK → time_slots restr.│───────────────────┘
+            │ active_slot_id ⓤ nullable  ⭐      │  = time_slot_id, երբ booked/done
+            │ price      ← գինը ամրագրման պահին  │  = NULL, երբ cancelled
+            │ status (booked · done · cancelled) │
+            │ note (255), cancelled_at           │
+            └────────────────────────────────────┘
+ⓤ = UNIQUE</code></pre>
+    </div>
+    <p>Ամբողջ որոշումների աղյուսակը՝ <a href="example-sevan-barber/docs/schema.md"><code>docs/schema.md</code></a>։ Ահա «դժվար ֆունկցիան» միգրացիայում․</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>database/migrations/…_create_bookings_table.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// restrict․ ամրագրումների պատմությունը չի կորչում հաճախորդին կամ ժամը ջնջելիս</span>
+<span class="n">$table</span>-&gt;<span class="f">foreignId</span>(<span class="s">'user_id'</span>)-&gt;<span class="f">constrained</span>()-&gt;<span class="f">restrictOnDelete</span>();
+<span class="n">$table</span>-&gt;<span class="f">foreignId</span>(<span class="s">'time_slot_id'</span>)-&gt;<span class="f">constrained</span>()-&gt;<span class="f">restrictOnDelete</span>();
+<span class="n">$table</span>-&gt;<span class="f">foreignId</span>(<span class="s">'service_id'</span>)-&gt;<span class="f">constrained</span>()-&gt;<span class="f">restrictOnDelete</span>();
+
+<span class="c">// ⭐ «Դժվար ֆունկցիան»․ ակտիվ ամրագրման դեպքում = time_slot_id, չեղարկվածի դեպքում՝ NULL։</span>
+<span class="c">// UNIQUE-ը թույլ է տալիս շատ NULL, ուստի չեղարկված ժամը կարելի է ամրագրել նորից,</span>
+<span class="c">// իսկ երկու ակտիվ ամրագրում նույն ժամին բազան չի ընդունի՝ նույնիսկ միաժամանակյա հարցումներով</span>
+<span class="n">$table</span>-&gt;<span class="f">unsignedBigInteger</span>(<span class="s">'active_slot_id'</span>)-&gt;<span class="f">nullable</span>()-&gt;<span class="f">unique</span>();
+
+<span class="n">$table</span>-&gt;<span class="f">unsignedInteger</span>(<span class="s">'price'</span>);                    <span class="c">// գինը ամրագրման պահին — PHP Դաս 9</span>
+<span class="n">$table</span>-&gt;<span class="k">string</span>(<span class="s">'status'</span>, <span class="n">10</span>)-&gt;<span class="k">default</span>(<span class="s">'booked'</span>);     <span class="c">// booked · done · cancelled</span>
+<span class="n">$table</span>-&gt;<span class="k">string</span>(<span class="s">'note'</span>, <span class="n">255</span>)-&gt;<span class="f">nullable</span>();
+<span class="n">$table</span>-&gt;<span class="f">timestamp</span>(<span class="s">'cancelled_at'</span>)-&gt;<span class="f">nullable</span>();
+<span class="n">$table</span>-&gt;<span class="f">timestamps</span>();
+
+<span class="n">$table</span>-&gt;<span class="f">index</span>([<span class="s">'user_id'</span>, <span class="s">'status'</span>]);</code></pre>
+    </div>
+    <div class="note">
+      <span class="tag">Ինչու ոչ պարզապես UNIQUE(time_slot_id)</span>
+      <p>Այդ դեպքում չեղարկված ամրագրման տողը ընդմիշտ կզբաղեցներ ժամը։ Կամ պետք կլիներ ջնջել այն (կորչում է պատմությունը), կամ ժամն այլևս չէր ազատվի։ <code>active_slot_id</code>-ը չեղարկելիս դառնում է <code>NULL</code>, իսկ UNIQUE-ը <code>NULL</code>-ները չի համեմատում։ Սա այն մտածողությունն է, որ սպասվում է քո «դժվար ֆունկցիայից»․ ոչ թե բարդ կոդ, այլ ճիշտ տեղ կանոնի համար։</p>
+    </div>
+    <h3>Մոդել՝ կապեր և scope-ներ</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Models/TimeSlot.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/** Ակտիվ ամրագրումը՝ active_slot_id-ով։ Առավելագույնը մեկ է՝ UNIQUE-ի շնորհիվ */</span>
+<span class="k">public</span> <span class="k">function</span> <span class="f">activeBooking</span>(): <span class="t">HasOne</span>
+{
+    <span class="k">return</span> <span class="n">$this</span>-&gt;<span class="f">hasOne</span>(<span class="t">Booking</span>::<span class="k">class</span>, <span class="s">'active_slot_id'</span>);
+}
+
+<span class="k">public</span> <span class="k">function</span> <span class="f">scopeFree</span>(<span class="t">Builder</span> <span class="n">$query</span>): <span class="t">Builder</span>
+{
+    <span class="k">return</span> <span class="n">$query</span>-&gt;<span class="f">whereDoesntHave</span>(<span class="s">'activeBooking'</span>);
+}</code></pre>
+    </div>
+    <h3>Seeder, որ չի հնանում</h3>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>database/seeders/DatabaseSeeder.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// ---------- Ժամեր․ 3 օր առաջ → 7 օր հետո, 10:00–18:00, կիրակի՝ հանգիստ ----------</span>
+<span class="k">foreach</span> ([<span class="n">$aram</span>, <span class="n">$levon</span>] <span class="k">as</span> <span class="n">$barber</span>) {
+    <span class="k">for</span> (<span class="n">$d</span> = -<span class="n">3</span>; <span class="n">$d</span> &lt;= <span class="n">7</span>; <span class="n">$d</span>++) {
+        <span class="n">$day</span> = <span class="f">today</span>()-&gt;<span class="f">addDays</span>(<span class="n">$d</span>);
+        <span class="k">if</span> (<span class="n">$day</span>-&gt;<span class="f">isSunday</span>()) {
+            <span class="k">continue</span>;
+        }
+        <span class="n">$rows</span> = [];
+        <span class="k">for</span> (<span class="n">$h</span> = <span class="n">10</span>; <span class="n">$h</span> &lt; <span class="n">19</span>; <span class="n">$h</span>++) {
+            <span class="n">$rows</span>[] = [<span class="s">'staff_id'</span> =&gt; <span class="n">$barber</span>-&gt;id, <span class="s">'starts_at'</span> =&gt; <span class="n">$day</span>-&gt;<span class="f">copy</span>()-&gt;<span class="f">setTime</span>(<span class="n">$h</span>, <span class="n">0</span>), <span class="s">'created_at'</span> =&gt; <span class="f">now</span>(), <span class="s">'updated_at'</span> =&gt; <span class="f">now</span>()];
+        }
+        <span class="t">TimeSlot</span>::<span class="f">insert</span>(<span class="n">$rows</span>);
+    }
+}</code></pre>
+    </div>
+    <p>Ամսաթվերը հաշվվում են <code>today()</code>-ից։ Եթե seeder-ում գրես <code>'2026-11-05 10:00'</code>, մեկ ամիս հետո demo-ում ազատ ժամ չի լինի, և պաշտպանության օրը կայքը դատարկ կթվա։</p>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>php artisan migrate:fresh --seed</div><button class="copy">Պատճենել</button></div>
+<pre><code>  Dropping all tables … 26.81ms DONE
+   INFO  Preparing database.
+  Creating migration table … 8.73ms DONE
+   INFO  Running migrations.
+  0001_01_01_000000_create_users_table … 29.76ms DONE
+  0001_01_01_000001_create_cache_table … 34.60ms DONE
+  0001_01_01_000002_create_jobs_table … 18.85ms DONE
+  2026_10_22_113409_add_two_factor_columns_to_users_table … 13.07ms DONE
+  2026_11_02_100000_create_services_table … 9.60ms DONE
+  2026_11_02_100100_create_time_slots_table … 23.47ms DONE
+  2026_11_02_100200_create_bookings_table … 37.23ms DONE
+   INFO  Seeding database.</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>HeidiSQL</div><button class="copy">Պատճենել</button></div>
+<pre><code>+------------+-----+
+| tbl        | n   |
++------------+-----+
+| users      |  13 |
+| services   |   7 |
+| time_slots | 180 |
+| bookings   |  81 |
++------------+-----+
++-----------+----+------------------+
+| status    | n  | with_active_slot |
++-----------+----+------------------+
+| booked    | 38 |               38 |
+| cancelled |  9 |                0 |
+| done      | 34 |               34 |
++-----------+----+------------------+</code></pre>
+    </div>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ինչ ցույց տալ դասախոսին · 10 րոպե</h2>
+    <ul class="check">
+      <li><code>docs/proposal.md</code>-ը՝ համաձայնեցված (կամ ուղղումներով)</li>
+      <li><code>docs/schema.md</code>՝ գծապատկեր և ON DELETE որոշումներ․ պատրաստ եղիր բացատրել ամեն մեկը</li>
+      <li>Տերմինալում՝ <code>php artisan migrate:fresh --seed</code> առանց սխալի</li>
+      <li>HeidiSQL-ում՝ տվյալներ ամեն աղյուսակում, ամեն դերի հաշիվ</li>
+      <li><code>php artisan tinker</code>-ում մեկ կապ․ օր. <code>Booking::first()->slot->staff->name</code></li>
+      <li>Գլխավոր էջը բացվում է layout-ով</li>
+      <li><code>git log --oneline</code>՝ առնվազն 6 commit, <code>git ls-files | grep .env</code>՝ միայն <code>.env.example</code></li>
+    </ul>
+    <div class="tip note">
+      <span class="tag">Եթե խրված ես</span>
+      <p>Ասա։ Ստուգակետը գնահատում չէ, այլ վաղ նախազգուշացում։ «Չգիտեմ՝ վարձույթը առանձին աղյուսակ լինի, թե books-ի սյունակ» հարցը առաջին շաբաթում լավագույն հարցն է։</p>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Տարածված սխալներ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչ է լինում</th><th>Ինչպես ճիշտ</th></tr>
+      <tr><td><code>role</code>-ը <code>$fillable</code>-ում</td><td>Գրանցման ֆորմային <code>role=admin</code> → ադմին</td><td>Seeder-ում՝ <code>$user->role = 'admin'</code> ուղիղ վերագրմամբ (PHP Դաս 20)</td></tr>
+      <tr><td>Timezone-ը՝ UTC</td><td>«10:00»-ն պահվում է որպես 14:00 Երևանում, «այսօր»-ը սկսվում է 04:00-ին</td><td><code>config/app.php</code> → <code>Asia/Yerevan</code> առաջին օրը</td></tr>
+      <tr><td>Ֆիքսված ամսաթվեր seeder-ում</td><td>Մեկ ամիս հետո demo-ն դատարկ է</td><td><code>today()->addDays($d)</code></td></tr>
+      <tr><td>Ամեն ինչ <code>cascade</code></td><td>Կատեգորիան ջնջելը ջնջում է պատվերների պատմությունը</td><td>Պատմությունը՝ <code>restrict</code> կամ soft delete, կախյալ մանրուքը՝ <code>cascade</code></td></tr>
+      <tr><td>Գինը միայն ապրանքի աղյուսակում</td><td>Գինը փոխելիս հին պատվերները «թանկանում են»</td><td>Պատճենիր գինը պահի դրությամբ (PHP Դաս 9)</td></tr>
+      <tr><td>10 աղյուսակ առաջին շաբաթում</td><td>Չորրորդ շաբաթում կեսը դատարկ է</td><td>4–5 աղյուսակ, որոնք իրոք օգտագործում ես</td></tr>
+      <tr><td>Factory-ներ production seeder-ում</td><td><code>composer install --no-dev</code>-ից հետո Faker-ը չկա → seeder-ը ընկնում է</td><td>Demo տվյալները՝ զանգվածներից, factory-ն՝ միայն տեղում (օրինակի seeder-ը)</td></tr>
+    </table>
+    </div>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Եթե խրվել ես</th><th>Նայիր</th></tr>
+      <tr><td>Միգրացիաներ, FK, ON DELETE</td><td><a href="../php-lesson-20.html">PHP Դաս 20</a>, <a href="../block-3-homework/lesson-20/task.html">Տնային 20</a></td></tr>
+      <tr><td>Սխեմայի նախագծում, գինը պահի դրությամբ</td><td><a href="../php-lesson-09.html">PHP Դաս 9</a></td></tr>
+      <tr><td>Մոդելներ, կապեր, scope-ներ</td><td><a href="../block-3-project/example-3-laravel/README.md">ՏեխնոՄարկետ · Laravel</a>՝ <code>app/Models/</code></td></tr>
+    </table>
+    </div>
+    <div class="pager"><span></span><a href="../final-project.html">Վերջնական նախագիծ</a><a href="checkpoint-2.html">Ստուգակետ 2 →</a></div>
+  </section>
+
+  <footer>
+    <span>Վերջնական նախագիծ · ստուգակետ 1</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

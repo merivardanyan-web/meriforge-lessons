@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 22 · Ակումբը՝ պորտֆոլիոյում — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · տնային</b> · Դաս 22</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../php-lesson-22.html">PHP Դաս 22</a> · մինի-նախագիծ</p>
+  <h1>Ակումբը՝ պորտֆոլիոյում</h1>
+  <p class="lede">Վերջին քայլը՝ ակումբը հրապարակվում է և դառնում պորտֆոլիոյի նախագիծ։ Ավելացնում ես մեկ ֆունկցիա, որ դասընթացում չկար՝ անդամների գնահատականներ, պատրաստում production <code>.env</code>-ը, <code>DemoSeeder</code>-ը, deploy-ի ստուգաթերթը և README-ն՝ այն կաղապարով, որ ռեկրուտերը կարդա 60 վայրկյանում։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Laravel նախագիծ</span>
+    <span>5 քայլ · 5 տնային կետ նախագծում</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–22․ ամբողջ բլոկը, <code>.env.example</code>, <code>APP_DEBUG=false</code>, <code>DemoSeeder</code>՝ գաղտնաբառերը <code>.env</code>-ից, <code>config:cache</code>, document root, README, GitHub պրոֆիլ։ CV-ն և հարցազրույցը՝ Դաս 23–24-ում։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <figure class="shot">
+      <img src="screenshots/rating.jpg" alt="Սամվելի էջը՝ 4.0 ★ և «Քո գնահատականը» ֆորմա" width="1280" height="900" loading="lazy">
+      <figcaption>Գնահատականից հետո</figcaption>
+    </figure>
+    <p>Laravel-ը ինքը չի մտնում օրինակի մեջ (vendor-ը 70+ ՄԲ է)․ <code>example/</code>-ում են միայն այն ֆայլերը, որ դու ստեղծում կամ փոխում ես նոր նախագծում։ Պատճենիր դրանք նույն ուղիներով։</p>
+    <div class="tree">.env.example
+README.md
+app/Actions/Fortify/CreateNewUser.php
+app/Http/Controllers/Admin/BookController.php
+app/Http/Controllers/Api/BookController.php
+app/Http/Controllers/BookController.php
+app/Http/Controllers/ListController.php
+app/Http/Controllers/RatingController.php
+app/Http/Controllers/ReadingController.php
+app/Http/Controllers/SuggestController.php
+app/Http/Requests/BookRequest.php
+app/Http/Requests/ReadingRequest.php
+app/Http/Requests/SuggestRequest.php
+app/Http/Resources/BookResource.php
+app/Models/Book.php
+app/Models/Genre.php
+app/Models/Rating.php
+app/Models/ReadingSession.php
+app/Models/User.php
+app/Policies/BookPolicy.php
+app/Providers/AppServiceProvider.php
+app/Providers/FortifyServiceProvider.php
+app/Services/ReadingList.php
+app/helpers.php
+config/fortify-changes.md
+database/factories/BookFactory.php
+database/migrations/0001_01_01_000000_create_users_table.php
+database/migrations/2026_10_20_100000_create_genres_table.php
+database/migrations/2026_10_20_100100_create_books_table.php
+database/migrations/2026_10_20_100200_create_reading_sessions_table.php
+database/migrations/2026_10_20_110000_add_series_to_books_table.php
+database/migrations/2026_10_22_100000_create_ratings_table.php
+database/seeders/DatabaseSeeder.php
+database/seeders/DemoSeeder.php
+docs/DEPLOY.md
+lang/hy/auth.php
+lang/hy/pagination.php
+lang/hy/validation.php
+public/images/favicon.svg
+public/js/list.js
+resources/views/admin/books/form.blade.php
+resources/views/admin/books/index.blade.php
+resources/views/admin/books/trashed.blade.php
+resources/views/auth/login.blade.php
+resources/views/auth/register.blade.php
+resources/views/books/index.blade.php
+resources/views/books/show.blade.php
+resources/views/components/alert.blade.php
+resources/views/components/book-card.blade.php
+resources/views/components/field.blade.php
+resources/views/errors/403.blade.php
+resources/views/errors/404.blade.php
+resources/views/errors/419.blade.php
+resources/views/errors/429.blade.php
+resources/views/layouts/app.blade.php
+resources/views/list/index.blade.php
+resources/views/partials/footer.blade.php
+resources/views/partials/header.blade.php
+resources/views/suggest.blade.php
+routes/web.php</div>
+    <div class="tip note">
+      <span class="tag">Ինչպես ստուգված է</span>
+      <p>Այս ֆայլերը պատճենվել են մաքուր Laravel 12 նախագծի վրա (Fortify-ով, MariaDB-ով), կատարվել են <code>migrate:fresh --seed</code> և <code>view:cache</code>, և կայքը ստուգվել է բրաուզերում ավտոմատ թեստերով (Դաս 22-ի վերջնական վիճակը՝ 50 ստուգում՝ ֆիլտրեր, ցուցակ, ադմին, վալիդացիա, դերեր, 403/404/419, API, գնահատական)։ Նկարները վերցված են հենց այդ գործարկումից։ Քո մեքենայում միևնույն է անցիր ստուգաթերթով (բաժին 03)։</p>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Շարունակիր Laravel նախագիծը։ Եթե բաց ես թողել նախորդ դասը, սկսիր <a href="../lesson-21/example/">Դաս 21-ի օրինակից</a>՝ պատճենելով ֆայլերը նոր Laravel նախագծի վրա։</p>
+    <ul class="goals">
+      <li><code>starter/README-template.md</code> — README-ի կաղապար</li>
+      <li><code>starter/docs/DEPLOY.md</code> — deploy-ի հրամանները և smoke test-ի 10 կետը</li>
+    </ul>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գործարկել</th></tr>
+      <tr><td><code>php artisan migrate &amp;&amp; php artisan serve</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Գաղտնիքներ</h3>
+    <ul class="goals">
+      <li><code>git log --all --oneline -- .env</code> բոլոր պահոցներում․ պետք է դատարկ լինի</li>
+      <li><code>.env.example</code>՝ production արժեքներով, առանց գաղտնաբառերի</li>
+      <li><code>APP_DEBUG=false</code>, <code>SESSION_SECURE_COOKIE=true</code></li>
+    </ul>
+
+    <h3>Քայլ 2 · What I added</h3>
+    <ul class="goals">
+      <li><code>ratings</code> աղյուսակ՝ <code>UNIQUE(user_id, book_id)</code> (տնային 2)</li>
+      <li><code>RatingController</code>՝ կա՞ գնահատական՝ թարմացնել, չկա՞՝ ստեղծել, միայն <code>auth</code></li>
+      <li><code>user_id</code>-ն fillable չէ․ <code>updateOrCreate(['user_id' =&gt; …])</code>-ը <code>shouldBeStrict</code>-ով կտա <code>MassAssignmentException</code></li>
+      <li>Գրքի էջում՝ <code>loadAvg('ratings', 'stars')</code> և <code>loadCount</code></li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Http/Controllers/RatingController.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">public</span> <span class="k">function</span> <span class="f">store</span>(<span class="t">Request</span> <span class="n">$request</span>, <span class="t">Book</span> <span class="n">$book</span>)
+{
+    <span class="f">abort_unless</span>(<span class="n">$book</span>-&gt;is_active, <span class="n">404</span>);
+
+    <span class="n">$data</span> = <span class="n">$request</span>-&gt;<span class="f">validate</span>([<span class="s">'stars'</span> =&gt; [<span class="s">'required'</span>, <span class="s">'integer'</span>, <span class="s">'between:1,5'</span>]], [], [<span class="s">'stars'</span> =&gt; <span class="s">'գնահատականը'</span>]);
+
+    <span class="c">// Կա՞ արդեն՝ թարմացնում ենք, չկա՝ ստեղծում։ UNIQUE(user_id, book_id)-ը երաշխավորում է նույնը բազայում</span>
+    <span class="c">// ⚠️ updateOrCreate(['user_id' =&gt; ...])-ը կփորձեր user_id-ն լցնել fill()-ով, իսկ այն fillable չէ (դիտավորյալ)․</span>
+    <span class="c">//    shouldBeStrict()-ով դա MassAssignmentException է։ Ուստի user_id-ն՝ ուղիղ վերագրմամբ, ինչպես role-ը (Դաս 20)</span>
+    <span class="n">$rating</span> = <span class="n">$book</span>-&gt;<span class="f">ratings</span>()-&gt;<span class="f">where</span>(<span class="s">'user_id'</span>, <span class="n">$request</span>-&gt;<span class="f">user</span>()-&gt;id)-&gt;<span class="f">first</span>() ?? <span class="n">$book</span>-&gt;<span class="f">ratings</span>()-&gt;<span class="f">make</span>();
+    <span class="n">$rating</span>-&gt;user_id = <span class="n">$request</span>-&gt;<span class="f">user</span>()-&gt;id;
+    <span class="n">$rating</span>-&gt;stars = <span class="n">$data</span>[<span class="s">'stars'</span>];
+    <span class="n">$rating</span>-&gt;<span class="f">save</span>();
+
+    <span class="k">return</span> <span class="f">redirect</span>()-&gt;<span class="f">route</span>(<span class="s">'book.show'</span>, <span class="n">$book</span>)-&gt;<span class="f">with</span>(<span class="s">'success'</span>, <span class="s">'Շնորհակալություն, գնահատականը պահպանվեց'</span>);
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 3 · DemoSeeder</h3>
+    <ul class="goals">
+      <li>Admin և demo հաշիվ՝ գաղտնաբառերը <code>.env</code>-ից, demo-ն՝ <code>editor</code></li>
+      <li><code>php artisan db:seed --class=DemoSeeder --force</code></li>
+    </ul>
+
+    <h3>Քայլ 4 · Deploy</h3>
+    <ul class="goals">
+      <li>Ընտրիր hosting-ը, Document Root-ը՝ <code>public/</code></li>
+      <li><code>docs/DEPLOY.md</code>-ի հրամանները և smoke test-ի 10 կետը</li>
+      <li>Lighthouse․ գրիր 4 թիվը և ուղղիր մեկ Accessibility սխալ (տնային 5)</li>
+    </ul>
+
+    <h3>Քայլ 5 · README և պրոֆիլ</h3>
+    <ul class="goals">
+      <li>README՝ մեկ նախադասություն, demo, GIF, Stack, Features, What I added, Security decisions, Run locally</li>
+      <li>GitHub պրոֆիլի README՝ ոչ ավելի քան չորս տող (տնային 4)</li>
+      <li>Բլոկ 1 և 2-ի նախագծերը GitHub Pages-ում (տնային 3)</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li><code>.env</code>-ը երբեք չի եղել պահոցում</li>
+      <li>Demo հաշիվը editor է, ոչ admin</li>
+      <li>Production-ում սխալի էջը չի ցույց տալիս stack trace</li>
+      <li>Անդամը կարող է գնահատել միայն մեկ անգամ, երկրորդը՝ փոխում է</li>
+      <li>Հարևանը 60 վայրկյանում պատասխանում է README-ի երեք հարցին</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Production-ում սպիտակ էջ</td><td><code>APP_KEY</code> չկա․ <code>php artisan key:generate --force</code></td></tr>
+      <tr><td>CSS-ը չի բեռնվում hosting-ում</td><td><code>APP_URL</code>-ը սխալ է կամ document root-ը արմատն է, ոչ <code>public/</code></td></tr>
+      <tr><td><code>/.env</code>-ը բացվում է</td><td>Document root-ը սխալ է․ սա ամենավտանգավոր սխալն է (Դաս 22, բաժին 04)</td></tr>
+      <tr><td>Գնահատականը կրկնվում է</td><td><code>unique(['user_id', 'book_id'])</code> միգրացիայում, իսկ կոնտրոլերում նախ փնտրիր անդամի գնահատականը, ոչ միշտ <code>create</code></td></tr>
+      <tr><td><code>Add fillable property [user_id]</code></td><td><code>updateOrCreate</code>-ի առաջին զանգվածը նույնպես լցվում է <code>fill()</code>-ով․ <code>user_id</code>-ն վերագրիր ուղիղ</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի տնային աշխատանքը</h2>
+    <p>Սրանք <a href="../../php-lesson-22.html#s13">Դաս 22-ի</a> տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում՝ Անիի ակումբում։ Մնացածը կատարիր ՏեխնոՄարկետում, ինչպես գրված է դասում։</p>
+    <ol class="hw">
+      <li>Ավարտիր դասարանականի 5 քայլը։ Ուղարկիր demo հղումը, GitHub պրոֆիլը և LinkedIn-ը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <strong>մեկ ֆունկցիա, որ դասընթացում չկար</strong>, և նկարագրիր այն README-ի «What I added» բաժնում։ Տարբերակներ․
+        ապրանքների գնահատականներ ·
+        ցանկությունների ցուցակ (wishlist) մուտք գործած օգտատերերի համար ·
+        պատվերի ձևակերպում և email <code>Mail</code>-ով (լոկալ՝ <code>MAIL_MAILER=log</code>) ·
+        ֆիլտրեր գնի և կատեգորիայի համար՝ query string-ով ·
+        API փաստաթուղթ Դաս 17-ի endpoint-ների համար։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Հրապարակիր HTML և JS բլոկի նախագծերը GitHub Pages-ում (եթե դեռ չես արել) և ավելացրու հղումները README-ներում։ Ստուգիր HTML Դաս 2-ի ուղիների սխալը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ստեղծիր պրոֆիլի README։ Չորս տողից ոչ ավելի։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գործարկիր Lighthouse-ը demo-ում։ Գրիր չորս թվերը և ուղղիր Accessibility-ի առնվազն մեկ սխալ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գրիր LinkedIn-ի About-ը ինքդ, ապա ուղղիր AI-ով «grammar only» հրահանգով։ Համեմատիր երկու տարբերակը։</li>
+      <li>Պատրաստիր Դաս 23-ի համար․ գտիր երեք իրական աշխատանքային հայտարարություն (մեկը Հայաստանից, մեկը remote, մեկը freelance) Laravel կամ PHP դերի համար և պահիր դրանց տեքստը։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/">օրինակը</a>։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-21/task.html">← Դաս 21</a><a href="../index.html">Բոլոր տնայինները</a><a href="../../block-3-project/task-3.html">Պաշտպանություն →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · տնային աշխատանք · Դաս 22</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

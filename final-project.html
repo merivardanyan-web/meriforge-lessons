@@ -65,10 +65,20 @@
       <tr><td><strong>Ա · Ռեստորանի պատվերներ</strong></td><td>categories, dishes, orders, order_items</td><td>Ադմին, աշխատող, հաճախորդ</td><td>Պատվերի կարգավիճակներ (new → cooking → ready → delivered), որոնք փոխում է միայն աշխատողը</td></tr>
       <tr><td><strong>Բ · Գրադարան</strong></td><td>authors, books, members, loans</td><td>Գրադարանավար, անդամ</td><td>Վարձույթ վերադարձման ժամկետով, ուշացածների ցուցակ, մեկ անդամին՝ առավելագույնը 3 գիրք</td></tr>
       <tr><td><strong>Գ · Դասընթացների գրանցում</strong></td><td>courses, lessons, teachers, enrollments</td><td>Ադմին, դասախոս, ուսանող</td><td>Տեղերի սահմանափակում․ լրացած դասընթացին գրանցվել հնարավոր չէ, նույնիսկ միաժամանակյա հարցումներով</td></tr>
-      <tr><td><strong>Դ · Ծառայությունների ամրագրում</strong> (վարսավիրանոց, ավտոսպասարկում)</td><td>services, staff, time_slots, bookings</td><td>Ադմին, աշխատակից, հաճախորդ</td><td>Ազատ ժամերի ցուցադրում և կրկնակի ամրագրման արգելք</td></tr>
+      <tr><td><strong>Դ · Աջակցության հարցումներ</strong> (help desk՝ ինտերնետ պրովայդեր, համալսարանի IT)</td><td>departments, tickets, ticket_messages, ticket_events</td><td>Ադմին, օպերատոր, հաճախորդ</td><td>Հարցումը «վերցնում է» միայն մեկ օպերատոր, նույնիսկ եթե երկուսը սեղմեն միաժամանակ․ կարգավիճակի ամեն փոփոխություն՝ պատմության մեջ, հաճախորդը տեսնում է միայն իր հարցումները</td></tr>
       <tr><td><strong>Ե · Հայտարարությունների կայք</strong></td><td>categories, listings, images, messages</td><td>Մոդերատոր, օգտատեր</td><td>Հայտարարությունը երևում է միայն մոդերատորի հաստատումից հետո, օգտատերը խմբագրում է միայն իրենը</td></tr>
       <tr><td><strong>Զ · Քո գաղափարը</strong></td><td>Առնվազն 4, կապերով</td><td>Առնվազն 2</td><td>Համաձայնեցրու դասախոսի հետ առաջին շաբաթում</td></tr>
     </table>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ծառայությունների ամրագրումը՝ ամբողջական օրինակ</span>
+      <p>Վարսավիրանոցի ամրագրումը (ազատ ժամեր, կրկնակի ամրագրման արգելք) ցանկում չէ, որովհետև այն կառուցված է որպես օրինակ՝ <a href="final-project/example-sevan-barber/README.md">Սևան Բարբեր</a>։ Ամեն ստուգակետի էջում ցույց է տրված, թե ինչ տեսք ունի այդ շաբաթվա արդյունքը օրինակում։ Կարող ես ընտրել մոտ թեմա (ավտոսպասարկում, բժշկի ընդունելություն), բայց այդ դեպքում «դժվար ֆունկցիան» պետք է լինի <strong>այլ</strong>՝ օր. բազմաժամյա ծառայություններ կամ սպասման ցուցակ, և դասախոսը կհամեմատի քո կոդը օրինակի հետ։</p>
+    </div>
+
+    <div class="note">
+      <span class="tag">Բ-ն Անիի ակումբը չէ</span>
+      <p>Բլոկ 3-ի տնայիններում արդեն կառուցել ես գրքերի ակումբ (գրքեր, ժանրեր, ընթերցանություն, գնահատականներ)։ Գրադարանը նման է միայն <code>books</code> աղյուսակով։ Նորը՝ <code>members</code>, <code>loans</code> վերադարձման ժամկետով, ուշացածների ցուցակ և «առավելագույնը 3 գիրք» կանոնը, որ պետք է պահվի նույնիսկ երկու միաժամանակյա վարձույթի դեպքում։ Տնայինի կոդից կարող ես վերցնել CSS-ը և կոմպոնենտները, բայց ոչ կոնտրոլերներն ու մոդելները ամբողջությամբ։</p>
     </div>
 
     <div class="warn note">
@@ -121,7 +131,7 @@
       <tr><td>Seeder և factory-ներ՝ իրատեսական demo տվյալներով</td><td>PHP 20, 22</td></tr>
       <tr><td>Eloquent կապեր, <code>with()</code>, <code>Model::shouldBeStrict()</code>, ոչ մի N+1</td><td>PHP 20</td></tr>
       <tr><td>Վալիդացիա Form Request-ներով, հայերեն հաղորդագրություններ</td><td>PHP 21</td></tr>
-      <tr><td>Մուտք Fortify-ով, հրապարակային գրանցում՝ միայն եթե թեման պահանջում է</td><td>PHP 21</td></tr>
+      <tr><td>Մուտք Fortify-ով, հրապարակային գրանցում՝ միայն եթե թեման պահանջում է և միայն ամենացածր դերով</td><td>PHP 16, 21</td></tr>
       <tr><td>Առնվազն 2 դեր և Gate-եր (կամ Policy), ստուգում՝ կոնտրոլերում, ոչ միայն <code>@can</code>-ում</td><td>PHP 21</td></tr>
       <tr><td>Blade layout և առնվազն 2 կոմպոնենտ</td><td>PHP 19</td></tr>
       <tr><td>Route model binding, resource controller ադմինի համար</td><td>PHP 19, 20</td></tr>
@@ -184,6 +194,16 @@
   · README, GIF, demo հաշիվ
   · Անվտանգության և հասանելիության ստուգում, Lighthouse
   ✓ Ստուգակետ 4․ հանձնում և պաշտպանություն</div>
+
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Շաբաթ</th><th>Առաջադրանք և օրինակ</th><th>Ինչ ես հանձնում</th></tr>
+      <tr><td>1</td><td><a href="final-project/checkpoint-1.html">Ստուգակետ 1 · Հիմք</a></td><td><code>docs/proposal.md</code>, <code>docs/schema.md</code>, <code>migrate:fresh --seed</code></td></tr>
+      <tr><td>2</td><td><a href="final-project/checkpoint-2.html">Ստուգակետ 2 · Հանրային մաս և ադմին</a></td><td>ցուցակ, մանրամասներ, ադմինի CRUD</td></tr>
+      <tr><td>3</td><td><a href="final-project/checkpoint-3.html">Ստուգակետ 3 · Մուտք, դերեր, JS</a></td><td>դերեր, «դժվար ֆունկցիա», fetch, առաջին deploy</td></tr>
+      <tr><td>4</td><td><a href="final-project/checkpoint-4.html">Ստուգակետ 4 · Հրապարակում</a></td><td>demo, README, <code>docs/smoke-test.md</code>, պաշտպանություն</td></tr>
+    </table>
+    </div>
 
     <div class="tip note">
       <span class="tag">Ստուգակետերը՝ 10 րոպեանոց</span>
@@ -323,30 +343,40 @@ php artisan migrate:fresh --seed
 php artisan route:list -v</code></pre>
     </div>
 
-    <div class="tree">Օրինակ․ տարբերակ Դ-ի սխեման (ծառայությունների ամրագրում)
+    <div class="tree">final-project/
+├── checkpoint-1…4.html     ← շաբաթվա առաջադրանք + օրինակ
+├── starter/
+│   ├── README-template.md  ← քո README-ն
+│   ├── docs/               ← proposal, schema, smoke-test…
+│   └── kit/                ← ոչ պարտադիր հիմք
+└── example-sevan-barber/   ← ամբողջական օրինակ
+    ├── README.md           ← The hard part, Security…
+    ├── docs/               ← ձևանմուշները՝ լրացված
+    └── app/, resources/, … ← մոտ 70 ֆայլ (SETUP.md)</div>
 
-users                services             time_slots
-┌──────────────┐     ┌──────────────┐     ┌────────────────────┐
-│ id           │     │ id           │◀────│ service_id      FK │
-│ name, email  │     │ name, slug   │     │ staff_id   FK→users│
-│ role         │     │ duration_min │     │ starts_at          │
-└──────────────┘     │ price        │     │ UNIQUE(staff_id,   │
-       ▲             └──────────────┘     │        starts_at) ⭐│
-       │                                  └────────────────────┘
-       │             bookings                       ▲
-       │             ┌───────────────────────┐      │
-       └─────────────│ user_id            FK │      │
-                     │ time_slot_id  FK UNIQUE ⭐ ───┘
-                     │ status (booked/cancelled)
-                     │ price  ← գինը ամրագրման պահին (PHP Դաս 9)
-                     └───────────────────────┘
+    <div class="tree">Օրինակի «դժվար ֆունկցիան»՝ սխեմայում
 
-UNIQUE(time_slot_id)-ը բազայի մակարդակում արգելում է կրկնակի ամրագրումը,
-նույնիսկ եթե երկու հարցում գան միաժամանակ։</div>
+time_slots                  bookings
+┌───────────────────┐       ┌─────────────────────────────┐
+│ id                │◀──────│ time_slot_id   FK restrict  │
+│ staff_id  FK      │       │ active_slot_id UNIQUE, NULL │ ⭐
+│ starts_at         │       │ status                      │
+│ UNIQUE(staff_id,  │       │ price (snapshot)            │
+│        starts_at) │       └─────────────────────────────┘
+└───────────────────┘
+active_slot_id = time_slot_id, երբ ամրագրումն ակտիվ է,
+և NULL, երբ չեղարկված է։ UNIQUE-ը NULL-ները չի համեմատում․
+չեղարկված ժամը կարելի է կրկին ամրագրել, իսկ երկու ակտիվ
+ամրագրում նույն ժամին բազան չի ընդունի։</div>
 
     <div class="note">
       <span class="tag">Ինչու օրինակը ունի <code>UNIQUE</code></span>
-      <p>«Դժվար ֆունկցիայի» ամենահուսալի պաշտպանությունը հաճախ բազայում է, ոչ PHP-ում։ PHP-ում «ստուգիր, ապա ավելացրու» կոդը ունի պահ, երբ երկու հարցում միասին անցնում են ստուգումը։ <code>UNIQUE</code> ինդեքսը (PHP Դաս 8) դա անհնար է դարձնում։ Կոդը միայն պետք է բռնի սխալը և ցույց տա հասկանալի հաղորդագրություն։ Սա այն պատասխանն է, որ սպասում են «ինչ կլինի, եթե երկու հոգի միաժամանակ...» հարցին։</p>
+      <p>«Դժվար ֆունկցիայի» ամենահուսալի պաշտպանությունը հաճախ բազայում է, ոչ PHP-ում։ PHP-ում «ստուգիր, ապա ավելացրու» կոդը ունի պահ, երբ երկու հարցում միասին անցնում են ստուգումը։ <code>UNIQUE</code> ինդեքսը (PHP Դաս 8) դա անհնար է դարձնում, իսկ կոդը միայն բռնում է սխալը և ցույց տալիս «Այս ժամը հենց նոր զբաղեցրեցին»։ Օրինակում 6 հաճախորդ ուղարկում են նույն ժամի ամրագրումը զուգահեռ․ միշտ անցնում է մեկը (<a href="final-project/example-sevan-barber/docs/smoke-test.md">smoke-test.md</a>)։ Սա այն պատասխանն է, որ սպասում են «ինչ կլինի, եթե երկու հոգի միաժամանակ...» հարցին։</p>
+    </div>
+
+    <div class="tip note">
+      <span class="tag">Ինչպես է ստուգված օրինակը</span>
+      <p>Օրինակը պատճենվել է մաքուր Laravel 12 նախագծի վրա (Fortify, MariaDB) և ստուգվել բրաուզերում 83 ավտոմատ ստուգումով․ բոլոր երեք դերերը, 403/404/419/422/429, JS-ով և առանց JS-ի, 360px, զուգահեռ ամրագրումներ, ինչպես նաև <code>APP_DEBUG=false</code>-ով 500 էջը անհասանելի բազայի դեպքում։ Kit-ը ստուգված է նույն ձևով՝ դատարկ նախագծի վրա։</p>
     </div>
   </section>
 

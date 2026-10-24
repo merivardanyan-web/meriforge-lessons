@@ -194,7 +194,7 @@ curl -X POST https://technomarket.test/contact.php \
       <code>$allowed = ['price_asc', 'price_desc', 'name'];</code><br>
       <code>$sort = in_array($_GET['sort'] ?? '', $allowed, true) ? $_GET['sort'] : 'price_asc';</code><br><br>
       Երրորդ արգումենտը՝ <code>true</code>, խիստ համեմատում է։ Առանց դրա <code>in_array(0, ['a','b'])</code> վերադարձնում է... անսպասելի արդյունքներ։<br><br>
-      Այս օրինաչափությունը Դաս 9-ում կփրկի SQL injection-ից, երբ տեսակավորման դաշտը գնա ուղիղ հարցման մեջ։</p>
+      Այս օրինաչափությունը Դաս 10-ում կփրկի SQL injection-ից, երբ տեսակավորման դաշտը գնա ուղիղ հարցման մեջ։</p>
     </div>
   </section>
 
@@ -554,6 +554,10 @@ curl -X POST https://technomarket.test/contact.php \
   <!-- ============ 08 ============ -->
   <section id="s8">
     <h2><span class="num">08</span>Տնային աշխատանք</h2>
+    <div class="tip note">
+      <span class="tag">Մինի-նախագիծ</span>
+      <p>Այս տնայինի գլխավոր մասը՝ <a href="block-3-homework/lesson-06/task.html" style="color:var(--pen);text-decoration:underline">««Առաջարկիր գիրք» ֆորմա»</a>, Անիի գրքերի ակումբում՝ քայլ առ քայլ, starter ֆայլերով և պատրաստի օրինակով։ Ներքևի ցուցակի կետերը, որ նշված չեն որպես «մինի-նախագծում», կատարիր ՏեխնոՄարկետում։</p>
+    </div>
     <ol class="hw">
       <li>Կատարիր դասարանականի 10 քայլը։</li>
       <li>Ուղարկիր <code>curl</code>-ի հրամանը և պատասխանը՝ սքրինշոթով։</li>

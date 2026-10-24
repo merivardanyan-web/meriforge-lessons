@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 16 · Մուտք, դերեր, CSRF — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · տնային</b> · Դաս 16</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../php-lesson-16.html">PHP Դաս 16</a> · մինի-նախագիծ</p>
+  <h1>Մուտք, դերեր, CSRF</h1>
+  <p class="lede">Ակումբը ստանում է անդամներ։ Գրանցումը, մուտքը և ելքը՝ <code>password_hash</code>-ով և <code>session_regenerate_id</code>-ով։ Երեք դեր․ Անին (admin) կառավարում է ամեն ինչ, Լիլիթը (editor) ավելացնում և խմբագրում է, Արամը (member) կազմում է ցուցակ։ Ամեն POST ֆորմա պաշտպանված է CSRF token-ով։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Անիի կայքը</span>
+    <span>6 քայլ · 10 տնային կետ նախագծում</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–16․ <code>password_hash</code>, <code>password_verify</code>, <code>password_needs_rehash</code>, <code>session_regenerate_id</code>, CSRF token (<code>random_bytes</code>, <code>hash_equals</code>), դերեր, 403/419, <code>LoginThrottle</code>, <code>microtime</code>։ JSON API՝ Դաս 17։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/register-errors.jpg" alt="Գրանցման ֆորմա երեք սխալով" width="1280" height="993" loading="lazy">
+      <figcaption>Գրանցում</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/hello.jpg" alt="Header-ում Բարև, Գոռ և Ելք" width="1280" height="900" loading="lazy">
+      <figcaption>Մուտք գործած անդամ</figcaption>
+    </figure>
+    </div>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/admin-ani.jpg" alt="Ադմին՝ Անի · admin" width="1280" height="900" loading="lazy">
+      <figcaption>Անին ադմինում</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/403.jpg" alt="Մուտքը փակ է" width="1280" height="900" loading="lazy">
+      <figcaption>Անդամը /admin/books-ում</figcaption>
+    </figure>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>Տերմինալ</div><button class="copy">Պատճենել</button></div>
+<pre><code>$ curl -i -X POST http://localhost:8000/admin/books/archive -d "ids[]=2"
+HTTP/1.1 419 Unknown Status Code</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>lab-auth.php (ժամանակները քոնը կլինեն այլ)</div><button class="copy">Պատճենել</button></div>
+<pre><code>== Նույն գաղտնաբառը երկու անգամ
+$2y$10$zzN/5s07ZTrdgRWlFjXd5uN583wXnbvixrd1aBVOIpaxBb99UWL2K
+$2y$10$ch4YYrjUNzPBkhZhfgLDO.mmHPX2M3LMnR0K79SZYVSFalt5vlo0C
+$a === $b             → false   (ամեն անգամ նոր salt)
+password_verify(..., $a) → true
+password_verify(..., $b) → true
+
+== Ժամանակ
+password_hash  58.1 մվ
+md5            0.0001 մվ
+→ Դանդաղը այստեղ լավ է․ հարձակվողը վայրկյանում միլիոնավոր md5 կփորձի, բայց ընդամենը տասնյակ bcrypt
+
+== Սեսիա
+մինչև   u6qrggm4g4mnjdftnf1rddhe77
+հետո    i852ftctjmtmbbq8r9rrpoapvb
+→ Մուտքից հետո հին id-ն այլևս չի աշխատում (session fixation)</code></pre>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Շարունակիր քո նախագիծը։ Եթե բաց ես թողել նախորդ դասը, սկսիր <a href="../lesson-15/example/">Դաս 15-ի օրինակից</a>։</p>
+    <ul class="goals">
+      <li><code>starter/lab/csrf-attack.html</code> — «չար» էջ CSRF փորձի համար (տնային 2)</li>
+      <li><code>starter/sql/upgrade-16.sql</code> — users աղյուսակ և երեք անդամ (գաղտնաբառերը՝ ֆայլի մեկնաբանությունում)</li>
+    </ul>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գործարկել</th></tr>
+      <tr><td><code>composer install &amp;&amp; php -S localhost:8000 -t public public/index.php</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · users</h3>
+    <ul class="goals">
+      <li>Կատարիր <code>starter/sql/upgrade-16.sql</code>-ը․ երեք անդամ հեշերով</li>
+      <li><code>role</code>՝ <code>DEFAULT 'member'</code></li>
+    </ul>
+
+    <h3>Քայլ 2 · Auth</h3>
+    <ul class="goals">
+      <li><code>attempt()</code>՝ <code>password_verify</code> ՄԻՇՏ, նույնիսկ եթե հասցեն չկա</li>
+      <li><code>login()</code>՝ <code>session_regenerate_id(true)</code> (տնային 6)</li>
+      <li><code>logout()</code>՝ սեսիա և cookie</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Services/Auth.php — attempt()</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">public</span> <span class="k">function</span> <span class="f">attempt</span>(<span class="k">string</span> <span class="n">$email</span>, <span class="k">string</span> <span class="n">$password</span>): <span class="k">bool</span>
+{
+    <span class="n">$user</span> = <span class="n">$this</span>-&gt;users-&gt;<span class="f">findByEmail</span>(<span class="n">$email</span>);
+
+    <span class="c">// ⭐ Ստուգում ենք ՄԻՇՏ, նույնիսկ երբ անդամը չկա․ թե չէ պատասխանի արագությունը</span>
+    <span class="c">// կհուշեր, որ այդ հասցեն գոյություն չունի (timing attack, տնային 5)</span>
+    <span class="n">$hash</span> = <span class="n">$user</span>?-&gt;passwordHash ?? <span class="s">'$2y$10$'</span> . <span class="f">str_repeat</span>(<span class="s">'x'</span>, <span class="n">53</span>);
+
+    <span class="k">if</span> (!<span class="f">password_verify</span>(<span class="n">$password</span>, <span class="n">$hash</span>) || <span class="n">$user</span> === <span class="k">null</span>) {
+        <span class="k">return</span> <span class="k">false</span>;
+    }
+
+    <span class="k">if</span> (<span class="f">password_needs_rehash</span>(<span class="n">$hash</span>, <span class="t">PASSWORD_DEFAULT</span>)) {
+        <span class="n">$this</span>-&gt;users-&gt;<span class="f">updatePassword</span>(<span class="n">$user</span>-&gt;id, <span class="f">password_hash</span>(<span class="n">$password</span>, <span class="t">PASSWORD_DEFAULT</span>));
+    }
+
+    <span class="n">$this</span>-&gt;<span class="f">login</span>(<span class="n">$user</span>);
+
+    <span class="k">return</span> <span class="k">true</span>;
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 3 · Գրանցում</h3>
+    <ul class="goals">
+      <li><code>RegisterController</code>՝ միայն <code>name</code> և <code>email</code> ֆորմայից</li>
+      <li>DevTools-ով ավելացրու <code>role=admin</code> և ստուգիր HeidiSQL-ում (տնային 10)</li>
+      <li>3 գրանցում ժամում մեկ սեսիայից (տնային 11)</li>
+    </ul>
+
+    <h3>Քայլ 4 · CSRF</h3>
+    <ul class="goals">
+      <li><code>csrf_field()</code>՝ ամեն <code>&lt;form method="post"&gt;</code>-ում</li>
+      <li>Ստուգումը՝ <code>public/index.php</code>-ում, ՄԻՆՉԵՎ Router-ը</li>
+      <li>Փորձիր <code>lab/csrf-attack.html</code>-ը (տնային 2)</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>public/index.php — CSRF և /admin</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">// 1. CSRF — ամեն վիճակ փոխող հարցում, ԱՌԱՋ ուղղորդումից (Դաս 16)</span>
+<span class="k">if</span> (<span class="n">$request</span>-&gt;method !== <span class="s">'GET'</span> &amp;&amp; <span class="n">$request</span>-&gt;method !== <span class="s">'HEAD'</span>) {
+    <span class="k">if</span> (!<span class="f">csrf_verify</span>(<span class="n">$request</span>-&gt;<span class="f">input</span>(<span class="s">'_token'</span>))) {
+        <span class="k">throw</span> <span class="k">new</span> <span class="f">HttpException</span>(<span class="s">'Ձևաթուղթը ժամկետանց է։ Թարմացրու էջը և փորձիր կրկին։'</span>, <span class="n">419</span>);
+    }
+}
+
+<span class="c">// 2. Ադմին գոտի — մուտք գործա՞ծ է</span>
+<span class="n">$isAdminArea</span> = <span class="n">$request</span>-&gt;path === <span class="s">'/admin'</span> || <span class="f">str_starts_with</span>(<span class="n">$request</span>-&gt;path, <span class="s">'/admin/'</span>);
+
+<span class="k">if</span> (<span class="n">$isAdminArea</span> &amp;&amp; !<span class="f">auth</span>()-&gt;<span class="f">check</span>()) {
+    <span class="k">if</span> (<span class="n">$request</span>-&gt;method === <span class="s">'GET'</span>) {
+        <span class="n">$_SESSION</span>[<span class="s">'intended'</span>] = <span class="n">$request</span>-&gt;path;      <span class="c">// մուտքից հետո՝ հենց այստեղ</span>
+    }
+    <span class="n">$response</span> = <span class="t">Response</span>::<span class="f">redirect</span>(<span class="s">'/login'</span>);
+
+<span class="c">// 3. Մուտք գործած է, բայց անձնակազմի՞ց է ⭐ (մուտքը ≠ իրավունք)</span>
+} <span class="k">elseif</span> (<span class="n">$isAdminArea</span> &amp;&amp; !<span class="f">auth</span>()-&gt;<span class="f">isStaff</span>()) {
+    <span class="k">throw</span> <span class="k">new</span> <span class="f">HttpException</span>(<span class="s">'Այս էջը միայն ակումբի կազմակերպիչների համար է'</span>, <span class="n">403</span>);
+
+} <span class="k">else</span> {
+    <span class="n">$response</span> = <span class="n">$router</span>-&gt;<span class="f">dispatch</span>(<span class="n">$request</span>);</code></pre>
+    </div>
+
+    <h3>Քայլ 5 · Դերեր</h3>
+    <ul class="goals">
+      <li><code>/admin…</code>՝ մուտք (302 → /login) և <code>isStaff()</code> (403)</li>
+      <li>Թաքցնելը՝ միայն <code>isAdmin()</code>, կոնտրոլերում (տնային 7)</li>
+      <li>«Կարդացի այսօր»-ը և շապիկը՝ <code>/admin/book/{slug}/…</code>, որ նույն կանոնը պաշտպանի (տնային 8)</li>
+    </ul>
+
+    <h3>Քայլ 6 · Header և փորձեր</h3>
+    <ul class="goals">
+      <li>«Բարև, Անի» և «Ելք»՝ POST ֆորմա (տնային 9)</li>
+      <li><code>public/lab-auth.php</code>՝ երկու հեշ մեկ գաղտնաբառից, <code>password_hash</code> և <code>md5</code> ժամանակով, PHPSESSID-ը մինչև և հետո (տնային 3, 4, 6)</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Սխալ գաղտնաբառ և անհայտ հասցե՝ նույն հաղորդագրությունը</li>
+      <li>Մուտքից հետո PHPSESSID-ը փոխվեց</li>
+      <li>Արամը <code>/admin/books</code>-ում ստանում է 403, Լիլիթը չի տեսնում «Թաքցնել»</li>
+      <li>POST առանց <code>_token</code>-ի → 419</li>
+      <li>Գրանցված անդամի դերը՝ <code>member</code>, ինչ էլ ուղարկվի ֆորմայով</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Ամեն ֆորմա տալիս է 419</td><td>Ֆորմայում չկա <code>&lt;?= csrf_field() ?&gt;</code>, կամ սեսիան չի պահվում</td></tr>
+      <tr><td>Մուտքից հետո դեռ «Մուտք» է գրված</td><td>Header-ը կարդում է <code>auth()</code>-ը, իսկ <code>login()</code>-ը չի գրել <code>$_SESSION['user_id']</code></td></tr>
+      <tr><td><code>password_verify</code>-ը միշտ false է</td><td>Սյունակը <code>VARCHAR(60)</code>-ից կարճ է, և հեշը կտրվել է․ <code>VARCHAR(255)</code></td></tr>
+      <tr><td>Editor-ը կարողանում է թաքցնել curl-ով</td><td>Կոճակը թաքցնելը պաշտպանություն չէ․ ստուգումը՝ կոնտրոլերում</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի տնային աշխատանքը</h2>
+    <p>Սրանք <a href="../../php-lesson-16.html#s9">Դաս 16-ի</a> տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում՝ Անիի ակումբում։ Մնացածը կատարիր ՏեխնոՄարկետում, ինչպես գրված է դասում։</p>
+    <ol class="hw">
+      <li>Ավարտիր դասարանականի 6 քայլը և յոթ փորձարկումը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ուղարկիր սքրինշոթներ CSRF հարձակման՝ պաշտպանությամբ և առանց դրա։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր, որ նույն գաղտնաբառը տալիս է տարբեր հեշեր։ Բացատրիր, ինչու <code>===</code>-ը այստեղ չի աշխատի։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Չափիր <code>password_hash()</code>-ի ժամանակը <code>microtime()</code>-ով։ Համեմատիր <code>md5()</code>-ի հետ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li><em>Խորացված․</em> ցուցադրիր timing attack-ի հնարավորությունը՝ չափիր մուտքի ժամանակը գոյություն ունեցող և չգոյություն ունեցող հասցեով, կեղծ հեշի ստուգումով և առանց դրա։</li>
+      <li>Ցուցադրիր <code>session_regenerate_id()</code>-ի աշխատանքը՝ համեմատիր <code>PHPSESSID</code>-ն մուտքից առաջ և հետո։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու երրորդ ստուգում․ <code>/admin/delete</code>-ը թույլատրված է միայն <code>role = 'admin'</code>-ին (<code>$auth-&gt;isAdmin()</code>), մյուսներին՝ 403։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու ադմին էջ <code>/manage/orders</code> հասցեով (առանց <code>/admin</code>-ի)։ Պաշտպանվա՞ծ է։ Ինչ կանոն պետք է պահել, որ սա չպատահի։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու «Բարև, [անուն]» և ելքի կոճակ header-ում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>DevTools-ով ավելացրու գրանցման ֆորմային <code>&lt;input name="role" value="admin"&gt;</code> և ուղարկիր։ HeidiSQL-ում ստուգիր նոր օգտագործողի դերը։ Բացատրիր, ինչու այն չփոխվեց։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու գրանցմանը փորձերի սահմանափակում <code>LoginThrottle</code>-ի օրինակով՝ առավելագույնը 3 նոր հաշիվ մեկ սեսիայից ժամում։ Ինչու՞ է սա ուսումնական, ոչ իրական պաշտպանություն (բաժին 05)։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Խնդրիր AI-ին վերանայել <code>Auth</code>-ը։ Ի՞նչ գտավ։ Համաձա՞յն ես։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/">օրինակը</a>։ Օրինակում <code>lab-…</code> ֆայլերը փորձնական են․ դրանք հաջորդ դասի օրինակում այլևս չկան։ Գործարկելուց առաջ ստեղծիր բազան <code>example/sql/</code>-ի ֆայլերով և <code>.env</code>-ը (<code>composer install</code>)։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-15/task.html">← Դաս 15</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-17/task.html">Դաս 17 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · տնային աշխատանք · Դաս 16</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

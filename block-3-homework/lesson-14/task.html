@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 14 · Composer, namespace, Repository — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · տնային</b> · Դաս 14</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../php-lesson-14.html">PHP Դաս 14</a> · մինի-նախագիծ</p>
+  <h1>Composer, namespace, Repository</h1>
+  <p class="lede">Տասնյակ <code>require_once</code>-ները փոխարինվում են մեկով՝ <code>vendor/autoload.php</code>։ Դասերը տեղափոխվում են <code>src/</code>՝ <code>App\Models</code>, <code>App\Services</code>, <code>App\Repositories</code>, իսկ <code>books.php</code>-ի ֆունկցիաները՝ <code>BookRepository</code>։ Գաղտնաբառը՝ <code>.env</code>-ում։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Անիի կայքը</span>
+    <span>6 քայլ · 7 տնային կետ նախագծում</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–14․ <code>composer init</code>, <code>autoload</code> PSR-4 և <code>files</code>, <code>namespace</code>, <code>use</code>, <code>vlucas/phpdotenv</code>, Repository՝ PDO-ն կոնստրուկտորով, <code>static</code> մեթոդներով Validator։ Router և controller՝ Դաս 15։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>curl -i http://localhost:8000/.env</div><button class="copy">Պատճենել</button></div>
+<pre><code>HTTP/1.1 200 OK
+Host: localhost:8814
+Date: Wed, 21 Oct 2026 18:27:06 GMT
+Connection: close
+Content-Length: 246
+<span class="c">
+# Պատճենիր որպես .env և լրացրու — PHP Դաս 14</span>
+<span class="c"># .env-ը .gitignore-ում է, .env.example-ը՝ պահոցում (առանց գաղտնաբառի)</span>
+APP_DEBUG=true
+
+DB_HOST=127.0.0.1
+DB_NAME=ani_books</code></pre>
+    </div>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>lab-namespace.php</div><button class="copy">Պատճենել</button></div>
+<pre><code>== new PDO() namespace Lab-ի ներսում, առանց use PDO;
+Error: Class "Lab\PDO" not found
+→ Ուղղում․ use PDO; ֆայլի սկզբում կամ \PDO
+
+== GenreRepository SQLite-ով
+Genre #2 · ալֆա
+Genre #1 · փորձ
+→ Repository-ն չգիտի՝ որտեղից է PDO-ն։ Այդպես են գրվում թեստերը՝ առանց իսկական բազայի</code></pre>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Շարունակիր քո նախագիծը։ Եթե բաց ես թողել նախորդ դասը, սկսիր <a href="../lesson-13/example/">Դաս 13-ի օրինակից</a>։</p>
+    <ul class="goals">
+      <li><code>starter/.env.example</code> — պատճենիր որպես .env</li>
+    </ul>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գործարկել</th></tr>
+      <tr><td><code>composer install &amp;&amp; php -S localhost:8000</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · composer.json</h3>
+    <ul class="goals">
+      <li><code>"App\\": "src/"</code> և <code>"files": ["src/helpers.php"]</code></li>
+      <li><code>composer require vlucas/phpdotenv</code></li>
+      <li><code>.env.example</code> պահոցում, <code>.env</code>՝ <code>.gitignore</code>-ում</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>composer.json</div><button class="copy">Պատճենել</button></div>
+<pre><code>{
+    <span class="s">"name"</span>: <span class="s">"ani/book-club"</span>,
+    <span class="s">"description"</span>: <span class="s">"Անիի գրքերի ակումբը — PHP Դաս 14"</span>,
+    <span class="s">"type"</span>: <span class="s">"project"</span>,
+    <span class="s">"require"</span>: {
+        <span class="s">"php"</span>: <span class="s">"&gt;=8.2"</span>,
+        <span class="s">"vlucas/phpdotenv"</span>: <span class="s">"^5.6"</span>
+    },
+    <span class="s">"autoload"</span>: {
+        <span class="s">"psr-4"</span>: {
+            <span class="s">"App\\"</span>: <span class="s">"src/"</span>
+        },
+        <span class="s">"files"</span>: [
+            <span class="s">"src/helpers.php"</span>
+        ]
+    }
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 2 · src/</h3>
+    <ul class="goals">
+      <li><code>Models/</code>՝ Book, PaperBook, AudioBook, EBook, Genre, ListItem, Lendable, Listenable</li>
+      <li><code>Services/</code>՝ ReadingList, DurationFormatter, Validator (տնային 5)</li>
+      <li><code>Support/Database.php</code>՝ <code>use PDO;</code> (տնային 2)</li>
+    </ul>
+
+    <h3>Քայլ 3 · BookRepository</h3>
+    <ul class="goals">
+      <li><code>new BookRepository($pdo)</code></li>
+      <li><code>search</code>, <code>count</code>, <code>find</code>, <code>findMany</code>, <code>stats</code>, ադմինի մեթոդները</li>
+      <li><code>SELECT_FIELDS</code> հաստատունը՝ նոր սյունակը մեկ տեղում (տնային 6)</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>src/Repositories/BookRepository.php — find()</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">public</span> <span class="k">function</span> <span class="f">find</span>(<span class="k">int</span> <span class="n">$id</span>): ?<span class="t">Book</span>
+{
+    <span class="n">$stmt</span> = <span class="n">$this</span>-&gt;pdo-&gt;<span class="f">prepare</span>(<span class="s">'SELECT '</span> . <span class="k">self</span>::<span class="t">SELECT_FIELDS</span> . <span class="s">' '</span> . <span class="k">self</span>::<span class="t">FROM</span> . <span class="s">' WHERE b.id = :id AND b.is_active = 1'</span>);
+    <span class="n">$stmt</span>-&gt;<span class="f">execute</span>([<span class="s">'id'</span> =&gt; <span class="n">$id</span>]);
+    <span class="n">$row</span> = <span class="n">$stmt</span>-&gt;<span class="f">fetch</span>();
+
+    <span class="k">return</span> <span class="n">$row</span> === <span class="k">false</span> ? <span class="k">null</span> : <span class="t">Book</span>::<span class="f">fromRow</span>(<span class="n">$row</span>);
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 4 · SessionRepository</h3>
+    <ul class="goals">
+      <li><code>forBook()</code> և <code>log()</code>՝ Դաս 11-ի տրանզակցիան (տնային 4)</li>
+    </ul>
+
+    <h3>Քայլ 5 · bootstrap.php</h3>
+    <ul class="goals">
+      <li><code>require_once __DIR__ . '/vendor/autoload.php';</code></li>
+      <li><code>Dotenv::createImmutable(__DIR__)-&gt;load()</code>, <code>required([...])</code></li>
+      <li><code>$books</code>, <code>$genres</code>, <code>$sessions</code>՝ ամեն էջի համար</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>bootstrap.php — Repository-ներ</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="n">$pdo</span> = <span class="t">Database</span>::<span class="f">connect</span>([
+    <span class="s">'host'</span>     =&gt; <span class="n">$_ENV</span>[<span class="s">'DB_HOST'</span>],
+    <span class="s">'name'</span>     =&gt; <span class="n">$_ENV</span>[<span class="s">'DB_NAME'</span>],
+    <span class="s">'user'</span>     =&gt; <span class="n">$_ENV</span>[<span class="s">'DB_USER'</span>],
+    <span class="s">'password'</span> =&gt; <span class="n">$_ENV</span>[<span class="s">'DB_PASS'</span>] ?? <span class="s">''</span>,
+]);
+
+<span class="n">$books</span>    = <span class="k">new</span> <span class="f">BookRepository</span>(<span class="n">$pdo</span>);
+<span class="n">$genres</span>   = <span class="k">new</span> <span class="f">GenreRepository</span>(<span class="n">$pdo</span>);
+<span class="n">$sessions</span> = <span class="k">new</span> <span class="f">SessionRepository</span>(<span class="n">$pdo</span>);</code></pre>
+    </div>
+
+    <h3>Քայլ 6 · Փորձնական ֆայլ</h3>
+    <ul class="goals">
+      <li><code>lab-namespace.php</code>՝ <code>new PDO()</code> namespace-ում առանց <code>use</code>-ի (տնային 2)</li>
+      <li>Նույն <code>GenreRepository</code>-ն՝ SQLite-ով հիշողության մեջ (տնային 7)</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Ոչ մի <code>require_once</code> դասերի համար</li>
+      <li><code>composer dump-autoload</code>-ից հետո ամեն ինչ աշխատում է</li>
+      <li>Գաղտնաբառը միայն <code>.env</code>-ում, <code>config.php</code>-ը ջնջված է</li>
+      <li>Էջերում SQL չկա</li>
+      <li>⚠️ Բրաուզերում բացիր <code>/.env</code>․ այն դեռ հասանելի է (Դաս 15-ում կուղղենք)</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>Class "App\Models\Book" not found</code></td><td>Թղթապանակի/ֆայլի անունը ռեգիստրով չի համընկնում namespace-ի հետ, կամ <code>composer dump-autoload</code> չես արել</td></tr>
+      <tr><td><code>Class "App\Support\PDO" not found</code></td><td><code>use PDO;</code> ֆայլի սկզբում</td></tr>
+      <tr><td><code>Dotenv\Exception\InvalidPathException</code></td><td><code>.env</code> չկա․ պատճենիր <code>.env.example</code>-ը</td></tr>
+      <tr><td>Windows-ում աշխատում է, Linux-ում՝ ոչ</td><td><code>models/</code> և <code>Models/</code>-ը Linux-ում տարբեր են (տնային 3)</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի տնային աշխատանքը</h2>
+    <p>Սրանք <a href="../../php-lesson-14.html#s8">Դաս 14-ի</a> տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում՝ Անիի ակումբում։ Մնացածը կատարիր ՏեխնոՄարկետում, ինչպես գրված է դասում։</p>
+    <ol class="hw">
+      <li>Ավարտիր դասարանականի 5 քայլը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր <code>use PDO;</code>-ի բացակայության սխալը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Փոխիր թղթապանակի ռեգիստրը (<code>models/</code> փոքրատառով) և տես, աշխատո՞ւմ է Windows-ում։ Բացատրիր, ինչու Linux-ում չի աշխատի։</li>
+      <li>Ստեղծիր <code>OrderRepository</code> տրանզակցիայով (Դաս 11)։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Տեղափոխիր <code>Validator</code>-ը դասի՝ <code>App\Services\Validator</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր, ինչու <code>SELECT_FIELDS</code> հաստատունը օգտակար է՝ ավելացրու նոր դաշտ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Փոխարինիր <code>PDO</code>-ն Repository-ի կոնստրուկտորում փորձնական օբյեկտով և ցուցադրիր, որ դա հնարավոր է։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գտիր packagist-ում փաթեթ նկարների չափափոխման համար։ Գնահատիր չորս չափանիշով։ Արժե՞ օգտագործել, թե՞ գրել ինքդ։</li>
+      <li>Համեմատիր հին և նոր <code>index.php</code>-ը։ Քանի՞ տող, քանի՞ գլոբալ ֆունկցիա։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Խնդրիր AI-ին վերանայել քո կառուցվածքը։ Առաջարկե՞ց այլ բաժանում։ Համաձա՞յն ես։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/">օրինակը</a>։ Օրինակում <code>lab-…</code> ֆայլերը փորձնական են․ դրանք հաջորդ դասի օրինակում այլևս չկան։ Գործարկելուց առաջ ստեղծիր բազան <code>example/sql/</code>-ի ֆայլերով և <code>.env</code>-ը (<code>composer install</code>)։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-13/task.html">← Դաս 13</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-15/task.html">Դաս 15 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · տնային աշխատանք · Դաս 14</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

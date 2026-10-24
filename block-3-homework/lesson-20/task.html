@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 20 · Eloquent և միգրացիաներ — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · տնային</b> · Դաս 20</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../php-lesson-20.html">PHP Դաս 20</a> · մինի-նախագիծ</p>
+  <h1>Eloquent և միգրացիաներ</h1>
+  <p class="lede">Laravel-ը ստանում է իր բազան՝ <code>ani_books_laravel</code>։ Դաս 09-ի <code>schema.sql</code>-ը դառնում է միգրացիաներ, <code>seed.sql</code>-ը՝ <code>DatabaseSeeder</code>։ <code>DB::table</code>-ը փոխարինվում է <code>Book</code> և <code>Genre</code> մոդելներով, URL-ը՝ route model binding-ով, իսկ «Թաքցնել»-ը՝ <code>SoftDeletes</code>-ով։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Laravel նախագիծ</span>
+    <span>6 քայլ · 6 տնային կետ նախագծում</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–20․ միգրացիաներ (<code>up</code>/<code>down</code>, <code>foreignId</code>, <code>softDeletes</code>), seeder, factory, մոդելներ, <code>$fillable</code>, <code>casts</code>, կապեր, scope-ներ, <code>with()</code>, <code>shouldBeStrict</code>, route model binding, <code>onlyTrashed</code>/<code>restore</code>, API Resource։ Form Request և մուտք՝ Դաս 21։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <p>Laravel-ը ինքը չի մտնում օրինակի մեջ (vendor-ը 70+ ՄԲ է)․ <code>example/</code>-ում են միայն այն ֆայլերը, որ դու ստեղծում կամ փոխում ես նոր նախագծում։ Պատճենիր դրանք նույն ուղիներով։</p>
+    <div class="tree">SETUP.md
+app/Http/Controllers/Admin/BookController.php
+app/Http/Controllers/Api/BookController.php
+app/Http/Controllers/BookController.php
+app/Http/Controllers/ListController.php
+app/Http/Resources/BookResource.php
+app/Models/Book.php
+app/Models/Genre.php
+app/Models/ReadingSession.php
+app/Models/User.php
+app/Providers/AppServiceProvider.php
+app/Services/ReadingList.php
+app/helpers.php
+database/factories/BookFactory.php
+database/migrations/0001_01_01_000000_create_users_table.php
+database/migrations/2026_10_20_100000_create_genres_table.php
+database/migrations/2026_10_20_100100_create_books_table.php
+database/migrations/2026_10_20_100200_create_reading_sessions_table.php
+database/migrations/2026_10_20_110000_add_series_to_books_table.php
+database/seeders/DatabaseSeeder.php
+public/images/favicon.svg
+public/js/list.js
+resources/views/admin/books/form.blade.php
+resources/views/admin/books/index.blade.php
+resources/views/admin/books/trashed.blade.php
+resources/views/books/index.blade.php
+resources/views/books/show.blade.php
+resources/views/components/alert.blade.php
+resources/views/components/book-card.blade.php
+resources/views/layouts/app.blade.php
+resources/views/list/index.blade.php
+resources/views/partials/footer.blade.php
+resources/views/partials/header.blade.php
+routes/web.php</div>
+    <div class="tip note">
+      <span class="tag">Ինչպես ստուգված է</span>
+      <p>Այս ֆայլերը պատճենվել են մաքուր Laravel 12 նախագծի վրա (Fortify-ով, MariaDB-ով), կատարվել են <code>migrate:fresh --seed</code> և <code>view:cache</code>, և կայքը ստուգվել է բրաուզերում ավտոմատ թեստերով (Դաս 22-ի վերջնական վիճակը՝ 50 ստուգում՝ ֆիլտրեր, ցուցակ, ադմին, վալիդացիա, դերեր, 403/404/419, API, գնահատական)։ Նկարները վերցված են հենց այդ գործարկումից։ Քո մեքենայում միևնույն է անցիր ստուգաթերթով (բաժին 03)։</p>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Շարունակիր Laravel նախագիծը։ Եթե բաց ես թողել նախորդ դասը, սկսիր <a href="../lesson-19/example/">Դաս 19-ի օրինակից</a>՝ պատճենելով ֆայլերը նոր Laravel նախագծի վրա։</p>
+    <ul class="goals">
+      <li><code>starter/SETUP.md</code> — այս դասի հրամանները</li>
+      <li><code>starter/database/seeders/DatabaseSeeder.php</code> — Դաս 09-ի տվյալները PHP-ով</li>
+    </ul>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գործարկել</th></tr>
+      <tr><td><code>php artisan migrate:fresh --seed &amp;&amp; php artisan serve</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Միգրացիաներ</h3>
+    <ul class="goals">
+      <li><code>users</code>-ին՝ <code>role</code> (<code>default('member')</code>)</li>
+      <li><code>genres</code>, <code>books</code> (Դաս 13-ի սյունակներով, <code>softDeletes</code>), <code>reading_sessions</code></li>
+      <li><code>add_series_to_books_table</code>՝ <code>migrate</code>, ապա <code>migrate:rollback</code> (տնային 3)</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>create_books_table — genre_id</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="n">$table</span>-&gt;<span class="f">foreignId</span>(<span class="s">'genre_id'</span>)-&gt;<span class="f">nullable</span>()-&gt;<span class="f">constrained</span>()-&gt;<span class="f">nullOnDelete</span>();   <span class="c">// ON DELETE SET NULL</span>
+<span class="n">$table</span>-&gt;<span class="k">string</span>(<span class="s">'title'</span>, <span class="n">200</span>);
+<span class="n">$table</span>-&gt;<span class="k">string</span>(<span class="s">'slug'</span>, <span class="n">200</span>)-&gt;<span class="f">unique</span>();
+<span class="n">$table</span>-&gt;<span class="k">string</span>(<span class="s">'author'</span>, <span class="n">100</span>);
+<span class="n">$table</span>-&gt;<span class="f">smallInteger</span>(<span class="s">'year'</span>)-&gt;<span class="f">nullable</span>();
+<span class="n">$table</span>-&gt;<span class="f">unsignedSmallInteger</span>(<span class="s">'pages'</span>);
+<span class="n">$table</span>-&gt;<span class="f">unsignedSmallInteger</span>(<span class="s">'read_pages'</span>)-&gt;<span class="k">default</span>(<span class="n">0</span>);</code></pre>
+    </div>
+
+    <h3>Քայլ 2 · Մոդելներ</h3>
+    <ul class="goals">
+      <li><code>Book</code>՝ <code>belongsTo(Genre)</code>, <code>hasMany(ReadingSession)</code>, <code>scopeActive</code>, <code>scopeSearch</code>, <code>scopeStatus</code></li>
+      <li>Դաս 12–13-ի մեթոդները՝ <code>status()</code>, <code>progress()</code>, <code>formatLabel()</code>, <code>minutesLeft()</code> (տնային 2)</li>
+      <li><code>User</code>՝ <code>role</code>-ը <code>$fillable</code>-ում ՉԿԱ</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>app/Models/Book.php — $fillable</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="c">/** Mass assignment-ի սպիտակ ցուցակ․ slug-ը և is_active-ը՝ ոչ (Դաս 11-ի bookData()-ի պես) */</span>
+<span class="k">protected</span> <span class="n">$fillable</span> = [
+    <span class="s">'genre_id'</span>, <span class="s">'title'</span>, <span class="s">'author'</span>, <span class="s">'year'</span>, <span class="s">'pages'</span>, <span class="s">'read_pages'</span>, <span class="s">'rating'</span>,
+    <span class="s">'color'</span>, <span class="s">'link'</span>, <span class="s">'format'</span>, <span class="s">'minutes'</span>, <span class="s">'narrator'</span>, <span class="s">'lent_to'</span>, <span class="s">'cover'</span>,
+];</code></pre>
+    </div>
+
+    <h3>Քայլ 3 · Seeder</h3>
+    <ul class="goals">
+      <li>Պատճենիր <code>starter/database/seeders/DatabaseSeeder.php</code>-ը</li>
+      <li><code>php artisan migrate:fresh --seed</code> → 12 գիրք, 22 օր, 3 անդամ</li>
+      <li><code>BookFactory</code>՝ <code>Book::factory()-&gt;count(30)-&gt;create()</code></li>
+    </ul>
+
+    <h3>Քայլ 4 · Կոնտրոլերներ</h3>
+    <ul class="goals">
+      <li><code>/genre/{genre:slug}</code>՝ <code>$genre-&gt;books()-&gt;active()-&gt;paginate(6)</code> (տնային 4)</li>
+      <li><code>/book/{book:slug}</code>՝ <code>abort_unless($book-&gt;is_active, 404)</code></li>
+      <li><code>with('genre')</code>՝ հանիր և տես <code>LazyLoadingViolationException</code></li>
+    </ul>
+
+    <h3>Քայլ 5 · Ջնջվածներ</h3>
+    <ul class="goals">
+      <li><code>destroy()</code>՝ <code>$book-&gt;delete()</code> → <code>deleted_at</code></li>
+      <li>«Ջնջվածներ» էջ՝ <code>onlyTrashed()</code>, «Վերականգնել»՝ <code>restore()</code> և <code>withTrashed()</code> ուղու վրա (տնային 6)</li>
+    </ul>
+
+    <h3>Քայլ 6 · API Resource</h3>
+    <ul class="goals">
+      <li><code>BookResource</code>՝ Դաս 17-ի <code>toArray()</code></li>
+      <li><code>/api/books</code>, <code>/api/books/{book:slug}</code>․ համեմատիր պատասխանը Դաս 17-ի հետ (տնային 7)</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li><code>migrate:fresh --seed</code>-ը աշխատում է առանց սխալի</li>
+      <li><code>migrate:rollback --step=1</code>-ը հանում է <code>series</code>-ը</li>
+      <li>tinker․ <code>User::create([..., 'role' =&gt; 'admin'])</code>-ի դերը <code>member</code> է</li>
+      <li>Թաքցված գրքի հասցեն → 404</li>
+      <li>Ջնջված գիրքը վերականգնվում է «Ջնջվածներ» էջից</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>LazyLoadingViolationException</code></td><td>Քարտը կարդում է <code>$book-&gt;genre</code>, իսկ հարցման մեջ չկա <code>with('genre')</code></td></tr>
+      <tr><td><code>MassAssignmentException</code></td><td>Դաշտը <code>$fillable</code>-ում չէ․ slug-ը և is_active-ը՝ ուղիղ վերագրմամբ</td></tr>
+      <tr><td><code>Duplicate entry … slug</code> ջնջելուց հետո</td><td>Ջնջվածը դեռ բազայում է․ <code>uniqueSlugFor()</code>-ը ստուգում է <code>withTrashed()</code></td></tr>
+      <tr><td>Restore-ը տալիս է 404</td><td>Ուղու վրա պետք է <code>-&gt;withTrashed()</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի տնային աշխատանքը</h2>
+    <p>Սրանք <a href="../../php-lesson-20.html#s12">Դաս 20-ի</a> տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում՝ Անիի ակումբում։ Մնացածը կատարիր ՏեխնոՄարկետում, ինչպես գրված է դասում։</p>
+    <ol class="hw">
+      <li>Ավարտիր դասարանականի 5 քայլը և հինգ փորձարկումը։ Ուղարկիր սքրինշոթներ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Փոխիր <code>&lt;x-product-card&gt;</code>-ը՝ <code>formattedPrice()</code>, <code>hasDiscount()</code>, <code>imageUrl()</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ստեղծիր նոր միգրացիա <code>add_brand_to_products_table</code>։ Գործարկիր, ապա <code>migrate:rollback</code>։ Ի՞նչ արեց <code>down()</code>-ը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու <code>/category/{category:slug}</code> էջ <code>$category-&gt;products()-&gt;active()-&gt;paginate(12)</code>-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր N+1-ը թվերով․ <code>DB::enableQueryLog()</code>, ապա <code>count(DB::getQueryLog())</code>՝ <code>with()</code>-ով և առանց դրա։</li>
+      <li>Ավելացրու ադմինում «Ջնջվածներ» էջ <code>onlyTrashed()</code>-ով և «Վերականգնել» կոճակ <code>restore()</code>-ով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ստեղծիր <code>/api/products</code> ուղի <code>ProductResource</code>-ով և համեմատիր պատասխանը Դաս 17-ի հետ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Խնդրիր AI-ին գրել Eloquent հարցում կատեգորիաներով և ապրանքներով։ Ստուգիր՝ կա՞ <code>with()</code>, թե՞ N+1։ Կա՞ <code>$guarded = []</code>։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/">օրինակը</a>։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-19/task.html">← Դաս 19</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-21/task.html">Դաս 21 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · տնային աշխատանք · Դաս 20</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

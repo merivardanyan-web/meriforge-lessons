@@ -261,13 +261,20 @@ word = <span class="s">"Կ"</span> + word.<span class="f">slice</span>(<span cla
 <span class="f">console</span>.<span class="f">log</span>(<span class="f">Number</span>(price.<span class="f">toFixed</span>(<span class="n">2</span>)));
 
 <span class="c">// հազարների բաժանարար</span>
-<span class="f">console</span>.<span class="f">log</span>((<span class="n">4500000</span>).<span class="f">toLocaleString</span>(<span class="s">"hy-AM"</span>));</code></pre>
+<span class="f">console</span>.<span class="f">log</span>((<span class="n">4500000</span>).<span class="f">toLocaleString</span>(<span class="s">"hy-AM"</span>));   <span class="c">// ⚠️ Chrome-ում՝ անգլերեն ձևը</span>
+<span class="f">console</span>.<span class="f">log</span>((<span class="n">4500000</span>).<span class="f">toLocaleString</span>(<span class="s">"ru-RU"</span>));   <span class="c">// Հայաստանում ընդունված ձևը</span></code></pre>
 <pre class="out"><span class="m">Console</span>
 <span class="r">1234.57</span>
 <span class="r">1235</span>
 <span class="g">string</span>
 <span class="r">1234.57</span>
+<span class="e">4,500,000</span>
 <span class="r">4 500 000</span></pre>
+    </div>
+
+    <div class="warn note">
+      <span class="tag">Chrome-ը հայերեն չգիտի</span>
+      <p>Chrome-ը և Edge-ը չունեն <code>"hy-AM"</code> լոկալը և լուռ անցնում են անգլերենի՝ <code>4,500,000</code>, <code>8/9/2026</code>։ Firefox-ում և Node.js-ում նույն կոդը կտա հայերեն ձևը, ուստի խնդիրը կարող է չերևալ քո մեքենայում, բայց երևալ օգտագործողի մոտ։ Թվերի համար օգտագործում ենք <code>"ru-RU"</code>-ը (բաժանարարը՝ բացատ, ինչպես Հայաստանում), իսկ ամսվա անունը՝ մեր սեփական զանգվածից (ներքևում)։ Ստուգիր․ <code>Intl.NumberFormat.supportedLocalesOf(["hy-AM"])</code>-ը Chrome-ում վերադարձնում է <code>[]</code>։</p>
     </div>
 
     <h3>Ինչո՞ւ 0.1 + 0.2 ≠ 0.3</h3>
@@ -422,15 +429,18 @@ word = <span class="s">"Կ"</span> + word.<span class="f">slice</span>(<span cla
 <span class="f">console</span>.<span class="f">log</span>(<span class="s">`</span>${<span class="f">pad</span>(d.<span class="f">getDate</span>())}<span class="s">.</span>${<span class="f">pad</span>(d.<span class="f">getMonth</span>() + <span class="n">1</span>)}<span class="s">.</span>${d.<span class="f">getFullYear</span>()}<span class="s">`</span>);
 <span class="f">console</span>.<span class="f">log</span>(<span class="s">`</span>${<span class="f">pad</span>(d.<span class="f">getHours</span>())}<span class="s">:</span>${<span class="f">pad</span>(d.<span class="f">getMinutes</span>())}<span class="s">`</span>);
 
-<span class="c">// ավտոմատ, հայերեն</span>
+<span class="c">// ավտոմատ՝ ⚠️ Chrome-ում "hy-AM"-ը դառնում է անգլերեն</span>
 <span class="f">console</span>.<span class="f">log</span>(d.<span class="f">toLocaleDateString</span>(<span class="s">"hy-AM"</span>));
-<span class="f">console</span>.<span class="f">log</span>(d.<span class="f">toLocaleDateString</span>(<span class="s">"hy-AM"</span>, {
-  day: <span class="s">"numeric"</span>, month: <span class="s">"long"</span>, year: <span class="s">"numeric"</span>
-}));</code></pre>
+
+<span class="c">// հայերեն ամիսը՝ մեր զանգվածից, որ աշխատի ամեն բրաուզերում</span>
+<span class="k">const</span> MONTHS = [<span class="s">"հունվարի"</span>, <span class="s">"փետրվարի"</span>, <span class="s">"մարտի"</span>, <span class="s">"ապրիլի"</span>, <span class="s">"մայիսի"</span>, <span class="s">"հունիսի"</span>,
+                <span class="s">"հուլիսի"</span>, <span class="s">"օգոստոսի"</span>, <span class="s">"սեպտեմբերի"</span>, <span class="s">"հոկտեմբերի"</span>, <span class="s">"նոյեմբերի"</span>, <span class="s">"դեկտեմբերի"</span>];
+
+<span class="f">console</span>.<span class="f">log</span>(<span class="s">`</span>${d.<span class="f">getDate</span>()}<span class="s"> </span>${MONTHS[d.<span class="f">getMonth</span>()]}<span class="s">, </span>${d.<span class="f">getFullYear</span>()}<span class="s"> թ.`</span>);</code></pre>
 <pre class="out"><span class="m">Console</span>
 <span class="r">09.08.2026</span>
 <span class="r">14:05</span>
-<span class="r">09.08.2026</span>
+<span class="e">8/9/2026</span>
 <span class="r">9 օգոստոսի, 2026 թ.</span></pre>
     </div>
 
@@ -591,6 +601,10 @@ console.log(`${pad(d.getHours())}:${pad(d.getMinutes())}`);</textarea>
   <!-- ============ 08 ============ -->
   <section id="s8">
     <h2><span class="num">08</span>Տնային աշխատանք</h2>
+    <div class="tip note">
+      <span class="tag">Մինի-նախագիծ</span>
+      <p>Այս տնայինի գլխավոր մասը՝ <a href="block-2-homework/lesson-08/task.html" style="color:var(--pen);text-decoration:underline">«Տեքստեր և ամսաթվեր»</a>, քայլ առ քայլ, starter ֆայլերով և պատրաստի օրինակով։ Ներքևի ցուցակի մնացած կետերը առանձին վարժություններ են։</p>
+    </div>
     <ol class="hw">
       <li><code>capitalize(str)</code> — առաջին տառը մեծատառ, մնացածը փոքրատառ։ Ապա <code>capitalizeWords(str)</code> — ամեն բառի համար։</li>
       <li><code>countVowels(str)</code> — քանի՞ ձայնավոր կա բառում (ա, ե, է, ը, ի, ո, ու, օ)։</li>
@@ -656,7 +670,7 @@ console.log(`${pad(d.getHours())}:${pad(d.getMinutes())}`);</textarea>
       <tr><td><code>getDay()</code></td><td>Շաբաթվա օրը (0 = կիրակի)</td></tr>
       <tr><td><code>getHours()</code> / <code>getMinutes()</code></td><td>Ժամ / րոպե</td></tr>
       <tr><td><code>getTime()</code></td><td>Միլիվայրկյաններ 1970-ից</td></tr>
-      <tr><td><code>toLocaleDateString("hy-AM")</code></td><td>Տեղային ձևաչափ</td></tr>
+      <tr><td><code>toLocaleString("ru-RU")</code></td><td>Հազարների բաժանարար՝ 4 500 000 (<code>"hy-AM"</code>-ը Chrome-ում չկա)</td></tr>
     </table>
     </div>
 

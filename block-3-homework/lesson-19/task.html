@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 19 · Blade, կոմպոնենտներ, resource — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · տնային</b> · Դաս 19</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../php-lesson-19.html">PHP Դաս 19</a> · մինի-նախագիծ</p>
+  <h1>Blade, կոմպոնենտներ, resource</h1>
+  <p class="lede">Երեք շաբլոնը ստանում են մեկ <code>layouts/app.blade.php</code>, header-ը և footer-ը՝ partials։ Քարտը դառնում է <code>&lt;x-book-card&gt;</code>, flash-ը՝ <code>&lt;x-alert&gt;</code>։ Կարդալու ցուցակը՝ <code>ReadingList</code> ծառայություն և <code>ListController</code>, իսկ ադմինը՝ resource controller։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Laravel նախագիծ</span>
+    <span>6 քայլ · 5 տնային կետ նախագծում</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–19․ <code>@extends</code>, <code>@section</code>, <code>@yield</code>, <code>@include</code>, <code>@push</code>/<code>@stack</code>, կոմպոնենտներ (<code>@props</code>, <code>$slot</code>, <code>$attributes</code>), <code>View::composer</code>, autowiring, <code>Route::resource</code>, <code>@csrf</code>, <code>@method</code>, <code>session()</code>, <code>back()-&gt;with()</code>։ Eloquent՝ Դաս 20։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/shelf.jpg" alt="Դարակը Laravel-ով՝ ժանրերի կոճակներ, դասավորում, էջավորում" width="1280" height="1233" loading="lazy">
+      <figcaption>Դարակը Blade-ով և Eloquent-ով</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/list.jpg" alt="Կարդալու ցուցակ՝ մեկ գիրք, օրական 20 էջ" width="1280" height="900" loading="lazy">
+      <figcaption>ReadingList-ը՝ սերվիս կոնտեյներում</figcaption>
+    </figure>
+    </div>
+    <p>Laravel-ը ինքը չի մտնում օրինակի մեջ (vendor-ը 70+ ՄԲ է)․ <code>example/</code>-ում են միայն այն ֆայլերը, որ դու ստեղծում կամ փոխում ես նոր նախագծում։ Պատճենիր դրանք նույն ուղիներով։</p>
+    <div class="tree">SETUP.md
+app/Http/Controllers/Admin/BookController.php
+app/Http/Controllers/BookController.php
+app/Http/Controllers/ListController.php
+app/Providers/AppServiceProvider.php
+app/Services/ReadingList.php
+app/helpers.php
+public/images/favicon.svg
+public/js/list.js
+resources/views/admin/books/form.blade.php
+resources/views/admin/books/index.blade.php
+resources/views/books/index.blade.php
+resources/views/books/show.blade.php
+resources/views/components/alert.blade.php
+resources/views/components/book-card.blade.php
+resources/views/layouts/app.blade.php
+resources/views/list/index.blade.php
+resources/views/partials/footer.blade.php
+resources/views/partials/header.blade.php
+routes/web.php</div>
+    <div class="tip note">
+      <span class="tag">Ինչպես ստուգված է</span>
+      <p>Այս ֆայլերը պատճենվել են մաքուր Laravel 12 նախագծի վրա (Fortify-ով, MariaDB-ով), կատարվել են <code>migrate:fresh --seed</code> և <code>view:cache</code>, և կայքը ստուգվել է բրաուզերում ավտոմատ թեստերով (Դաս 22-ի վերջնական վիճակը՝ 50 ստուգում՝ ֆիլտրեր, ցուցակ, ադմին, վալիդացիա, դերեր, 403/404/419, API, գնահատական)։ Նկարները վերցված են հենց այդ գործարկումից։ Քո մեքենայում միևնույն է անցիր ստուգաթերթով (բաժին 03)։</p>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Շարունակիր Laravel նախագիծը։ Եթե բաց ես թողել նախորդ դասը, սկսիր <a href="../lesson-18/example/">Դաս 18-ի օրինակից</a>՝ պատճենելով ֆայլերը նոր Laravel նախագծի վրա։</p>
+    <ul class="goals">
+      <li><code>starter/SETUP.md</code> — այս դասի հրամանները</li>
+    </ul>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գործարկել</th></tr>
+      <tr><td><code>php artisan serve</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Layout</h3>
+    <ul class="goals">
+      <li><code>layouts/app.blade.php</code>՝ <code>@yield('title')</code>, <code>@yield('content')</code>, <code>@stack('scripts')</code></li>
+      <li><code>partials/header</code> և <code>footer</code></li>
+      <li>Դաս 18-ի երկու շաբլոնը՝ <code>@extends</code>-ով</li>
+    </ul>
+
+    <h3>Քայլ 2 · Կոմպոնենտներ</h3>
+    <ul class="goals">
+      <li><code>php artisan make:component BookCard --view</code>՝ <code>@props(['book', 'inList' =&gt; false])</code></li>
+      <li><code>&lt;x-alert type="success"&gt;</code>՝ <code>$slot</code>-ով, փոխարինում է layout-ի flash-ին (տնային 3)</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>components/alert.blade.php</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">@props</span>([<span class="s">'type'</span> =&gt; <span class="s">'success'</span>])
+
+<span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"row"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="t">div</span> <span class="f">class</span>=<span class="s">"col w-100"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">div</span> <span class="k">{{</span> <span class="n">$attributes</span>-&gt;<span class="k">class</span>([<span class="s">'alert'</span>, <span class="s">'alert--'</span> . <span class="n">$type</span>, <span class="s">'mt-20'</span>]) <span class="k">}}</span> <span class="f">role</span>=<span class="s">"<span class="k">{{</span> <span class="n">$type</span> === <span class="s">'danger'</span> ? <span class="s">'alert'</span> : <span class="s">'status'</span> <span class="k">}}</span>"</span><span class="p">&gt;</span>
+            <span class="k">{{</span> <span class="n">$slot</span> <span class="k">}}</span>
+        <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span></code></pre>
+    </div>
+
+    <h3>Քայլ 3 · ReadingList և composer</h3>
+    <ul class="goals">
+      <li><code>app/Services/ReadingList.php</code>՝ <code>session()</code>, առանց <code>&amp;</code></li>
+      <li><code>$this-&gt;app-&gt;scoped(ReadingList::class)</code></li>
+      <li><code>View::composer('partials.header', ...)</code>՝ <code>$listCount</code></li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>AppServiceProvider — boot()</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">public</span> <span class="k">function</span> <span class="f">boot</span>(): <span class="k">void</span>
+{
+    <span class="c">// Մեր էջավորման շաբլոնը՝ main.css-ի .pager դասերով, ոչ Tailwind (տնային 4)</span>
+    <span class="t">Paginator</span>::<span class="f">defaultView</span>(<span class="s">'pagination::default'</span>);
+
+    <span class="c">// Header-ին պետք է ամեն էջում։ composer-ը հաշվում է ՑՈՒՑԱԴՐՄԱՆ պահին,</span>
+    <span class="c">// իսկ View::share()-ը՝ boot-ում, երբ դեռ հայտնի չէ, թե ինչ կավելացվի (դասարանական, փորձ 2)</span>
+    <span class="t">View</span>::<span class="f">composer</span>(<span class="s">'partials.header'</span>, <span class="k">function</span> (\<span class="t">Illuminate</span>\<span class="t">View</span>\<span class="t">View</span> <span class="n">$view</span>) {
+        <span class="n">$view</span>-&gt;<span class="f">with</span>(<span class="s">'listCount'</span>, <span class="f">app</span>(<span class="t">ReadingList</span>::<span class="k">class</span>)-&gt;<span class="f">count</span>());
+    });
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 4 · Կարդալու ցուցակ</h3>
+    <ul class="goals">
+      <li><code>POST /list/items</code> և <code>DELETE /list/items/{id}</code></li>
+      <li><code>list/index.blade.php</code>՝ աղյուսակ, «Հանել»՝ <code>@method('DELETE')</code> (տնային 2)</li>
+      <li><code>public/js/list.js</code>՝ <code>X-CSRF-TOKEN</code></li>
+    </ul>
+
+    <h3>Քայլ 5 · Ադմին</h3>
+    <ul class="goals">
+      <li><code>php artisan make:controller Admin/BookController --resource</code></li>
+      <li><code>Route::prefix('admin')-&gt;name('admin.')-&gt;group(...)</code></li>
+      <li><code>store</code>/<code>update</code>՝ առայժմ <code>dd($request-&gt;method())</code>․ Դաս 21-ում՝ Form Request</li>
+    </ul>
+
+    <h3>Քայլ 6 · Էջավորում և helpers</h3>
+    <ul class="goals">
+      <li><code>php artisan vendor:publish --tag=laravel-pagination</code>, <code>default.blade.php</code>՝ <code>.pager</code> դասերով (տնային 4)</li>
+      <li><code>app/helpers.php</code>՝ <code>safe_url()</code>, <code>pages()</code>, <code>composer.json</code>-ի <code>files</code> (տնային 6)</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>HTML-ի գլուխը՝ միայն <code>layouts/app.blade.php</code>-ում</li>
+      <li>Header-ի հաշվիչը ճիշտ է ամեն էջում</li>
+      <li>«Հանել» կոճակը ուղարկում է <code>DELETE</code> (Network-ում՝ POST + <code>_method</code>)</li>
+      <li><code>/admin/books/1/edit</code> → «Պահպանել» → <code>dd()</code>-ն ցույց է տալիս <code>"PUT"</code></li>
+      <li>«Հոբիտի» <code>javascript:</code> հղումը դառնում է <code>#</code></li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>Unable to locate a class or view for component [book-card]</code></td><td>Ֆայլը՝ <code>resources/views/components/book-card.blade.php</code></td></tr>
+      <tr><td><code>Undefined variable $listCount</code></td><td>composer-ը կցված է <code>partials.header</code>-ին, իսկ layout-ը include է անում այլ անուն</td></tr>
+      <tr><td><code>Call to undefined function safe_url()</code></td><td><code>composer dump-autoload</code>՝ <code>files</code>-ը ավելացնելուց հետո</td></tr>
+      <tr><td><code>405 Method Not Allowed</code> «Հանել»-ով</td><td>Մոռացել ես <code>@method('DELETE')</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի տնային աշխատանքը</h2>
+    <p>Սրանք <a href="../../php-lesson-19.html#s10">Դաս 19-ի</a> տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում՝ Անիի ակումբում։ Մնացածը կատարիր ՏեխնոՄարկետում, ինչպես գրված է դասում։</p>
+    <ol class="hw">
+      <li>Ավարտիր դասարանականի 5 քայլը և հինգ փորձարկումը։ Ուղարկիր սքրինշոթներ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գրիր <code>cart/index.blade.php</code>՝ զամբյուղի տողերը, «Հանել» կոճակ (<code>@method('DELETE')</code>) և ընդհանուր գումար։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ստեղծիր <code>&lt;x-alert type="success"&gt;</code> կոմպոնենտ <code>@props</code>-ով և <code>{{ $slot }}</code>-ով։ Փոխարինիր layout-ի flash բլոկը դրանով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Հրապարակիր էջավորման շաբլոնները և հարմարեցրու դրանք <code>main.css</code>-ի <code>.btn</code> դասերին։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Բացիր <code>storage/framework/views/</code>-ը և գտիր <code>e(</code>-ն քո քարտի կոմպիլացված ֆայլում։</li>
+      <li>Տեղափոխիր Դաս 5-ի <code>safeUrl()</code>-ը <code>app/helpers.php</code> (<code>composer.json</code> → <code>"autoload": {"files": [...]}</code>, ապա <code>composer dump-autoload</code>) և ստուգիր <code>javascript:</code> հասցեով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Խնդրիր AI-ին գրել Blade կոմպոնենտ։ Ստուգիր՝ օգտագործո՞ւմ է Tailwind դասեր։ Կա՞ <code>{!! !!}</code>։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/">օրինակը</a>։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-18/task.html">← Դաս 18</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-20/task.html">Դաս 20 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · տնային աշխատանք · Դաս 19</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

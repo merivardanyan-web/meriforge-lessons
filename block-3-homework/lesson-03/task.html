@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 03 · Գրքերի ֆունկցիաներ — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · տնային</b> · Դաս 03</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../php-lesson-03.html">PHP Դաս 03</a> · մինի-նախագիծ</p>
+  <h1>Գրքերի ֆունկցիաներ</h1>
+  <p class="lede">Կրկնվող հաշվարկները դառնում են ֆունկցիաներ <code>functions.php</code>-ում՝ տիպերով և <code>strict_types</code>-ով։ Header-ը և footer-ը՝ առանձին ֆայլեր, որ երկրորդ էջը չկրկնի նույն HTML-ը։ Գլխավոր էջը ցույց է տալիս վիճակագրություն և գրքերը ժանրերով։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Անիի կայքը</span>
+    <span>5 քայլ · 7 տնային կետ նախագծում</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–03․ ֆունկցիաներ տիպերով (<code>int, string, bool, array, ?array, void</code>), <code>declare(strict_types=1)</code>, <code>array_filter</code>, <code>array_values</code>, <code>array_map</code>, <code>array_reduce</code>, <code>usort</code>, <code>count</code>, <code>require_once __DIR__</code>։ Շաբլոններ և <code>e()</code> դեռ չկան (Դաս 05)։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <figure class="shot">
+      <img src="screenshots/shelf.jpg" alt="Վիճակագրություն և գրքերը ժանրերով խմբավորված" width="1280" height="2070" loading="lazy">
+      <figcaption>Ֆունկցիաներով հաշված վիճակագրություն և ժանրեր</figcaption>
+    </figure>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Շարունակիր քո նախագիծը։ Եթե բաց ես թողել նախորդ դասը, սկսիր <a href="../lesson-02/example/">Դաս 02-ի օրինակից</a>։</p>
+    <p>Այս դասին starter չկա․ աշխատում ես քո կոդի վրա։</p>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գործարկել</th></tr>
+      <tr><td><code>php -S localhost:8000</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · functions.php</h3>
+    <ul class="goals">
+      <li><code>declare(strict_types=1);</code> առաջին տողում</li>
+      <li><code>formatPages</code>, <code>bookStatus</code>, <code>statusLabel</code>, <code>progress</code></li>
+    </ul>
+
+    <h3>Քայլ 2 · Ֆիլտր և որոնում</h3>
+    <ul class="goals">
+      <li><code>filterByStatus</code>, <code>filterByGenre</code>՝ <code>array_filter</code> + <code>array_values</code></li>
+      <li><code>findBook(array $books, int $id): ?array</code>՝ չգտնելիս <code>null</code> (տնային 3)</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>functions.php — ֆիլտր</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">filterByStatus</span>(<span class="k">array</span> <span class="n">$books</span>, <span class="k">string</span> <span class="n">$status</span>): <span class="k">array</span>
+{
+    <span class="n">$result</span> = <span class="f">array_filter</span>(<span class="n">$books</span>, <span class="k">fn</span>(<span class="k">array</span> <span class="n">$b</span>): <span class="k">bool</span> =&gt; <span class="f">bookStatus</span>(<span class="n">$b</span>) === <span class="n">$status</span>);
+
+    <span class="k">return</span> <span class="f">array_values</span>(<span class="n">$result</span>);        <span class="c">// ⭐ վերահամարակալում՝ 0, 1, 2...</span>
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 3 · Դասավորում և վիճակագրություն</h3>
+    <ul class="goals">
+      <li><code>sortBooks($books, 'progress')</code>՝ <code>usort</code> և <code>&lt;=&gt;</code></li>
+      <li><code>totalRead</code>, <code>averagePages</code>, <code>longestBook</code>, <code>shortestBook</code> (տնային 10)</li>
+    </ul>
+
+    <h3>Քայլ 4 · Խմբավորում</h3>
+    <ul class="goals">
+      <li><code>groupByGenre(array $books): array</code>՝ <code>['վեպ' =&gt; [...], ...]</code> (տնային 9)</li>
+      <li>Գլխավոր էջում՝ ամեն ժանր առանձին վերնագրով</li>
+    </ul>
+
+    <h3>Քայլ 5 · Header և footer</h3>
+    <ul class="goals">
+      <li><code>partials/header.php</code> և <code>partials/footer.php</code>, <code>$pageTitle</code>-ով</li>
+      <li><code>require_once __DIR__ . '/partials/header.php'</code>․ փորձիր առանց <code>__DIR__</code>-ի ենթաթղթապանակից (տնային 8)</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Ամեն ֆունկցիա ունի պարամետրերի և վերադարձի տիպ</li>
+      <li>Ոչ մի <code>global</code></li>
+      <li><code>findBook($books, 99)</code>-ը վերադարձնում է <code>null</code></li>
+      <li><code>array_filter</code>-ից հետո միշտ <code>array_values</code></li>
+      <li>Էջի HTML-ը header/footer-ով կրճատվեց</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td><code>TypeError: must be of type int, string given</code></td><td><code>strict_types</code>-ը միացված է․ փոխանցիր ճիշտ տիպը կամ <code>(int)</code></td></tr>
+      <tr><td>json_encode-ը տալիս է <code>{"1":...}</code></td><td>Մոռացել ես <code>array_values</code>-ը</td></tr>
+      <tr><td><code>Failed opening required</code></td><td>Ուղին հարաբերական է ընթացիկ թղթապանակին․ օգտագործիր <code>__DIR__</code></td></tr>
+      <tr><td>Ֆունկցիան «չի տեսնում» <code>$books</code>-ը</td><td>Ֆունկցիայի ներսում արտաքին փոփոխականները չկան․ փոխանցիր պարամետրով</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի տնային աշխատանքը</h2>
+    <p>Սրանք <a href="../../php-lesson-03.html#s7">Դաս 03-ի</a> տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում՝ Անիի ակումբում։ Մնացածը կատարիր ՏեխնոՄարկետում, ինչպես գրված է դասում։</p>
+    <ol class="hw">
+      <li>Կատարիր դասարանականի 8 քայլը։</li>
+      <li>Ավելացրու <code>data.php</code>-ում <code>category</code> դաշտ և գրիր <code>filterByCategory()</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գրիր <code>findProduct(array $products, int $id): ?array</code>։ Ի՞նչ է վերադարձնում, երբ չի գտնում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր, ինչ է լինում <code>array_filter</code>-ից հետո առանց <code>array_values</code>-ի։ Օգտագործիր <code>var_dump</code>։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Համեմատիր <code>json_encode</code>-ի արդյունքը <code>array_values</code>-ով և առանց դրա։</li>
+      <li>Փորձարկիր <code>strict_types</code>-ը՝ միացրած և անջատած։ Ի՞նչ տարբերություն։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր տեսանելիության տիրույթի խնդիրը և ուղղիր երեք ձևով։</li>
+      <li>Ջնջիր <code>__DIR__</code>-ը <code>require</code>-ից և կանչիր էջը ենթաթղթապանակից։ Նկարագրիր սխալը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գրիր <code>groupByCategory()</code>, որը վերադարձնում է զանգված, որտեղ բանալին կատեգորիան է։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Հաշվիր միջին գինը, ամենաթանկը և ամենաէժանը՝ երեք ֆունկցիայով տիպերի հայտարարմամբ։ <span class="tag-in">մինի-նախագծում</span></li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/">օրինակը</a>։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-02/task.html">← Դաս 02</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-04/task.html">Դաս 04 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · տնային աշխատանք · Դաս 03</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

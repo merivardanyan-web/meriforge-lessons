@@ -1,0 +1,18 @@
+/* Ավելացրու main.css-ի վերջում — PHP Դաս 10 */
+/* ============ 14. PHP — ֆիլտրեր և էջավորում (PHP Դաս 10) ============ */
+.filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 16px;
+    border-radius: var(--radius-sm);
+    background-color: var(--surface);
+    box-shadow: var(--shadow-sm);
+}
+.filter-bar .field { flex: 1 1 160px; }
+.filter-bar .field--short { flex: 0 1 110px; }
+.filter-bar__actions { display: flex; gap: 8px; }
+.pager { display: flex; flex-wrap: wrap; gap: 6px; }
+.pager a[aria-current="page"] { --btn-bg: var(--accent); --btn-color: var(--on-accent); }

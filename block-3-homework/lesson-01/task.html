@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 01 · Անիի կայքը սերվերում — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · տնային</b> · Դաս 01</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../php-lesson-01.html">PHP Դաս 01</a> · մինի-նախագիծ</p>
+  <h1>Անիի կայքը սերվերում</h1>
+  <p class="lede">Բլոկ 2-ում Անիի «Գրքեր» էջը աշխատում էր բրաուզերում։ Այս դասին այն տեղափոխվում է սերվեր․ <code>index.html</code>-ը դառնում է <code>index.php</code>, իսկ կրկնվող տեքստերը՝ փոփոխականներ։ Մինչև Դաս 22-ը այս կայքը կդառնա գրքերի ակումբ՝ բազայով, մուտքով և Laravel-ով։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Անիի կայքը</span>
+    <span>5 քայլ · 6 տնային կետ նախագծում</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Միայն Դաս 01-ը․ Laragon, <code>php -S</code>, <code>&lt;?php ?&gt;</code> և <code>&lt;?= ?&gt;</code>, փոփոխականներ, <code>date()</code>, <code>var_dump</code>, <code>print_r</code>, սխալների ցուցադրում։ Պայմաններ, ցիկլեր և զանգվածներ դեռ չկան։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/index.jpg" alt="Անիի «Գրքեր» էջը index.php-ով" width="1280" height="900" loading="lazy">
+      <figcaption>index.php՝ նույն էջը, տարեթիվը՝ date()-ով</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/debug.jpg" alt="var_dump և print_r չորս տիպի և զանգվածի վրա" width="1280" height="900" loading="lazy">
+      <figcaption>debug.php</figcaption>
+    </figure>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Աշխատիր նոր թղթապանակում՝ <code>www/ani-club/</code>։ Starter-ը Անիի «Գրքեր» էջն է Բլոկ 2-ից։</p>
+    <ul class="goals">
+      <li><code>starter/css/global.css</code> — Բլոկ 1–2-ի ոճերը</li>
+      <li><code>starter/css/main.css</code> — Բլոկ 1–2-ի ոճերը</li>
+      <li><code>starter/images/favicon.svg</code> — favicon</li>
+      <li><code>starter/index.html</code> — Անիի «Գրքեր» էջը Բլոկ 2-ից՝ առանց JS-ի (ստատիկ HTML)</li>
+    </ul>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գործարկել</th></tr>
+      <tr><td><code>php -S localhost:8000</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Նախագծի թղթապանակ</h3>
+    <ul class="goals">
+      <li>Laragon-ի <code>www/</code>-ում ստեղծիր <code>ani-club/</code> և պատճենիր <code>starter/</code>-ի ֆայլերը</li>
+      <li>Բաց արա <code>http://ani-club.test</code>, ապա նույնը <code>php -S localhost:8000</code>-ով (տնային 2)</li>
+    </ul>
+
+    <h3>Քայլ 2 · index.html → index.php</h3>
+    <ul class="goals">
+      <li>Փոխանվանիր ֆայլը և թարմացրու էջը։ Ոչինչ չպիտի փոխվի․ PHP-ն HTML-ը թողնում է ինչպես կա</li>
+      <li>Ctrl+U․ PHP կոդ էջում չկա, սերվերն այն արդեն կատարել է (տնային 10)</li>
+    </ul>
+
+    <h3>Քայլ 3 · Փոփոխականներ</h3>
+    <ul class="goals">
+      <li>Ֆայլի սկզբում՝ <code>$siteName</code>, <code>$email</code>, <code>$city</code>, <code>$year</code></li>
+      <li>Օգտագործիր դրանք առնվազն երեք տեղում՝ <code>&lt;title&gt;</code>, logo, footer</li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>index.php — սկիզբը</div><button class="copy">Պատճենել</button></div>
+<pre><code>&lt;?php
+<span class="c">// Անիի գրքերը · PHP Դաս 01</span>
+<span class="c">// Բլոկ 2-ի pages/books.html-ը՝ վերանվանված index.php․ HTML-ը նույնն է, PHP-ն՝ միայն մի քանի տեղում</span>
+
+<span class="c">// Սխալների ցուցադրում — միայն զարգացման ժամանակ</span>
+<span class="f">ini_set</span>(<span class="s">'display_errors'</span>, <span class="n">1</span>);
+<span class="f">ini_set</span>(<span class="s">'display_startup_errors'</span>, <span class="n">1</span>);
+<span class="f">error_reporting</span>(<span class="t">E_ALL</span>);
+
+<span class="n">$siteName</span> = <span class="s">"Անի Սարգսյան"</span>;
+<span class="n">$email</span>    = <span class="s">"ani@example.com"</span>;
+<span class="n">$city</span>     = <span class="s">"Սևան"</span>;
+<span class="n">$year</span>     = <span class="f">date</span>(<span class="s">"Y"</span>);
+?&gt;</code></pre>
+    </div>
+
+    <h3>Քայլ 4 · Սխալներ</h3>
+    <ul class="goals">
+      <li><code>display_errors</code>-ը միացված է</li>
+      <li>Դիտմամբ ջնջիր մի <code>;</code> և կարդա հաղորդագրությունը․ ո՞ր տողն է նշում և ինչու հաջորդը (տնային 7)</li>
+    </ul>
+
+    <h3>Քայլ 5 · dd() և var_dump</h3>
+    <ul class="goals">
+      <li>Ստեղծիր <code>debug.php</code>՝ չորս տիպի փոփոխական և <code>dd()</code> ֆունկցիա</li>
+      <li>Համեմատիր <code>var_dump</code>-ը և <code>print_r</code>-ը զանգվածի վրա։ Ինչու՞ է <code>"Սամվել"</code>-ը <code>string(12)</code></li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>debug.php — dd()</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">dd</span>(<span class="n">$data</span>): <span class="k">void</span>
+{
+    <span class="k">echo</span> <span class="s">"&lt;pre style='background:#1e252a;color:#e8eced;padding:14px;border-radius:8px'&gt;"</span>;
+    <span class="f">var_dump</span>(<span class="n">$data</span>);
+    <span class="k">echo</span> <span class="s">"&lt;/pre&gt;"</span>;
+    <span class="f">die</span>();
+}</code></pre>
+    </div>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li><code>index.php</code>-ը բացվում է Laragon-ով և <code>php -S</code>-ով</li>
+      <li>Footer-ի տարեթիվը՝ <code>date("Y")</code>, ոչ ձեռքով գրված</li>
+      <li>Կայքի անունը գրված է ՄԵԿ տեղում</li>
+      <li>Ctrl+U-ում PHP կոդ չկա</li>
+      <li><code>debug.php</code>-ը ցույց է տալիս 4 տիպ</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Բրաուզերը ցույց է տալիս <code>&lt;?php</code> տեքստը</td><td>Ֆայլը բացել ես կրկնակի սեղմումով (file://)։ PHP-ին սերվեր է պետք</td></tr>
+      <tr><td>Ներբեռնվում է index.php ֆայլը</td><td>Laragon-ը միացված չէ կամ թղթապանակը <code>www/</code>-ում չէ</td></tr>
+      <tr><td><code>Undefined variable $siteName</code></td><td>Փոփոխականը սահմանված է ավելի ներքև, քան օգտագործվում է, կամ տառասխալ կա</td></tr>
+      <tr><td>Հայերենը «Õ...» է</td><td>Ֆայլը պահպանիր UTF-8 կոդավորմամբ, <code>&lt;meta charset="UTF-8"&gt;</code>-ը տեղում է</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի տնային աշխատանքը</h2>
+    <p>Սրանք <a href="../../php-lesson-01.html#s8">Դաս 01-ի</a> տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում՝ Անիի ակումբում։ Մնացածը կատարիր ՏեխնոՄարկետում, ինչպես գրված է դասում։</p>
+    <ol class="hw">
+      <li>Տեղադրիր Laragon։ Ուղարկիր սքրինշոթ երկու կանաչ ցուցիչով։</li>
+      <li>Գործարկիր <code>php -S</code> և Laragon։ Գրիր, ի՞նչ տարբերություն նկատեցիր։</li>
+      <li>Տեղափոխիր ՏեխնոՄարկետը <code>www</code>-ի մեջ և բաց արա <code>.test</code> հասցեով։</li>
+      <li>Փոխանվանիր <code>index.html</code> → <code>index.php</code>։ Համոզվիր, որ ամեն ինչ աշխատում է։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Դարձրու footer-ի տարեթիվը դինամիկ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ստեղծիր փոփոխականներ կայքի անվան, հեռախոսի և հասցեի համար։ Օգտագործիր դրանք էջում առնվազն 3 տեղում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու սխալների ցուցադրումը։ Դիտմամբ արա սխալ (մոռացիր <code>;</code>) և նկարագրիր հաղորդագրությունը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Գրիր <code>dd()</code> ֆունկցիան և փորձարկիր այն 4 տարբեր տիպի վրա։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Համեմատիր <code>var_dump</code>-ը և <code>print_r</code>-ը զանգվածի վրա։ Ո՞րն է ավելի հարմար և ե՞րբ։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Բացիր էջը և սեղմիր <kbd>Ctrl</kbd>+<kbd>U</kbd>։ Գտի՞ր PHP կոդը։ Բացատրիր, ինչու։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/">օրինակը</a>։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><span></span><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-02/task.html">Դաս 02 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · տնային աշխատանք · Դաս 01</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

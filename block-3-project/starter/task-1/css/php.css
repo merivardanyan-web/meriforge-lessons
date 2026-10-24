@@ -1,0 +1,94 @@
+/* Ավելացրու main.css-ի վերջում — PHP Դաս 6, 7, 11-ի դասերը ՏեխնոՄարկետի տոկեններով */
+/* ============ 15. PHP ԲԼՈԿ — սերվերի հաղորդագրություններ, ֆորմաներ, ադմին ============
+   Նոր դասեր չենք հորինում․ միայն այն, ինչ PHP Դաս 6, 7, 11-ը ավելացնում են main.css-ում */
+
+.mt-10 { margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
+.bg-surface { background: var(--surface); }
+
+/* ---------- Հաղորդագրություններ — PHP Դաս 6, 7 ---------- */
+.alert {
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+}
+
+.alert--success { border-color: var(--success); }
+.alert--danger  { border-color: var(--danger); }
+.alert--warning { border-color: #e0a100; }
+
+/* ---------- Ֆորմայի դաշտեր — PHP Դաս 6 ---------- */
+.input--error { border-color: var(--danger); }
+
+.field__error:empty { display: none; }
+
+.form-section .field + .field { margin-top: 0; }
+
+/* ---------- Քարտ ---------- */
+.card__warning {
+    margin-top: -4px;
+    margin-bottom: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--danger);
+}
+
+/* ---------- Զամբյուղի քանակ՝ −/+ ֆորմա — PHP Դաս 7 ---------- */
+.qty-form {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.qty-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 1.125rem;
+    cursor: pointer;
+}
+
+.qty-btn:hover:not(:disabled) { border-color: var(--accent); }
+.qty-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+/* ---------- Ադմին — PHP Դաս 11 ---------- */
+.admin main { padding-bottom: 60px; }
+.admin section { padding-top: 10px; }
+
+.scroll-x { overflow-x: auto; }
+
+.admin-table {
+    min-width: 720px;
+    background: var(--surface);
+    font-size: 0.9375rem;
+}
+
+.admin-table th {
+    background: var(--icon-bg);
+    font-weight: 700;
+}
+
+.admin-table tbody tr:hover td { background: var(--bg); }
+
+.row-inactive { opacity: .55; }
+
+.btn--danger {
+    --btn-bg: var(--danger);
+    --btn-color: var(--white);
+    --btn-border: var(--danger);
+}
+
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.admin-stats li {
+    padding: 6px 12px;
+    border-radius: var(--radius-full);
+    background: var(--icon-bg);
+    font-size: 0.8125rem;
+}

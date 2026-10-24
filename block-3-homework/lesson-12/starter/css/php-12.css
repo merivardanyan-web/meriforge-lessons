@@ -1,0 +1,7 @@
+/* Ավելացրու main.css-ի վերջում — PHP Դաս 12 */
+/* ============ 16. PHP — օբյեկտներ (PHP Դաս 12) ============ */
+.book .pill.pill--new, .pill--new { background-color: var(--accent); color: var(--on-accent); }
+.stars-text { color: #e0a100; letter-spacing: 2px; }
+.list-item { display: flex; flex-direction: column; gap: 8px; }
+.goal-form { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.goal-form input { width: 80px; }

@@ -1,0 +1,157 @@
+/* ============================================
+   global.css
+   Բազային վարքագիծ և ունիվերսալ դասեր
+   ՉԻ ՓՈԽՎՈՒՄ նախագծից նախագիծ
+   Հավաքված է HTML բլոկի 1–21 դասերից
+   ============================================ */
+
+/* ---------- Reset — Դաս 6 ---------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ---------- Հղումներ ---------- */
+a {
+    display: inline-block;
+    color: inherit;
+    text-decoration: none;
+}
+
+/* ---------- Ցուցակներ ---------- */
+ul, ol {
+    list-style: none;
+}
+
+/* ---------- Ֆորմայի տարրեր — Դաս 4 ---------- */
+input, textarea, select, button {
+    font: inherit;          /* ← առանց սրա ֆորմաները ժառանգում են բրաուզերի տառատեսակը */
+    color: inherit;
+}
+
+button {
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+/* outline-ը հանված չէ․ ստեղնաշարով նավիգացիան մնում է տեսանելի — Դաս 18
+   :focus-visible-ը աշխատում է Tab-ով, մկնիկով սեղմելիս՝ ոչ */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+/* ---------- Նկարներ — Դաս 16 ---------- */
+picture {
+    display: block;
+    font-size: 0;           /* հանում է inline տարրերի ներքևի բացակը */
+}
+
+img, svg {
+    display: block;
+    max-width: 100%;
+}
+
+.img-cover   { width: 100%; height: 100%; object-fit: cover; }
+.img-contain { width: 100%; height: 100%; object-fit: contain; }
+
+.ratio-1-1  { aspect-ratio: 1 / 1; }
+.ratio-4-3  { aspect-ratio: 4 / 3; }
+.ratio-3-2  { aspect-ratio: 3 / 2; }
+.ratio-16-9 { aspect-ratio: 16 / 9; }
+
+/* ---------- Տեքստ ---------- */
+.text-center { text-align: center; }
+.text-left   { text-align: left; }
+.text-right  { text-align: right; }
+
+/* ---------- Կմախք — Դաս 10 ---------- */
+.row {
+    display: flex;
+}
+
+.wrapper {
+    height: 100%;
+}
+
+/* ---------- Flex օգնականներ — Դաս 11–12 ---------- */
+.flex        { display: flex; }
+.flex-wrap   { flex-wrap: wrap; }
+.flex-column { flex-direction: column; }
+
+.justify-start   { justify-content: start; }
+.justify-center  { justify-content: center; }
+.justify-end     { justify-content: end; }
+.justify-between { justify-content: space-between; }
+
+.align-start  { align-items: start; }
+.align-center { align-items: center; }
+.align-end    { align-items: end; }
+
+/* ---------- Grid օգնականներ — Դաս 20 ---------- */
+.grid { display: grid; }
+
+/* Ինքնահարմարվող ցանց — ամենաօգտագործվողը */
+.grid-auto {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+}
+
+/* ---------- Չափեր ---------- */
+.h-100 { height: 100%; }
+
+.w-25  { width: 25%; }
+.w-30  { width: 30%; }
+.w-33  { width: 33.3333%; }
+.w-40  { width: 40%; }
+.w-50  { width: 50%; }
+.w-60  { width: 60%; }
+.w-70  { width: 70%; }
+.w-75  { width: 75%; }
+.w-100 { width: 100%; }
+
+/* ---------- Ադապտիվ լայնություններ — Դաս 14 ----------
+   .w-md-100 = «մինչև 992px դառնում է 100%»
+   Գրվում է ՄԵԾ էկրանի դասից հետո՝ class="col w-33 w-md-100"  */
+@media (max-width: 992px) {
+    .w-md-50  { width: 50%; }
+    .w-md-100 { width: 100%; }
+}
+
+@media (max-width: 576px) {
+    .w-sm-100 { width: 100%; }
+}
+
+/* ---------- Հասանելիություն — Դաս 5–6 ---------- */
+.skip-link {
+    position: absolute;
+    left: -9999px;
+}
+
+.skip-link:focus {
+    left: 10px;
+    top: 10px;
+    z-index: 1000;
+    background: #ffffff;
+    color: #1a1a1a;
+    padding: 10px 14px;
+}
+
+/* Տեքստ միայն էկրանընթերցիչի համար */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}

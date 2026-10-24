@@ -1,0 +1,376 @@
+/* ============================================
+   main.css — Սևան Բարբեր
+   global.css-ը (կմախքը) նույնն է, ինչ դասընթացում․ այստեղ՝ միայն այս կայքի տեսքը
+   ============================================ */
+
+/* ============ 1. ՏՈԿԵՆՆԵՐ — HTML Դաս 19 ============ */
+:root {
+    /* Շերտ 1․ գունապնակ */
+    --ink-900:    #1d1b19;
+    --ink-700:    #34302b;
+    --ink-500:    #6d655c;
+    --cream-50:   #faf6f0;
+    --cream-100:  #f1e9dd;
+    --copper-700: #86421d;
+    --copper-600: #a4572a;
+    --copper-200: #efd9c8;
+    --green-700:  #2f6b3f;
+    --green-100:  #e3efe5;
+    --red-700:    #a12b2b;
+    --red-100:    #f7e3e1;
+    --white:      #ffffff;
+
+    /* Շերտ 2․ իմաստ */
+    --bg:           var(--cream-50);
+    --surface:      var(--white);
+    --text:         var(--ink-900);
+    --text-muted:   var(--ink-500);
+    --accent:       var(--copper-600);
+    --accent-hover: var(--copper-700);
+    --accent-light: var(--copper-200);
+    --on-accent:    var(--white);
+    --dark:         var(--ink-900);
+    --on-dark:      var(--cream-50);
+    --border:       #e6dccd;
+    --success:      var(--green-700);
+    --danger:       var(--red-700);
+
+    /* Կմախք, ձև */
+    --wall: 60px;
+    --gap:  10px;
+    --radius-sm: 6px;
+    --radius-md: 14px;
+    --radius-full: 999px;
+    --shadow-sm: 0 1px 3px rgba(29, 27, 25, .08);
+    --shadow-md: 0 6px 18px rgba(29, 27, 25, .10);
+    --transition: .2s ease;
+
+    --font-body: "Noto Sans Armenian", system-ui, sans-serif;
+    --font-head: "Noto Serif Armenian", Georgia, serif;
+}
+
+@media (max-width: 768px) {
+    :root { --wall: 16px; }
+}
+
+/* ============ 2. ԲԱԶԱ ============ */
+[hidden] { display: none !important; }   /* .btn-ի display-ը չպիտի հաղթի hidden-ին */
+
+body {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text);
+    background-color: var(--bg);
+}
+
+section { padding: 40px 0; }
+.row    { padding: 0 calc(var(--wall) - var(--gap)); }
+.col    { padding: var(--gap); }
+.row--top { align-items: flex-start; }
+
+h1, h2, h3 { font-family: var(--font-head); line-height: 1.2; margin-bottom: 12px; }
+h1 { font-size: clamp(1.75rem, 4.5vw, 2.75rem); }
+h2 { font-size: clamp(1.375rem, 3vw, 1.875rem); }
+h3 { font-size: 1.25rem; }
+p, table, form { margin-bottom: 16px; }
+
+.lead       { font-size: 1.125rem; max-width: 60ch; }
+.meta       { font-size: .875rem; color: var(--text-muted); }
+.text-muted { color: var(--text-muted); }
+.mt-20      { margin-top: 20px; }
+.mb-20      { margin-bottom: 20px; }
+.gap-10     { gap: 10px; }
+.gap-20     { gap: 20px; }
+
+main a:not(.btn) { color: var(--accent); text-decoration: underline; white-space: normal; }
+main a:not(.btn):hover { color: var(--accent-hover); }
+
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* ============ 3. ԿՈՄՊՈՆԵՆՏՆԵՐ ============ */
+
+/* ---------- Կոճակ պարամետրերով — HTML Դաս 17, 19 ---------- */
+.btn {
+    --btn-bg: var(--accent);
+    --btn-color: var(--on-accent);
+    --btn-border: transparent;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 22px;
+    border: 1px solid var(--btn-border);
+    border-radius: var(--radius-full);
+    background: var(--btn-bg);
+    color: var(--btn-color);
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color var(--transition), color var(--transition), transform var(--transition);
+}
+.btn--primary:hover { --btn-bg: var(--accent-hover); }
+.btn--outline       { --btn-bg: transparent; --btn-color: var(--accent); --btn-border: var(--accent); }
+.btn--outline:hover { --btn-bg: var(--accent); --btn-color: var(--on-accent); }
+.btn--ghost         { --btn-bg: transparent; --btn-color: var(--accent); }
+.btn--ghost:hover   { --btn-bg: var(--cream-100); }
+.btn--light         { --btn-bg: var(--cream-50); --btn-color: var(--ink-900); }
+.btn--danger        { --btn-bg: transparent; --btn-color: var(--danger); --btn-border: var(--danger); }
+.btn--danger:hover  { --btn-bg: var(--danger); --btn-color: var(--white); }
+.btn--sm            { min-height: 36px; padding: 6px 14px; font-size: .875rem; }
+.btn:active         { transform: translateY(1px); }
+.btn:disabled       { opacity: .5; cursor: progress; }
+
+/* ---------- Կարգավիճակ — x-status կոմպոնենտ ---------- */
+.status {
+    display: inline-block;
+    padding: 2px 12px;
+    border-radius: var(--radius-full);
+    font-size: .8125rem;
+    font-weight: 700;
+    background: var(--accent-light);
+    color: var(--copper-700);
+}
+.status--done      { background: var(--green-100); color: var(--green-700); }
+.status--cancelled { background: var(--red-100);   color: var(--red-700); }
+
+/* ---------- Բլոկ ---------- */
+.box {
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+.box > :last-child { margin-bottom: 0; }
+
+/* ---------- Ալերտ — x-alert ---------- */
+.alert {
+    margin-bottom: 0;
+    padding: 12px 16px;
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+}
+.alert--success { border-color: var(--success); }
+.alert--danger  { border-color: var(--danger); }
+
+/* ---------- Ֆորմաներ — HTML Դաս 4, PHP Դաս 21 ---------- */
+label { font-weight: 500; }
+
+input:not([type="checkbox"]):not([type="radio"]), select, textarea {
+    width: 100%;
+    min-height: 44px;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+}
+textarea { min-height: 90px; resize: vertical; }
+input:focus, select:focus, textarea:focus { border-color: var(--accent); outline: 2px solid var(--accent-light); }
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr);
+    gap: 12px 16px;
+    align-items: center;
+    max-width: 640px;
+}
+.form-grid .check { grid-column: 2; display: flex; align-items: center; gap: 8px; }
+
+.field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.field__error { color: var(--danger); font-size: .875rem; }
+.field.has-error input,
+.field.has-error select,
+.field.has-error textarea { border-color: var(--danger); }
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+}
+.filters .field { flex: 1 1 170px; }
+
+/* ---------- Աղյուսակ ---------- */
+.table-wrap { overflow-x: auto; margin-bottom: 16px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); }
+.data-table { width: 100%; border-collapse: collapse; margin: 0; }
+.data-table th, .data-table td { padding: 10px 14px; text-align: left; vertical-align: middle; border-bottom: 1px solid var(--border); }
+.data-table thead th { background: var(--cream-100); font-size: .8125rem; text-transform: uppercase; letter-spacing: .03em; color: var(--ink-700); }
+.data-table tbody tr:last-child td { border-bottom: 0; }
+.data-table td .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.data-table form { margin: 0; }
+.row-muted td { color: var(--text-muted); }
+
+.empty { padding: 24px; text-align: center; color: var(--text-muted); background: var(--surface); border: 1px dashed var(--border); border-radius: var(--radius-md); }
+
+/* ---------- Էջավորում ---------- */
+.pager { display: flex; flex-wrap: wrap; gap: 6px; }
+.pager a[aria-current="page"] { --btn-bg: var(--accent); --btn-color: var(--on-accent); }
+
+/* ---------- Toast — JS ---------- */
+.toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    z-index: 300;
+    max-width: calc(100% - 32px);
+    padding: 12px 20px;
+    border-radius: var(--radius-sm);
+    background: var(--dark);
+    color: var(--on-dark);
+    box-shadow: var(--shadow-md);
+    transform: translate(-50%, 20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition), transform var(--transition);
+}
+.toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+
+/* ============ 4. ԲԱԺԻՆՆԵՐ ============ */
+
+/* ---------- Header ---------- */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--dark);
+    color: var(--on-dark);
+}
+.header .row { padding-top: 6px; padding-bottom: 6px; }
+.logo { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-head); font-size: 1.375rem; font-weight: 700; }
+.logo svg { width: 28px; height: 28px; }
+.menu { display: flex; align-items: center; gap: 4px; margin: 0; }
+.menu a:not(.btn) { display: block; padding: 10px 12px; border-radius: var(--radius-sm); }
+.menu a:not(.btn):hover { background: var(--ink-700); }
+.menu a[aria-current="page"] { color: var(--accent-light); box-shadow: inset 0 -2px 0 var(--accent); }
+.menu form { margin: 0; }
+.menu .btn--ghost { --btn-color: var(--on-dark); }
+.menu .btn--ghost:hover { --btn-bg: var(--ink-700); }
+.hello { font-size: .875rem; color: var(--accent-light); padding: 0 8px; white-space: nowrap; }
+
+.nav-toggle { position: absolute; opacity: 0; pointer-events: none; }
+.burger { display: none; width: 44px; height: 44px; flex-direction: column; justify-content: center; align-items: center; gap: 5px; cursor: pointer; }
+.burger span:not(.visually-hidden) { display: block; width: 24px; height: 2px; background: var(--on-dark); }
+.nav-toggle:focus-visible ~ .row .burger { outline: 2px solid var(--accent); }
+
+/* ---------- Hero ---------- */
+.hero {
+    padding: 70px 0 60px;
+    background:
+        repeating-linear-gradient(135deg, rgba(164, 87, 42, .12) 0 18px, transparent 18px 36px),
+        var(--dark);
+    color: var(--on-dark);
+}
+.hero h1 { max-width: 16ch; font-size: clamp(2rem, 6vw, 3.5rem); }
+.hero .lead { color: var(--cream-100); }
+.hero__facts { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-top: 24px; padding: 0; list-style: none; font-size: .9375rem; color: var(--accent-light); }
+
+.page-head { padding: 34px 0 8px; }
+.page-head h1 { margin-bottom: 6px; }
+
+.crumbs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; padding: 0; list-style: none; font-size: .875rem; }
+.crumbs li + li::before { content: "/"; margin-right: 6px; color: var(--text-muted); }
+
+/* ---------- Ծառայությունների քարտեր ---------- */
+.services { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+.service-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: 100%;
+    padding: 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--accent);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition), transform var(--transition);
+}
+.service-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.service-card h3 { margin: 0; }
+.service-card p { margin: 0; flex-grow: 1; color: var(--text-muted); }
+.service-card__meta { display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
+.service-card__price { color: var(--accent); font-size: 1.125rem; }
+
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 0; list-style: none; counter-reset: step; }
+.steps li { position: relative; padding: 20px 20px 20px 64px; background: var(--surface); border-radius: var(--radius-md); border: 1px solid var(--border); }
+.steps li::before {
+    counter-increment: step;
+    content: counter(step);
+    position: absolute;
+    left: 18px;
+    top: 18px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--accent);
+    color: var(--on-accent);
+    font-weight: 700;
+}
+
+/* ---------- Ժամերի ընտրություն ---------- */
+.summary { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-bottom: 16px; padding: 0; list-style: none; font-weight: 700; }
+.summary li span { color: var(--text-muted); font-weight: 400; }
+
+.slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; margin: 0 0 16px; padding: 0; border: 0; }
+.slots legend { margin-bottom: 10px; font-weight: 700; }
+.slot { position: relative; }
+.slot input { position: absolute; opacity: 0; }
+.slot label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 6px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.0625rem;
+    transition: border-color var(--transition), background-color var(--transition);
+}
+.slot label small { font-weight: 400; font-size: .75rem; color: var(--text-muted); }
+.slot label:hover { border-color: var(--accent); }
+.slot input:checked + label { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.slot input:checked + label small { color: var(--cream-100); }
+.slot input:focus-visible + label { outline: 3px solid var(--accent); outline-offset: 2px; }
+.slots-status { min-height: 1.6em; margin-bottom: 10px; color: var(--text-muted); }
+.slots.is-loading { opacity: .5; }
+
+/* ---------- Footer ---------- */
+.footer { padding: 26px 0; background: var(--dark); color: var(--on-dark); font-size: .9375rem; }
+.footer p { margin: 0; }
+.footer a:hover { text-decoration: underline; }
+
+/* ============ 5. ԱԴԱՊՏԻՎՈՒԹՅՈՒՆ — HTML Դաս 14 · միշտ վերջում ============ */
+@media (max-width: 992px) {
+    .steps { grid-template-columns: 1fr; }
+
+    /* Բուրգեր-մենյու checkbox-ով — HTML Դաս 18 (ադմինի մենյուն երկար է, ուստի 992px) */
+    .burger { display: flex; }
+    .header nav { display: none; width: 100%; }
+    .nav-toggle:checked ~ .row nav { display: block; }
+    .header .row { flex-wrap: wrap; }
+    .menu { flex-direction: column; align-items: stretch; padding-bottom: 10px; }
+    .hello { padding: 8px 12px; }
+}
+
+@media (max-width: 768px) {
+    section { padding: 26px 0; }
+    .hero { padding: 44px 0 36px; }
+
+    .form-grid { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+    .form-grid .check { grid-column: 1; }
+    .data-table th, .data-table td { padding: 8px 10px; }
+    .btn { white-space: normal; text-align: center; }    /* երկար կոճակը նեղ էկրանին՝ երկու տողով */
+}

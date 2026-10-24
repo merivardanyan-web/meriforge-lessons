@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Բլոկ 3 · ՏեխնոՄարկետ նախագիծ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lesson.css">
+<script src="../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · PHP</b> · նախագիծ</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Բլոկ 3 · նախագիծ · 3 առաջադրանք</p>
+  <h1>ՏեխնոՄարկետը՝ սերվերում</h1>
+  <p class="lede">Բլոկ 1-ում ՏեխնոՄարկետը ստացավ տեսք, Բլոկ 2-ում՝ վարքագիծ բրաուզերում։ Բլոկ 3-ում այն դառնում է իսկական խանութ․ ապրանքները բազայում են, պատվերները պահվում են, ադմինը կառավարում է կատալոգը, իսկ գնորդը մուտք է գործում իր հաշիվ։ Նախագիծը կառուցում ես երեք անգամ՝ մաքուր PHP-ով, սեփական ֆրեյմվորքով և Laravel-ով։</p>
+
+  <div class="facts">
+    <span>3 առաջադրանք · 3 օրինակ</span>
+    <span>Դաս 01–24</span>
+    <span>Պաշտպանություն՝ Դաս 22–24</span>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչպես աշխատել այս թղթապանակի հետ</h2>
+    <div class="tree">block-3-project/
+├── index.html               ← այս էջը
+├── task-1.html              ← PHP և MySQL · Դաս 01–11
+├── task-2.html              ← սեփական MVC, մուտք, API · Դաս 12–17
+├── task-3.html              ← Laravel, հրապարակում, պաշտպանություն · Դաս 18–24
+├── starter/task-1..3/       ← տվյալներ, SQL, CSS, տեքստեր՝ որ չհորինես
+├── example-1-php-mysql/     ← օրինակ՝ Առաջադրանք 1-ից հետո
+├── example-2-mvc/           ← օրինակ՝ Առաջադրանք 2-ից հետո
+├── example-3-laravel/       ← մեր ֆայլերը Laravel նախագծի համար
+└── screenshots/</div>
+    <div class="warn note">
+      <span class="tag">Կանոն</span>
+      <p>Նախ կատարիր առաջադրանքը և անցիր ընդունման ստուգաթերթով, հետո բաց արա օրինակը։ PHP-ի օրինակները չեն բացվում կրկնակի սեղմումով․ դրանց պետք է սերվեր և բազա։ Ամեն օրինակի <code>README.md</code>-ում՝ գործարկման հրամանները։</p>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Երեք քայլ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Երբ</th><th>Առաջադրանք</th><th>Օրինակ</th><th>Ինչ է ավելանում</th></tr>
+      <tr><td>Դաս 01–11</td><td><a href="task-1.html">1 · Խանութը սերվերում</a></td><td><a href="example-1-php-mysql/README.md">example-1-php-mysql</a></td><td>Շաբլոններ, ֆորմաներ, սեսիա, զամբյուղ, MySQL, կատալոգ ֆիլտրերով, պատվեր տրանզակցիայով, ադմին CRUD</td></tr>
+      <tr><td>Դաս 12–17</td><td><a href="task-2.html">2 · Սեփական ֆրեյմվորք</a></td><td><a href="example-2-mvc/README.md">example-2-mvc</a></td><td>Դասեր, Composer, Router, կոնտրոլերներ, մուտք և դերեր, CSRF, JSON API, fetch-ով «Գնել» և որոնում</td></tr>
+      <tr><td>Դաս 18–24</td><td><a href="task-3.html">3 · Laravel</a></td><td><a href="example-3-laravel/README.md">example-3-laravel</a></td><td>Միգրացիաներ, Eloquent, Blade, Form Request-ներ, Fortify, Gate-եր, հրապարակում, պաշտպանություն</td></tr>
+    </table>
+    </div>
+    <div class="note">
+      <span class="tag">Նույն խանութը՝ երեք անգամ</span>
+      <p>Ամեն առաջադրանք նույն ՏեխնոՄարկետն է՝ նույն էջերով և նույն CSS-ով։ Փոխվում է միայն այն, թե ինչպես է կառուցված կոդը։ Դա միտումնավոր է․ երբ Laravel-ում գրում ես <code>Route::resource</code> կամ <code>$request-&gt;validated()</code>, դու արդեն գիտես, թե ինչ է այն անում ներսում, որովհետև նույնը գրել ես ձեռքով։</p>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Ինչպես է այն կապված դասերի հետ</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Դաս</th><th>Թեմա</th><th>Նախագծում</th></tr>
+      <tr><td>01</td><td>Սերվեր, Laragon</td><td>Բլոկ 1-ի էջերը՝ <code>.php</code>, դինամիկ տարեթիվ</td></tr>
+      <tr><td>02–03</td><td>Շարահյուսություն, զանգվածներ, ֆունկցիաներ</td><td>Քարտերը՝ <code>foreach</code>-ով, <code>functions.php</code></td></tr>
+      <tr><td>04</td><td>AI</td><td><code>context.txt</code> ՏեխնոՄարկետի համար, կոդի վերանայում</td></tr>
+      <tr><td>05</td><td>Շաբլոններ, XSS</td><td><code>e()</code>, <code>render()</code>, layout</td></tr>
+      <tr><td>06–07</td><td>Ֆորմաներ, սեսիաներ, ֆայլեր</td><td>Կապ, զամբյուղ, flash, թեմա, նկարի վերբեռնում</td></tr>
+      <tr><td>08–11</td><td>SQL, PDO, CRUD</td><td>Կատալոգը բազայից, պատվեր, ադմին</td></tr>
+      <tr><td>12–14</td><td>OOP, Composer</td><td>Մոդելներ, Repository-ներ, <code>.env</code></td></tr>
+      <tr><td>15–17</td><td>MVC, մուտք, API</td><td>Router, դերեր, CSRF, JSON API, fetch</td></tr>
+      <tr><td>18–21</td><td>Laravel</td><td>Նույն խանութը ֆրեյմվորքով</td></tr>
+      <tr><td>22–24</td><td>Պորտֆոլիո, CV, հարցազրույց</td><td>Հրապարակում, README, պաշտպանություն</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ինչ է ուղղվում Բլոկ 2-ից</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Բլոկ 2-ում</th><th>Բլոկ 3-ում</th><th>Որտեղ</th></tr>
+      <tr><td>Ապրանքները՝ <code>products.json</code>-ում, ադմինը չի կարող փոխել դրանք</td><td>MySQL և ադմին վահանակ</td><td>Առաջադրանք 1, Դաս 8–11</td></tr>
+      <tr><td>Զամբյուղը՝ <code>localStorage</code>-ում, ամեն բրաուզերում՝ իրենը</td><td>Սեսիա սերվերում, գինը՝ միշտ բազայից</td><td>Առաջադրանք 1, Դաս 7</td></tr>
+      <tr><td>Ֆորմայի ստուգումը՝ միայն JS-ում, DevTools-ով շրջանցվում է</td><td>Վալիդացիա սերվերում, JS-ը միայն օգնում է</td><td>Առաջադրանք 1, Դաս 6</td></tr>
+      <tr><td>Պատվերը ոչ մի տեղ չի պահվում</td><td><code>orders</code> + <code>order_items</code> տրանզակցիայով</td><td>Առաջադրանք 1, Դաս 11</td></tr>
+      <tr><td>Մուտքը և գրանցումը՝ միայն ֆորմայի տեսք</td><td>Իսկական հաշիվներ, դերեր, CSRF</td><td>Առաջադրանք 2, Դաս 16</td></tr>
+      <tr><td>Առանց JS-ի էջը դատարկ էր</td><td>HTML-ը՝ սերվերից, JS-ը՝ progressive enhancement</td><td>Առաջադրանք 2, Դաս 17</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Վերջնական արդյունքը</h2>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/ex1-catalog.jpg" alt="Կատալոգ ֆիլտրերով" width="900" height="949" loading="lazy">
+      <figcaption>Կատալոգ՝ բազայից</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/ex2-admin-manager.jpg" alt="Ադմինի աղյուսակ մենեջերի համար" width="900" height="703" loading="lazy">
+      <figcaption>Ադմին՝ դերերով</figcaption>
+    </figure>
+    </div>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/ex2-live-search.jpg" alt="Որոնում գրելու ընթացքում" width="900" height="773" loading="lazy">
+      <figcaption>Որոնում՝ API-ով</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/ex2-register-errors.jpg" alt="Գրանցման ֆորմա սխալներով" width="900" height="703" loading="lazy">
+      <figcaption>Գրանցում</figcaption>
+    </figure>
+    </div>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Օրինակների գործարկում</h2>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Օրինակ</th><th>Ինչ է պետք</th><th>Հասցե</th></tr>
+      <tr><td>example-1-php-mysql</td><td>PHP 8.2+, MySQL/MariaDB, <code>config.php</code></td><td><code>php -S localhost:8000</code></td></tr>
+      <tr><td>example-2-mvc</td><td>PHP 8.2+, MySQL, Composer, <code>.env</code></td><td><code>php -S localhost:8000 -t public public/index.php</code></td></tr>
+      <tr><td>example-3-laravel</td><td>PHP 8.3+, Composer, նոր Laravel նախագիծ + Fortify</td><td><code>php artisan serve</code></td></tr>
+    </table>
+    </div>
+    <div class="tip note">
+      <span class="tag">Մեկ բազա երկու օրինակի համար</span>
+      <p>Առաջին երկու օրինակը օգտագործում են <code>technomarket</code> բազան։ Երկրորդի սխեման առաջինի ընդլայնումն է, ուստի <code>example-2-mvc/sql/</code>-ը կատարելուց հետո առաջին օրինակը նույնպես կաշխատի։ Laravel-ը՝ առանձին բազա՝ <code>technomarket_laravel</code> (Դաս 20)։</p>
+    </div>
+    <div class="tip note">
+      <span class="tag">Ինչպես են ստուգված օրինակները</span>
+      <p>Առաջին երկու օրինակը ստուգված են ավտոմատ թեստերով իրական MariaDB-ի վրա (100+ ստուգում՝ կատալոգ, զամբյուղ, պատվեր, դերեր, CSRF, API)։ Laravel-ի օրինակը պատճենվել է մաքուր Laravel 12 նախագծի վրա Fortify-ով և ստուգվել բրաուզերում՝ 45 ստուգում (կատալոգ և էջավորում, զամբյուղ fetch-ով, պատվեր տրանզակցիայով, վերբեռնում, soft delete, դերեր և 403, CSRF 419, API, գրանցում, մուտքի սահմանափակում)։</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · նախագիծ</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>

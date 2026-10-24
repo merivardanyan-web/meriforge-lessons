@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="hy" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Դաս 11 · Ադմին և «Կարդացի այսօր» — տնային</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;700&family=Noto+Serif+Armenian:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../lesson.css">
+<script src="../../lesson-css.js" defer></script>
+<style>
+  .shot{margin:18px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--paper)}
+  .shot img{display:block; width:100%; height:auto}
+  .shot figcaption{padding:8px 12px; font-size:14px; color:var(--ink-soft); border-top:1px solid var(--rule)}
+  .shots{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+  .shots--wide{grid-template-columns:2fr 1fr}
+  @media (max-width:700px){.shots, .shots--wide{grid-template-columns:1fr}}
+  .lede a, .note a, .tbl a, .pager a, .goals a{color:var(--pen); text-decoration:underline}
+  .tag-in{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:99px; font-size:12px; background:var(--pen); color:#fff; vertical-align:middle}
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:30px}
+  li code:not(pre code), p code:not(pre code), td code{white-space:normal; overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+<div class="inner">
+
+  <div class="topbar">
+    <div class="brand">Full&nbsp;Stack · <b>Բլոկ 3 · տնային</b> · Դաս 11</div>
+    <button class="toggle" id="themeBtn" aria-label="Փոխել թեման">
+      <span id="themeIcon">☾</span><span id="themeTxt">Մուգ</span>
+    </button>
+  </div>
+
+  <p class="eyebrow">Տնային աշխատանք · <a href="../../php-lesson-11.html">PHP Դաս 11</a> · մինի-նախագիծ</p>
+  <h1>Ադմին և «Կարդացի այսօր»</h1>
+  <p class="lede">Անին այլևս չի բացում HeidiSQL-ը․ ադմին վահանակում ավելացնում, խմբագրում և թաքցնում է գրքերը, վերբեռնում շապիկը։ Գրքի էջում «Կարդացի այսօր» ֆորման գրում է երկու աղյուսակ մեկ տրանզակցիայով․ կամ երկուսն էլ, կամ ոչ մեկը։</p>
+
+  <div class="facts">
+    <span>task.html → starter/ → example/</span>
+    <span>Անիի կայքը</span>
+    <span>6 քայլ · 9 տնային կետ նախագծում</span>
+  </div>
+
+  <div class="warn note">
+    <span class="tag">Միայն անցածը</span>
+    <p>Դաս 01–11․ <code>INSERT</code>, <code>UPDATE</code>, <code>lastInsertId</code>, <code>rowCount</code>, <code>beginTransaction</code>, <code>commit</code>, <code>rollBack</code>, <code>try/catch</code>, <code>slugify()</code>, <code>uniqueSlug()</code>, փափուկ ջնջում (<code>is_active = 0</code>), <code>ids[]</code>։ ⚠️ Ադմինը դեռ բաց է բոլորի համար․ մուտքը՝ Դաս 16։</p>
+  </div>
+
+  <!-- ============ 00 ============ -->
+  <section id="s0">
+    <h2><span class="num">00</span>Ինչ պետք է ստացվի</h2>
+    <div class="shots">
+    <figure class="shot">
+      <img src="screenshots/admin.jpg" alt="Ադմինի աղյուսակ, թաքցված գիրքը մոխրագույն" width="1280" height="1099" loading="lazy">
+      <figcaption>admin/index.php</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="screenshots/form-errors.jpg" alt="Գրքի ֆորմա չորս սխալով" width="1280" height="1175" loading="lazy">
+      <figcaption>Վալիդացիա ադմինում</figcaption>
+    </figure>
+    </div>
+    <figure class="shot">
+      <img src="screenshots/book-sessions.jpg" alt="Սամվելի էջը՝ Կարդացի այսօր ֆորմայով և ընթերցանության օրերի աղյուսակով" width="1280" height="1362" loading="lazy">
+      <figcaption>Տրանզակցիայից հետո</figcaption>
+    </figure>
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>lab-crud.php</div><button class="copy">Պատճենել</button></div>
+<pre><code>InnoDB: rollBack()-ից հետո աղյուսակում մնաց 0 տող
+MyISAM: rollBack()-ից հետո աղյուսակում մնաց 2 տող
+→ MyISAM-ը տրանզակցիա չունի․ rollBack()-ը ոչինչ չի չեղարկում
+
+UPDATE առանց WHERE․ փոխվեց 12 տող՝ ամբողջ աղյուսակը
+→ Միշտ նախ SELECT նույն WHERE-ով, հետո UPDATE
+
+Առաջին անգամ rating = 5 · rowCount() = 1
+Նույն արժեքով կրկին  · rowCount() = 0
+Գոյություն չունեցող id · rowCount() = 0
+→ 0-ն չի տարբերում «չգտնվեց»-ը «ոչինչ չփոխվեց»-ից։ Գոյությունը ստուգիր SELECT-ով</code></pre>
+    </div>
+  </section>
+  <!-- ============ 01 ============ -->
+  <section id="s1">
+    <h2><span class="num">01</span>Ինչ ես ստանում</h2>
+    <p>Շարունակիր քո նախագիծը։ Եթե բաց ես թողել նախորդ դասը, սկսիր <a href="../lesson-10/example/">Դաս 10-ի օրինակից</a>։</p>
+    <ul class="goals">
+      <li><code>starter/css/php-11.css</code> — ադմինի աղյուսակ և «Կարդացի այսօր»</li>
+    </ul>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Գործարկել</th></tr>
+      <tr><td><code>php -S localhost:8000</code></td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 02 ============ -->
+  <section id="s2">
+    <h2><span class="num">02</span>Քայլեր</h2>
+    <h3>Քայլ 1 · Ադմինի ցուցակ</h3>
+    <ul class="goals">
+      <li><code>admin/index.php</code>՝ բոլոր գրքերը, ներառյալ թաքցվածները, որոնումով (տնային 8)</li>
+      <li>Մեկ ֆորմա՝ <code>ids[]</code> checkbox-ներով, «Թաքցնել նշվածները» (տնային 9)</li>
+    </ul>
+
+    <h3>Քայլ 2 · Ստեղծում և խմբագրում</h3>
+    <ul class="goals">
+      <li><code>admin/form.php</code>՝ մեկ ֆայլ երկու գործի համար, <code>?id=</code>-ով</li>
+      <li><code>validateBook()</code>՝ <code>read_pages &lt;= pages</code>, <code>javascript:</code> հղումը՝ ոչ</li>
+      <li><code>bookData()</code>՝ միայն թվարկված դաշտերը, ոչ ամբողջ <code>$_POST</code>-ը</li>
+    </ul>
+
+    <h3>Քայլ 3 · Slug</h3>
+    <ul class="goals">
+      <li><code>slugify('Սամվել')</code> → <code>samvel</code></li>
+      <li><code>uniqueSlug()</code>՝ <code>samvel-2</code>, իսկ խմբագրելիս՝ <code>AND id != :id</code></li>
+    </ul>
+
+    <h3>Քայլ 4 · Շապիկ ադմինում</h3>
+    <ul class="goals">
+      <li>Ֆորմայում՝ <code>enctype</code>, Դաս 07-ի <code>uploadImage()</code> (տնային 2)</li>
+      <li>Ֆայլ չընտրելիս հինը մնում է</li>
+    </ul>
+
+    <h3>Քայլ 5 · Տրանզակցիա</h3>
+    <ul class="goals">
+      <li><code>logReading()</code>՝ <code>INSERT reading_sessions</code> + <code>UPDATE books SET read_pages = read_pages + :pages</code> (տնային 3)</li>
+      <li>Պայմանը WHERE-ում․ <code>read_pages + :pages2 &lt;= pages</code>, <code>rowCount() === 0</code> → բացառություն → <code>rollBack</code></li>
+    </ul>
+
+    <div class="block">
+      <div class="block__bar"><div class="bar-left"><span class="dots"><i></i><i></i><i></i></span>books.php — logReading()</div><button class="copy">Պատճենել</button></div>
+<pre><code><span class="k">function</span> <span class="f">logReading</span>(<span class="k">int</span> <span class="n">$bookId</span>, <span class="k">int</span> <span class="n">$pages</span>, <span class="k">string</span> <span class="n">$date</span>, ?<span class="k">string</span> <span class="n">$note</span>): <span class="k">void</span>
+{
+    <span class="n">$pdo</span> = <span class="f">db</span>();
+    <span class="n">$pdo</span>-&gt;<span class="f">beginTransaction</span>();
+
+    <span class="k">try</span> {
+        <span class="n">$stmt</span> = <span class="n">$pdo</span>-&gt;<span class="f">prepare</span>(<span class="s">'
+            INSERT INTO reading_sessions (book_id, pages, read_on, note)
+            VALUES (:book, :pages, :read_on, :note)
+        '</span>);
+        <span class="n">$stmt</span>-&gt;<span class="f">execute</span>([<span class="s">'book'</span> =&gt; <span class="n">$bookId</span>, <span class="s">'pages'</span> =&gt; <span class="n">$pages</span>, <span class="s">'read_on'</span> =&gt; <span class="n">$date</span>, <span class="s">'note'</span> =&gt; <span class="n">$note</span>]);
+
+        <span class="c">// Պայմանը WHERE-ում․ եթե մեկ ուրիշ ներդիրից արդեն ավելացրել ես էջեր, չենք անցնի pages-ից</span>
+        <span class="n">$stmt</span> = <span class="n">$pdo</span>-&gt;<span class="f">prepare</span>(<span class="s">'
+            UPDATE books
+            SET read_pages = read_pages + :pages
+            WHERE id = :id AND read_pages + :pages2 &lt;= pages
+        '</span>);
+        <span class="n">$stmt</span>-&gt;<span class="f">execute</span>([<span class="s">'pages'</span> =&gt; <span class="n">$pages</span>, <span class="s">'pages2'</span> =&gt; <span class="n">$pages</span>, <span class="s">'id'</span> =&gt; <span class="n">$bookId</span>]);
+
+        <span class="k">if</span> (<span class="n">$stmt</span>-&gt;<span class="f">rowCount</span>() === <span class="n">0</span>) {
+            <span class="k">throw</span> <span class="k">new</span> <span class="f">RuntimeException</span>(<span class="s">'Էջերը շատ են․ գիրքն այդքան էջ չունի'</span>);
+        }
+
+        <span class="n">$pdo</span>-&gt;<span class="f">commit</span>();
+    } <span class="k">catch</span> (<span class="t">Throwable</span> <span class="n">$e</span>) {
+        <span class="n">$pdo</span>-&gt;<span class="f">rollBack</span>();          <span class="c">// INSERT-ը նույնպես չեղարկվում է</span>
+        <span class="k">throw</span> <span class="n">$e</span>;                  <span class="c">// կանչողը կորոշի՝ ինչ ցույց տալ</span>
+    }
+}</code></pre>
+    </div>
+
+    <h3>Քայլ 6 · Փորձնական ֆայլ</h3>
+    <ul class="goals">
+      <li><code>lab-crud.php</code>՝ բացառություն երկրորդ INSERT-ից հետո InnoDB-ում և MyISAM-ում (տնային 4, 5)</li>
+      <li><code>UPDATE</code> առանց <code>WHERE</code>՝ փորձնական աղյուսակի վրա (տնային 6), <code>rowCount()</code>-ի թակարդը (տնային 7)</li>
+    </ul>
+  </section>
+  <!-- ============ 03 ============ -->
+  <section id="s3">
+    <h2><span class="num">03</span>Ստուգաթերթ</h2>
+    <ul class="goals">
+      <li>Նույն վերնագրով երկրորդ գիրքը ստանում է <code>samvel-2</code></li>
+      <li>Խմբագրումն առանց փոփոխության՝ «Ոչինչ չփոխվեց»</li>
+      <li>1000 էջ «Սամվել»-ից՝ մերժվում է, <code>reading_sessions</code>-ում նոր տող չկա</li>
+      <li>Սեսիաների գումարը = <code>read_pages</code> ամեն գրքի համար</li>
+      <li>Թաքցված գիրքը ադմինում մոխրագույն է, կայքում՝ 404</li>
+    </ul>
+
+    <h3>Հաճախ հանդիպող սխալներ</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <tr><th>Սխալ</th><th>Ինչպես ուղղել</th></tr>
+      <tr><td>Խմբագրելիս slug-ը դառնում է <code>samvel-2</code></td><td><code>uniqueSlug()</code>-ին չես փոխանցել <code>$exceptId</code></td></tr>
+      <tr><td><code>There is no active transaction</code></td><td><code>rollBack()</code>-ը կանչվել է <code>commit()</code>-ից հետո կամ <code>beginTransaction()</code>-ից առաջ</td></tr>
+      <tr><td>Checkbox-ը միշտ «Երևում է»</td><td>Չնշված checkbox-ը չկա <code>$_POST</code>-ում․ <code>isset($post['is_active']) ? 1 : 0</code></td></tr>
+      <tr><td>MyISAM-ում rollBack-ից հետո տողերը մնացին</td><td>Դա է փորձի իմաստը․ MyISAM-ը տրանզակցիա չունի</td></tr>
+    </table>
+    </div>
+  </section>
+  <!-- ============ 04 ============ -->
+  <section id="s4">
+    <h2><span class="num">04</span>Դասի տնային աշխատանքը</h2>
+    <p>Սրանք <a href="../../php-lesson-11.html#s8">Դաս 11-ի</a> տնային աշխատանքի կետերն են։ «մինի-նախագծում» նշվածները արդեն կատարել ես վերևի քայլերում՝ Անիի ակումբում։ Մնացածը կատարիր ՏեխնոՄարկետում, ինչպես գրված է դասում։</p>
+    <ol class="hw">
+      <li>Կատարիր դասարանականի 10 քայլը և չորս փորձարկումը։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու նկարի վերբեռնում ադմին ֆորմայում (Դաս 7-ի <code>uploadImage()</code>)։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Իրագործիր <code>createOrder()</code>-ը տրանզակցիայով։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Փորձարկիր տրանզակցիան․ դիտմամբ գցիր բացառություն երկրորդ <code>INSERT</code>-ից հետո։ Պատվերը մնա՞ց բազայում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Փոխիր աղյուսակի շարժիչը MyISAM-ի և կրկնիր փորձը։ Ի՞նչ փոխվեց։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր <code>UPDATE</code>-ը առանց <code>WHERE</code>-ի <strong>փորձնական</strong> աղյուսակի վրա։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ցուցադրիր <code>rowCount()</code>-ի թակարդը՝ պահպանիր առանց փոփոխության։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու ապրանքների որոնում ադմին ցուցակում։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Ավելացրու զանգվածային գործողություն՝ նշել մի քանիսը և արխիվացնել միանգամից։ <span class="tag-in">մինի-նախագծում</span></li>
+      <li>Խնդրիր AI-ին վերանայել CRUD ֆունկցիաները։ Ի՞նչ եզրային դեպքեր գտավ, որ բաց էիր թողել։</li>
+    </ol>
+  </section>
+  <!-- ============ 05 ============ -->
+  <section id="s5">
+    <h2><span class="num">05</span>Համեմատիր օրինակի հետ</h2>
+    <div class="tip note">
+      <span class="tag">Նախ ստուգաթերթը, հետո օրինակը</span>
+      <p>Երբ բաժին 03-ի բոլոր կետերը նշված են, բացիր <a href="example/">օրինակը</a>։ Օրինակում <code>lab-…</code> ֆայլերը փորձնական են․ դրանք հաջորդ դասի օրինակում այլևս չկան։ Գործարկելուց առաջ ստեղծիր բազան <code>example/sql/</code>-ի ֆայլերով և <code>config.php</code>-ը։ Գտիր մեկ բան, որ դու արել ես այլ կերպ, և մտածիր՝ որն է ավելի հասկանալի և ինչու։ Քո լուծումը կարող է տարբերվել և լինել ճիշտ։</p>
+    </div>
+    <div class="pager"><a href="../lesson-10/task.html">← Դաս 10</a><a href="../index.html">Բոլոր տնայինները</a><a href="../lesson-12/task.html">Դաս 12 →</a></div>
+  </section>
+
+  <footer>
+    <span>Բլոկ 3 · տնային աշխատանք · Դաս 11</span>
+    <span>Full Stack Web Development · 72 դաս</span>
+  </footer>
+
+</div>
+</div>
+
+</body>
+</html>
